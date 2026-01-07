@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amnesfubbia XX1 - Streaming & Download Film Indonesia</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        body { background-color: #0b0b0b; color: #fff; font-family: 'Poppins', sans-serif; }
+        .navbar { background-color: #e50914 !important; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+        .navbar-brand { font-weight: 800; letter-spacing: 1px; }
+        
+        /* Card Film Style */
+        .card-film { 
+            background: #181818; 
+            border: none; 
+            border-radius: 10px; 
+            overflow: hidden; 
+            transition: all 0.3s ease; 
+            cursor: pointer;
+            position: relative;
+        }
+        .card-film:hover { transform: translateY(-10px); box-shadow: 0 10px 20px rgba(229, 9, 20, 0.3); }
+        .poster-wrapper { position: relative; }
+        .rating-badge {
+            position: absolute; top: 10px; right: 10px;
+            background: rgba(229, 9, 20, 0.9); padding: 2px 8px;
+            border-radius: 5px; font-size: 0.8rem; font-weight: bold;
+        }
+        .movie-title { 
+            font-size: 0.95rem; font-weight: 600; padding: 10px; 
+            display: block; color: #fff; text-decoration: none;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+
+        /* Modal Customization */
+        .modal-content { background-color: #141414; border: 1px solid #333; border-radius: 15px; }
+        .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 10px; margin-bottom: 15px; }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+        
+        .btn-stream { background-color: #007bff; border: none; font-weight: 600; margin-bottom: 8px; }
+        .btn-stream:hover { background-color: #0056b3; }
+        .btn-download { background-color: #1db954; border: none; font-weight: 600; margin-bottom: 8px; }
+        .btn-download:hover { background-color: #179443; }
+        .disabled { opacity: 0.5; cursor: not-allowed; }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-dark sticky-top">
+    <div class="container">
+        <a class="navbar-brand" href="#">AMNESFUBBIA XX1</a>
+        <div class="d-flex w-50">
+            <input id="searchInput" class="form-control me-2 bg-dark text-white border-secondary" type="search" placeholder="Cari film Indonesia...">
+            <button onclick="searchMovie()" class="btn btn-light">Cari</button>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4 class="fw-bold border-start border-4 border-danger ps-3">KOLEKSI FILM INDONESIA</h4>
+    </div>
+    
+    <div id="movieGrid" class="row row-cols-2 row-cols-md-4 row-cols-lg-5 g-4">
+        </div>
+</div>
+
+<div class="modal fade" id="movieModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title fw-bold" id="modalTitle">Loading...</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div id="trailerArea" class="video-container">
+                            </div>
+                        <h6 class="text-danger fw-bold">SINOPSIS</h6>
+                        <p id="modalOverview" class="small text-secondary" style="text-align: justify;"></p>
+                    </div>
+                    
+                    <div class="col-lg-4">
+                        <div class="p-3 bg-dark rounded border border-secondary">
+                            <img id="modalPoster" src="" class="img-fluid rounded mb-3 shadow" alt="Poster">
+                            <p class="mb-1 small"><strong>Tahun:</strong> <span id="modalDate"></span></p>
+                            <p class="mb-3 small"><strong>Rating:</strong> ⭐ <span id="modalRating"></span></p>
+                            
+                            <hr class="border-secondary">
+                            <h6 class="small fw-bold mb-3 text-uppercase">Opsi Streaming</h6>
+                            <a href="#" id="streamFembed" class="btn btn-sm btn-stream w-100" target="_blank">Server 1 (Fembed)</a>
+                            <a href="#" id="streamDood" class="btn btn-sm btn-stream w-100" target="_blank">Server 2 (Doodstream)</a>
+                            
+                            <h6 class="small fw-bold my-3 text-uppercase">Opsi Download</h6>
+                            <a href="#" id="downFembed" class="btn btn-sm btn-download w-100" target="_blank">Download 1 (Fembed)</a>
+                            <a href="#" id="downDood" class="btn btn-sm btn-download w-100" target="_blank">Download 2 (Doodstream)</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="text-center py-5 mt-5 border-top border-secondary text-secondary small">
+    &copy; 2024 Amnesfubbia XX1 - Powered by TMDB & Community
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    const apiKey = 'bfa7df5310c9974f62f26c6789a8c00d';
+    const baseUrl = 'https://api.themoviedb.org/3';
+    
+    // MASUKKAN URL CSV GOOGLE SHEETS ANDA DI SINI
+    const sheetUrl = 'MASUKKAN_LINK_CSV_GOOGLE_SHEETS_ANDA';
+
+    // Load film populer saat start
+    async function loadMovies() {
+        try {
+            const response = await fetch(`${baseUrl}/discover/movie?api_key=${apiKey}&with_original_language=id&sort_by=popularity.desc`);
+            const data = await response.json();
+            displayMovies(data.results);
+        } catch (e) { console.error("Gagal load film"); }
+    }
+
+    async function searchMovie() {
+        const query = document.getElementById('searchInput').value;
+        if(query) {
+            const response = await fetch(`${baseUrl}/search/movie?api_key=${apiKey}&query=${query}&language=id-ID`);
+            const data = await response.json();
+            displayMovies(data.results);
+        }
+    }
+
+    function displayMovies(movies) {
+        const grid = document.getElementById('movieGrid');
+        grid.innerHTML = '';
+        movies.forEach(m => {
+            const movieCard = `
+                <div class="col">
+                    <div class="card card-film" onclick="getMovieDetails('${m.id}')">
+                        <div class="poster-wrapper">
+                            <img src="https://image.tmdb.org/t/p/w500${m.poster_path}" class="w-100" alt="${m.title}">
+                            <div class="rating-badge">⭐ ${m.vote_average.toFixed(1)}</div>
+                        </div>
+                        <div class="movie-title">${m.title}</div>
+                    </div>
+                </div>
+            `;
+            grid.innerHTML += movieCard;
+        });
+    }
+
+    // Ambil detail lengkap termasuk trailer (Video)
+    async function getMovieDetails(id) {
+        const res = await fetch(`${baseUrl}/movie/${id}?api_key=${apiKey}&append_to_response=videos&language=id-ID`);
+        let movie = await res.json();
+        
+        // Jika sinopsis Indo kosong, ambil versi English
+        if(!movie.overview) {
+            const resEn = await fetch(`${baseUrl}/movie/${id}?api_key=${apiKey}`);
+            const movieEn = await resEn.json();
+            movie.overview = movieEn.overview;
+        }
+
+        showModal(movie);
+    }
+
+    async function showModal(movie) {
+        document.getElementById('modalTitle').innerText = movie.title;
+        document.getElementById('modalOverview').innerText = movie.overview || "Sinopsis tidak tersedia di TMDB. Silakan rujuk FilmIndonesia.or.id";
+        document.getElementById('modalPoster').src = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
+        document.getElementById('modalDate').innerText = movie.release_date;
+        document.getElementById('modalRating').innerText = movie.vote_average;
+
+        // Cari Trailer YouTube dari TMDB
+        const trailer = movie.videos.results.find(v => v.type === 'Trailer' && v.site === 'YouTube');
+        const trailerArea = document.getElementById('trailerArea');
+        if(trailer) {
+            trailerArea.innerHTML = `<iframe src="https://www.youtube.com/embed/${trailer.key}" allowfullscreen></iframe>`;
+        } else {
+            trailerArea.innerHTML = `<div class="bg-secondary text-center py-5 rounded">Trailer tidak tersedia</div>`;
+        }
+
+        // Ambil Link dari Google Sheets (Jika dikonfigurasi)
+        checkExternalLinks(movie.id);
+
+        new bootstrap.Modal(document.getElementById('movieModal')).show();
+    }
+
+    async function checkExternalLinks(movieId) {
+        if(sheetUrl === 'MASUKKAN_LINK_CSV_GOOGLE_SHEETS_ANDA') {
+            updateButtons(false, "Belum Ada Link");
+            return;
+        }
+
+        try {
+            const res = await fetch(sheetUrl);
+            const csv = await res.text();
+            const rows = csv.split('\n').slice(1);
+            const match = rows.find(r => r.split(',')[0].trim() === movieId.toString());
+
+            if(match) {
+                const cols = match.split(',');
+                document.getElementById('streamFembed').href = cols[1];
+                document.getElementById('streamDood').href = cols[2];
+                document.getElementById('downFembed').href = cols[3];
+                document.getElementById('downDood').href = cols[4];
+                updateButtons(true);
+            } else {
+                updateButtons(false, "Link Belum Tersedia");
+            }
+        } catch (e) { updateButtons(false, "Error Database"); }
+    }
+
+    function updateButtons(active, text = "") {
+        const ids = ['streamFembed', 'streamDood', 'downFembed', 'downDood'];
+        ids.forEach(id => {
+            const el = document.getElementById(id);
+            if(active) {
+                el.classList.remove('disabled');
+                if(id.includes('Fembed')) el.innerText = "Server 1 (Fembed)";
+                if(id.includes('Dood')) el.innerText = "Server 2 (Doodstream)";
+            } else {
+                el.classList.add('disabled');
+                el.innerText = text;
+                el.href = "#";
+            }
+        });
+    }
+
+    loadMovies();
+</script>
+
+</body>
+</html>
