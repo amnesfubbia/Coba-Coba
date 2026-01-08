@@ -3,46 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AMNESFUBBIA FILM</title>
+    <title>AMNESFUBBIA FILM INDONESIA</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
-        body { background-color: #050505; color: #f4f4f5; font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; }
+        body { background-color: #050505; color: #f4f4f5; font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; scroll-behavior: smooth; }
         
-        /* Navbar Glassmorphism */
+        /* Navbar */
         .nav-glass { background: rgba(5, 5, 5, 0.95); backdrop-filter: blur(15px); border-bottom: 1px solid rgba(255,255,255,0.05); position: fixed; top: 0; width: 100%; z-index: 1000; }
         
         /* Grid Film */
         .movie-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 10px; }
         @media (min-width: 768px) { .movie-grid { grid-template-columns: repeat(6, 1fr); gap: 20px; } }
 
-        .movie-card { border-radius: 12px; overflow: hidden; background: #0f0f0f; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s; cursor: pointer; position: relative; }
+        .movie-card { border-radius: 12px; overflow: hidden; background: #0f0f0f; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s; cursor: pointer; }
         .movie-card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; }
-        .movie-card:hover { border-color: #ef4444; }
 
-        /* Tombol Merah Premium (Seragam) */
-        .btn-action { 
+        /* TOMBOL MERAH SERAGAM */
+        .btn-red-action { 
             @apply flex items-center justify-between px-5 py-4 rounded-xl text-[11px] font-black uppercase tracking-widest transition-all duration-300 w-full mb-3;
-            background: #e11d48; color: white; border: none; box-shadow: 0 4px 12px rgba(225, 29, 72, 0.3);
+            background: #e11d48; color: white; border: none;
         }
-        .btn-action:hover { background: #be123c; transform: translateY(-2px); }
+        .btn-red-action:hover { background: #be123c; transform: scale(1.02); }
 
-        /* Modal Settings */
+        /* Modal */
         .modal { display: none; position: fixed; inset: 0; z-index: 2000; background: rgba(0,0,0,0.98); overflow-y: auto; }
-        .modal-content { background: #080808; width: 100%; max-width: 1050px; margin: 0 auto; min-height: 100vh; position: relative; }
+        .modal-content { background: #080808; width: 100%; max-width: 1000px; margin: 0 auto; min-height: 100vh; position: relative; }
         @media (min-width: 768px) { .modal-content { min-height: auto; margin: 30px auto; border-radius: 24px; border: 1px solid #1a1a1a; } }
         
-        /* Fix Judul Tabrakan */
+        /* Font Judul Diperkecil & Aman dari X */
         #mTitle { font-size: 1.1rem; font-weight: 800; text-transform: uppercase; padding-right: 60px; line-height: 1.4; color: #fff; }
 
-        .cast-item { flex: 0 0 auto; width: 75px; text-align: center; cursor: pointer; }
-        .cast-item img { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid #222; margin-bottom: 5px; }
-        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        /* Back to Top */
+        #backToTop { display: none; position: fixed; bottom: 20px; right: 20px; z-index: 99; background: #e11d48; color: white; width: 45px; height: 45px; border-radius: 50%; border: none; cursor: pointer; transition: 0.3s; }
+        #backToTop:hover { transform: scale(1.1); background: #be123c; }
 
-        /* Quick Filter Tab */
-        .quick-tab { @apply px-4 py-2 rounded-full text-[10px] font-bold border border-white/10 bg-white/5 whitespace-nowrap; transition: 0.3s; }
-        .quick-tab:hover { @apply bg-red-600 border-red-600 text-white; }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
     </style>
 </head>
 <body onload="initApp()">
@@ -54,61 +51,63 @@
                     <span class="text-xl font-black italic uppercase">AMNESFUBBIA<span class="text-red-600">FILM</span></span>
                 </div>
                 <div class="relative flex-grow flex items-center">
-                    <input type="text" id="searchInput" onkeypress="if(event.key==='Enter') searchMulti()" placeholder="Cari Judul / Aktor..." class="w-full bg-white/5 border border-white/10 p-3 pr-10 rounded-xl text-xs outline-none focus:border-red-600">
+                    <input type="text" id="searchInput" onkeypress="if(event.key==='Enter') searchMulti()" placeholder="Cari Film Indonesia..." class="w-full bg-white/5 border border-white/10 p-3 pr-10 rounded-xl text-xs outline-none focus:border-red-600">
                     <button onclick="searchMulti()" class="absolute right-3 text-zinc-500 hover:text-red-600"><i class="fa-solid fa-magnifying-glass"></i></button>
                 </div>
             </div>
 
-            <div class="flex gap-2 items-center overflow-x-auto scrollbar-hide pb-1">
-                <select id="typeFilter" onchange="resetAndLoad()" class="bg-zinc-900 text-white text-[10px] font-bold p-2.5 rounded-lg border border-white/5 uppercase outline-none"><option value="movie">FILM</option><option value="tv">SERIES</option></select>
-                <select id="genreFilter" onchange="resetAndLoad()" class="bg-zinc-900 text-white text-[10px] font-bold p-2.5 rounded-lg border border-white/5 uppercase outline-none"><option value="">GENRE</option><option value="28">AKSI</option><option value="27">HOROR</option><option value="35">KOMEDI</option><option value="18">DRAMA</option></select>
-                <select id="yearFilter" onchange="resetAndLoad()" class="bg-zinc-900 text-white text-[10px] font-bold p-2.5 rounded-lg border border-white/5 uppercase outline-none"><option value="">TAHUN</option><script>for(let y=2026; y>=1970; y--) document.write(`<option value="${y}">${y}</option>`);</script></select>
-                <select id="sortFilter" onchange="resetAndLoad()" class="bg-zinc-900 text-white text-[10px] font-bold p-2.5 rounded-lg border border-white/5 uppercase outline-none flex-grow"><option value="popularity.desc">TERPOPULER</option><option value="primary_release_date.desc">TERBARU</option><option value="vote_average.desc">RATING TERBAIK</option></select>
-            </div>
-
-            <div class="flex gap-2 overflow-x-auto scrollbar-hide">
-                <button onclick="filterByRegion('ID')" class="quick-tab">🇮🇩 INDONESIA</button>
-                <button onclick="filterByRegion('KR')" class="quick-tab">🇰🇷 KOREA</button>
-                <button onclick="filterByRegion('US')" class="quick-tab">🇺🇸 BARAT</button>
-                <button onclick="filterByRegion('JP')" class="quick-tab">🇯🇵 JEPANG</button>
-                <button onclick="filterByRegion('TH')" class="quick-tab">🇹🇭 THAILAND</button>
+            <div class="flex gap-2 overflow-x-auto scrollbar-hide pb-1">
+                <select id="typeFilter" onchange="resetAndLoad()" class="bg-zinc-900 text-white text-[10px] font-bold p-2.5 rounded-lg border border-white/5 uppercase">
+                    <option value="all">SEMUA</option>
+                    <option value="movie">FILM</option>
+                    <option value="tv">SERIES</option>
+                </select>
+                <select id="genreFilter" onchange="resetAndLoad()" class="bg-zinc-900 text-white text-[10px] font-bold p-2.5 rounded-lg border border-white/5 uppercase">
+                    <option value="">GENRE (SEMUA)</option>
+                    <option value="28">Aksi</option><option value="27">Horor</option><option value="35">Komedi</option><option value="18">Drama</option><option value="10749">Romansa</option>
+                </select>
+                <select id="yearFilter" onchange="resetAndLoad()" class="bg-zinc-900 text-white text-[10px] font-bold p-2.5 rounded-lg border border-white/5 uppercase">
+                    <option value="">TAHUN (SEMUA)</option>
+                    <script>
+                        const startY = 1920, endY = new Date().getFullYear();
+                        for(let y=endY; y>=startY; y--) document.write(`<option value="${y}">${y}</option>`);
+                    </script>
+                </select>
+                <select id="sortFilter" onchange="resetAndLoad()" class="bg-zinc-900 text-white text-[10px] font-bold p-2.5 rounded-lg border border-white/5 uppercase flex-grow">
+                    <option value="popularity.desc">TERPOPULER</option>
+                    <option value="primary_release_date.desc">TERBARU</option>
+                    <option value="vote_average.desc">RATING TERBAIK</option>
+                </select>
             </div>
         </div>
     </nav>
 
-    <main class="container mx-auto pt-44 pb-20 px-2">
+    <main class="container mx-auto pt-36 pb-20 px-2">
         <div id="movieGrid" class="movie-grid"></div>
         <div id="loadMoreContainer" class="flex justify-center mt-10">
-            <button onclick="loadMore()" class="bg-zinc-900 border border-white/10 text-white font-black text-[10px] uppercase px-12 py-4 rounded-full hover:bg-red-600 transition-all">Muat Lebih Banyak</button>
+            <button onclick="loadMore()" class="bg-white text-black font-black text-[10px] uppercase px-12 py-3 rounded-full hover:bg-red-600 hover:text-white transition-all">Muat Lebih Banyak</button>
         </div>
     </main>
 
+    <button id="backToTop" onclick="window.scrollTo(0,0)"><i class="fa-solid fa-arrow-up"></i></button>
+
     <div id="movieModal" class="modal">
         <div class="modal-content">
-            <button onclick="closeModal()" class="absolute top-5 right-5 bg-black/50 text-white w-10 h-10 rounded-full z-[3000] border border-white/10 hover:bg-red-600">✕</button>
-            
+            <button onclick="closeModal()" class="absolute top-5 right-5 bg-black/60 text-white w-10 h-10 rounded-full z-[3000] border border-white/10 hover:bg-red-600 transition-all">✕</button>
             <div class="flex flex-col lg:flex-row">
-                <div class="lg:w-2/3 p-5 lg:p-10">
-                    <h2 id="mTitle" class="mb-2 italic uppercase"></h2>
+                <div class="lg:w-2/3 p-5 lg:p-10 border-r border-white/5">
+                    <h2 id="mTitle" class="italic mb-2"></h2>
                     <p id="mMeta" class="text-[10px] font-bold text-zinc-500 uppercase mb-6 flex gap-3"></p>
-                    
-                    <div class="aspect-video bg-black rounded-2xl overflow-hidden mb-8 border border-white/10">
+                    <div class="aspect-video bg-black rounded-2xl overflow-hidden mb-8 border border-white/10 shadow-2xl">
                         <iframe id="mainPlayer" class="w-full h-full" allowfullscreen allow="autoplay"></iframe>
                     </div>
-
                     <p class="text-[10px] font-black text-red-600 uppercase mb-3 tracking-widest">Sinopsis</p>
                     <p id="mDesc" class="text-sm text-zinc-400 leading-relaxed italic mb-8"></p>
-                    
-                    <p class="text-[10px] font-black text-red-600 uppercase mb-4 tracking-widest">Pemeran Utama</p>
-                    <div id="mCast" class="flex overflow-x-auto gap-4 scrollbar-hide mb-6"></div>
                 </div>
-
-                <div class="lg:w-1/3 p-5 lg:p-10 bg-[#050505] lg:border-l border-white/5">
-                    <p class="text-[10px] font-black text-zinc-600 uppercase mb-4 tracking-widest">Pilih Server Streaming</p>
+                <div class="lg:w-1/3 p-5 lg:p-10 bg-[#050505]">
+                    <p class="text-[10px] font-black text-zinc-600 uppercase mb-4 tracking-widest">Server Streaming</p>
                     <div id="streamLinks"></div>
-                    
                     <div class="my-10 border-t border-white/5"></div>
-                    
                     <p class="text-[10px] font-black text-zinc-600 uppercase mb-4 tracking-widest">Download Media</p>
                     <div id="downloadLinks"></div>
                 </div>
@@ -120,7 +119,10 @@
         const API_KEY = 'bfa7df5310c9974f62f26c6789a8c00d';
         const IMG_BASE = 'https://image.tmdb.org/t/p/w500';
         let currentPage = 1;
-        let activeRegion = '';
+
+        window.onscroll = function() {
+            document.getElementById("backToTop").style.display = (window.pageYOffset > 500) ? "block" : "none";
+        };
 
         async function initApp() { loadMovies(); }
 
@@ -130,14 +132,21 @@
             const year = document.getElementById('yearFilter').value;
             const sort = document.getElementById('sortFilter').value;
             
-            let url = `https://api.themoviedb.org/3/discover/${type}?api_key=${API_KEY}&language=id-ID&page=${currentPage}&sort_by=${sort}`;
-            if (genre) url += `&with_genres=${genre}`;
-            if (year) url += `&primary_release_year=${year}&first_air_date_year=${year}`;
-            if (activeRegion) url += `&with_origin_country=${activeRegion}`;
+            let url = '';
+            if(type === 'all') {
+                // Untuk "Semua", kita ambil trending harian di Indonesia
+                url = `https://api.themoviedb.org/3/trending/all/day?api_key=${API_KEY}&language=id-ID&page=${currentPage}`;
+            } else {
+                url = `https://api.themoviedb.org/3/discover/${type}?api_key=${API_KEY}&with_origin_country=ID&language=id-ID&page=${currentPage}&sort_by=${sort}`;
+                if (genre) url += `&with_genres=${genre}`;
+                if (year) url += `&primary_release_year=${year}&first_air_date_year=${year}`;
+            }
 
             const res = await fetch(url);
             const data = await res.json();
-            renderMovies(data.results, append);
+            // Filter extra untuk pastikan hanya film Indonesia
+            const filtered = data.results.filter(m => m.origin_country?.includes('ID') || m.original_language === 'id');
+            renderMovies(filtered, append);
         }
 
         function renderMovies(movies, append) {
@@ -147,7 +156,7 @@
                 if(!m.poster_path) return;
                 const div = document.createElement('div');
                 div.className = 'movie-card';
-                div.onclick = () => showDetail(m.id, m.media_type || document.getElementById('typeFilter').value);
+                div.onclick = () => showDetail(m.id, m.media_type || (document.getElementById('typeFilter').value === 'all' ? 'movie' : document.getElementById('typeFilter').value));
                 div.innerHTML = `<img src="${IMG_BASE + m.poster_path}"><div class="p-3"><p class="text-[9px] font-black uppercase truncate">${m.title || m.name}</p></div>`;
                 grid.appendChild(div);
             });
@@ -155,68 +164,44 @@
 
         async function showDetail(id, type) {
             const [resID, resEN] = await Promise.all([
-                fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&append_to_response=videos,credits&language=id-ID`),
+                fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&append_to_response=videos&language=id-ID`),
                 fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&language=en-US`)
             ]);
-            
             const m = await resID.json();
             const mEN = await resEN.json();
 
             document.getElementById('mTitle').innerText = m.title || m.name;
-            document.getElementById('mMeta').innerHTML = `<span>${m.release_date?.split('-')[0] || m.first_air_date?.split('-')[0] || 'N/A'}</span> • <span>⭐ ${m.vote_average.toFixed(1)}</span> • <span>${m.genres[0]?.name || ''}</span>`;
-            
-            // Logika Sinopsis (Cari Bahasa Inggris jika Indonesia kosong)
+            document.getElementById('mMeta').innerHTML = `<span>${m.release_date?.split('-')[0] || m.first_air_date?.split('-')[0] || 'N/A'}</span> • <span>⭐ ${m.vote_average.toFixed(1)}</span>`;
             document.getElementById('mDesc').innerText = m.overview || mEN.overview || "Sinopsis tidak tersedia.";
 
-            const video = m.videos.results.find(v => (v.site === 'YouTube' || v.site === 'Vimeo') && v.type === 'Trailer') || m.videos.results[0];
-            document.getElementById('mainPlayer').src = video ? (video.site === 'YouTube' ? `https://www.youtube.com/embed/${video.key}?autoplay=1` : `https://player.vimeo.com/video/${video.key}`) : '';
+            const yt = m.videos?.results.find(v => v.type === 'Trailer') || m.videos?.results[0];
+            document.getElementById('mainPlayer').src = yt ? `https://www.youtube.com/embed/${yt.key}?autoplay=1` : '';
 
-            // Tombol Server & Download Seragam (Warna Merah)
-            document.getElementById('streamLinks').innerHTML = `
-                <button onclick="changePlayer('https://vidsrc.xyz/embed/${type}/${id}')" class="btn-action"><span>SERVER 01 (XYZ)</span><i class="fa-solid fa-play"></i></button>
-                <button onclick="changePlayer('https://vidsrc.to/embed/${type}/${id}')" class="btn-action"><span>SERVER 02 (TO)</span><i class="fa-solid fa-play"></i></button>
-                <button onclick="changePlayer('https://vidrock.net/embed/${type}/${id}')" class="btn-action"><span>SERVER 03 (PRO)</span><i class="fa-solid fa-play"></i></button>
-            `;
-            
-            document.getElementById('downloadLinks').innerHTML = `
-                <a href="https://dl.vidsrc.vip/${type}/${id}" target="_blank" class="btn-action"><span>DOWNLOAD WEB-DL (VIP)</span><i class="fa-solid fa-bolt"></i></a>
-            `;
-
-            const castCont = document.getElementById('mCast');
-            castCont.innerHTML = m.credits.cast.slice(0, 10).map(c => `
-                <div class="cast-item" onclick="searchByActorID('${c.id}', '${c.name}')">
-                    <img src="${c.profile_path ? 'https://image.tmdb.org/t/p/w185'+c.profile_path : 'https://via.placeholder.com/100x100'}">
-                    <p class="text-[8px] font-black uppercase truncate">${c.name}</p>
-                </div>
-            `).join('');
+            // Tombol Merah Identik
+            const btns = [`
+                <button onclick="changePlayer('https://vidsrc.xyz/embed/${type}/${id}')" class="btn-red-action"><span>SERVER 01</span><i class="fa-solid fa-play"></i></button>
+                <button onclick="changePlayer('https://vidsrc.to/embed/${type}/${id}')" class="btn-red-action"><span>SERVER 02</span><i class="fa-solid fa-play"></i></button>
+            `, `
+                <a href="https://dl.vidsrc.vip/${type}/${id}" target="_blank" class="btn-red-action"><span>DOWNLOAD VIP</span><i class="fa-solid fa-download"></i></a>
+            `];
+            document.getElementById('streamLinks').innerHTML = btns[0];
+            document.getElementById('downloadLinks').innerHTML = btns[1];
 
             document.getElementById('movieModal').style.display = 'block';
             document.body.style.overflow = 'hidden';
-        }
-
-        async function searchByActorID(personId, name) {
-            closeModal();
-            document.getElementById('searchInput').value = name;
-            const res = await fetch(`https://api.themoviedb.org/3/person/${personId}/combined_credits?api_key=${API_KEY}&language=id-ID`);
-            const data = await res.json();
-            renderMovies(data.cast.filter(m => m.poster_path).sort((a,b) => b.popularity - a.popularity), false);
-            window.scrollTo({top: 0, behavior: 'smooth'});
-            document.getElementById('loadMoreContainer').style.display = 'none';
         }
 
         async function searchMulti() {
             const q = document.getElementById('searchInput').value; if(!q) return;
             const res = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(q)}&language=id-ID`);
             const data = await res.json();
-            renderMovies(data.results.filter(i => i.poster_path), false);
-            document.getElementById('loadMoreContainer').style.display = 'none';
+            renderMovies(data.results.filter(i => i.poster_path && (i.origin_country?.includes('ID') || i.original_language === 'id')), false);
         }
 
-        function filterByRegion(code) { activeRegion = code; resetAndLoad(); }
         function closeModal() { document.getElementById('movieModal').style.display = 'none'; document.getElementById('mainPlayer').src = ''; document.body.style.overflow = 'auto'; }
         function changePlayer(url) { document.getElementById('mainPlayer').src = url + "?autoplay=1"; }
         function loadMore() { currentPage++; loadMovies(true); }
-        function resetAndLoad() { currentPage = 1; loadMovies(); document.getElementById('loadMoreContainer').style.display = 'flex'; }
+        function resetAndLoad() { currentPage = 1; loadMovies(); }
     </script>
 </body>
 </html>
