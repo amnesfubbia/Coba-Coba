@@ -32,7 +32,7 @@
         .video-container { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 12px; overflow: hidden; border: 1px solid #333; }
         .btn-link { @apply py-3 rounded-xl text-[9px] font-black uppercase italic text-center transition-all active:scale-95 flex items-center justify-center gap-2; }
         .btn-stream { @apply bg-zinc-800 text-white border border-white/5 hover:bg-red-600; }
-        .btn-download { @apply bg-emerald-600 text-white hover:bg-emerald-500; }
+        .btn-download { @apply bg-emerald-600 text-white hover:bg-emerald-500 font-black; }
 
         .scrollbar-hide::-webkit-scrollbar { display: none; }
     </style>
@@ -47,7 +47,7 @@
                     <span class="text-xl font-black text-red-600 italic uppercase">FILM</span>
                 </div>
                 <div class="flex-grow">
-                    <input type="text" id="searchInput" onkeypress="if(event.key==='Enter') searchMulti()" placeholder="Cari film Indonesia..." class="w-full bg-white/5 p-2.5 rounded-xl border border-white/10 text-xs outline-none focus:border-red-600 text-white">
+                    <input type="text" id="searchInput" onkeypress="if(event.key==='Enter') searchMulti()" placeholder="Cari film atau series..." class="w-full bg-white/5 p-2.5 rounded-xl border border-white/10 text-xs outline-none focus:border-red-600 text-white">
                 </div>
                 <button onclick="showWatchlist()" class="bg-white/10 p-2.5 rounded-xl text-white">
                     <i class="fa-solid fa-heart"></i>
@@ -55,18 +55,18 @@
             </div>
             
             <div class="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
-                <select id="typeFilter" onchange="resetAndLoad()" class="bg-[#111] text-red-500 font-bold text-[10px] p-2 rounded-lg border border-white/10 uppercase">
+                <select id="typeFilter" onchange="resetAndLoad()" class="bg-[#111] text-red-500 font-bold text-[10px] p-2 rounded-lg border border-white/10 uppercase outline-none">
                     <option value="movie">LAYAR LEBAR</option>
                     <option value="tv">TV SERIES</option>
                 </select>
-                <select id="genreFilter" onchange="resetAndLoad()" class="bg-[#111] text-white font-bold text-[10px] p-2 rounded-lg border border-white/10 uppercase">
+                <select id="genreFilter" onchange="resetAndLoad()" class="bg-[#111] text-white font-bold text-[10px] p-2 rounded-lg border border-white/10 uppercase outline-none">
                     <option value="">SEMUA GENRE</option>
                     <option value="27">HOROR</option>
                     <option value="35">KOMEDI</option>
                     <option value="18">DRAMA</option>
                     <option value="28">AKSI</option>
                 </select>
-                <select id="yearFilter" onchange="resetAndLoad()" class="bg-[#111] text-white font-bold text-[10px] p-2 rounded-lg border border-white/10 uppercase">
+                <select id="yearFilter" onchange="resetAndLoad()" class="bg-[#111] text-white font-bold text-[10px] p-2 rounded-lg border border-white/10 uppercase outline-none">
                     <option value="">TAHUN</option>
                     <script>for(let y=2026; y>=1980; y--) document.write(`<option value="${y}">${y}</option>`);</script>
                 </select>
@@ -102,7 +102,7 @@
                     <h2 id="mTitle" class="text-4xl font-black italic uppercase tracking-tighter mb-1 text-white leading-none"></h2>
                     <p id="mSub" class="text-[10px] text-zinc-500 font-bold mb-8 uppercase tracking-[0.3em]"></p>
 
-                    <p class="text-[9px] font-black text-zinc-500 mb-2 uppercase italic">Trailer (YouTube)</p>
+                    <p class="text-[9px] font-black text-zinc-500 mb-2 uppercase italic">Official Trailer (YouTube)</p>
                     <div class="video-container mb-8 shadow-2xl">
                         <iframe id="mTrailerFrame" allowfullscreen allow="autoplay"></iframe>
                     </div>
@@ -175,24 +175,23 @@
             document.getElementById('mSub').innerText = `${(m.release_date || m.first_air_date || '').split('-')[0]} | ${m.genres.map(g => g.name).join(' • ')}`;
             document.getElementById('mDesc').innerText = m.overview || "Sinopsis tidak tersedia.";
 
+            // Trailer YouTube
             const youtube = m.videos.results.find(v => v.site === 'YouTube' && v.type === 'Trailer') || m.videos.results[0];
             document.getElementById('mTrailerFrame').src = youtube ? `https://www.youtube.com/embed/${youtube.key}?autoplay=1` : '';
 
-            // DAFTAR STREAMING (7 Server)
+            // STREAMING SERVERS (Sesuai List Baru Anda)
             const streamServers = [
                 { n: 'VidSrc TO', u: `https://vidsrc.to/embed/${type}/${id}` },
-                { n: 'RGShows', u: `https://www.rgshows.ru/embed/${type}/${id}` }, // Fixed URL format
                 { n: 'VidRock', u: `https://vidrock.net/embed/${type}/${id}` },
+                { n: 'RGShows', u: `https://www.rgshows.ru/embed/${type}/${id}` },
                 { n: 'VidNest', u: `https://vidnest.fun/embed/${type}/${id}` },
                 { n: 'VidLink Pro', u: `https://vidlink.pro/embed/${type}/${id}` },
-                { n: 'VidEasy', u: `https://videasy.su/embed/${type}/${id}` },
                 { n: 'VidFast', u: `https://vidfast.pro/embed/${type}/${id}` }
             ];
 
-            // DAFTAR DOWNLOAD (2 Server)
+            // DOWNLOAD SERVER (Sesuai List Baru Anda)
             const downloadServers = [
-                { n: 'Direct DL (VIP)', u: `https://dl.vidsrc.vip/${type}/${id}` },
-                { n: 'FlashStream DL', u: `https://flashstream.cc/download/${type}/${id}` }
+                { n: 'Server Download VIP', u: `https://dl.vidsrc.vip/${type}/${id}` }
             ];
 
             const sCont = document.getElementById('streamLinks');
@@ -200,7 +199,7 @@
             sCont.innerHTML = ''; dCont.innerHTML = '';
 
             streamServers.forEach(s => sCont.innerHTML += `<a href="${s.u}" target="_blank" class="btn-link btn-stream"><i class="fa-solid fa-play text-[7px]"></i> ${s.n}</a>`);
-            downloadServers.forEach(d => dCont.innerHTML += `<a href="${d.u}" target="_blank" class="btn-link btn-download"><i class="fa-solid fa-download"></i> ${d.n}</a>`);
+            downloadServers.forEach(d => dCont.innerHTML += `<a href="${d.u}" target="_blank" class="btn-link btn-download"><i class="fa-solid fa-cloud-arrow-down"></i> ${d.n}</a>`);
 
             document.getElementById('mCast').innerHTML = m.credits.cast.slice(0, 5).map(c => `<span class="bg-zinc-800 text-[9px] px-3 py-1 rounded-full border border-white/5">${c.name}</span>`).join('');
             document.getElementById('movieModal').style.display = 'block';
