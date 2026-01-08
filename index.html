@@ -17,22 +17,26 @@
         .movie-card { background: #111; border-radius: 8px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); }
         .modal { display: none; position: fixed; inset: 0; z-index: 3000; background: rgba(0,0,0,0.95); overflow-y: auto; padding: 15px 10px; }
         .modal-content { background: #0a0a0a; width: 100%; max-width: 900px; border-radius: 20px; margin: auto; position: relative; border: 1px solid #333; }
-        .video-container { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 10px; overflow: hidden; margin-bottom: 20px; }
         
+        .video-container { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 10px; overflow: hidden; margin-bottom: 10px; border: 1px solid #333; }
+        .video-container iframe { width: 100%; height: 100%; }
+
+        /* Tab Trailer Style */
+        .trailer-tab { display: flex; gap: 5px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 5px; }
+        .btn-tab { padding: 8px 12px; border-radius: 6px; font-size: 8px; font-weight: 900; text-transform: uppercase; background: #1a1a1a; border: 1px solid #333; color: #999; flex-shrink: 0; }
+        .btn-tab.active { background: #ef4444; border-color: #ef4444; color: #fff; }
+
         .cast-scroll { display: flex; overflow-x: auto; gap: 10px; padding: 10px 0; }
         .cast-item { flex: 0 0 70px; text-align: center; }
-        .cast-item img { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 2px solid #ef4444; margin: 0 auto 5px; }
-        .cast-item p { font-size: 8px; font-weight: 700; text-transform: uppercase; line-height: 1.1; }
+        .cast-item img { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid #ef4444; margin: 0 auto 5px; }
+        .cast-item p { font-size: 7px; font-weight: 700; text-transform: uppercase; line-height: 1.1; }
 
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         select { background: #1a1a1a; color: white; border: 1px solid #333; padding: 6px 10px; border-radius: 8px; font-size: 10px; font-weight: bold; }
         
-        /* Tombol Link Style */
-        .btn-link { padding: 10px 5px; border-radius: 8px; font-size: 8px; font-weight: 900; text-transform: uppercase; text-align: center; transition: 0.2s; }
-        .btn-stream { background: #333; border: 1px solid #444; color: #fff; }
-        .btn-stream:hover { background: #ef4444; border-color: #ef4444; }
+        .btn-link { padding: 10px 5px; border-radius: 8px; font-size: 8px; font-weight: 900; text-transform: uppercase; text-align: center; }
+        .btn-stream { background: #333; color: #fff; border: 1px solid #444; }
         .btn-download { background: #166534; color: #fff; }
-        .btn-download:hover { background: #15803d; }
     </style>
 </head>
 <body onload="initApp()">
@@ -41,13 +45,13 @@
         <div class="container mx-auto space-y-3">
             <div class="flex items-center gap-2">
                 <div class="shrink-0 cursor-pointer" onclick="location.reload()">
-                    <span class="text-lg font-black italic tracking-tighter uppercase">AMNES</span>
+                    <span class="text-lg font-black italic tracking-tighter uppercase text-white">AMNES</span>
                     <span class="text-lg font-black text-red-600 italic uppercase">FILM</span>
                 </div>
                 <div class="flex-grow">
-                    <input type="text" id="searchInput" onkeypress="handleEnter(event)" placeholder="Cari film..." class="w-full bg-white/5 p-2 rounded-lg border border-white/10 text-xs outline-none focus:border-red-600">
+                    <input type="text" id="searchInput" onkeypress="handleEnter(event)" placeholder="Cari film..." class="w-full bg-white/5 p-2 rounded-lg border border-white/10 text-xs outline-none focus:border-red-600 text-white">
                 </div>
-                <button onclick="searchMulti()" class="bg-red-600 px-4 py-2 rounded-lg font-black text-[10px] uppercase italic shrink-0">CARI</button>
+                <button onclick="searchMulti()" class="bg-red-600 px-4 py-2 rounded-lg font-black text-[10px] uppercase italic shrink-0 text-white">CARI</button>
             </div>
             <div class="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
                 <select id="typeFilter" onchange="resetAndLoad()" class="text-red-500">
@@ -60,6 +64,7 @@
                     <option value="16">ANIMASI</option>
                     <option value="27">HOROR</option>
                     <option value="35">KOMEDI</option>
+                    <option value="18">DRAMA</option>
                 </select>
                 <select id="yearFilter" onchange="resetAndLoad()">
                     <option value="">TAHUN</option>
@@ -72,7 +77,7 @@
     <main class="container mx-auto px-2 pt-36 pb-20">
         <div id="movieGrid" class="movie-grid"></div>
         <div class="flex justify-center mt-10">
-            <button onclick="loadMore()" class="bg-white/10 border border-white/20 px-8 py-3 rounded-xl font-black text-[10px] uppercase italic tracking-widest">Muat Lainnya</button>
+            <button onclick="loadMore()" class="bg-white/10 border border-white/20 px-8 py-3 rounded-xl font-black text-[10px] uppercase italic tracking-widest text-white">Muat Lainnya</button>
         </div>
     </main>
 
@@ -85,22 +90,23 @@
             <button onclick="closeModal()" class="absolute top-4 right-4 bg-red-600 text-white w-10 h-10 rounded-full z-[100] flex items-center justify-center font-bold">✕</button>
             <div class="flex flex-col md:flex-row">
                 <div class="md:w-1/3 p-5 bg-black/40 border-r border-white/5 text-center">
-                    <img id="mPoster" class="w-full rounded-xl shadow-2xl mb-4">
+                    <img id="mPoster" class="w-full rounded-xl shadow-2xl mb-4 border border-white/10">
                     <p id="mRating" class="text-lg font-black text-red-600 bg-white/5 py-2 rounded-lg"></p>
                 </div>
                 <div class="md:w-2/3 p-6">
-                    <h2 id="mTitle" class="text-2xl font-black italic uppercase leading-tight mb-1"></h2>
-                    <p id="mSub" class="text-[10px] text-red-500 font-black mb-6 uppercase"></p>
+                    <h2 id="mTitle" class="text-2xl font-black italic uppercase leading-tight mb-1 text-white"></h2>
+                    <p id="mSub" class="text-[10px] text-red-500 font-black mb-6 uppercase tracking-widest"></p>
 
-                    <p class="text-[9px] font-black text-gray-500 mb-2 uppercase italic">OFFICIAL TRAILER</p>
+                    <p class="text-[9px] font-black text-gray-500 mb-2 uppercase italic tracking-widest">Pilih Sumber Trailer:</p>
+                    <div class="trailer-tab scrollbar-hide" id="trailerTabs"></div>
                     <div class="video-container">
-                        <iframe id="mTrailer" allowfullscreen allow="autoplay"></iframe>
+                        <iframe id="mTrailerFrame" allowfullscreen allow="autoplay"></iframe>
                     </div>
 
-                    <p class="text-[9px] font-black text-gray-500 mb-1 uppercase italic">PEMERAN UTAMA</p>
-                    <div id="mCast" class="cast-scroll scrollbar-hide"></div>
+                    <p class="text-[9px] font-black text-gray-500 mb-1 uppercase italic tracking-widest">PEMERAN UTAMA</p>
+                    <div id="mCast" class="cast-scroll scrollbar-hide border-b border-white/5 mb-4"></div>
 
-                    <p class="text-[9px] font-black text-gray-500 mb-2 uppercase italic">SINOPSIS</p>
+                    <p class="text-[9px] font-black text-gray-500 mb-2 uppercase italic tracking-widest">SINOPSIS</p>
                     <p id="mDesc" class="text-[12px] text-gray-300 leading-relaxed italic mb-8"></p>
 
                     <div class="space-y-6 pt-6 border-t border-white/10">
@@ -122,6 +128,7 @@
         const KEY = 'bfa7df5310c9974f62f26c6789a8c00d';
         const IMG = 'https://image.tmdb.org/t/p/w500';
         let page = 1;
+        let currentMovieData = null;
 
         function initApp() { loadMovies(); }
         function handleEnter(e) { if (e.key === 'Enter') searchMulti(); }
@@ -145,7 +152,7 @@
                 const card = document.createElement('div');
                 card.className = 'movie-card cursor-pointer';
                 card.onclick = () => showDetail(m.id, m.title ? 'movie' : 'tv');
-                card.innerHTML = `<img src="${IMG + m.poster_path}" class="w-full aspect-[2/3] object-cover"><div class="p-2 text-[7px] font-black truncate uppercase">${m.title || m.name}</div>`;
+                card.innerHTML = `<img src="${IMG + m.poster_path}" class="w-full aspect-[2/3] object-cover"><div class="p-2 text-[7px] font-black truncate uppercase text-white">${m.title || m.name}</div>`;
                 grid.appendChild(card);
             });
         }
@@ -153,14 +160,12 @@
         async function showDetail(id, type) {
             const res = await fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${KEY}&append_to_response=videos,credits&language=id-ID`);
             const m = await res.json();
+            currentMovieData = { id, type, title: m.title || m.name };
 
             document.getElementById('mPoster').src = IMG + m.poster_path;
             document.getElementById('mTitle').innerText = m.title || m.name;
             document.getElementById('mRating').innerText = "⭐ " + (m.vote_average ? m.vote_average.toFixed(1) : '0');
             document.getElementById('mSub').innerText = `${(m.release_date || m.first_air_date || '').split('-')[0]} | ${m.genres.map(g => g.name).join(', ')}`;
-            
-            let video = m.videos.results.find(v => v.type === 'Trailer') || m.videos.results[0];
-            document.getElementById('mTrailer').src = video ? `https://www.youtube.com/embed/${video.key}?autoplay=1` : '';
             document.getElementById('mDesc').innerText = m.overview || "Sinopsis tidak tersedia.";
 
             // Cast
@@ -168,11 +173,14 @@
             castDiv.innerHTML = m.credits.cast.slice(0, 8).map(c => `
                 <div class="cast-item">
                     <img src="${c.profile_path ? IMG + c.profile_path : 'https://via.placeholder.com/100x100?text=Actor'}">
-                    <p>${c.name.split(' ')[0]}</p>
+                    <p class="text-white">${c.name.split(' ')[0]}</p>
                 </div>
             `).join('');
 
-            // Generator Links
+            // Setup Trailer Tabs
+            setupTrailerTabs(m);
+
+            // Server Links
             const servers = [
                 { name: 'VidNest', url: 'https://vidnest.fun/' },
                 { name: 'VidLink', url: 'https://vidlink.pro/' },
@@ -185,14 +193,10 @@
 
             const sContainer = document.getElementById('streamLinks');
             const dContainer = document.getElementById('downloadLinks');
-            sContainer.innerHTML = '';
-            dContainer.innerHTML = '';
+            sContainer.innerHTML = ''; dContainer.innerHTML = '';
 
             servers.forEach(srv => {
-                let finalUrl;
-                if(srv.name === 'RGShows') finalUrl = srv.url + id;
-                else finalUrl = srv.url + (type === 'movie' ? 'movie/' : 'tv/') + id;
-
+                let finalUrl = srv.name === 'RGShows' ? srv.url + id : srv.url + (type === 'movie' ? 'movie/' : 'tv/') + id;
                 sContainer.innerHTML += `<a href="${finalUrl}" target="_blank" class="btn-link btn-stream">${srv.name}</a>`;
                 dContainer.innerHTML += `<a href="${finalUrl}" target="_blank" class="btn-link btn-download">${srv.name}</a>`;
             });
@@ -201,22 +205,51 @@
             document.body.style.overflow = 'hidden';
         }
 
+        function setupTrailerTabs(m) {
+            const tabsContainer = document.getElementById('trailerTabs');
+            tabsContainer.innerHTML = '';
+            
+            const youtubeTrailer = m.videos.results.find(v => v.type === 'Trailer');
+            const trailerSources = [];
+
+            if(youtubeTrailer) {
+                trailerSources.push({ name: 'YouTube', url: `https://www.youtube.com/embed/${youtubeTrailer.key}?autoplay=1` });
+            }
+            trailerSources.push({ name: 'VidLink', url: `https://vidlink.pro/${currentMovieData.type}/${currentMovieData.id}` });
+            trailerSources.push({ name: 'VidFast', url: `https://vidfast.pro/${currentMovieData.type}/${currentMovieData.id}` });
+            trailerSources.push({ name: 'RGShows', url: `https://www.rgshows.ru/?p=1&m=m-${currentMovieData.id}` });
+
+            trailerSources.forEach((src, index) => {
+                const btn = document.createElement('button');
+                btn.className = `btn-tab ${index === 0 ? 'active' : ''}`;
+                btn.innerText = src.name;
+                btn.onclick = () => {
+                    document.querySelectorAll('.btn-tab').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    document.getElementById('mTrailerFrame').src = src.url;
+                };
+                tabsContainer.appendChild(btn);
+            });
+
+            // Play first source by default
+            document.getElementById('mTrailerFrame').src = trailerSources[0].url;
+        }
+
         function loadMore() { page++; loadMovies(true); }
         function resetAndLoad() { page = 1; loadMovies(); }
-        function closeModal() { document.getElementById('movieModal').style.display = 'none'; document.getElementById('mTrailer').src = ''; document.body.style.overflow = 'auto'; }
+        function closeModal() { document.getElementById('movieModal').style.display = 'none'; document.getElementById('mTrailerFrame').src = ''; document.body.style.overflow = 'auto'; }
 
         async function searchMulti() {
             const q = document.getElementById('searchInput').value; if (!q) return;
             const res = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${KEY}&query=${encodeURIComponent(q)}&language=id-ID`);
             const data = await res.json();
-            const grid = document.getElementById('movieGrid');
-            grid.innerHTML = '';
+            const grid = document.getElementById('movieGrid'); grid.innerHTML = '';
             data.results.forEach(m => {
                 if(!m.poster_path) return;
                 const card = document.createElement('div');
                 card.className = 'movie-card';
                 card.onclick = () => showDetail(m.id, m.title ? 'movie' : 'tv');
-                card.innerHTML = `<img src="${IMG + m.poster_path}" class="w-full aspect-[2/3] object-cover"><div class="p-2 text-[7px] font-black truncate uppercase">${m.title || m.name}</div>`;
+                card.innerHTML = `<img src="${IMG + m.poster_path}" class="w-full aspect-[2/3] object-cover"><div class="p-2 text-[7px] font-black truncate uppercase text-white">${m.title || m.name}</div>`;
                 grid.appendChild(card);
             });
         }
