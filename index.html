@@ -3,74 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AMNESFUBBIA FILM</title>
+    <title>AMNESFUBBIA FILM INDONESIA</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
-        body { background-color: #050505; color: #f4f4f5; font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; }
         
-        /* Navbar Fixed */
-        .nav-glass { background: rgba(5, 5, 5, 0.98); border-bottom: 1px solid rgba(255,255,255,0.05); position: fixed; top: 0; width: 100%; z-index: 1000; padding: 12px 0; }
+        body { background-color: #050505; color: #fff; font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; }
         
-        /* Dropdown Styling agar tidak berantakan */
-        select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 0.5rem center; background-size: 1em; padding-right: 2rem; -webkit-appearance: none; appearance: none; }
+        /* Navbar Glass Effect */
+        .nav-fixed { position: fixed; top: 0; width: 100%; z-index: 50; background: rgba(5, 5, 5, 0.95); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
+        
+        /* Grid Layout yang Stabil (Tidak akan acak-acakan) */
+        .grid-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 10px; padding-top: 160px; padding-bottom: 80px; }
+        @media (min-width: 768px) { .grid-container { grid-template-columns: repeat(6, 1fr); gap: 20px; padding: 20px; padding-top: 160px; } }
 
-        /* Movie Grid */
-        .movie-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 10px; }
-        @media (min-width: 768px) { .movie-grid { grid-template-columns: repeat(6, 1fr); gap: 20px; } }
+        .card { background: #111; border-radius: 10px; overflow: hidden; position: relative; aspect-ratio: 2/3; border: 1px solid #222; }
+        .card img { width: 100%; height: 100%; object-fit: cover; }
 
-        .movie-card { border-radius: 12px; overflow: hidden; background: #0f0f0f; border: 1px solid rgba(255,255,255,0.05); cursor: pointer; position: relative; }
-        .movie-card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; }
+        /* MODAL FIX (Agar Judul tidak nabrak X) */
+        .modal { display: none; position: fixed; inset: 0; z-index: 100; background: black; overflow-y: auto; }
+        .modal-body { min-height: 100vh; background: #080808; padding: 20px; }
+        @media(min-width: 768px){ .modal-body { padding: 40px; max-width: 1000px; margin: 0 auto; } }
 
-        /* Tombol Merah Premium */
-        .btn-premium { @apply flex items-center justify-between px-5 py-4 rounded-xl text-[11px] font-black uppercase tracking-widest transition-all w-full mb-3 bg-[#e11d48] text-white border-none; }
+        /* Judul Modal Spesifik */
+        .modal-title { 
+            font-size: 1.2rem; 
+            font-weight: 800; 
+            text-transform: uppercase; 
+            padding-right: 60px; /* Jarak aman biar gak nabrak X */
+            margin-bottom: 5px; 
+            line-height: 1.3;
+        }
 
-        /* Modal Settings */
-        .modal { display: none; position: fixed; inset: 0; z-index: 2000; background: rgba(0,0,0,0.98); overflow-y: auto; }
-        .modal-content { background: #080808; width: 100%; max-width: 1000px; margin: 0 auto; position: relative; min-height: 100vh; }
-        @media (min-width: 768px) { .modal-content { min-height: auto; margin: 40px auto; border-radius: 24px; border: 1px solid #1a1a1a; } }
+        /* Tombol Merah Seragam (Streaming & Download SAMA PERSIS) */
+        .btn-red {
+            display: flex; justify-content: space-between; align-items: center;
+            width: 100%; padding: 15px; margin-bottom: 10px;
+            background: #dc2626; color: white; border-radius: 8px;
+            font-weight: 700; font-size: 12px; text-transform: uppercase;
+            border: none; cursor: pointer;
+        }
+        .btn-red:hover { background: #b91c1c; }
 
-        /* Judul diperkecil agar tidak kena Tombol X */
-        #mTitle { font-size: 1.1rem; font-weight: 800; text-transform: uppercase; padding-right: 50px; color: white; }
+        /* Select Menu Styling */
+        .custom-select {
+            background: #171717; color: white; border: 1px solid #333;
+            padding: 8px 12px; border-radius: 6px; font-size: 11px; font-weight: bold;
+            text-transform: uppercase; outline: none;
+        }
+
+        /* Search Input Fix */
+        .search-box { position: relative; width: 100%; }
+        .search-input { width: 100%; background: #171717; border: 1px solid #333; padding: 10px 40px 10px 15px; border-radius: 8px; color: white; font-size: 12px; outline: none; }
+        .search-icon { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: #666; }
 
         /* Back to Top */
-        #btnTop { display: none; position: fixed; bottom: 25px; right: 20px; background: #e11d48; color: white; width: 45px; height: 45px; border-radius: 50%; z-index: 1500; border: none; cursor: pointer; }
-
-        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .btn-top { display: none; position: fixed; bottom: 20px; right: 20px; background: #dc2626; width: 40px; height: 40px; border-radius: 50%; color: white; border: none; z-index: 90; cursor: pointer; }
     </style>
 </head>
-<body onload="initApp()">
+<body>
 
-    <nav class="nav-glass">
-        <div class="container mx-auto px-4 space-y-4">
-            <div class="flex items-center gap-3">
-                <div onclick="location.reload()" class="shrink-0 cursor-pointer">
-                    <span class="text-xl font-black italic uppercase">AMNESFUBBIA<span class="text-red-600">FILM</span></span>
+    <nav class="nav-fixed">
+        <div class="container mx-auto px-4 pt-4">
+            <div class="flex items-center gap-3 mb-3">
+                <div class="text-lg font-black italic shrink-0" onclick="window.location.reload()">
+                    AMNESFUBBIA<span class="text-red-600">FILM</span>
                 </div>
-                <div class="relative flex-grow">
-                    <input type="text" id="searchInput" onkeypress="if(event.key==='Enter') searchMulti()" placeholder="Cari Film Indo..." class="w-full bg-white/5 border border-white/10 p-3 pr-10 rounded-xl text-xs outline-none focus:border-red-600">
-                    <button onclick="searchMulti()" class="absolute right-3 top-3 text-zinc-500"><i class="fa-solid fa-magnifying-glass"></i></button>
+                <div class="search-box">
+                    <input type="text" id="searchInput" class="search-input" placeholder="Cari Film..." onkeypress="if(event.key==='Enter') doSearch()">
+                    <i class="fa-solid fa-magnifying-glass search-icon" onclick="doSearch()"></i>
                 </div>
             </div>
 
-            <div class="flex gap-2 overflow-x-auto scrollbar-hide pb-1">
-                <select id="typeFilter" onchange="resetAndLoad()" class="bg-zinc-900 text-white text-[10px] font-bold p-2.5 rounded-lg border border-white/5 uppercase">
-                    <option value="all">SEMUA</option>
-                    <option value="movie">FILM</option>
-                    <option value="tv">SERIES</option>
+            <div class="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
+                <select id="typeFilter" class="custom-select" onchange="resetApp()">
+                    <option value="movie">FILM</option> <option value="tv">SERIES</option>
+                    <option value="multi">SEMUA</option>
                 </select>
-                <select id="genreFilter" onchange="resetAndLoad()" class="bg-zinc-900 text-white text-[10px] font-bold p-2.5 rounded-lg border border-white/5 uppercase">
+                <select id="genreFilter" class="custom-select" onchange="resetApp()">
                     <option value="">GENRE (SEMUA)</option>
-                    <option value="28">Aksi</option><option value="27">Horor</option><option value="35">Komedi</option><option value="18">Drama</option>
+                    <option value="28">Aksi</option>
+                    <option value="27">Horor</option>
+                    <option value="35">Komedi</option>
+                    <option value="18">Drama</option>
+                    <option value="10749">Romansa</option>
                 </select>
-                <select id="yearFilter" onchange="resetAndLoad()" class="bg-zinc-900 text-white text-[10px] font-bold p-2.5 rounded-lg border border-white/5 uppercase">
+                <select id="yearFilter" class="custom-select" onchange="resetApp()">
                     <option value="">TAHUN (SEMUA)</option>
                     <script>
-                        for(let y=new Date().getFullYear(); y>=1920; y--) document.write(`<option value="${y}">${y}</option>`);
+                        for(let i = new Date().getFullYear(); i >= 1920; i--) {
+                            document.write(`<option value="${i}">${i}</option>`);
+                        }
                     </script>
                 </select>
-                <select id="sortFilter" onchange="resetAndLoad()" class="bg-zinc-900 text-white text-[10px] font-bold p-2.5 rounded-lg border border-white/5 uppercase flex-grow">
+                <select id="sortFilter" class="custom-select flex-grow" onchange="resetApp()">
                     <option value="popularity.desc">TERPOPULER</option>
                     <option value="primary_release_date.desc">TERBARU</option>
                 </select>
@@ -78,34 +105,41 @@
         </div>
     </nav>
 
-    <main class="container mx-auto pt-40 pb-20 px-2">
-        <div id="movieGrid" class="movie-grid"></div>
-        <div id="loadMoreContainer" class="flex justify-center mt-10">
-            <button onclick="loadMore()" class="bg-white text-black font-black text-[10px] uppercase px-12 py-3 rounded-full">Muat Lebih Banyak</button>
-        </div>
-    </main>
+    <main id="movieGrid" class="grid-container"></main>
+    
+    <div class="text-center pb-10">
+        <button onclick="loadMore()" class="bg-white text-black font-bold px-6 py-2 rounded-full text-xs uppercase">Muat Lebih Banyak</button>
+    </div>
 
-    <button id="btnTop" onclick="window.scrollTo(0,0)"><i class="fa-solid fa-arrow-up"></i></button>
+    <button class="btn-top" id="btnTop" onclick="window.scrollTo(0,0)"><i class="fa-solid fa-arrow-up"></i></button>
 
     <div id="movieModal" class="modal">
-        <div class="modal-content">
-            <button onclick="closeModal()" class="absolute top-5 right-5 bg-black/60 text-white w-10 h-10 rounded-full z-[3000] border border-white/10">✕</button>
-            <div class="flex flex-col lg:flex-row">
-                <div class="lg:w-2/3 p-6 lg:p-10 border-r border-white/5">
-                    <h2 id="mTitle" class="italic mb-2"></h2>
-                    <p id="mMeta" class="text-[10px] font-bold text-zinc-500 uppercase mb-6"></p>
-                    <div class="aspect-video bg-black rounded-2xl overflow-hidden mb-8 border border-white/10">
-                        <iframe id="mainPlayer" class="w-full h-full" allowfullscreen></iframe>
+        <div class="modal-body">
+            <button onclick="closeModal()" class="fixed top-5 right-5 z-50 bg-black/80 text-white w-10 h-10 rounded-full border border-white/20">✕</button>
+
+            <div class="flex flex-col md:flex-row gap-6">
+                <div class="md:w-2/3">
+                    <h1 id="mTitle" class="modal-title">JUDUL FILM</h1>
+                    <div id="mMeta" class="text-xs text-gray-500 font-bold mb-4 uppercase"></div>
+
+                    <div class="aspect-video bg-black rounded-xl overflow-hidden mb-6 border border-white/10">
+                        <iframe id="mainPlayer" class="w-full h-full" frameborder="0" allowfullscreen></iframe>
                     </div>
-                    <p class="text-[10px] font-black text-red-600 uppercase mb-3 tracking-widest">Sinopsis</p>
-                    <p id="mDesc" class="text-sm text-zinc-400 leading-relaxed italic mb-8"></p>
+
+                    <div class="mb-6">
+                        <h3 class="text-red-600 text-[10px] font-black tracking-widest mb-2">SINOPSIS</h3>
+                        <p id="mDesc" class="text-sm text-gray-300 leading-relaxed italic"></p>
+                    </div>
                 </div>
-                <div class="lg:w-1/3 p-6 lg:p-10 bg-[#050505]">
-                    <p class="text-[10px] font-black text-zinc-600 uppercase mb-4">Streaming</p>
-                    <div id="streamLinks"></div>
-                    <div class="my-8 border-t border-white/5"></div>
-                    <p class="text-[10px] font-black text-zinc-600 uppercase mb-4">Download</p>
-                    <div id="downloadLinks"></div>
+
+                <div class="md:w-1/3">
+                    <h3 class="text-gray-500 text-[10px] font-bold mb-3 uppercase">Pilih Server</h3>
+                    <div id="streamButtons"></div>
+                    
+                    <hr class="border-gray-800 my-6">
+                    
+                    <h3 class="text-gray-500 text-[10px] font-bold mb-3 uppercase">Download</h3>
+                    <div id="downloadButtons"></div>
                 </div>
             </div>
         </div>
@@ -113,83 +147,117 @@
 
     <script>
         const API_KEY = 'bfa7df5310c9974f62f26c6789a8c00d';
-        const IMG_BASE = 'https://image.tmdb.org/t/p/w500';
-        let currentPage = 1;
+        const IMG_URL = 'https://image.tmdb.org/t/p/w500';
+        let page = 1;
 
-        window.onscroll = () => { document.getElementById("btnTop").style.display = (window.pageYOffset > 500) ? "block" : "none"; };
+        window.onload = () => loadMovies();
+        window.onscroll = () => {
+            document.getElementById('btnTop').style.display = window.scrollY > 300 ? 'block' : 'none';
+        }
 
-        async function initApp() { loadMovies(); }
-
-        async function loadMovies(append = false) {
+        async function loadMovies() {
             const type = document.getElementById('typeFilter').value;
             const genre = document.getElementById('genreFilter').value;
             const year = document.getElementById('yearFilter').value;
             const sort = document.getElementById('sortFilter').value;
-            
-            // Logika All/Movie/TV khusus Indonesia
-            let url = '';
-            if(type === 'all') {
-                url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_origin_country=ID&language=id-ID&page=${currentPage}&sort_by=${sort}`;
-            } else {
-                url = `https://api.themoviedb.org/3/discover/${type}?api_key=${API_KEY}&with_origin_country=ID&language=id-ID&page=${currentPage}&sort_by=${sort}`;
-            }
-            if (genre) url += `&with_genres=${genre}`;
-            if (year) url += `&primary_release_year=${year}&first_air_date_year=${year}`;
 
-            const res = await fetch(url);
-            const data = await res.json();
-            renderMovies(data.results, append);
+            // FIX: Logika URL agar tidak crash/layar hitam
+            let url = '';
+            if (type === 'multi') {
+                url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_origin_country=ID&page=${page}&sort_by=${sort}`;
+            } else {
+                url = `https://api.themoviedb.org/3/discover/${type}?api_key=${API_KEY}&with_origin_country=ID&page=${page}&sort_by=${sort}`;
+            }
+
+            if(genre) url += `&with_genres=${genre}`;
+            if(year) url += `&primary_release_year=${year}&first_air_date_year=${year}`;
+
+            try {
+                const res = await fetch(url);
+                const data = await res.json();
+                renderMovies(data.results);
+            } catch (e) { console.error("Error:", e); }
         }
 
-        function renderMovies(movies, append) {
+        function renderMovies(movies) {
             const grid = document.getElementById('movieGrid');
-            if (!append) grid.innerHTML = '';
+            if (page === 1) grid.innerHTML = '';
+            
             movies.forEach(m => {
-                if(!m.poster_path) return;
-                const div = document.createElement('div');
-                div.className = 'movie-card';
-                div.onclick = () => showDetail(m.id, m.media_type || (document.getElementById('typeFilter').value === 'all' ? 'movie' : document.getElementById('typeFilter').value));
-                div.innerHTML = `<img src="${IMG_BASE + m.poster_path}"><div class="p-3"><p class="text-[9px] font-black uppercase truncate">${m.title || m.name}</p></div>`;
-                grid.appendChild(div);
+                if (!m.poster_path) return;
+                // Filter ketat: Hanya ID
+                if (m.original_language !== 'id' && !m.origin_country?.includes('ID')) return;
+
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.onclick = () => openModal(m.id, m.media_type || (document.getElementById('typeFilter').value === 'tv' ? 'tv' : 'movie'));
+                card.innerHTML = `<img src="${IMG_URL + m.poster_path}" loading="lazy">`;
+                grid.appendChild(card);
             });
         }
 
-        async function showDetail(id, type) {
+        async function openModal(id, type) {
+            // Reset Modal
+            document.getElementById('mTitle').innerText = "Memuat...";
+            document.getElementById('movieModal').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+
+            // Ambil Data Indo & Inggris (untuk fallback sinopsis)
             const [resID, resEN] = await Promise.all([
-                fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&append_to_response=videos&language=id-ID`),
+                fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&language=id-ID&append_to_response=videos`),
                 fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&language=en-US`)
             ]);
             const m = await resID.json();
             const mEN = await resEN.json();
 
+            // Set Data
             document.getElementById('mTitle').innerText = m.title || m.name;
-            document.getElementById('mMeta').innerHTML = `${m.release_date?.split('-')[0] || 'N/A'} • ⭐ ${m.vote_average.toFixed(1)}`;
-            document.getElementById('mDesc').innerText = m.overview || mEN.overview || "Sinopsis tidak tersedia.";
-
-            const yt = m.videos?.results.find(v => v.type === 'Trailer') || m.videos?.results[0];
-            document.getElementById('mainPlayer').src = yt ? `https://www.youtube.com/embed/${yt.key}?autoplay=1` : '';
-
-            // Tombol Merah Identik
-            const serverBtn = (label, url) => `<button onclick="changePlayer('${url}')" class="btn-premium"><span>${label}</span><i class="fa-solid fa-play"></i></button>`;
+            document.getElementById('mMeta').innerText = `${m.release_date?.split('-')[0] || 'N/A'} • ⭐ ${m.vote_average.toFixed(1)}`;
             
-            document.getElementById('streamLinks').innerHTML = serverBtn('SERVER 01', `https://vidsrc.xyz/embed/${type}/${id}`) + serverBtn('SERVER 02', `https://vidsrc.to/embed/${type}/${id}`);
-            document.getElementById('downloadLinks').innerHTML = `<a href="https://dl.vidsrc.vip/${type}/${id}" target="_blank" class="btn-premium"><span>DOWNLOAD VIP</span><i class="fa-solid fa-download"></i></a>`;
+            // LOGIKA SINOPSIS: Indo -> Inggris -> Default
+            let desc = m.overview;
+            if (!desc || desc === "") desc = mEN.overview; 
+            if (!desc || desc === "") desc = "Sinopsis belum tersedia dalam bahasa Indonesia maupun Inggris.";
+            document.getElementById('mDesc').innerText = desc;
 
-            document.getElementById('movieModal').style.display = 'block';
-            document.body.style.overflow = 'hidden';
+            // Player
+            const vid = m.videos?.results.find(v => v.type === 'Trailer') || m.videos?.results[0];
+            document.getElementById('mainPlayer').src = vid ? `https://www.youtube.com/embed/${vid.key}?autoplay=1` : '';
+
+            // Buttons: FIX DESAIN MERAH SERAGAM
+            const btnHTML = (label, link) => `
+                <button onclick="document.getElementById('mainPlayer').src='${link}'" class="btn-red">
+                    <span>${label}</span> <i class="fa-solid fa-play"></i>
+                </button>`;
+            
+            document.getElementById('streamButtons').innerHTML = 
+                btnHTML('Server Utama (XYZ)', `https://vidsrc.xyz/embed/${type}/${id}`) +
+                btnHTML('Server Cadangan (TO)', `https://vidsrc.to/embed/${type}/${id}`);
+
+            document.getElementById('downloadButtons').innerHTML = `
+                <a href="https://dl.vidsrc.vip/${type}/${id}" target="_blank" class="btn-red" style="text-decoration:none;">
+                    <span>Download VIP</span> <i class="fa-solid fa-download"></i>
+                </a>`;
         }
 
-        async function searchMulti() {
-            const q = document.getElementById('searchInput').value; if(!q) return;
-            const res = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(q)}&language=id-ID`);
+        async function doSearch() {
+            const q = document.getElementById('searchInput').value;
+            if(!q) return;
+            const res = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${q}&language=id-ID`);
             const data = await res.json();
-            renderMovies(data.results.filter(i => i.poster_path && (i.origin_country?.includes('ID') || i.original_language === 'id')), false);
+            // Reset page dan grid khusus hasil search
+            page = 1;
+            document.getElementById('movieGrid').innerHTML = '';
+            renderMovies(data.results);
         }
 
-        function closeModal() { document.getElementById('movieModal').style.display = 'none'; document.getElementById('mainPlayer').src = ''; document.body.style.overflow = 'auto'; }
-        function changePlayer(url) { document.getElementById('mainPlayer').src = url + "?autoplay=1"; }
-        function loadMore() { currentPage++; loadMovies(true); }
-        function resetAndLoad() { currentPage = 1; loadMovies(); }
+        function closeModal() {
+            document.getElementById('movieModal').style.display = 'none';
+            document.getElementById('mainPlayer').src = '';
+            document.body.style.overflow = 'auto';
+        }
+        function loadMore() { page++; loadMovies(); }
+        function resetApp() { page = 1; loadMovies(); }
     </script>
 </body>
 </html>
