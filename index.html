@@ -3,56 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AMNESFUBBIA FILM INDONESIA</title>
+    <title>AMNESFUBBIA FILM</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
-        body { background-color: #050505; color: #f4f4f5; font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; scroll-behavior: smooth; }
+        body { background-color: #050505; color: #f4f4f5; font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; }
         
-        /* Navbar */
-        .nav-glass { background: rgba(5, 5, 5, 0.95); backdrop-filter: blur(15px); border-bottom: 1px solid rgba(255,255,255,0.05); position: fixed; top: 0; width: 100%; z-index: 1000; }
+        /* Navbar Fixed */
+        .nav-glass { background: rgba(5, 5, 5, 0.98); border-bottom: 1px solid rgba(255,255,255,0.05); position: fixed; top: 0; width: 100%; z-index: 1000; padding: 12px 0; }
         
-        /* Grid Film */
+        /* Dropdown Styling agar tidak berantakan */
+        select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 0.5rem center; background-size: 1em; padding-right: 2rem; -webkit-appearance: none; appearance: none; }
+
+        /* Movie Grid */
         .movie-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 10px; }
         @media (min-width: 768px) { .movie-grid { grid-template-columns: repeat(6, 1fr); gap: 20px; } }
 
-        .movie-card { border-radius: 12px; overflow: hidden; background: #0f0f0f; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s; cursor: pointer; }
+        .movie-card { border-radius: 12px; overflow: hidden; background: #0f0f0f; border: 1px solid rgba(255,255,255,0.05); cursor: pointer; position: relative; }
         .movie-card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; }
 
-        /* TOMBOL MERAH SERAGAM */
-        .btn-red-action { 
-            @apply flex items-center justify-between px-5 py-4 rounded-xl text-[11px] font-black uppercase tracking-widest transition-all duration-300 w-full mb-3;
-            background: #e11d48; color: white; border: none;
-        }
-        .btn-red-action:hover { background: #be123c; transform: scale(1.02); }
+        /* Tombol Merah Premium */
+        .btn-premium { @apply flex items-center justify-between px-5 py-4 rounded-xl text-[11px] font-black uppercase tracking-widest transition-all w-full mb-3 bg-[#e11d48] text-white border-none; }
 
-        /* Modal */
+        /* Modal Settings */
         .modal { display: none; position: fixed; inset: 0; z-index: 2000; background: rgba(0,0,0,0.98); overflow-y: auto; }
-        .modal-content { background: #080808; width: 100%; max-width: 1000px; margin: 0 auto; min-height: 100vh; position: relative; }
-        @media (min-width: 768px) { .modal-content { min-height: auto; margin: 30px auto; border-radius: 24px; border: 1px solid #1a1a1a; } }
-        
-        /* Font Judul Diperkecil & Aman dari X */
-        #mTitle { font-size: 1.1rem; font-weight: 800; text-transform: uppercase; padding-right: 60px; line-height: 1.4; color: #fff; }
+        .modal-content { background: #080808; width: 100%; max-width: 1000px; margin: 0 auto; position: relative; min-height: 100vh; }
+        @media (min-width: 768px) { .modal-content { min-height: auto; margin: 40px auto; border-radius: 24px; border: 1px solid #1a1a1a; } }
+
+        /* Judul diperkecil agar tidak kena Tombol X */
+        #mTitle { font-size: 1.1rem; font-weight: 800; text-transform: uppercase; padding-right: 50px; color: white; }
 
         /* Back to Top */
-        #backToTop { display: none; position: fixed; bottom: 20px; right: 20px; z-index: 99; background: #e11d48; color: white; width: 45px; height: 45px; border-radius: 50%; border: none; cursor: pointer; transition: 0.3s; }
-        #backToTop:hover { transform: scale(1.1); background: #be123c; }
+        #btnTop { display: none; position: fixed; bottom: 25px; right: 20px; background: #e11d48; color: white; width: 45px; height: 45px; border-radius: 50%; z-index: 1500; border: none; cursor: pointer; }
 
         .scrollbar-hide::-webkit-scrollbar { display: none; }
     </style>
 </head>
 <body onload="initApp()">
 
-    <nav class="nav-glass p-3">
-        <div class="container mx-auto space-y-3">
+    <nav class="nav-glass">
+        <div class="container mx-auto px-4 space-y-4">
             <div class="flex items-center gap-3">
-                <div class="shrink-0 cursor-pointer" onclick="location.reload()">
+                <div onclick="location.reload()" class="shrink-0 cursor-pointer">
                     <span class="text-xl font-black italic uppercase">AMNESFUBBIA<span class="text-red-600">FILM</span></span>
                 </div>
-                <div class="relative flex-grow flex items-center">
-                    <input type="text" id="searchInput" onkeypress="if(event.key==='Enter') searchMulti()" placeholder="Cari Film Indonesia..." class="w-full bg-white/5 border border-white/10 p-3 pr-10 rounded-xl text-xs outline-none focus:border-red-600">
-                    <button onclick="searchMulti()" class="absolute right-3 text-zinc-500 hover:text-red-600"><i class="fa-solid fa-magnifying-glass"></i></button>
+                <div class="relative flex-grow">
+                    <input type="text" id="searchInput" onkeypress="if(event.key==='Enter') searchMulti()" placeholder="Cari Film Indo..." class="w-full bg-white/5 border border-white/10 p-3 pr-10 rounded-xl text-xs outline-none focus:border-red-600">
+                    <button onclick="searchMulti()" class="absolute right-3 top-3 text-zinc-500"><i class="fa-solid fa-magnifying-glass"></i></button>
                 </div>
             </div>
 
@@ -64,51 +62,49 @@
                 </select>
                 <select id="genreFilter" onchange="resetAndLoad()" class="bg-zinc-900 text-white text-[10px] font-bold p-2.5 rounded-lg border border-white/5 uppercase">
                     <option value="">GENRE (SEMUA)</option>
-                    <option value="28">Aksi</option><option value="27">Horor</option><option value="35">Komedi</option><option value="18">Drama</option><option value="10749">Romansa</option>
+                    <option value="28">Aksi</option><option value="27">Horor</option><option value="35">Komedi</option><option value="18">Drama</option>
                 </select>
                 <select id="yearFilter" onchange="resetAndLoad()" class="bg-zinc-900 text-white text-[10px] font-bold p-2.5 rounded-lg border border-white/5 uppercase">
                     <option value="">TAHUN (SEMUA)</option>
                     <script>
-                        const startY = 1920, endY = new Date().getFullYear();
-                        for(let y=endY; y>=startY; y--) document.write(`<option value="${y}">${y}</option>`);
+                        for(let y=new Date().getFullYear(); y>=1920; y--) document.write(`<option value="${y}">${y}</option>`);
                     </script>
                 </select>
                 <select id="sortFilter" onchange="resetAndLoad()" class="bg-zinc-900 text-white text-[10px] font-bold p-2.5 rounded-lg border border-white/5 uppercase flex-grow">
                     <option value="popularity.desc">TERPOPULER</option>
                     <option value="primary_release_date.desc">TERBARU</option>
-                    <option value="vote_average.desc">RATING TERBAIK</option>
                 </select>
             </div>
         </div>
     </nav>
 
-    <main class="container mx-auto pt-36 pb-20 px-2">
+    <main class="container mx-auto pt-40 pb-20 px-2">
         <div id="movieGrid" class="movie-grid"></div>
         <div id="loadMoreContainer" class="flex justify-center mt-10">
-            <button onclick="loadMore()" class="bg-white text-black font-black text-[10px] uppercase px-12 py-3 rounded-full hover:bg-red-600 hover:text-white transition-all">Muat Lebih Banyak</button>
+            <button onclick="loadMore()" class="bg-white text-black font-black text-[10px] uppercase px-12 py-3 rounded-full">Muat Lebih Banyak</button>
         </div>
     </main>
 
-    <button id="backToTop" onclick="window.scrollTo(0,0)"><i class="fa-solid fa-arrow-up"></i></button>
+    <button id="btnTop" onclick="window.scrollTo(0,0)"><i class="fa-solid fa-arrow-up"></i></button>
 
     <div id="movieModal" class="modal">
         <div class="modal-content">
-            <button onclick="closeModal()" class="absolute top-5 right-5 bg-black/60 text-white w-10 h-10 rounded-full z-[3000] border border-white/10 hover:bg-red-600 transition-all">✕</button>
+            <button onclick="closeModal()" class="absolute top-5 right-5 bg-black/60 text-white w-10 h-10 rounded-full z-[3000] border border-white/10">✕</button>
             <div class="flex flex-col lg:flex-row">
-                <div class="lg:w-2/3 p-5 lg:p-10 border-r border-white/5">
+                <div class="lg:w-2/3 p-6 lg:p-10 border-r border-white/5">
                     <h2 id="mTitle" class="italic mb-2"></h2>
-                    <p id="mMeta" class="text-[10px] font-bold text-zinc-500 uppercase mb-6 flex gap-3"></p>
-                    <div class="aspect-video bg-black rounded-2xl overflow-hidden mb-8 border border-white/10 shadow-2xl">
-                        <iframe id="mainPlayer" class="w-full h-full" allowfullscreen allow="autoplay"></iframe>
+                    <p id="mMeta" class="text-[10px] font-bold text-zinc-500 uppercase mb-6"></p>
+                    <div class="aspect-video bg-black rounded-2xl overflow-hidden mb-8 border border-white/10">
+                        <iframe id="mainPlayer" class="w-full h-full" allowfullscreen></iframe>
                     </div>
                     <p class="text-[10px] font-black text-red-600 uppercase mb-3 tracking-widest">Sinopsis</p>
                     <p id="mDesc" class="text-sm text-zinc-400 leading-relaxed italic mb-8"></p>
                 </div>
-                <div class="lg:w-1/3 p-5 lg:p-10 bg-[#050505]">
-                    <p class="text-[10px] font-black text-zinc-600 uppercase mb-4 tracking-widest">Server Streaming</p>
+                <div class="lg:w-1/3 p-6 lg:p-10 bg-[#050505]">
+                    <p class="text-[10px] font-black text-zinc-600 uppercase mb-4">Streaming</p>
                     <div id="streamLinks"></div>
-                    <div class="my-10 border-t border-white/5"></div>
-                    <p class="text-[10px] font-black text-zinc-600 uppercase mb-4 tracking-widest">Download Media</p>
+                    <div class="my-8 border-t border-white/5"></div>
+                    <p class="text-[10px] font-black text-zinc-600 uppercase mb-4">Download</p>
                     <div id="downloadLinks"></div>
                 </div>
             </div>
@@ -120,9 +116,7 @@
         const IMG_BASE = 'https://image.tmdb.org/t/p/w500';
         let currentPage = 1;
 
-        window.onscroll = function() {
-            document.getElementById("backToTop").style.display = (window.pageYOffset > 500) ? "block" : "none";
-        };
+        window.onscroll = () => { document.getElementById("btnTop").style.display = (window.pageYOffset > 500) ? "block" : "none"; };
 
         async function initApp() { loadMovies(); }
 
@@ -132,21 +126,19 @@
             const year = document.getElementById('yearFilter').value;
             const sort = document.getElementById('sortFilter').value;
             
+            // Logika All/Movie/TV khusus Indonesia
             let url = '';
             if(type === 'all') {
-                // Untuk "Semua", kita ambil trending harian di Indonesia
-                url = `https://api.themoviedb.org/3/trending/all/day?api_key=${API_KEY}&language=id-ID&page=${currentPage}`;
+                url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_origin_country=ID&language=id-ID&page=${currentPage}&sort_by=${sort}`;
             } else {
                 url = `https://api.themoviedb.org/3/discover/${type}?api_key=${API_KEY}&with_origin_country=ID&language=id-ID&page=${currentPage}&sort_by=${sort}`;
-                if (genre) url += `&with_genres=${genre}`;
-                if (year) url += `&primary_release_year=${year}&first_air_date_year=${year}`;
             }
+            if (genre) url += `&with_genres=${genre}`;
+            if (year) url += `&primary_release_year=${year}&first_air_date_year=${year}`;
 
             const res = await fetch(url);
             const data = await res.json();
-            // Filter extra untuk pastikan hanya film Indonesia
-            const filtered = data.results.filter(m => m.origin_country?.includes('ID') || m.original_language === 'id');
-            renderMovies(filtered, append);
+            renderMovies(data.results, append);
         }
 
         function renderMovies(movies, append) {
@@ -171,21 +163,17 @@
             const mEN = await resEN.json();
 
             document.getElementById('mTitle').innerText = m.title || m.name;
-            document.getElementById('mMeta').innerHTML = `<span>${m.release_date?.split('-')[0] || m.first_air_date?.split('-')[0] || 'N/A'}</span> • <span>⭐ ${m.vote_average.toFixed(1)}</span>`;
+            document.getElementById('mMeta').innerHTML = `${m.release_date?.split('-')[0] || 'N/A'} • ⭐ ${m.vote_average.toFixed(1)}`;
             document.getElementById('mDesc').innerText = m.overview || mEN.overview || "Sinopsis tidak tersedia.";
 
             const yt = m.videos?.results.find(v => v.type === 'Trailer') || m.videos?.results[0];
             document.getElementById('mainPlayer').src = yt ? `https://www.youtube.com/embed/${yt.key}?autoplay=1` : '';
 
             // Tombol Merah Identik
-            const btns = [`
-                <button onclick="changePlayer('https://vidsrc.xyz/embed/${type}/${id}')" class="btn-red-action"><span>SERVER 01</span><i class="fa-solid fa-play"></i></button>
-                <button onclick="changePlayer('https://vidsrc.to/embed/${type}/${id}')" class="btn-red-action"><span>SERVER 02</span><i class="fa-solid fa-play"></i></button>
-            `, `
-                <a href="https://dl.vidsrc.vip/${type}/${id}" target="_blank" class="btn-red-action"><span>DOWNLOAD VIP</span><i class="fa-solid fa-download"></i></a>
-            `];
-            document.getElementById('streamLinks').innerHTML = btns[0];
-            document.getElementById('downloadLinks').innerHTML = btns[1];
+            const serverBtn = (label, url) => `<button onclick="changePlayer('${url}')" class="btn-premium"><span>${label}</span><i class="fa-solid fa-play"></i></button>`;
+            
+            document.getElementById('streamLinks').innerHTML = serverBtn('SERVER 01', `https://vidsrc.xyz/embed/${type}/${id}`) + serverBtn('SERVER 02', `https://vidsrc.to/embed/${type}/${id}`);
+            document.getElementById('downloadLinks').innerHTML = `<a href="https://dl.vidsrc.vip/${type}/${id}" target="_blank" class="btn-premium"><span>DOWNLOAD VIP</span><i class="fa-solid fa-download"></i></a>`;
 
             document.getElementById('movieModal').style.display = 'block';
             document.body.style.overflow = 'hidden';
