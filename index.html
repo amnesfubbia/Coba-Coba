@@ -8,65 +8,92 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
-        body { background-color: #050505; color: #e5e5e5; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background-color: #050505; color: #e5e5e5; font-family: 'Plus Jakarta Sans', sans-serif; overflow-x: hidden; }
         
-        .nav-glass { background: rgba(5, 5, 5, 0.9); backdrop-filter: blur(15px); border-bottom: 1px solid rgba(255,255,255,0.05); position: fixed; top: 0; width: 100%; z-index: 1000; }
+        .nav-glass { background: rgba(5, 5, 5, 0.95); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.05); position: fixed; top: 0; width: 100%; z-index: 1000; }
         
-        .movie-card { transition: all 0.3s ease; background: #0f0f0f; border-radius: 12px; overflow: hidden; cursor: pointer; border: 1px solid transparent; }
-        .movie-card:hover { transform: translateY(-5px); border-color: #ef4444; }
+        /* Grid 3 Kolom untuk Mobile */
+        .movie-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        @media (min-width: 768px) { .movie-grid { grid-template-columns: repeat(6, 1fr); gap: 20px; } }
+
+        .movie-card { transition: all 0.3s ease; background: #0f0f0f; border-radius: 8px; overflow: hidden; border: 1px solid rgba(255,255,255,0.03); }
+        .movie-card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; }
+
+        .modal { display: none; position: fixed; inset: 0; z-index: 2000; background: rgba(0,0,0,0.98); overflow-y: auto; }
+        .modal-content { background: #0a0a0a; width: 100%; max-width: 1000px; border-radius: 20px; margin: 10px auto; border: 1px solid #222; overflow: hidden; position: relative; }
         
-        .modal { display: none; position: fixed; inset: 0; z-index: 2000; background: rgba(0,0,0,0.98); overflow-y: auto; padding: 10px; }
-        .modal-content { background: #0a0a0a; width: 100%; max-width: 1000px; border-radius: 24px; margin: 20px auto; border: 1px solid #222; overflow: hidden; }
-        
+        /* Slider Pemeran Geser */
+        .cast-slider { display: flex; overflow-x: auto; gap: 10px; padding-bottom: 10px; scrollbar-width: none; -ms-overflow-style: none; }
+        .cast-slider::-webkit-scrollbar { display: none; }
+        .cast-item { flex: 0 0 auto; width: 80px; text-align: center; cursor: pointer; }
+        .cast-item img { width: 60px; h-60px; border-radius: 50%; object-fit: cover; margin: 0 auto 5px; border: 2px solid #333; }
+
         .btn-server { @apply bg-zinc-900 border border-white/5 py-3 rounded-xl text-[10px] font-bold uppercase transition-all hover:bg-red-600 flex items-center justify-center gap-2; }
-        .cast-tag { @apply bg-white/5 border border-white/10 px-3 py-1.5 rounded-full text-[10px] hover:bg-red-600 hover:border-red-600 cursor-pointer transition-all flex items-center gap-2; }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
     </style>
 </head>
 <body onload="initApp()">
 
-    <nav class="nav-glass p-4">
-        <div class="container mx-auto flex items-center gap-4">
-            <div class="flex items-center gap-2 cursor-pointer" onclick="location.reload()">
-                <span class="text-xl font-black italic uppercase tracking-tighter">AMNESFUBBIA<span class="text-red-600">FILM</span></span>
+    <nav class="nav-glass p-3">
+        <div class="container mx-auto space-y-3">
+            <div class="flex items-center gap-3">
+                <div class="shrink-0 cursor-pointer" onclick="location.reload()">
+                    <span class="text-lg font-black italic uppercase">AMNESFUBBIA<span class="text-red-600">FILM</span></span>
+                </div>
+                <div class="relative flex-grow">
+                    <input type="text" id="searchInput" onkeypress="if(event.key==='Enter') searchMulti()" placeholder="Cari film atau aktor..." class="w-full bg-white/5 border border-white/10 p-2.5 rounded-xl text-xs outline-none focus:border-red-600">
+                </div>
             </div>
-            <div class="relative flex-grow">
-                <input type="text" id="searchInput" onkeypress="if(event.key==='Enter') searchMulti()" placeholder="Cari judul atau nama aktor..." class="w-full bg-white/5 border border-white/10 p-3 rounded-xl text-xs outline-none focus:border-red-600">
+            
+            <div class="flex gap-2 overflow-x-auto scrollbar-hide pb-1">
+                <select id="typeFilter" onchange="resetAndLoad()" class="bg-zinc-900 text-red-500 font-bold text-[10px] p-2 rounded-lg border border-white/10 outline-none uppercase">
+                    <option value="movie">BIOSKOP</option>
+                    <option value="tv">SERIES</option>
+                </select>
+                <select id="genreFilter" onchange="resetAndLoad()" class="bg-zinc-900 text-white text-[10px] font-bold p-2 rounded-lg border border-white/10 outline-none uppercase">
+                    <option value="">SEMUA GENRE</option>
+                    <option value="28">AKSI</option>
+                    <option value="27">HOROR</option>
+                    <option value="35">KOMEDI</option>
+                    <option value="18">DRAMA</option>
+                </select>
+                <select id="yearFilter" onchange="resetAndLoad()" class="bg-zinc-900 text-white text-[10px] font-bold p-2 rounded-lg border border-white/10 outline-none uppercase">
+                    <option value="">TAHUN</option>
+                    <script>for(let y=2026; y>=2000; y--) document.write(`<option value="${y}">${y}</option>`);</script>
+                </select>
             </div>
-            <select id="typeFilter" onchange="resetAndLoad()" class="bg-zinc-900 text-white text-[10px] font-bold p-3 rounded-xl border border-white/10 outline-none">
-                <option value="movie">BIOSKOP</option>
-                <option value="tv">SERIES</option>
-            </select>
         </div>
     </nav>
 
-    <main class="container mx-auto px-4 pt-28 pb-20">
-        <div id="movieGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4"></div>
-        <div id="loadMoreContainer" class="flex justify-center mt-12">
-            <button onclick="loadMore()" class="bg-red-600 text-white font-black text-xs uppercase px-10 py-4 rounded-full shadow-lg shadow-red-600/20">Muat Lagi</button>
+    <main class="container mx-auto px-2 pt-32 pb-20">
+        <div id="movieGrid" class="movie-grid"></div>
+        <div id="loadMoreContainer" class="flex justify-center mt-10">
+            <button onclick="loadMore()" class="bg-red-600 text-white font-black text-xs uppercase px-12 py-4 rounded-full">MUAT LAGI</button>
         </div>
     </main>
 
     <div id="movieModal" class="modal">
         <div class="modal-content">
-            <button onclick="closeModal()" class="absolute top-5 right-5 bg-black/60 text-white w-10 h-10 rounded-full z-50">✕</button>
+            <button onclick="closeModal()" class="absolute top-4 right-4 bg-black/60 text-white w-9 h-9 rounded-full z-50">✕</button>
             <div class="flex flex-col lg:flex-row">
-                <div class="lg:w-2/3 p-6 lg:p-10 border-r border-white/5">
-                    <h2 id="mTitle" class="text-3xl font-black italic uppercase mb-4 leading-tight"></h2>
+                <div class="lg:w-2/3 p-5 lg:p-8 border-r border-white/5">
+                    <h2 id="mTitle" class="text-2xl font-black italic uppercase mb-4 leading-tight"></h2>
                     <div class="aspect-video bg-black rounded-xl overflow-hidden mb-6 border border-white/10">
-                        <iframe id="mainPlayer" class="w-full h-full" allowfullscreen></iframe>
+                        <iframe id="mainPlayer" class="w-full h-full" allowfullscreen allow="autoplay"></iframe>
                     </div>
-                    <p class="text-[10px] font-bold text-red-500 uppercase mb-2">Sinopsis</p>
+                    
+                    <p class="text-[9px] font-black text-red-500 uppercase mb-2 italic">Sinopsis</p>
                     <p id="mDesc" class="text-sm text-zinc-400 leading-relaxed italic mb-8"></p>
                     
-                    <p class="text-[10px] font-bold text-red-500 uppercase mb-4">Pemeran Utama (Klik untuk cari film lain)</p>
-                    <div id="mCast" class="flex flex-wrap gap-2"></div>
+                    <p class="text-[9px] font-black text-red-500 uppercase mb-3 italic">Pemeran (Geser & Klik)</p>
+                    <div id="mCast" class="cast-slider"></div>
                 </div>
 
-                <div class="lg:w-1/3 p-6 lg:p-10 bg-zinc-900/20">
-                    <p class="text-[10px] font-black text-white/40 uppercase mb-4 tracking-widest">Streaming Server</p>
+                <div class="lg:w-1/3 p-5 lg:p-8 bg-zinc-900/20">
+                    <p class="text-[9px] font-black text-zinc-500 uppercase mb-4 tracking-widest">Pilih Server Nonton</p>
                     <div id="streamLinks" class="grid grid-cols-1 gap-2 mb-8"></div>
                     
-                    <p class="text-[10px] font-black text-white/40 uppercase mb-4 tracking-widest">Download Server</p>
+                    <p class="text-[9px] font-black text-zinc-500 uppercase mb-4 tracking-widest">Download Link</p>
                     <div id="downloadLinks" class="grid grid-cols-1 gap-2"></div>
                 </div>
             </div>
@@ -82,60 +109,68 @@
 
         async function loadMovies(append = false) {
             const type = document.getElementById('typeFilter').value;
-            const url = `https://api.themoviedb.org/3/discover/${type}?api_key=${API_KEY}&with_origin_country=ID&language=id-ID&page=${currentPage}&sort_by=popularity.desc`;
+            const genre = document.getElementById('genreFilter').value;
+            const year = document.getElementById('yearFilter').value;
+            
+            let url = `https://api.themoviedb.org/3/discover/${type}?api_key=${API_KEY}&with_origin_country=ID&language=id-ID&page=${currentPage}&sort_by=popularity.desc`;
+            if (genre) url += `&with_genres=${genre}`;
+            if (year) url += `&primary_release_year=${year}&first_air_date_year=${year}`;
+
             const res = await fetch(url);
             const data = await res.json();
             const grid = document.getElementById('movieGrid');
             if (!append) grid.innerHTML = '';
+            
             data.results.forEach(m => {
-                if (!m.poster_path) return;
-                const card = document.createElement('div');
-                card.className = 'movie-card';
-                card.onclick = () => showDetail(m.id, type);
-                card.innerHTML = `<img src="${IMG_BASE + m.poster_path}" class="w-full aspect-[2/3] object-cover"><div class="p-3 text-[9px] font-bold truncate uppercase">${m.title || m.name}</div>`;
-                grid.appendChild(card);
+                const poster = m.poster_path ? IMG_BASE + m.poster_path : 'https://via.placeholder.com/500x750?text=No+Poster';
+                const div = document.createElement('div');
+                div.className = 'movie-card';
+                div.onclick = () => showDetail(m.id, type);
+                div.innerHTML = `<img src="${poster}"><div class="p-2 text-[8px] font-bold truncate uppercase">${m.title || m.name}</div>`;
+                grid.appendChild(div);
             });
         }
 
         async function showDetail(id, type) {
-            const res = await fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&append_to_response=videos,credits&language=id-ID`);
-            const m = await res.json();
+            // Kita ambil data bahasa Indonesia DAN bahasa Inggris sekaligus untuk cadangan sinopsis
+            const [resID, resEN] = await Promise.all([
+                fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&append_to_response=videos,credits&language=id-ID`),
+                fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&language=en-US`)
+            ]);
+            
+            const m = await resID.json();
+            const mBackup = await resEN.json();
 
             document.getElementById('mTitle').innerText = m.title || m.name;
-            // Gunakan overview utama, jika kosong pakai bahasa Inggris (jika ada)
-            document.getElementById('mDesc').innerText = m.overview || "Maaf, sinopsis untuk film ini belum tersedia.";
+            // Gunakan sinopsis Indo, jika kosong gunakan Inggris
+            document.getElementById('mDesc').innerText = m.overview || mBackup.overview || "Sinopsis belum tersedia untuk saat ini.";
 
-            // Daftar Server yang Benar-Benar Berfungsi
+            // Server List
             const streams = [
                 { n: 'Server Utama', u: `https://vidsrc.to/embed/${type}/${id}` },
                 { n: 'Server Cadangan', u: `https://vidrock.net/embed/${type}/${id}` },
-                { n: 'Server Internasional', u: `https://vidsrc.xyz/embed/${type}/${id}` }
+                { n: 'Server VIP', u: `https://vidsrc.xyz/embed/${type}/${id}` }
             ];
             
-            const downloads = [
-                { n: 'Download High Quality', u: `https://dl.vidsrc.vip/${type}/${id}` },
-                { n: 'Download Alternatif', u: `https://vidsrc.xyz/download/${type}/${id}` }
-            ];
-
             const sCont = document.getElementById('streamLinks');
             const dCont = document.getElementById('downloadLinks');
             sCont.innerHTML = ''; dCont.innerHTML = '';
 
             streams.forEach(s => sCont.innerHTML += `<button onclick="changePlayer('${s.u}')" class="btn-server"><i class="fa-solid fa-play"></i> ${s.n}</button>`);
-            downloads.forEach(d => dCont.innerHTML += `<a href="${d.u}" target="_blank" class="btn-server bg-emerald-600/20 text-emerald-400 border-emerald-600/20"><i class="fa-solid fa-download"></i> ${d.n}</a>`);
+            dCont.innerHTML = `<a href="https://dl.vidsrc.vip/${type}/${id}" target="_blank" class="btn-server bg-emerald-600/20 text-emerald-400 border-emerald-600/20"><i class="fa-solid fa-download"></i> Download Video</a>`;
 
-            // Fitur Pemeran
+            // Slider Pemeran (Geser)
             const castCont = document.getElementById('mCast');
-            castCont.innerHTML = m.credits.cast.slice(0, 10).map(c => `
-                <div class="cast-tag" onclick="searchByActor('${c.name}')">
-                    ${c.profile_path ? `<img src="https://image.tmdb.org/t/p/w45${c.profile_path}" class="w-5 h-5 rounded-full object-cover">` : '<i class="fa-solid fa-user"></i>'}
-                    ${c.name}
+            castCont.innerHTML = m.credits.cast.slice(0, 15).map(c => `
+                <div class="cast-item" onclick="searchByActor('${c.name}')">
+                    <img src="${c.profile_path ? 'https://image.tmdb.org/t/p/w185'+c.profile_path : 'https://via.placeholder.com/100x100?text=Actor'}">
+                    <p class="text-[7px] font-bold truncate">${c.name}</p>
                 </div>
             `).join('');
 
-            // Set player default ke trailer youtube
-            const yt = m.videos.results.find(v => v.site === 'YouTube' && v.type === 'Trailer') || m.videos.results[0];
-            document.getElementById('mainPlayer').src = yt ? `https://www.youtube.com/embed/${yt.key}` : '';
+            // Autoplay Trailer (Ditambah parameter autoplay=1)
+            const yt = m.videos.results.find(v => v.site === 'YouTube') || m.videos.results[0];
+            document.getElementById('mainPlayer').src = yt ? `https://www.youtube.com/embed/${yt.key}?autoplay=1` : '';
 
             document.getElementById('movieModal').style.display = 'block';
             document.body.style.overflow = 'hidden';
@@ -147,25 +182,22 @@
             searchMulti();
         }
 
-        function changePlayer(url) { document.getElementById('mainPlayer').src = url; }
+        function changePlayer(url) { document.getElementById('mainPlayer').src = url + "?autoplay=1"; }
         function loadMore() { currentPage++; loadMovies(true); }
         function resetAndLoad() { currentPage = 1; loadMovies(); }
         function closeModal() { document.getElementById('movieModal').style.display = 'none'; document.getElementById('mainPlayer').src = ''; document.body.style.overflow = 'auto'; }
 
         async function searchMulti() {
-            const q = document.getElementById('searchInput').value;
-            if(!q) return;
+            const q = document.getElementById('searchInput').value; if(!q) return;
             const res = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(q)}&language=id-ID`);
             const data = await res.json();
-            const grid = document.getElementById('movieGrid');
-            grid.innerHTML = '';
+            const grid = document.getElementById('movieGrid'); grid.innerHTML = '';
             data.results.forEach(m => {
                 if(!m.poster_path) return;
-                const card = document.createElement('div');
-                card.className = 'movie-card';
-                card.onclick = () => showDetail(m.id, m.media_type || 'movie');
-                card.innerHTML = `<img src="${IMG_BASE + m.poster_path}"><div class="p-3 text-[9px] font-bold truncate uppercase">${m.title || m.name}</div>`;
-                grid.appendChild(card);
+                const div = document.createElement('div'); div.className = 'movie-card';
+                div.onclick = () => showDetail(m.id, m.media_type || 'movie');
+                div.innerHTML = `<img src="${IMG_BASE + m.poster_path}"><div class="p-2 text-[8px] font-bold truncate uppercase">${m.title || m.name}</div>`;
+                grid.appendChild(div);
             });
             document.getElementById('loadMoreContainer').style.display = 'none';
         }
