@@ -47,27 +47,26 @@
                     <span class="text-xl font-black text-red-600 italic uppercase">FILM</span>
                 </div>
                 <div class="flex-grow">
-                    <input type="text" id="searchInput" onkeypress="if(event.key==='Enter') searchMulti()" placeholder="Cari film atau series..." class="w-full bg-white/5 p-2.5 rounded-xl border border-white/10 text-xs outline-none focus:border-red-600 text-white font-medium">
+                    <input type="text" id="searchInput" onkeypress="if(event.key==='Enter') searchMulti()" placeholder="Cari film atau series..." class="w-full bg-white/5 p-2.5 rounded-xl border border-white/10 text-xs outline-none focus:border-red-600 text-white">
                 </div>
-                <button onclick="showWatchlist()" class="bg-white/10 p-2.5 rounded-xl text-white hover:bg-red-600 transition-all">
+                <button onclick="showWatchlist()" class="bg-white/10 p-2.5 rounded-xl text-white">
                     <i class="fa-solid fa-heart"></i>
                 </button>
             </div>
             
             <div class="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
-                <select id="typeFilter" onchange="resetAndLoad()" class="bg-[#111] text-red-500 font-bold text-[10px] p-2 rounded-lg border border-white/10 uppercase outline-none cursor-pointer">
+                <select id="typeFilter" onchange="resetAndLoad()" class="bg-[#111] text-red-500 font-bold text-[10px] p-2 rounded-lg border border-white/10 uppercase outline-none">
                     <option value="movie">LAYAR LEBAR</option>
                     <option value="tv">TV SERIES</option>
                 </select>
-                <select id="genreFilter" onchange="resetAndLoad()" class="bg-[#111] text-white font-bold text-[10px] p-2 rounded-lg border border-white/10 uppercase outline-none cursor-pointer">
+                <select id="genreFilter" onchange="resetAndLoad()" class="bg-[#111] text-white font-bold text-[10px] p-2 rounded-lg border border-white/10 uppercase outline-none">
                     <option value="">SEMUA GENRE</option>
                     <option value="27">HOROR</option>
                     <option value="35">KOMEDI</option>
                     <option value="18">DRAMA</option>
                     <option value="28">AKSI</option>
-                    <option value="16">ANIMASI</option>
                 </select>
-                <select id="yearFilter" onchange="resetAndLoad()" class="bg-[#111] text-white font-bold text-[10px] p-2 rounded-lg border border-white/10 uppercase outline-none cursor-pointer">
+                <select id="yearFilter" onchange="resetAndLoad()" class="bg-[#111] text-white font-bold text-[10px] p-2 rounded-lg border border-white/10 uppercase outline-none">
                     <option value="">TAHUN</option>
                     <script>for(let y=2026; y>=1980; y--) document.write(`<option value="${y}">${y}</option>`);</script>
                 </select>
@@ -78,23 +77,23 @@
     <main class="container mx-auto px-2 pt-36 pb-20 min-h-screen">
         <div id="movieGrid" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2 sm:gap-4"></div>
         <div id="loadMoreContainer" class="flex justify-center mt-12">
-            <button onclick="loadMore()" class="bg-white/5 border border-white/10 px-10 py-4 rounded-2xl font-black text-[10px] uppercase italic tracking-widest text-white hover:bg-red-600 transition-all">MUAT LAGI</button>
+            <button onclick="loadMore()" class="bg-white/5 border border-white/10 px-10 py-4 rounded-2xl font-black text-[10px] uppercase italic tracking-widest text-white hover:bg-red-600">MUAT LAGI</button>
         </div>
     </main>
 
     <div id="movieModal" class="modal">
         <div class="modal-content">
-            <button onclick="closeModal()" class="absolute top-5 right-5 bg-black/60 hover:bg-red-600 text-white w-10 h-10 rounded-full z-[100] flex items-center justify-center transition-all">✕</button>
+            <button onclick="closeModal()" class="absolute top-5 right-5 bg-black/60 hover:bg-red-600 text-white w-10 h-10 rounded-full z-[100] flex items-center justify-center">✕</button>
             <div class="flex flex-col lg:flex-row">
                 <div class="lg:w-1/4 p-6 bg-zinc-900/30 border-r border-white/5">
                     <img id="mPoster" class="w-full rounded-2xl shadow-2xl mb-6 border border-white/10">
-                    <div id="mRating" class="text-center text-xl font-black text-red-600 mb-6 bg-white/5 py-3 rounded-2xl border border-white/5"></div>
+                    <div id="mRating" class="text-center text-xl font-black text-red-600 mb-6 bg-white/5 py-3 rounded-2xl"></div>
                     
                     <div class="space-y-4">
-                        <p class="text-[10px] font-black text-red-500 uppercase italic mb-2 tracking-widest">Streaming Server</p>
+                        <p class="text-[10px] font-black text-red-500 uppercase italic mb-2">Pilih Server Nonton</p>
                         <div id="streamLinks" class="grid grid-cols-1 gap-2"></div>
                         
-                        <p class="text-[10px] font-black text-emerald-500 uppercase italic mt-6 mb-2 tracking-widest">Download Server</p>
+                        <p class="text-[10px] font-black text-emerald-500 uppercase italic mt-6 mb-2">Pilih Server Download</p>
                         <div id="downloadLinks" class="grid grid-cols-1 gap-2"></div>
                     </div>
                 </div>
@@ -103,18 +102,18 @@
                     <h2 id="mTitle" class="text-4xl font-black italic uppercase tracking-tighter mb-1 text-white leading-none"></h2>
                     <p id="mSub" class="text-[10px] text-zinc-500 font-bold mb-8 uppercase tracking-[0.3em]"></p>
 
-                    <p class="text-[9px] font-black text-zinc-500 mb-2 uppercase italic tracking-widest">Official Trailer (YouTube)</p>
+                    <p class="text-[9px] font-black text-zinc-500 mb-2 uppercase italic">Official Trailer</p>
                     <div class="video-container mb-8 shadow-2xl">
                         <iframe id="mTrailerFrame" allowfullscreen allow="autoplay"></iframe>
                     </div>
 
                     <div class="grid md:grid-cols-2 gap-8">
                         <div>
-                            <p class="text-[10px] font-black text-zinc-500 mb-3 uppercase italic tracking-widest">Sinopsis</p>
-                            <p id="mDesc" class="text-sm text-zinc-300 leading-relaxed italic font-medium"></p>
+                            <p class="text-[10px] font-black text-zinc-500 mb-3 uppercase italic">Sinopsis Film</p>
+                            <p id="mDesc" class="text-sm text-zinc-300 leading-relaxed italic"></p>
                         </div>
                         <div>
-                            <p class="text-[10px] font-black text-zinc-500 mb-3 uppercase italic tracking-widest">Pemeran</p>
+                            <p class="text-[10px] font-black text-zinc-500 mb-3 uppercase italic">Pemeran</p>
                             <div id="mCast" class="flex flex-wrap gap-2"></div>
                         </div>
                     </div>
@@ -179,23 +178,19 @@
             const youtube = m.videos.results.find(v => v.site === 'YouTube' && v.type === 'Trailer') || m.videos.results[0];
             document.getElementById('mTrailerFrame').src = youtube ? `https://www.youtube.com/embed/${youtube.key}?autoplay=1` : '';
 
-            // --- 6 SERVER STREAMING (Pilihan Anda) ---
+            // STREAMING SERVERS (Sesuai List Baru Anda)
             const streamServers = [
+                { n: 'MovieAPI HD', u: `https://moviesapi.club/${type}/${id}` },
+                { n: 'SuperEmbed', u: `https://multiembed.mov/?video_id=${id}&tmdb=1` },
+                { n: 'VidSrc ME', u: `https://vidsrc.me/embed/${type}/${id}` },
+                { n: 'AutoEmbed', u: `https://player.autoembed.cc/embed/${type}/${id}` },
                 { n: 'VidSrc TO', u: `https://vidsrc.to/embed/${type}/${id}` },
-                { n: 'VidRock', u: `https://vidrock.net/embed/${type}/${id}` },
-                { n: 'RGShows', u: `https://www.rgshows.ru/embed/${type}/${id}` },
-                { n: 'VidNest', u: `https://vidnest.fun/embed/${type}/${id}` },
-                { n: 'VidLink Pro', u: `https://vidlink.pro/embed/${type}/${id}` },
-                { n: 'VidFast', u: `https://vidfast.pro/embed/${type}/${id}` }
+                { n: 'VidRock', u: `https://vidrock.net/embed/${type}/${id}` }
             ];
 
-            // --- 5 SERVER DOWNLOAD (Vidsrc VIP + Rekomendasi Terbaru) ---
+            // DOWNLOAD SERVER 
             const downloadServers = [
-                { n: 'Server Utama VIP', u: `https://dl.vidsrc.vip/${type}/${id}` },
-                { n: 'FlashStream (Cepat)', u: `https://flashstream.cc/download/${type}/${id}` },
-                { n: 'Google Drive API', u: `https://drive.plus/embed/${type}/${id}` },
-                { n: 'Vidsrc ICU', u: `https://vidsrc.icu/embed/${type}/${id}` },
-                { n: 'Multi Server', u: `https://www.2embed.cc/embed/${id}` }
+                { n: 'Server Download 1', u: `https://dl.vidsrc.vip/${type}/${id}` }
             ];
 
             const sCont = document.getElementById('streamLinks');
@@ -203,9 +198,9 @@
             sCont.innerHTML = ''; dCont.innerHTML = '';
 
             streamServers.forEach(s => sCont.innerHTML += `<a href="${s.u}" target="_blank" class="btn-link btn-stream"><i class="fa-solid fa-play text-[7px]"></i> ${s.n}</a>`);
-            downloadServers.forEach(d => dCont.innerHTML += `<a href="${d.u}" target="_blank" class="btn-link btn-download"><i class="fa-solid fa-cloud-arrow-down text-[7px]"></i> ${d.n}</a>`);
+            downloadServers.forEach(d => dCont.innerHTML += `<a href="${d.u}" target="_blank" class="btn-link btn-download"><i class="fa-solid fa-cloud-arrow-down"></i> ${d.n}</a>`);
 
-            document.getElementById('mCast').innerHTML = m.credits.cast.slice(0, 6).map(c => `<span class="bg-zinc-800 text-[9px] px-3 py-1.5 rounded-full border border-white/5 font-semibold text-zinc-300">${c.name}</span>`).join('');
+            document.getElementById('mCast').innerHTML = m.credits.cast.slice(0, 5).map(c => `<span class="bg-zinc-800 text-[9px] px-3 py-1 rounded-full border border-white/5">${c.name}</span>`).join('');
             document.getElementById('movieModal').style.display = 'block';
             document.body.style.overflow = 'hidden';
         }
@@ -226,15 +221,11 @@
             const res = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${KEY}&query=${encodeURIComponent(q)}&language=id-ID`);
             const data = await res.json();
             renderGrid(data.results.filter(m => m.poster_path), false);
-            document.getElementById('loadMoreContainer').style.display = 'none';
         }
 
         function loadMore() { page++; loadMovies(true); }
         function resetAndLoad() { page = 1; isSearch = false; document.getElementById('loadMoreContainer').style.display = 'flex'; loadMovies(); }
         function closeModal() { document.getElementById('movieModal').style.display = 'none'; document.getElementById('mTrailerFrame').src = ''; document.body.style.overflow = 'auto'; }
-        
-        // Tutup modal jika klik di luar konten
-        window.onclick = (e) => { if (e.target.id == 'movieModal') closeModal(); }
     </script>
 </body>
 </html>
