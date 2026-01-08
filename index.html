@@ -3,256 +3,223 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Amnesfubbia Entertainment</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Movie Library Pro</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
-        body { background-color: #050505; color: #ffffff; font-family: 'Inter', sans-serif; margin: 0; }
-        .glass-nav { background: rgba(8, 8, 8, 0.98); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255, 255, 255, 0.1); z-index: 1000; position: fixed; top: 0; width: 100%; }
-        
-        .movie-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-        @media (min-width: 640px) { .movie-grid { grid-template-columns: repeat(4, 1fr); gap: 15px; } }
-        @media (min-width: 1024px) { .movie-grid { grid-template-columns: repeat(6, 1fr); } }
+        :root {
+            --primary: #e50914;
+            --dark: #141414;
+            --light: #ffffff;
+            --grey: #2f2f2f;
+        }
 
-        .movie-card { background: #111; border-radius: 8px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); }
-        .modal { display: none; position: fixed; inset: 0; z-index: 3000; background: rgba(0,0,0,0.95); overflow-y: auto; padding: 15px 10px; }
-        .modal-content { background: #0a0a0a; width: 100%; max-width: 900px; border-radius: 20px; margin: auto; position: relative; border: 1px solid #333; }
-        
-        .video-container { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 10px; overflow: hidden; margin-bottom: 10px; border: 1px solid #333; }
-        .video-container iframe { width: 100%; height: 100%; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--dark);
+            color: var(--light);
+            margin: 0;
+            padding: 20px;
+        }
 
-        /* Tab Trailer Style */
-        .trailer-tab { display: flex; gap: 5px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 5px; }
-        .btn-tab { padding: 8px 12px; border-radius: 6px; font-size: 8px; font-weight: 900; text-transform: uppercase; background: #1a1a1a; border: 1px solid #333; color: #999; flex-shrink: 0; }
-        .btn-tab.active { background: #ef4444; border-color: #ef4444; color: #fff; }
+        .container { max-width: 1200px; margin: auto; }
 
-        .cast-scroll { display: flex; overflow-x: auto; gap: 10px; padding: 10px 0; }
-        .cast-item { flex: 0 0 70px; text-align: center; }
-        .cast-item img { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid #ef4444; margin: 0 auto 5px; }
-        .cast-item p { font-size: 7px; font-weight: 700; text-transform: uppercase; line-height: 1.1; }
+        /* Filter Section */
+        .filter-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
 
-        .scrollbar-hide::-webkit-scrollbar { display: none; }
-        select { background: #1a1a1a; color: white; border: 1px solid #333; padding: 6px 10px; border-radius: 8px; font-size: 10px; font-weight: bold; }
-        
-        .btn-link { padding: 10px 5px; border-radius: 8px; font-size: 8px; font-weight: 900; text-transform: uppercase; text-align: center; }
-        .btn-stream { background: #333; color: #fff; border: 1px solid #444; }
-        .btn-download { background: #166534; color: #fff; }
+        select {
+            padding: 10px;
+            border-radius: 5px;
+            background: var(--grey);
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* Movie Grid */
+        .movie-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .movie-card {
+            background: #1f1f1f;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s;
+            position: relative;
+        }
+
+        .movie-card:hover { transform: scale(1.05); }
+
+        .movie-card img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+        }
+
+        .movie-info { padding: 15px; }
+        .movie-info h3 { margin: 0 0 10px; font-size: 1.1rem; }
+
+        /* Watchlist Button */
+        .btn-watchlist {
+            width: 100%;
+            padding: 8px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        /* Skeleton Loading */
+        .skeleton {
+            background: #2f2f2f;
+            height: 300px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .skeleton::after {
+            content: "";
+            position: absolute;
+            top: 0; right: 0; bottom: 0; left: 0;
+            background: linear-gradient(90deg, #2f2f2f 0, #3f3f3f 50%, #2f2f2f 100%);
+            animation: shimmer 1.5s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .hidden { display: none; }
     </style>
 </head>
-<body onload="initApp()">
+<body>
 
-    <nav class="glass-nav p-3">
-        <div class="container mx-auto space-y-3">
-            <div class="flex items-center gap-2">
-                <div class="shrink-0 cursor-pointer" onclick="location.reload()">
-                    <span class="text-lg font-black italic tracking-tighter uppercase text-white">AMNES</span>
-                    <span class="text-lg font-black text-red-600 italic uppercase">FILM</span>
-                </div>
-                <div class="flex-grow">
-                    <input type="text" id="searchInput" onkeypress="handleEnter(event)" placeholder="Cari film..." class="w-full bg-white/5 p-2 rounded-lg border border-white/10 text-xs outline-none focus:border-red-600 text-white">
-                </div>
-                <button onclick="searchMulti()" class="bg-red-600 px-4 py-2 rounded-lg font-black text-[10px] uppercase italic shrink-0 text-white">CARI</button>
-            </div>
-            <div class="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
-                <select id="typeFilter" onchange="resetAndLoad()" class="text-red-500">
-                    <option value="all">SEMUA TIPE</option>
-                    <option value="movie">LAYAR LEBAR</option>
-                    <option value="tv">TV SERIES</option>
-                </select>
-                <select id="genreFilter" onchange="resetAndLoad()">
-                    <option value="">GENRE</option>
-                    <option value="16">ANIMASI</option>
-                    <option value="27">HOROR</option>
-                    <option value="35">KOMEDI</option>
-                    <option value="18">DRAMA</option>
-                </select>
-                <select id="yearFilter" onchange="resetAndLoad()">
-                    <option value="">TAHUN</option>
-                    <script>for(let y=2026; y>=1950; y--) document.write(`<option value="${y}">${y}</option>`);</script>
-                </select>
-            </div>
-        </div>
-    </nav>
+<div class="container">
+    <h1>Katalog Film</h1>
 
-    <main class="container mx-auto px-2 pt-36 pb-20">
-        <div id="movieGrid" class="movie-grid"></div>
-        <div class="flex justify-center mt-10">
-            <button onclick="loadMore()" class="bg-white/10 border border-white/20 px-8 py-3 rounded-xl font-black text-[10px] uppercase italic tracking-widest text-white">Muat Lainnya</button>
-        </div>
-    </main>
+    <div class="filter-group">
+        <select id="genreFilter" onchange="applyFilters()">
+            <option value="all">Semua Genre</option>
+            <option value="Action">Action</option>
+            <option value="Horor">Horor</option>
+            <option value="Drama">Drama</option>
+        </select>
 
-    <footer class="bg-[#030303] py-16 border-t border-white/5 text-center">
-        <p class="text-[14px] font-black tracking-[0.4em] text-white uppercase italic">AMNESFUBBIA ENTERTAINMENT</p>
-    </footer>
+        <select id="yearFilter" onchange="applyFilters()">
+            <option value="all">Semua Tahun</option>
+            <option value="2024">2024</option>
+            <option value="2023">2023</option>
+        </select>
 
-    <div id="movieModal" class="modal">
-        <div class="modal-content">
-            <button onclick="closeModal()" class="absolute top-4 right-4 bg-red-600 text-white w-10 h-10 rounded-full z-[100] flex items-center justify-center font-bold">✕</button>
-            <div class="flex flex-col md:flex-row">
-                <div class="md:w-1/3 p-5 bg-black/40 border-r border-white/5 text-center">
-                    <img id="mPoster" class="w-full rounded-xl shadow-2xl mb-4 border border-white/10">
-                    <p id="mRating" class="text-lg font-black text-red-600 bg-white/5 py-2 rounded-lg"></p>
-                </div>
-                <div class="md:w-2/3 p-6">
-                    <h2 id="mTitle" class="text-2xl font-black italic uppercase leading-tight mb-1 text-white"></h2>
-                    <p id="mSub" class="text-[10px] text-red-500 font-black mb-6 uppercase tracking-widest"></p>
-
-                    <p class="text-[9px] font-black text-gray-500 mb-2 uppercase italic tracking-widest">Pilih Sumber Trailer:</p>
-                    <div class="trailer-tab scrollbar-hide" id="trailerTabs"></div>
-                    <div class="video-container">
-                        <iframe id="mTrailerFrame" allowfullscreen allow="autoplay"></iframe>
-                    </div>
-
-                    <p class="text-[9px] font-black text-gray-500 mb-1 uppercase italic tracking-widest">PEMERAN UTAMA</p>
-                    <div id="mCast" class="cast-scroll scrollbar-hide border-b border-white/5 mb-4"></div>
-
-                    <p class="text-[9px] font-black text-gray-500 mb-2 uppercase italic tracking-widest">SINOPSIS</p>
-                    <p id="mDesc" class="text-[12px] text-gray-300 leading-relaxed italic mb-8"></p>
-
-                    <div class="space-y-6 pt-6 border-t border-white/10">
-                        <div class="space-y-3">
-                            <p class="text-[10px] font-black text-red-500 uppercase italic">STREAMING SERVER</p>
-                            <div id="streamLinks" class="grid grid-cols-2 sm:grid-cols-4 gap-2"></div>
-                        </div>
-                        <div class="space-y-3">
-                            <p class="text-[10px] font-black text-green-500 uppercase italic">DOWNLOAD SERVER</p>
-                            <div id="downloadLinks" class="grid grid-cols-2 sm:grid-cols-4 gap-2"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <select id="typeFilter" onchange="applyFilters()">
+            <option value="all">Semua Tipe</option>
+            <option value="Movie">Movie</option>
+            <option value="Series">Series</option>
+        </select>
+        
+        <button onclick="showWatchlist()" style="background: #333; color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer;">
+            ⭐ Lihat Watchlist
+        </button>
     </div>
 
-    <script>
-        const KEY = 'bfa7df5310c9974f62f26c6789a8c00d';
-        const IMG = 'https://image.tmdb.org/t/p/w500';
-        let page = 1;
-        let currentMovieData = null;
+    <div id="movieContainer" class="movie-grid">
+        <div class="movie-card skeleton-container">
+            <div class="skeleton"></div>
+            <div class="movie-info"><div style="height:20px; background:#2f2f2f; width:80%;"></div></div>
+        </div>
+    </div>
+</div>
 
-        function initApp() { loadMovies(); }
-        function handleEnter(e) { if (e.key === 'Enter') searchMulti(); }
+<script>
+    // Data Film Dummy
+    const allMovies = [
+        { id: 1, title: "Deadpool & Wolverine", genre: "Action", year: "2024", type: "Movie", img: "https://via.placeholder.com/200x300?text=Action+2024" },
+        { id: 2, title: "The Conjuring 4", genre: "Horor", year: "2024", type: "Movie", img: "https://via.placeholder.com/200x300?text=Horor+2024" },
+        { id: 3, title: "Succession", genre: "Drama", year: "2023", type: "Series", img: "https://via.placeholder.com/200x300?text=Drama+2023" },
+        { id: 4, title: "John Wick 4", genre: "Action", year: "2023", type: "Movie", img: "https://via.placeholder.com/200x300?text=Action+2023" }
+    ];
 
-        async function loadMovies(append = false) {
-            const type = document.getElementById('typeFilter').value;
-            const genre = document.getElementById('genreFilter').value;
-            const year = document.getElementById('yearFilter').value;
-            let fetchType = type === 'all' ? 'movie' : type;
-            let url = `https://api.themoviedb.org/3/discover/${fetchType}?api_key=${KEY}&with_origin_country=ID&language=id-ID&page=${page}&sort_by=popularity.desc`;
-            if (genre) url += `&with_genres=${genre}`;
-            if (year) url += `&primary_release_year=${year}`;
+    const container = document.getElementById('movieContainer');
 
-            const res = await fetch(url);
-            const data = await res.json();
-            const grid = document.getElementById('movieGrid');
-            if (!append) grid.innerHTML = '';
-            
-            data.results.forEach(m => {
-                if (!m.poster_path) return;
-                const card = document.createElement('div');
-                card.className = 'movie-card cursor-pointer';
-                card.onclick = () => showDetail(m.id, m.title ? 'movie' : 'tv');
-                card.innerHTML = `<img src="${IMG + m.poster_path}" class="w-full aspect-[2/3] object-cover"><div class="p-2 text-[7px] font-black truncate uppercase text-white">${m.title || m.name}</div>`;
-                grid.appendChild(card);
-            });
+    // Fungsi Render Utama
+    function displayMovies(movies) {
+        container.innerHTML = '';
+        if (movies.length === 0) {
+            container.innerHTML = '<p>Film tidak ditemukan.</p>';
+            return;
         }
 
-        async function showDetail(id, type) {
-            const res = await fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${KEY}&append_to_response=videos,credits&language=id-ID`);
-            const m = await res.json();
-            currentMovieData = { id, type, title: m.title || m.name };
-
-            document.getElementById('mPoster').src = IMG + m.poster_path;
-            document.getElementById('mTitle').innerText = m.title || m.name;
-            document.getElementById('mRating').innerText = "⭐ " + (m.vote_average ? m.vote_average.toFixed(1) : '0');
-            document.getElementById('mSub').innerText = `${(m.release_date || m.first_air_date || '').split('-')[0]} | ${m.genres.map(g => g.name).join(', ')}`;
-            document.getElementById('mDesc').innerText = m.overview || "Sinopsis tidak tersedia.";
-
-            // Cast
-            const castDiv = document.getElementById('mCast');
-            castDiv.innerHTML = m.credits.cast.slice(0, 8).map(c => `
-                <div class="cast-item">
-                    <img src="${c.profile_path ? IMG + c.profile_path : 'https://via.placeholder.com/100x100?text=Actor'}">
-                    <p class="text-white">${c.name.split(' ')[0]}</p>
+        movies.forEach(movie => {
+            const card = document.createElement('div');
+            card.className = 'movie-card';
+            card.innerHTML = `
+                <img src="${movie.img}" alt="${movie.title}" loading="lazy">
+                <div class="movie-info">
+                    <h3>${movie.title}</h3>
+                    <p>${movie.genre} | ${movie.year}</p>
+                    <button class="btn-watchlist" onclick="toggleWatchlist(${movie.id})">
+                        + Watchlist
+                    </button>
                 </div>
-            `).join('');
+            `;
+            container.appendChild(card);
+        });
+    }
 
-            // Setup Trailer Tabs
-            setupTrailerTabs(m);
+    // 1. Integrated Multi-Filter Logic
+    function applyFilters() {
+        const genre = document.getElementById('genreFilter').value;
+        const year = document.getElementById('yearFilter').value;
+        const type = document.getElementById('typeFilter').value;
 
-            // Server Links
-            const servers = [
-                { name: 'VidNest', url: 'https://vidnest.fun/' },
-                { name: 'VidLink', url: 'https://vidlink.pro/' },
-                { name: 'VidFast', url: 'https://vidfast.pro/' },
-                { name: 'VidRock', url: 'https://vidrock.net/' },
-                { name: 'Vidsrc-Ru', url: 'https://vidsrc-embed.ru/embed/' },
-                { name: 'RGShows', url: 'https://www.rgshows.ru/?p=1&m=m-' },
-                { name: 'VidEasy', url: 'https://videasy.su/' }
-            ];
+        const filtered = allMovies.filter(m => {
+            return (genre === 'all' || m.genre === genre) &&
+                   (year === 'all' || m.year === year) &&
+                   (type === 'all' || m.type === type);
+        });
 
-            const sContainer = document.getElementById('streamLinks');
-            const dContainer = document.getElementById('downloadLinks');
-            sContainer.innerHTML = ''; dContainer.innerHTML = '';
+        displayMovies(filtered);
+    }
 
-            servers.forEach(srv => {
-                let finalUrl = srv.name === 'RGShows' ? srv.url + id : srv.url + (type === 'movie' ? 'movie/' : 'tv/') + id;
-                sContainer.innerHTML += `<a href="${finalUrl}" target="_blank" class="btn-link btn-stream">${srv.name}</a>`;
-                dContainer.innerHTML += `<a href="${finalUrl}" target="_blank" class="btn-link btn-download">${srv.name}</a>`;
-            });
+    // 2. Watchlist Logic (Local Storage)
+    function toggleWatchlist(id) {
+        let watchlist = JSON.parse(localStorage.getItem('userWatchlist')) || [];
+        const movie = allMovies.find(m => m.id === id);
 
-            document.getElementById('movieModal').style.display = 'block';
-            document.body.style.overflow = 'hidden';
+        const isExist = watchlist.some(item => item.id === id);
+
+        if (!isExist) {
+            watchlist.push(movie);
+            alert(`${movie.title} berhasil ditambah ke Watchlist!`);
+        } else {
+            watchlist = watchlist.filter(item => item.id !== id);
+            alert(`${movie.title} dihapus dari Watchlist!`);
         }
 
-        function setupTrailerTabs(m) {
-            const tabsContainer = document.getElementById('trailerTabs');
-            tabsContainer.innerHTML = '';
-            
-            const youtubeTrailer = m.videos.results.find(v => v.type === 'Trailer');
-            const trailerSources = [];
+        localStorage.setItem('userWatchlist', JSON.stringify(watchlist));
+    }
 
-            if(youtubeTrailer) {
-                trailerSources.push({ name: 'YouTube', url: `https://www.youtube.com/embed/${youtubeTrailer.key}?autoplay=1` });
-            }
-            trailerSources.push({ name: 'VidLink', url: `https://vidlink.pro/${currentMovieData.type}/${currentMovieData.id}` });
-            trailerSources.push({ name: 'VidFast', url: `https://vidfast.pro/${currentMovieData.type}/${currentMovieData.id}` });
-            trailerSources.push({ name: 'RGShows', url: `https://www.rgshows.ru/?p=1&m=m-${currentMovieData.id}` });
+    function showWatchlist() {
+        const watchlist = JSON.parse(localStorage.getItem('userWatchlist')) || [];
+        displayMovies(watchlist);
+        alert("Menampilkan daftar favorit Anda");
+    }
 
-            trailerSources.forEach((src, index) => {
-                const btn = document.createElement('button');
-                btn.className = `btn-tab ${index === 0 ? 'active' : ''}`;
-                btn.innerText = src.name;
-                btn.onclick = () => {
-                    document.querySelectorAll('.btn-tab').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    document.getElementById('mTrailerFrame').src = src.url;
-                };
-                tabsContainer.appendChild(btn);
-            });
+    // Simulasi Delay untuk Skeleton Loading
+    window.onload = () => {
+        setTimeout(() => {
+            displayMovies(allMovies);
+        }, 1500); // 1.5 detik loading
+    };
 
-            // Play first source by default
-            document.getElementById('mTrailerFrame').src = trailerSources[0].url;
-        }
-
-        function loadMore() { page++; loadMovies(true); }
-        function resetAndLoad() { page = 1; loadMovies(); }
-        function closeModal() { document.getElementById('movieModal').style.display = 'none'; document.getElementById('mTrailerFrame').src = ''; document.body.style.overflow = 'auto'; }
-
-        async function searchMulti() {
-            const q = document.getElementById('searchInput').value; if (!q) return;
-            const res = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${KEY}&query=${encodeURIComponent(q)}&language=id-ID`);
-            const data = await res.json();
-            const grid = document.getElementById('movieGrid'); grid.innerHTML = '';
-            data.results.forEach(m => {
-                if(!m.poster_path) return;
-                const card = document.createElement('div');
-                card.className = 'movie-card';
-                card.onclick = () => showDetail(m.id, m.title ? 'movie' : 'tv');
-                card.innerHTML = `<img src="${IMG + m.poster_path}" class="w-full aspect-[2/3] object-cover"><div class="p-2 text-[7px] font-black truncate uppercase text-white">${m.title || m.name}</div>`;
-                grid.appendChild(card);
-            });
-        }
-    </script>
+</script>
 </body>
 </html>
