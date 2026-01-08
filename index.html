@@ -20,7 +20,7 @@
         @media (min-width: 768px) { .modal-content { min-height: auto; margin: 20px auto; border-radius: 24px; border: 1px solid #222; } }
         .btn-premium { @apply flex items-center justify-center gap-3 py-3 px-6 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300 mb-3 w-full; background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%); border: 1px solid rgba(255,255,255,0.08); }
         .btn-premium:hover { border-color: #ef4444; transform: translateY(-3px); }
-        .btn-dl-utama { color: #10b981; border-color: rgba(16, 185, 129, 0.3); background: rgba(16, 185, 129, 0.05) !important; font-size: 11px !important; }
+        .btn-dl-utama { color: #10b981; border-color: rgba(16, 185, 129, 0.3); background: rgba(16, 185, 129, 0.05) !important; font-size: 12px !important; }
         .scrollbar-hide::-webkit-scrollbar { display: none; }
     </style>
 </head>
@@ -33,19 +33,19 @@
                     <span class="text-xl font-black italic uppercase">AMNESFUBBIA<span class="text-red-600">FILM</span></span>
                 </div>
                 <div class="relative flex-grow">
-                    <input type="text" id="searchInput" onkeypress="if(event.key==='Enter') searchMulti()" placeholder="Cari Film Indonesia..." class="w-full bg-white/5 border border-white/10 p-3 rounded-xl text-xs outline-none focus:border-red-600 transition-all">
+                    <input type="text" id="searchInput" onkeypress="if(event.key==='Enter') searchMulti()" placeholder="Cari Film atau Aktor..." class="w-full bg-white/5 border border-white/10 p-3 rounded-xl text-xs outline-none focus:border-red-600 transition-all">
                 </div>
             </div>
             <div class="flex gap-2 overflow-x-auto scrollbar-hide pb-1">
-                <select id="typeFilter" onchange="resetAndLoad()" class="bg-zinc-900 text-white font-bold text-[10px] p-2.5 rounded-lg border border-white/5 uppercase outline-none">
+                <select id="typeFilter" onchange="resetAndLoad()" class="bg-zinc-900 text-white font-bold text-[10px] p-2.5 rounded-lg border border-white/5 uppercase">
                     <option value="movie">FILM</option>
                     <option value="tv">SERIES</option>
                 </select>
-                <select id="genreFilter" onchange="resetAndLoad()" class="bg-zinc-900 text-white text-[10px] font-bold p-2.5 rounded-lg border border-white/5 uppercase outline-none">
+                <select id="genreFilter" onchange="resetAndLoad()" class="bg-zinc-900 text-white text-[10px] font-bold p-2.5 rounded-lg border border-white/5 uppercase">
                     <option value="">GENRE</option>
                     <option value="28">Aksi</option><option value="12">Petualangan</option><option value="35">Komedi</option><option value="27">Horor</option><option value="18">Drama</option><option value="10749">Romantis</option>
                 </select>
-                <select id="yearFilter" onchange="resetAndLoad()" class="bg-zinc-900 text-white text-[10px] font-bold p-2.5 rounded-lg border border-white/5 uppercase outline-none">
+                <select id="yearFilter" onchange="resetAndLoad()" class="bg-zinc-900 text-white text-[10px] font-bold p-2.5 rounded-lg border border-white/5 uppercase">
                     <option value="">TAHUN</option>
                     <script>for(let y=2026; y>=1920; y--) document.write(`<option value="${y}">${y}</option>`);</script>
                 </select>
@@ -56,7 +56,7 @@
     <main class="container mx-auto pt-32 pb-20 px-2">
         <div id="movieGrid" class="movie-grid"></div>
         <div id="loadMoreContainer" class="flex justify-center mt-10">
-            <button onclick="loadMore()" class="bg-zinc-900 border border-white/10 text-white font-black text-[10px] uppercase px-12 py-4 rounded-full hover:bg-red-600 transition-all">Muat Lebih Banyak</button>
+            <button onclick="loadMore()" class="bg-zinc-900 border border-white/10 text-white font-black text-[10px] uppercase px-12 py-4 rounded-full">Muat Lebih Banyak</button>
         </div>
     </main>
 
@@ -67,15 +67,11 @@
                 <div class="lg:w-2/3 p-5 lg:p-10 border-r border-white/5">
                     <h2 id="mTitle" class="text-2xl lg:text-4xl font-black italic uppercase mb-2 text-white"></h2>
                     <p id="mMeta" class="text-[10px] font-bold text-zinc-500 uppercase mb-6"></p>
-                    
-                    <div class="aspect-video bg-black rounded-2xl overflow-hidden mb-4 border border-white/10">
+                    <div class="aspect-video bg-black rounded-2xl overflow-hidden mb-8 border border-white/10">
                         <iframe id="mainPlayer" class="w-full h-full" allowfullscreen allow="autoplay"></iframe>
                     </div>
-
-                    <div id="trailerFallbacks" class="flex gap-2 mb-8"></div>
-
                     <p id="mDesc" class="text-sm text-zinc-400 leading-relaxed italic mb-8"></p>
-                    <p class="text-[9px] font-black text-red-600 uppercase mb-4 tracking-widest">Pemeran Film</p>
+                    <p class="text-[9px] font-black text-red-600 uppercase mb-4 tracking-widest">Pemeran (Klik untuk Cari Film Lainnya)</p>
                     <div id="mCast" class="flex overflow-x-auto gap-4 scrollbar-hide"></div>
                 </div>
 
@@ -83,7 +79,7 @@
                     <p class="text-[10px] font-black text-zinc-600 uppercase mb-4 tracking-widest">Streaming Server</p>
                     <div id="streamLinks"></div>
                     <div class="my-8 border-t border-white/5"></div>
-                    <p class="text-[10px] font-black text-zinc-600 uppercase mb-4 tracking-widest">Opsi Download WEB-DL</p>
+                    <p class="text-[10px] font-black text-zinc-600 uppercase mb-4 tracking-widest">Download WEB-DL</p>
                     <div id="downloadLinks"></div>
                 </div>
             </div>
@@ -117,50 +113,40 @@
         }
 
         async function showDetail(id, type) {
-            const res = await fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&append_to_response=videos,credits,external_ids&language=id-ID`);
+            const res = await fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&append_to_response=videos,credits&language=id-ID`);
             const m = await res.json();
-            const title = m.title || m.name;
-            const imdbId = m.external_ids?.imdb_id;
-
-            document.getElementById('mTitle').innerText = title;
+            document.getElementById('mTitle').innerText = m.title || m.name;
             document.getElementById('mMeta').innerText = `${m.release_date?.split('-')[0] || ''} • ${m.genres.map(g=>g.name).join(', ')} • ⭐ ${m.vote_average.toFixed(1)}`;
             document.getElementById('mDesc').innerText = m.overview || "Sinopsis belum tersedia.";
             
-            // Player Logic (YouTube Trailer)
-            const yt = m.videos.results.find(v => v.site === 'YouTube' && v.type === 'Trailer') || m.videos.results[0];
-            document.getElementById('mainPlayer').src = yt ? `https://www.youtube.com/embed/${yt.key}?autoplay=1` : '';
-
-            // Tombol Cadangan Jika YouTube Gagal
-            let fallbacks = `<p class="text-[8px] text-zinc-600 font-black uppercase mr-2 mt-2">Trailer Mati? Cek di:</p>`;
-            if(imdbId) {
-                fallbacks += `<a href="https://www.imdb.com/title/${imdbId}/videogallery" target="_blank" class="px-3 py-1 bg-yellow-500 text-black text-[9px] font-bold rounded hover:bg-yellow-400 transition">IMDb Trailer</a>`;
+            // Logic Trailer (YouTube & Vimeo In-Frame)
+            const video = m.videos.results.find(v => (v.site === 'YouTube' || v.site === 'Vimeo') && v.type === 'Trailer') || m.videos.results[0];
+            let trailerUrl = '';
+            if (video) {
+                if (video.site === 'YouTube') trailerUrl = `https://www.youtube.com/embed/${video.key}?autoplay=1`;
+                else if (video.site === 'Vimeo') trailerUrl = `https://player.vimeo.com/video/${video.key}?autoplay=1`;
             }
-            fallbacks += `<a href="https://www.rottentomatoes.com/search?search=${encodeURIComponent(title)}" target="_blank" class="px-3 py-1 bg-red-600 text-white text-[9px] font-bold rounded hover:bg-red-500 transition ml-1">Rotten Tomatoes</a>`;
-            document.getElementById('trailerFallbacks').innerHTML = fallbacks;
+            document.getElementById('mainPlayer').src = trailerUrl;
 
-            // Link Streaming
+            // 3 Server Streaming
             document.getElementById('streamLinks').innerHTML = `
-                <button onclick="changePlayer('https://vidsrc.xyz/embed/${type}/${id}')" class="btn-premium btn-stream text-red-500"><i class="fa-solid fa-play"></i> Server Streaming 1</button>
-                <button onclick="changePlayer('https://vidsrc.to/embed/${type}/${id}')" class="btn-premium btn-stream text-red-500"><i class="fa-solid fa-play"></i> Server Streaming 2</button>
+                <button onclick="changePlayer('https://vidsrc.xyz/embed/${type}/${id}')" class="btn-premium text-red-500"><i class="fa-solid fa-play"></i> Server 1 (XYZ)</button>
+                <button onclick="changePlayer('https://vidsrc.to/embed/${type}/${id}')" class="btn-premium text-red-500"><i class="fa-solid fa-play"></i> Server 2 (TO)</button>
+                <button onclick="changePlayer('https://vidrock.net/embed/${type}/${id}')" class="btn-premium text-red-500"><i class="fa-solid fa-play"></i> Server 3 (PRO)</button>
             `;
             
-            // Link Download (VIP dl.vidsrc.vip dikembalikan)
+            // Link Download Tunggal (Sesuai Permintaan)
             document.getElementById('downloadLinks').innerHTML = `
                 <a href="https://dl.vidsrc.vip/${type}/${id}" target="_blank" class="btn-premium btn-dl-utama">
                     <i class="fa-solid fa-download"></i> DOWNLOAD WEB-DL (VIP)
                 </a>
-                <a href="https://www.google.com/search?q=site:terabox.com+${encodeURIComponent(title)}+Indonesia" target="_blank" class="btn-premium" style="color:#a855f7">
-                    <i class="fa-solid fa-box-open"></i> Cari Link TeraBox
-                </a>
-                <a href="https://www.google.com/search?q=${encodeURIComponent(title)}+indomaxx21" target="_blank" class="btn-premium" style="color:#3b82f6">
-                    <i class="fa-solid fa-magnifying-glass"></i> Cari di Indomaxx21
-                </a>
             `;
 
+            // Cast Clickable Search
             const castCont = document.getElementById('mCast');
             castCont.innerHTML = m.credits.cast.slice(0, 10).map(c => `
                 <div class="text-center shrink-0 cursor-pointer" onclick="searchByActor('${c.name}')">
-                    <img src="${c.profile_path ? 'https://image.tmdb.org/t/p/w185'+c.profile_path : 'https://via.placeholder.com/100x100'}" class="w-16 h-16 rounded-full object-cover">
+                    <img src="${c.profile_path ? 'https://image.tmdb.org/t/p/w185'+c.profile_path : 'https://via.placeholder.com/100x100'}" class="w-16 h-16 rounded-full object-cover border border-zinc-800">
                     <p class="text-[8px] mt-2 text-zinc-500">${c.name}</p>
                 </div>
             `).join('');
@@ -174,6 +160,7 @@
         function changePlayer(url) { document.getElementById('mainPlayer').src = url + "?autoplay=1"; }
         function loadMore() { currentPage++; loadMovies(true); }
         function resetAndLoad() { currentPage = 1; loadMovies(); }
+
         async function searchMulti() {
             const q = document.getElementById('searchInput').value; if(!q) return;
             const res = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(q)}&language=id-ID`);
@@ -188,7 +175,14 @@
             });
             document.getElementById('loadMoreContainer').style.display = 'none';
         }
-        function searchByActor(name) { closeModal(); document.getElementById('searchInput').value = name; searchMulti(); window.scrollTo({top:0, behavior:'smooth'}); }
+
+        // Fungsi klik pemeran langsung cari film lainnya
+        function searchByActor(name) {
+            closeModal();
+            document.getElementById('searchInput').value = name;
+            searchMulti();
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
     </script>
 </body>
 </html>
