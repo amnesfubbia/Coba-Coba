@@ -32,8 +32,7 @@
         .video-container { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 12px; overflow: hidden; border: 1px solid #333; }
         .btn-link { @apply py-3 rounded-xl text-[9px] font-black uppercase italic text-center transition-all active:scale-95 flex items-center justify-center gap-2; }
         .btn-stream { @apply bg-zinc-800 text-white border border-white/5 hover:bg-red-600; }
-        /* Tombol Download warna Hijau Emerald agar beda dari streaming */
-        .btn-download { @apply bg-emerald-600 text-white hover:bg-emerald-500 font-black; }
+        .btn-download { @apply bg-emerald-600 text-white hover:bg-emerald-500; }
 
         .scrollbar-hide::-webkit-scrollbar { display: none; }
     </style>
@@ -176,33 +175,34 @@
             document.getElementById('mSub').innerText = `${(m.release_date || m.first_air_date || '').split('-')[0]} | ${m.genres.map(g => g.name).join(' • ')}`;
             document.getElementById('mDesc').innerText = m.overview || "Sinopsis tidak tersedia.";
 
-            // Trailer YouTube
             const youtube = m.videos.results.find(v => v.site === 'YouTube' && v.type === 'Trailer') || m.videos.results[0];
             document.getElementById('mTrailerFrame').src = youtube ? `https://www.youtube.com/embed/${youtube.key}?autoplay=1` : '';
 
-            // SERVER STREAMING (Urutan Sebelumnya)
+            // DAFTAR STREAMING (7 Server)
             const streamServers = [
+                { n: 'VidSrc TO', u: `https://vidsrc.to/embed/${type}/${id}` },
+                { n: 'RGShows', u: `https://www.rgshows.ru/embed/${type}/${id}` }, // Fixed URL format
                 { n: 'VidRock', u: `https://vidrock.net/embed/${type}/${id}` },
-                { n: 'RGShows', u: `https://www.rgshows.ru/embed/${type}/${id}` },
-                { n: 'VidLink', u: `https://vidlink.pro/embed/${type}/${id}` }
+                { n: 'VidNest', u: `https://vidnest.fun/embed/${type}/${id}` },
+                { n: 'VidLink Pro', u: `https://vidlink.pro/embed/${type}/${id}` },
+                { n: 'VidEasy', u: `https://videasy.su/embed/${type}/${id}` },
+                { n: 'VidFast', u: `https://vidfast.pro/embed/${type}/${id}` }
             ];
 
-            // SERVER DOWNLOAD (Sesuai Permintaan Baru)
+            // DAFTAR DOWNLOAD (2 Server)
             const downloadServers = [
-                { n: 'Server Utama (VIP)', u: `https://dl.vidsrc.vip/${type}/${id}` },
-                { n: 'Server Drive Plus', u: `https://drive.plus/embed/${type}/${id}` },
-                { n: 'Server VidSrc TO', u: `https://vidsrc.to/embed/${type}/${id}` },
-                { n: 'Server 2Embed', u: `https://2embed.cc/embed/${type}/${id}` }
+                { n: 'Direct DL (VIP)', u: `https://dl.vidsrc.vip/${type}/${id}` },
+                { n: 'FlashStream DL', u: `https://flashstream.cc/download/${type}/${id}` }
             ];
 
             const sCont = document.getElementById('streamLinks');
             const dCont = document.getElementById('downloadLinks');
             sCont.innerHTML = ''; dCont.innerHTML = '';
 
-            streamServers.forEach(s => sCont.innerHTML += `<a href="${s.u}" target="_blank" class="btn-link btn-stream">${s.n}</a>`);
-            downloadServers.forEach(d => dCont.innerHTML += `<a href="${d.u}" target="_blank" class="btn-link btn-download"><i class="fa-solid fa-cloud-arrow-down"></i> ${d.n}</a>`);
+            streamServers.forEach(s => sCont.innerHTML += `<a href="${s.u}" target="_blank" class="btn-link btn-stream"><i class="fa-solid fa-play text-[7px]"></i> ${s.n}</a>`);
+            downloadServers.forEach(d => dCont.innerHTML += `<a href="${d.u}" target="_blank" class="btn-link btn-download"><i class="fa-solid fa-download"></i> ${d.n}</a>`);
 
-            document.getElementById('mCast').innerHTML = m.credits.cast.slice(0, 5).map(c => `<span class="bg-zinc-800 text-[9px] px-3 py-1 rounded-full">${c.name}</span>`).join('');
+            document.getElementById('mCast').innerHTML = m.credits.cast.slice(0, 5).map(c => `<span class="bg-zinc-800 text-[9px] px-3 py-1 rounded-full border border-white/5">${c.name}</span>`).join('');
             document.getElementById('movieModal').style.display = 'block';
             document.body.style.overflow = 'hidden';
         }
@@ -216,6 +216,7 @@
         }
 
         function showWatchlist() { isSearch = true; renderGrid(watchlist, false); document.getElementById('loadMoreContainer').style.display = 'none'; }
+        
         async function searchMulti() {
             const q = document.getElementById('searchInput').value; if (!q) return;
             isSearch = true;
