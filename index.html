@@ -5,114 +5,125 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Amnesfubbia Entertainment</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
-        body { background-color: #050505; color: #ffffff; font-family: 'Inter', sans-serif; min-height: 100vh; }
+        body { background-color: #050505; color: #ffffff; font-family: 'Inter', sans-serif; margin: 0; }
+        
         .glass-nav { background: rgba(8, 8, 8, 0.98); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255, 255, 255, 0.1); z-index: 1000; position: fixed; top: 0; width: 100%; }
-        .movie-card { background: #111; border-radius: 12px; overflow: hidden; position: relative; border: 1px solid rgba(255,255,255,0.05); }
-        .type-badge { position: absolute; top: 8px; left: 8px; background: #ef4444; color: white; font-size: 8px; font-weight: 900; padding: 3px 7px; border-radius: 4px; z-index: 10; text-transform: uppercase; }
-        .modal { display: none; position: fixed; inset: 0; z-index: 3000; background: rgba(0,0,0,0.95); overflow-y: auto; }
         
-        /* Perbaikan Pemeran - Tanpa Batasan Sempit */
-        .actor-item { flex: 0 0 auto; width: 100px; text-align: center; padding: 10px; }
-        .actor-item img { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 2px solid #ef4444; margin-bottom: 8px; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3); }
+        /* Grid 1 Baris 3 Film (Mobile) */
+        .movie-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+        @media (min-width: 640px) { .movie-grid { grid-template-columns: repeat(4, 1fr); gap: 15px; } }
+        @media (min-width: 1024px) { .movie-grid { grid-template-columns: repeat(6, 1fr); } }
+
+        .movie-card { background: #111; border-radius: 8px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); }
+
+        /* Modal & Konten */
+        .modal { display: none; position: fixed; inset: 0; z-index: 3000; background: rgba(0,0,0,0.95); overflow-y: auto; padding: 15px 10px; }
+        .modal-content { background: #0a0a0a; width: 100%; max-width: 900px; border-radius: 20px; margin: auto; position: relative; border: 1px solid #333; }
+
+        .video-container { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 10px; overflow: hidden; margin-bottom: 20px; }
         
+        /* Ukuran Pemeran Lebih Kecil */
+        .cast-scroll { display: flex; overflow-x: auto; gap: 10px; padding: 10px 0; }
+        .cast-item { flex: 0 0 70px; text-align: center; }
+        .cast-item img { width: 55px; height: 55px; border-radius: 50%; object-fit: cover; border: 2px solid #ef4444; margin: 0 auto 5px; }
+        .cast-item p { font-size: 8px; font-weight: 700; text-transform: uppercase; color: #fff; line-height: 1.1; }
+
         .scrollbar-hide::-webkit-scrollbar { display: none; }
-        select { background-color: #1a1a1a; color: white; border: 1px solid #333; padding: 8px; border-radius: 8px; font-size: 11px; font-weight: bold; text-transform: uppercase; }
+        select { background: #1a1a1a; color: white; border: 1px solid #333; padding: 6px 10px; border-radius: 8px; font-size: 10px; font-weight: bold; }
     </style>
 </head>
 <body onload="initApp()">
 
-    <nav class="glass-nav p-4">
-        <div class="container mx-auto space-y-4">
-            <div class="flex items-center gap-3">
+    <nav class="glass-nav p-3">
+        <div class="container mx-auto space-y-3">
+            <div class="flex items-center gap-2">
                 <div class="shrink-0 cursor-pointer" onclick="location.reload()">
-                    <span class="text-2xl font-black italic tracking-tighter">AMNES</span><span class="text-2xl font-black text-red-600 italic">FILM</span>
+                    <span class="text-lg font-black italic tracking-tighter uppercase">AMNES</span>
+                    <span class="text-lg font-black text-red-600 italic uppercase">FILM</span>
                 </div>
-                <input type="text" id="searchInput" placeholder="Cari film atau aktor..." class="flex-grow bg-white/5 p-3 rounded-xl border border-white/10 text-xs outline-none focus:border-red-600 transition-all">
-                <button onclick="searchMulti()" class="bg-red-600 px-5 py-3 rounded-xl font-black text-[11px] uppercase italic">Cari</button>
+                <div class="flex-grow relative">
+                    <input type="text" id="searchInput" onkeypress="handleEnter(event)" placeholder="Cari film..." class="w-full bg-white/5 p-2 rounded-lg border border-white/10 text-xs outline-none focus:border-red-600">
+                </div>
+                <button onclick="searchMulti()" class="bg-red-600 px-4 py-2 rounded-lg font-black text-[10px] uppercase italic shrink-0">CARI</button>
             </div>
             
             <div class="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
                 <select id="typeFilter" onchange="resetAndLoad()" class="text-red-500">
-                    <option value="all">Semua Tipe</option>
-                    <option value="movie">Layar Lebar</option>
-                    <option value="tv">TV Series</option>
-                    <option value="short">Short Movie</option>
+                    <option value="all">SEMUA TIPE</option>
+                    <option value="movie">LAYAR LEBAR</option>
+                    <option value="tv">TV SERIES</option>
                 </select>
                 <select id="genreFilter" onchange="resetAndLoad()">
-                    <option value="">Semua Genre</option>
-                    <option value="16">Animasi</option>
-                    <option value="27">Horor</option>
-                    <option value="35">Komedi</option>
-                    <option value="18">Drama</option>
-                    <option value="28">Aksi</option>
-                    <option value="10749">Romantis</option>
-                    <option value="99">Dokumenter</option>
-                    <option value="10751">Keluarga</option>
+                    <option value="">GENRE</option>
+                    <option value="16">ANIMASI</option>
+                    <option value="27">HOROR</option>
+                    <option value="35">KOMEDI</option>
+                    <option value="18">DRAMA</option>
                 </select>
                 <select id="yearFilter" onchange="resetAndLoad()">
-                    <option value="">Semua Tahun</option>
-                    <script>
-                        for(let y=2026; y>=1950; y--) document.write(`<option value="${y}">${y}</option>`);
-                    </script>
+                    <option value="">TAHUN</option>
+                    <script>for(let y=2026; y>=1950; y--) document.write(`<option value="${y}">${y}</option>`);</script>
                 </select>
             </div>
         </div>
     </nav>
 
-    <main class="container mx-auto px-4 pt-44 pb-20">
-        <div id="movieGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            <div class="col-span-full text-center py-20 opacity-50 italic">Memuat film Indonesia...</div>
+    <main class="container mx-auto px-2 pt-36 pb-20">
+        <div id="movieGrid" class="movie-grid">
+            <div class="col-span-full text-center py-20 opacity-50 italic text-xs uppercase">Menghubungkan Server...</div>
         </div>
-        
-        <div class="flex justify-center mt-12">
-            <button id="loadMoreBtn" onclick="loadMore()" class="bg-white/10 border border-white/20 hover:bg-red-600 px-12 py-4 rounded-2xl font-black text-xs uppercase italic tracking-widest transition-all">Tampilkan Lebih Banyak</button>
+        <div class="flex justify-center mt-10">
+            <button onclick="loadMore()" class="bg-white/10 border border-white/20 px-8 py-3 rounded-xl font-black text-[10px] uppercase italic tracking-widest">Muat Lainnya</button>
         </div>
     </main>
 
-    <footer class="bg-[#030303] py-20 border-t border-white/5 text-center">
-        <p class="text-[18px] font-black tracking-[0.6em] text-white uppercase italic">AMNESFUBBIA ENTERTAINMENT</p>
+    <footer class="bg-[#030303] py-16 border-t border-white/5 text-center">
+        <p class="text-[14px] font-black tracking-[0.4em] text-white uppercase italic">AMNESFUBBIA ENTERTAINMENT</p>
     </footer>
 
-    <div id="movieModal" class="modal flex items-start justify-center p-4">
-        <div class="bg-[#0a0a0a] w-full max-w-5xl rounded-3xl overflow-hidden relative border border-white/10 shadow-2xl mt-10">
-            <button onclick="closeModal()" class="absolute top-5 right-5 bg-red-600 text-white w-12 h-12 rounded-full z-[100] flex items-center justify-center shadow-lg">✕</button>
+    <div id="movieModal" class="modal">
+        <div class="modal-content">
+            <button onclick="closeModal()" class="absolute top-4 right-4 bg-red-600 text-white w-10 h-10 rounded-full z-[100] flex items-center justify-center font-bold">✕</button>
             
             <div class="flex flex-col md:flex-row">
-                <div class="md:w-1/3 p-8 bg-black/40 border-r border-white/5">
-                    <img id="mPoster" class="w-full rounded-2xl shadow-2xl transition-transform duration-500 hover:scale-105">
+                <div class="md:w-1/3 p-5 bg-black/40 border-r border-white/5">
+                    <img id="mPoster" class="w-full rounded-xl shadow-2xl">
+                    <div class="mt-4 bg-white/5 p-2 rounded-lg text-center">
+                        <p id="mRating" class="text-lg font-black text-red-600"></p>
+                    </div>
                 </div>
 
-                <div class="md:w-2/3 p-8 flex flex-col">
-                    <h2 id="mTitle" class="text-4xl font-black italic tracking-tighter uppercase mb-2 leading-none"></h2>
-                    <p id="mSub" class="text-xs text-red-500 font-bold mb-8 uppercase tracking-widest"></p>
+                <div class="md:w-2/3 p-6">
+                    <h2 id="mTitle" class="text-2xl font-black italic uppercase leading-tight"></h2>
+                    <p id="mSub" class="text-[10px] text-red-500 font-black mb-6 uppercase"></p>
 
-                    <p class="text-[10px] font-black text-gray-500 uppercase mb-3 italic tracking-widest">Official Trailer</p>
-                    <div class="w-full aspect-video bg-black rounded-2xl overflow-hidden border border-white/10 mb-8">
-                        <iframe id="mTrailer" class="w-full h-full" frameborder="0" allowfullscreen allow="autoplay"></iframe>
+                    <p class="text-[9px] font-black text-gray-500 mb-2 uppercase italic tracking-widest">OFFICIAL TRAILER</p>
+                    <div class="video-container">
+                        <iframe id="mTrailer" allowfullscreen allow="autoplay"></iframe>
                     </div>
 
-                    <p class="text-[10px] font-black text-gray-500 uppercase mb-3 italic tracking-widest">Pemeran Utama</p>
-                    <div id="mCast" class="flex overflow-x-auto gap-2 pb-6 scrollbar-hide mb-6 border-b border-white/5"></div>
+                    <p class="text-[9px] font-black text-gray-500 mb-1 uppercase italic tracking-widest">PEMERAN</p>
+                    <div id="mCast" class="cast-scroll scrollbar-hide"></div>
 
-                    <p class="text-[10px] font-black text-gray-500 uppercase mb-3 italic tracking-widest">Sinopsis Film</p>
-                    <p id="mDesc" class="text-[14px] text-gray-300 leading-relaxed italic mb-12"></p>
+                    <p class="text-[9px] font-black text-gray-500 mb-2 uppercase italic tracking-widest">SINOPSIS</p>
+                    <p id="mDesc" class="text-[12px] text-gray-300 leading-relaxed italic mb-8"></p>
 
-                    <div class="mt-auto grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 gap-4 pt-6 border-t border-white/10">
                         <div class="space-y-2">
-                            <p class="text-[10px] font-black text-red-500 uppercase italic">Streaming</p>
-                            <div class="flex gap-2">
-                                <a id="s1" target="_blank" class="flex-1 bg-red-600 text-center py-4 rounded-xl text-[10px] font-black uppercase italic">Server 1</a>
-                                <a id="s2" target="_blank" class="flex-1 bg-white/10 text-center py-4 rounded-xl text-[10px] font-black uppercase italic border border-white/10">Server 2</a>
+                            <p class="text-[9px] font-black text-red-500 uppercase italic">STREAMING SERVER</p>
+                            <div class="flex flex-wrap gap-2">
+                                <a id="s1" target="_blank" class="flex-1 min-w-[100px] bg-red-600 text-center py-3 rounded-lg text-[9px] font-black uppercase italic">SERVER 1</a>
+                                <a id="s2" target="_blank" class="flex-1 min-w-[100px] bg-white/10 text-center py-3 rounded-lg text-[9px] font-black uppercase italic border border-white/10">SERVER 2</a>
+                                <a id="sUtelly" target="_blank" class="flex-1 min-w-[100px] bg-blue-600 text-center py-3 rounded-lg text-[9px] font-black uppercase italic">SERVER 3 (UTELLY)</a>
                             </div>
                         </div>
                         <div class="space-y-2">
-                            <p class="text-[10px] font-black text-green-500 uppercase italic">Download</p>
+                            <p class="text-[9px] font-black text-green-500 uppercase italic">DOWNLOAD SERVER</p>
                             <div class="flex gap-2">
-                                <a id="d1" target="_blank" class="flex-1 bg-green-700 text-center py-4 rounded-xl text-[10px] font-black uppercase italic">Server 1</a>
-                                <a id="d2" target="_blank" class="flex-1 bg-blue-700 text-center py-4 rounded-xl text-[10px] font-black uppercase italic">Server 2</a>
+                                <a id="d1" target="_blank" class="flex-1 bg-green-700 text-center py-3 rounded-lg text-[9px] font-black uppercase italic">SERVER 1</a>
+                                <a id="d2" target="_blank" class="flex-1 bg-blue-800 text-center py-3 rounded-lg text-[9px] font-black uppercase italic">SERVER 2</a>
                             </div>
                         </div>
                     </div>
@@ -126,9 +137,13 @@
         const IMG = 'https://image.tmdb.org/t/p/w500';
         let page = 1;
 
-        function initApp() { 
-            try { loadMovies(); } 
-            catch(e) { document.getElementById('movieGrid').innerHTML = "Terjadi kendala koneksi."; }
+        function initApp() { loadMovies(); }
+
+        // Fungsi Enter di Keyboard
+        function handleEnter(e) {
+            if (e.key === 'Enter') {
+                searchMulti();
+            }
         }
 
         async function loadMovies(append = false) {
@@ -136,32 +151,25 @@
             const genre = document.getElementById('genreFilter').value;
             const year = document.getElementById('yearFilter').value;
             
-            let fetchType = type === 'all' || type === 'short' ? 'movie' : type;
+            let fetchType = type === 'all' ? 'movie' : type;
             let url = `https://api.themoviedb.org/3/discover/${fetchType}?api_key=${KEY}&with_origin_country=ID&language=id-ID&page=${page}&sort_by=popularity.desc`;
             
             if (genre) url += `&with_genres=${genre}`;
             if (year) url += `&primary_release_year=${year}`;
-            if (type === 'short') url += `&with_runtime.lte=45`;
 
             const res = await fetch(url);
             const data = await res.json();
             const grid = document.getElementById('movieGrid');
             if (!append) grid.innerHTML = '';
             
-            if(data.results.length === 0) {
-                grid.innerHTML = `<div class="col-span-full text-center py-20 italic">Tidak ada film ditemukan untuk kriteria ini.</div>`;
-                return;
-            }
-
             data.results.forEach(m => {
                 if (!m.poster_path) return;
                 const card = document.createElement('div');
                 card.className = 'movie-card cursor-pointer';
                 card.onclick = () => showDetail(m.id, m.title ? 'movie' : 'tv');
                 card.innerHTML = `
-                    <div class="type-badge">${m.title ? 'Layar Lebar' : 'TV Series'}</div>
                     <img src="${IMG + m.poster_path}" class="w-full aspect-[2/3] object-cover" loading="lazy">
-                    <div class="p-3 text-[10px] font-black truncate uppercase text-gray-200">${m.title || m.name}</div>
+                    <div class="p-2 text-[7px] font-black truncate uppercase text-gray-300">${m.title || m.name}</div>
                 `;
                 grid.appendChild(card);
             });
@@ -173,37 +181,35 @@
             
             document.getElementById('mPoster').src = IMG + m.poster_path;
             document.getElementById('mTitle').innerText = m.title || m.name;
+            document.getElementById('mRating').innerText = "⭐ " + (m.vote_average ? m.vote_average.toFixed(1) : '0');
             
             const year = (m.release_date || m.first_air_date || '').split('-')[0];
             const genres = m.genres.map(g => g.name).join(', ');
-            const rating = m.vote_average ? m.vote_average.toFixed(1) : '0';
-            document.getElementById('mSub').innerText = `${year} | ⭐ ${rating} | ${genres}`;
+            document.getElementById('mSub').innerText = `${year} | ${genres}`;
             
-            // Fix Trailer
-            let video = m.videos.results.find(v => v.type === 'Trailer');
-            if(!video && m.videos.results.length > 0) video = m.videos.results[0];
-            document.getElementById('mTrailer').src = video ? `https://www.youtube.com/embed/${video.key}?autoplay=1&mute=1` : '';
+            // Trailer tanpa MUTE
+            let video = m.videos.results.find(v => v.type === 'Trailer') || m.videos.results[0];
+            document.getElementById('mTrailer').src = video ? `https://www.youtube.com/embed/${video.key}?autoplay=1` : '';
 
-            document.getElementById('mDesc').innerText = m.overview || "Sinopsis belum tersedia dalam Bahasa Indonesia.";
+            document.getElementById('mDesc').innerText = m.overview || "Sinopsis tidak tersedia.";
 
-            // Perbaikan Daftar Pemeran
+            // Pemeran Kecil
             const castDiv = document.getElementById('mCast');
-            castDiv.innerHTML = m.credits.cast.length > 0 ? m.credits.cast.slice(0, 10).map(c => `
-                <div class="actor-item" onclick="searchByActor(${c.id}, '${c.name}')">
-                    <img src="${c.profile_path ? IMG + c.profile_path : 'https://via.placeholder.com/150x150?text=No+Photo'}" alt="${c.name}">
-                    <p class="text-[9px] font-black text-white uppercase leading-tight">${c.name}</p>
+            castDiv.innerHTML = m.credits.cast.slice(0, 10).map(c => `
+                <div class="cast-item">
+                    <img src="${c.profile_path ? IMG + c.profile_path : 'https://via.placeholder.com/100x100?text=Amnes'}">
+                    <p>${c.name.split(' ')[0]}</p>
                 </div>
-            `).join('') : '<p class="text-xs italic text-gray-600 ml-2">Data pemeran tidak tersedia.</p>';
+            `).join('');
 
-            // Update Links
-            const stream1 = `https://vidsrc.to/embed/${type}/${m.id}`;
-            const stream2 = `https://vidsrc.xyz/embed/${type}/${m.id}`;
-            document.getElementById('s1').href = stream1;
-            document.getElementById('s2').href = stream2;
+            // Link Update
+            document.getElementById('s1').href = `https://vidsrc.to/embed/${type}/${m.id}`;
+            document.getElementById('s2').href = `https://vidsrc.xyz/embed/${type}/${m.id}`;
+            document.getElementById('sUtelly').href = `https://www.utelly.com/id/movie/${encodeURIComponent(m.title || m.name)}`;
             document.getElementById('d1').href = `https://dl.vidsrc.vip/${type}/${m.id}`;
             document.getElementById('d2').href = `https://flashstream.cc/download/${type === 'movie' ? 'movie' : 'series'}/${m.id}`;
 
-            document.getElementById('movieModal').style.display = 'flex';
+            document.getElementById('movieModal').style.display = 'block';
             document.body.style.overflow = 'hidden';
         }
 
@@ -226,7 +232,7 @@
                 const card = document.createElement('div');
                 card.className = 'movie-card';
                 card.onclick = () => showDetail(m.id, m.title ? 'movie' : 'tv');
-                card.innerHTML = `<img src="${IMG + m.poster_path}" class="w-full aspect-[2/3] object-cover"><div class="p-3 text-[10px] font-black uppercase text-gray-200">${m.title || m.name}</div>`;
+                card.innerHTML = `<img src="${IMG + m.poster_path}" class="w-full aspect-[2/3] object-cover"><div class="p-2 text-[7px] font-black uppercase text-gray-200">${m.title || m.name}</div>`;
                 grid.appendChild(card);
             });
         }
