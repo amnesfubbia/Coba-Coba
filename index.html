@@ -3,40 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AMNESFUBBIA VIP</title>
+    <title>AMNESFUBBIA FILM</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
         body { background-color: #050505; color: #f4f4f5; font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; }
+        
+        /* Navbar Glassmorphism */
         .nav-glass { background: rgba(5, 5, 5, 0.95); backdrop-filter: blur(15px); border-bottom: 1px solid rgba(255,255,255,0.05); position: fixed; top: 0; width: 100%; z-index: 1000; }
         
         /* Grid Film */
         .movie-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 10px; }
         @media (min-width: 768px) { .movie-grid { grid-template-columns: repeat(6, 1fr); gap: 20px; } }
 
-        /* Card Film */
-        .movie-card { border-radius: 12px; overflow: hidden; background: #0f0f0f; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s; cursor: pointer; }
-        .movie-card:hover { border-color: #ef4444; transform: translateY(-5px); }
+        .movie-card { border-radius: 12px; overflow: hidden; background: #0f0f0f; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s; cursor: pointer; position: relative; }
         .movie-card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; }
+        .movie-card:hover { border-color: #ef4444; }
 
-        /* Tombol Modern */
-        .btn-server { @apply flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-[10px] font-bold uppercase transition-all duration-300; 
-            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); color: #fff; }
-        .btn-server i { color: #ef4444; font-size: 12px; }
-        .btn-server:hover { background: #ef4444; border-color: #ef4444; }
+        /* Tombol Merah Premium (Seragam) */
+        .btn-action { 
+            @apply flex items-center justify-between px-5 py-4 rounded-xl text-[11px] font-black uppercase tracking-widest transition-all duration-300 w-full mb-3;
+            background: #e11d48; color: white; border: none; box-shadow: 0 4px 12px rgba(225, 29, 72, 0.3);
+        }
+        .btn-action:hover { background: #be123c; transform: translateY(-2px); }
 
-        .btn-dl-vip { background: linear-gradient(135deg, #059669 0%, #10b981 100%); border: none; font-size: 11px; font-weight: 800; color: white; }
-
-        /* Modal Layout */
+        /* Modal Settings */
         .modal { display: none; position: fixed; inset: 0; z-index: 2000; background: rgba(0,0,0,0.98); overflow-y: auto; }
-        .modal-content { background: #080808; width: 100%; max-width: 1100px; margin: 0 auto; min-height: 100vh; position: relative; border: 1px solid #1a1a1a; }
-        @media (min-width: 768px) { .modal-content { min-height: auto; margin: 30px auto; border-radius: 24px; } }
+        .modal-content { background: #080808; width: 100%; max-width: 1050px; margin: 0 auto; min-height: 100vh; position: relative; }
+        @media (min-width: 768px) { .modal-content { min-height: auto; margin: 30px auto; border-radius: 24px; border: 1px solid #1a1a1a; } }
         
+        /* Fix Judul Tabrakan */
+        #mTitle { font-size: 1.1rem; font-weight: 800; text-transform: uppercase; padding-right: 60px; line-height: 1.4; color: #fff; }
+
         .cast-item { flex: 0 0 auto; width: 75px; text-align: center; cursor: pointer; }
         .cast-item img { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid #222; margin-bottom: 5px; }
-
         .scrollbar-hide::-webkit-scrollbar { display: none; }
+
+        /* Quick Filter Tab */
+        .quick-tab { @apply px-4 py-2 rounded-full text-[10px] font-bold border border-white/10 bg-white/5 whitespace-nowrap; transition: 0.3s; }
+        .quick-tab:hover { @apply bg-red-600 border-red-600 text-white; }
     </style>
 </head>
 <body onload="initApp()">
@@ -47,43 +53,46 @@
                 <div class="shrink-0 cursor-pointer" onclick="location.reload()">
                     <span class="text-xl font-black italic uppercase">AMNESFUBBIA<span class="text-red-600">FILM</span></span>
                 </div>
-                <div class="relative flex-grow">
-                    <input type="text" id="searchInput" onkeypress="if(event.key==='Enter') searchMulti()" placeholder="Cari Film atau Aktor..." class="w-full bg-white/5 border border-white/10 p-3 rounded-xl text-xs outline-none focus:border-red-600">
+                <div class="relative flex-grow flex items-center">
+                    <input type="text" id="searchInput" onkeypress="if(event.key==='Enter') searchMulti()" placeholder="Cari Judul / Aktor..." class="w-full bg-white/5 border border-white/10 p-3 pr-10 rounded-xl text-xs outline-none focus:border-red-600">
+                    <button onclick="searchMulti()" class="absolute right-3 text-zinc-500 hover:text-red-600"><i class="fa-solid fa-magnifying-glass"></i></button>
                 </div>
             </div>
-            <div class="flex gap-2 overflow-x-auto scrollbar-hide pb-1">
-                <select id="typeFilter" onchange="resetAndLoad()" class="bg-zinc-900 text-white text-[10px] font-bold p-2 rounded-lg border border-white/5 uppercase outline-none">
-                    <option value="movie">FILM</option>
-                    <option value="tv">SERIES</option>
-                </select>
-                <select id="genreFilter" onchange="resetAndLoad()" class="bg-zinc-900 text-white text-[10px] font-bold p-2 rounded-lg border border-white/5 uppercase outline-none">
-                    <option value="">GENRE</option>
-                    <option value="28">Aksi</option><option value="27">Horor</option><option value="35">Komedi</option><option value="18">Drama</option>
-                </select>
-                <select id="yearFilter" onchange="resetAndLoad()" class="bg-zinc-900 text-white text-[10px] font-bold p-2 rounded-lg border border-white/5 uppercase outline-none">
-                    <option value="">TAHUN</option>
-                    <script>for(let y=2026; y>=1950; y--) document.write(`<option value="${y}">${y}</option>`);</script>
-                </select>
+
+            <div class="flex gap-2 items-center overflow-x-auto scrollbar-hide pb-1">
+                <select id="typeFilter" onchange="resetAndLoad()" class="bg-zinc-900 text-white text-[10px] font-bold p-2.5 rounded-lg border border-white/5 uppercase outline-none"><option value="movie">FILM</option><option value="tv">SERIES</option></select>
+                <select id="genreFilter" onchange="resetAndLoad()" class="bg-zinc-900 text-white text-[10px] font-bold p-2.5 rounded-lg border border-white/5 uppercase outline-none"><option value="">GENRE</option><option value="28">AKSI</option><option value="27">HOROR</option><option value="35">KOMEDI</option><option value="18">DRAMA</option></select>
+                <select id="yearFilter" onchange="resetAndLoad()" class="bg-zinc-900 text-white text-[10px] font-bold p-2.5 rounded-lg border border-white/5 uppercase outline-none"><option value="">TAHUN</option><script>for(let y=2026; y>=1970; y--) document.write(`<option value="${y}">${y}</option>`);</script></select>
+                <select id="sortFilter" onchange="resetAndLoad()" class="bg-zinc-900 text-white text-[10px] font-bold p-2.5 rounded-lg border border-white/5 uppercase outline-none flex-grow"><option value="popularity.desc">TERPOPULER</option><option value="primary_release_date.desc">TERBARU</option><option value="vote_average.desc">RATING TERBAIK</option></select>
+            </div>
+
+            <div class="flex gap-2 overflow-x-auto scrollbar-hide">
+                <button onclick="filterByRegion('ID')" class="quick-tab">🇮🇩 INDONESIA</button>
+                <button onclick="filterByRegion('KR')" class="quick-tab">🇰🇷 KOREA</button>
+                <button onclick="filterByRegion('US')" class="quick-tab">🇺🇸 BARAT</button>
+                <button onclick="filterByRegion('JP')" class="quick-tab">🇯🇵 JEPANG</button>
+                <button onclick="filterByRegion('TH')" class="quick-tab">🇹🇭 THAILAND</button>
             </div>
         </div>
     </nav>
 
-    <main class="container mx-auto pt-36 pb-20 px-2">
+    <main class="container mx-auto pt-44 pb-20 px-2">
         <div id="movieGrid" class="movie-grid"></div>
         <div id="loadMoreContainer" class="flex justify-center mt-10">
-            <button onclick="loadMore()" class="bg-white text-black font-black text-[10px] uppercase px-10 py-3 rounded-full hover:bg-red-600 hover:text-white">Lebih Banyak</button>
+            <button onclick="loadMore()" class="bg-zinc-900 border border-white/10 text-white font-black text-[10px] uppercase px-12 py-4 rounded-full hover:bg-red-600 transition-all">Muat Lebih Banyak</button>
         </div>
     </main>
 
     <div id="movieModal" class="modal">
         <div class="modal-content">
-            <button onclick="closeModal()" class="fixed top-5 right-5 bg-black/80 text-white w-10 h-10 rounded-full z-[3000] border border-white/10">✕</button>
+            <button onclick="closeModal()" class="absolute top-5 right-5 bg-black/50 text-white w-10 h-10 rounded-full z-[3000] border border-white/10 hover:bg-red-600">✕</button>
+            
             <div class="flex flex-col lg:flex-row">
-                <div class="lg:w-2/3 p-5 lg:p-10 border-r border-white/5">
-                    <h2 id="mTitle" class="text-2xl lg:text-4xl font-black italic uppercase mb-2"></h2>
+                <div class="lg:w-2/3 p-5 lg:p-10">
+                    <h2 id="mTitle" class="mb-2 italic uppercase"></h2>
                     <p id="mMeta" class="text-[10px] font-bold text-zinc-500 uppercase mb-6 flex gap-3"></p>
                     
-                    <div class="aspect-video bg-black rounded-2xl overflow-hidden mb-8 border border-white/10 shadow-2xl">
+                    <div class="aspect-video bg-black rounded-2xl overflow-hidden mb-8 border border-white/10">
                         <iframe id="mainPlayer" class="w-full h-full" allowfullscreen allow="autoplay"></iframe>
                     </div>
 
@@ -94,13 +103,13 @@
                     <div id="mCast" class="flex overflow-x-auto gap-4 scrollbar-hide mb-6"></div>
                 </div>
 
-                <div class="lg:w-1/3 p-5 lg:p-10 bg-[#050505]">
+                <div class="lg:w-1/3 p-5 lg:p-10 bg-[#050505] lg:border-l border-white/5">
                     <p class="text-[10px] font-black text-zinc-600 uppercase mb-4 tracking-widest">Pilih Server Streaming</p>
-                    <div id="streamLinks" class="grid grid-cols-1 gap-3"></div>
+                    <div id="streamLinks"></div>
                     
-                    <div class="my-8 border-t border-white/5"></div>
+                    <div class="my-10 border-t border-white/5"></div>
                     
-                    <p class="text-[10px] font-black text-zinc-600 uppercase mb-4 tracking-widest">Download Film</p>
+                    <p class="text-[10px] font-black text-zinc-600 uppercase mb-4 tracking-widest">Download Media</p>
                     <div id="downloadLinks"></div>
                 </div>
             </div>
@@ -111,6 +120,7 @@
         const API_KEY = 'bfa7df5310c9974f62f26c6789a8c00d';
         const IMG_BASE = 'https://image.tmdb.org/t/p/w500';
         let currentPage = 1;
+        let activeRegion = '';
 
         async function initApp() { loadMovies(); }
 
@@ -118,9 +128,12 @@
             const type = document.getElementById('typeFilter').value;
             const genre = document.getElementById('genreFilter').value;
             const year = document.getElementById('yearFilter').value;
-            let url = `https://api.themoviedb.org/3/discover/${type}?api_key=${API_KEY}&with_origin_country=ID&language=id-ID&page=${currentPage}&sort_by=popularity.desc`;
+            const sort = document.getElementById('sortFilter').value;
+            
+            let url = `https://api.themoviedb.org/3/discover/${type}?api_key=${API_KEY}&language=id-ID&page=${currentPage}&sort_by=${sort}`;
             if (genre) url += `&with_genres=${genre}`;
             if (year) url += `&primary_release_year=${year}&first_air_date_year=${year}`;
+            if (activeRegion) url += `&with_origin_country=${activeRegion}`;
 
             const res = await fetch(url);
             const data = await res.json();
@@ -141,7 +154,6 @@
         }
 
         async function showDetail(id, type) {
-            // Ambil data dalam 2 bahasa sekaligus untuk sinopsis fallback
             const [resID, resEN] = await Promise.all([
                 fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&append_to_response=videos,credits&language=id-ID`),
                 fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&language=en-US`)
@@ -151,30 +163,25 @@
             const mEN = await resEN.json();
 
             document.getElementById('mTitle').innerText = m.title || m.name;
-            document.getElementById('mMeta').innerHTML = `<span>${m.release_date?.split('-')[0] || 'N/A'}</span> • <span>⭐ ${m.vote_average.toFixed(1)}</span> • <span>${m.genres[0]?.name || ''}</span>`;
+            document.getElementById('mMeta').innerHTML = `<span>${m.release_date?.split('-')[0] || m.first_air_date?.split('-')[0] || 'N/A'}</span> • <span>⭐ ${m.vote_average.toFixed(1)}</span> • <span>${m.genres[0]?.name || ''}</span>`;
             
-            // LOGIKA SINOPSIS: Jika ID kosong, pakai EN
-            document.getElementById('mDesc').innerText = m.overview || mEN.overview || "No synopsis available.";
+            // Logika Sinopsis (Cari Bahasa Inggris jika Indonesia kosong)
+            document.getElementById('mDesc').innerText = m.overview || mEN.overview || "Sinopsis tidak tersedia.";
 
-            // Trailer Logic
-            const yt = m.videos.results.find(v => (v.site === 'YouTube' || v.site === 'Vimeo') && v.type === 'Trailer') || m.videos.results[0];
-            document.getElementById('mainPlayer').src = yt ? (yt.site === 'YouTube' ? `https://www.youtube.com/embed/${yt.key}?autoplay=1` : `https://player.vimeo.com/video/${yt.key}`) : '';
+            const video = m.videos.results.find(v => (v.site === 'YouTube' || v.site === 'Vimeo') && v.type === 'Trailer') || m.videos.results[0];
+            document.getElementById('mainPlayer').src = video ? (video.site === 'YouTube' ? `https://www.youtube.com/embed/${video.key}?autoplay=1` : `https://player.vimeo.com/video/${video.key}`) : '';
 
-            // Streaming Buttons (Grid Rapi)
+            // Tombol Server & Download Seragam (Warna Merah)
             document.getElementById('streamLinks').innerHTML = `
-                <button onclick="changePlayer('https://vidsrc.xyz/embed/${type}/${id}')" class="btn-server"><i class="fa-solid fa-play"></i> SERVER 01 (XYZ)</button>
-                <button onclick="changePlayer('https://vidsrc.to/embed/${type}/${id}')" class="btn-server"><i class="fa-solid fa-play"></i> SERVER 02 (TO)</button>
-                <button onclick="changePlayer('https://vidrock.net/embed/${type}/${id}')" class="btn-server"><i class="fa-solid fa-play"></i> SERVER 03 (PRO)</button>
+                <button onclick="changePlayer('https://vidsrc.xyz/embed/${type}/${id}')" class="btn-action"><span>SERVER 01 (XYZ)</span><i class="fa-solid fa-play"></i></button>
+                <button onclick="changePlayer('https://vidsrc.to/embed/${type}/${id}')" class="btn-action"><span>SERVER 02 (TO)</span><i class="fa-solid fa-play"></i></button>
+                <button onclick="changePlayer('https://vidrock.net/embed/${type}/${id}')" class="btn-action"><span>SERVER 03 (PRO)</span><i class="fa-solid fa-play"></i></button>
             `;
             
-            // Download Button
             document.getElementById('downloadLinks').innerHTML = `
-                <a href="https://dl.vidsrc.vip/${type}/${id}" target="_blank" class="btn-server btn-dl-vip">
-                    <i class="fa-solid fa-bolt" style="color:white"></i> DOWNLOAD WEB-DL (VIP)
-                </a>
+                <a href="https://dl.vidsrc.vip/${type}/${id}" target="_blank" class="btn-action"><span>DOWNLOAD WEB-DL (VIP)</span><i class="fa-solid fa-bolt"></i></a>
             `;
 
-            // Cast Clickable Search
             const castCont = document.getElementById('mCast');
             castCont.innerHTML = m.credits.cast.slice(0, 10).map(c => `
                 <div class="cast-item" onclick="searchByActorID('${c.id}', '${c.name}')">
@@ -205,6 +212,7 @@
             document.getElementById('loadMoreContainer').style.display = 'none';
         }
 
+        function filterByRegion(code) { activeRegion = code; resetAndLoad(); }
         function closeModal() { document.getElementById('movieModal').style.display = 'none'; document.getElementById('mainPlayer').src = ''; document.body.style.overflow = 'auto'; }
         function changePlayer(url) { document.getElementById('mainPlayer').src = url + "?autoplay=1"; }
         function loadMore() { currentPage++; loadMovies(true); }
