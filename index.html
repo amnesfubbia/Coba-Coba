@@ -16,6 +16,8 @@
             border-bottom: 1px solid rgba(255,255,255,0.1); z-index: 50; padding: 10px 0;
         }
 
+        #loadingBar { position: absolute; bottom: -1px; left: 0; height: 2px; background: #e11d48; width: 0; transition: width 0.3s; }
+
         .search-input {
             width: 100%; background: #1a1a1a; border: 1px solid #333;
             padding: 8px 35px 8px 12px; border-radius: 8px; color: white; font-size: 11px; outline: none;
@@ -23,10 +25,9 @@
 
         .movie-grid {
             display: grid; grid-template-columns: repeat(3, 1fr);
-            gap: 8px; padding: 135px 8px 80px 8px;
+            gap: 8px; padding: 165px 8px 80px 8px;
         }
 
-        /* Saran No 2 & 5: Efek Glow & Fade-in */
         .card { 
             position: relative; aspect-ratio: 2/3; background: #111; 
             border-radius: 8px; overflow: hidden; border: 1px solid #222; 
@@ -52,6 +53,17 @@
             font-weight: 800; text-transform: uppercase; outline: none; min-width: 45px;
         }
 
+        .history-scroll { display: flex; gap: 8px; overflow-x: auto; padding: 5px 12px; scrollbar-width: none; background: #0a0a0a; border-bottom: 1px solid #1a1a1a; }
+        .hist-item { flex: 0 0 40px; aspect-ratio: 2/3; border-radius: 4px; overflow: hidden; border: 1px solid #333; }
+        .hist-item img { width: 100%; height: 100%; object-fit: cover; }
+
+        #backToTop {
+            display: none; position: fixed; bottom: 20px; right: 20px;
+            width: 40px; height: 40px; background: #e11d48; color: white;
+            border-radius: 50%; border: none; z-index: 40; cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5); font-size: 14px;
+        }
+
         .modal { display: none; position: fixed; inset: 0; z-index: 100; background: black; overflow-y: auto; }
         .modal-box { min-height: 100vh; background: #080808; padding: 15px; padding-top: 50px; }
         
@@ -62,7 +74,6 @@
 
         .btn-red { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 12px; margin-bottom: 8px; background: #e11d48; color: white; border-radius: 8px; font-size: 10px; font-weight: 800; border: none; text-decoration: none; }
 
-        /* Style untuk Modal Info (Saran No 3) */
         .info-page { display: none; position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,0.9); backdrop-filter: blur(10px); padding: 40px 20px; text-align: center; }
     </style>
 </head>
@@ -76,14 +87,18 @@
         </div>
     </div>
 
+    <button id="backToTop" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+        <i class="fa-solid fa-arrow-up"></i>
+    </button>
+
     <nav class="nav-fixed">
+        <div id="loadingBar"></div>
         <div class="container mx-auto px-3">
             <div class="flex items-center gap-2 mb-3">
                 <div onclick="location.reload()" class="cursor-pointer shrink-0 uppercase font-black italic text-sm">
                     AMNESFUBBIA<span class="text-red-600">FILM</span>
                 </div>
                 <i class="fa-solid fa-circle-info text-gray-500 text-xs cursor-pointer" onclick="toggleAbout()"></i>
-                
                 <div class="relative w-full">
                     <input type="text" id="inputCari" class="search-input" placeholder="Cari Film..." onkeyup="if(event.key==='Enter') cariFilm()">
                     <i class="fa-solid fa-magnifying-glass absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 text-[12px] cursor-pointer" onclick="cariFilm()"></i>
@@ -113,6 +128,7 @@
                 </select>
             </div>
         </div>
+        <div id="historyBar" class="history-scroll hidden"></div>
     </nav>
 
     <div id="gridFilm" class="movie-grid"></div>
@@ -142,12 +158,24 @@
     <script>
         const API = 'bfa7df5310c9974f62f26c6789a8c00d';
         let hal = 1; let sedangMemuat = false;
+        let startY = 0;
 
-        window.onload = memuatFilm;
-        window.onscroll = () => { if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 500) { if (!sedangMemuat) loadLagi(); } };
+        window.onload = () => { memuatFilm(); updateHistoryUI(); };
+
+        window.addEventListener('touchstart', e => startY = e.touches[0].pageY);
+        window.addEventListener('touchmove', e => {
+            if (window.scrollY === 0 && e.touches[0].pageY > startY + 150) location.reload();
+        });
+
+        window.onscroll = () => { 
+            const btt = document.getElementById('backToTop');
+            if (window.scrollY > 500) btt.style.display = 'block'; else btt.style.display = 'none';
+            if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 500) { if (!sedangMemuat) loadLagi(); } 
+        };
 
         async function memuatFilm() {
             if (sedangMemuat) return; sedangMemuat = true;
+            document.getElementById('loadingBar').style.width = '50%';
             const tipe = document.getElementById('pilihTipe').value;
             const genre = document.getElementById('pilihGenre').value;
             const tahun = document.getElementById('pilihTahun').value;
@@ -174,7 +202,11 @@
                 }
                 tampilkan(hasilGabungan, tipe);
             } catch (e) { console.log(e); }
-            finally { sedangMemuat = false; }
+            finally { 
+                sedangMemuat = false; 
+                document.getElementById('loadingBar').style.width = '100%';
+                setTimeout(() => document.getElementById('loadingBar').style.width = '0', 300);
+            }
         }
 
         function tampilkan(data, filterTipe) {
@@ -189,11 +221,9 @@
                 let bTxt = tipeItem === 'movie' ? 'FILM' : 'SERIES';
                 if(filterTipe === 'short') { bCls = 'badge-short'; bTxt = 'SHORT'; }
 
-                kartu.onclick = () => bukaModal(m.id, tipeItem);
+                kartu.onclick = () => { saveHistory(m.id, tipeItem, m.poster_path); bukaModal(m.id, tipeItem); };
                 kartu.innerHTML = `<div class="badge ${bCls}">${bTxt}</div><img src="https://image.tmdb.org/t/p/w500${m.poster_path}" loading="lazy">`;
                 grid.appendChild(kartu);
-
-                // Saran No 5: Animasi muncul satu per satu (Staggered fade-in)
                 setTimeout(() => { kartu.classList.add('loaded'); }, index * 50);
             });
         }
@@ -204,8 +234,11 @@
             const res = await fetch(`https://api.themoviedb.org/3/${tipe}/${id}?api_key=${API}&language=id-ID&append_to_response=videos,credits`);
             const d = await res.json();
             
+            let infoTambahan = (d.release_date || d.first_air_date || '').split('-')[0];
+            if(tipe === 'tv') infoTambahan += ` • ${d.number_of_seasons} Season • ${d.number_of_episodes} Episode`;
+            
             document.getElementById('jdl').innerText = d.title || d.name;
-            document.getElementById('inf').innerText = `${(d.release_date || d.first_air_date || '').split('-')[0]} • ⭐ ${d.vote_average.toFixed(1)}`;
+            document.getElementById('inf').innerText = `${infoTambahan} • ⭐ ${d.vote_average.toFixed(1)}`;
             document.getElementById('gen').innerText = d.genres.map(g => g.name).join(', ');
             document.getElementById('sinop').innerText = d.overview || "Sinopsis belum tersedia.";
             
@@ -232,28 +265,52 @@
         async function cariFilmPemeran(pId, pName) {
             tutupModal();
             document.getElementById('inputCari').value = pName;
+            document.getElementById('loadingBar').style.width = '50%';
             const res = await fetch(`https://api.themoviedb.org/3/person/${pId}/combined_credits?api_key=${API}&language=id-ID`);
             const data = await res.json();
             hal = 1;
-            const hasilIndo = data.cast.filter(m => m.original_language === 'id' || m.origin_country?.includes('ID'));
+            // PERBAIKAN: Filter hanya film Indonesia (bahasa 'id' atau asal negara 'ID')
+            const hasilIndo = data.cast.filter(m => m.original_language === 'id' || (m.origin_country && m.origin_country.includes('ID')));
             tampilkan(hasilIndo, 'multi');
             window.scrollTo(0,0);
+            document.getElementById('loadingBar').style.width = '100%';
+            setTimeout(() => document.getElementById('loadingBar').style.width = '0', 300);
+        }
+
+        function saveHistory(id, tipe, path) {
+            let hist = JSON.parse(localStorage.getItem('hist_amnes')) || [];
+            hist = hist.filter(x => x.id !== id);
+            hist.unshift({id, tipe, path});
+            localStorage.setItem('hist_amnes', JSON.stringify(hist.slice(0, 10)));
+            updateHistoryUI();
+        }
+
+        function updateHistoryUI() {
+            const hist = JSON.parse(localStorage.getItem('hist_amnes')) || [];
+            const bar = document.getElementById('historyBar');
+            if(hist.length === 0) return;
+            bar.classList.remove('hidden');
+            bar.innerHTML = hist.map(x => `
+                <div class="hist-item" onclick="bukaModal(${x.id}, '${x.tipe}')">
+                    <img src="https://image.tmdb.org/t/p/w200${x.path}">
+                </div>
+            `).join('');
         }
 
         async function cariFilm() {
             const q = document.getElementById('inputCari').value;
             if(!q) return;
-            sedangMemuat = true;
+            document.getElementById('loadingBar').style.width = '50%';
             const res = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${API}&query=${q}&language=id-ID`);
             const data = await res.json();
             hal = 1;
-            const hasilIndo = data.results.filter(m => m.original_language === 'id' || m.origin_country?.includes('ID'));
+            const hasilIndo = data.results.filter(m => m.original_language === 'id' || (m.origin_country && m.origin_country.includes('ID')));
             tampilkan(hasilIndo, 'multi');
             window.scrollTo(0,0);
-            sedangMemuat = false;
+            document.getElementById('loadingBar').style.width = '100%';
+            setTimeout(() => document.getElementById('loadingBar').style.width = '0', 300);
         }
 
-        // Saran No 3: Fungsi buka/tutup About
         function toggleAbout() {
             const about = document.getElementById('modalAbout');
             about.style.display = about.style.display === 'block' ? 'none' : 'block';
