@@ -86,7 +86,6 @@
         .server-btn { width: 100%; padding: 14px; border-radius: 12px; font-size: 10px; font-weight: 800; text-transform: uppercase; margin-bottom: 8px; border: 1px solid #1c1c1c; transition: 0.2s; text-align: center; display: block; cursor: pointer; }
         .server-btn:active { transform: scale(0.98); opacity: 0.8; }
         
-        /* Tombol download minimalis */
         .btn-download-minimal { background: transparent; color: #fff; border: 1px solid #1c1c1c; }
         .btn-download-minimal:active { background: #fff; color: #000; }
     </style>
@@ -134,7 +133,6 @@
                     <div class="circle-icon"><i class="fa-solid fa-border-all"></i></div>
                     <p class="highlight-label">Semua</p>
                 </div>
-                <!-- Genre Lengkap Sesuai TMDB -->
                 <div class="highlight-item" onclick="setFilter('genre', '27', this)"><div class="circle-icon"><i class="fa-solid fa-ghost"></i></div><p class="highlight-label">Horor</p></div>
                 <div class="highlight-item" onclick="setFilter('genre', '35', this)"><div class="circle-icon"><i class="fa-solid fa-masks-theater"></i></div><p class="highlight-label">Komedi</p></div>
                 <div class="highlight-item" onclick="setFilter('genre', '10749', this)"><div class="circle-icon"><i class="fa-solid fa-heart"></i></div><p class="highlight-label">Romantis</p></div>
@@ -149,7 +147,6 @@
     <div id="yearDropdown" class="year-dropdown no-scrollbar"></div>
     <main id="feedGrid" class="movie-grid"></main>
 
-    <!-- MOVIE PLAYER MODAL -->
     <div id="movieModal" class="modal-player">
         <div class="max-w-xl mx-auto pb-20">
             <div class="p-4 flex items-center justify-between border-b border-zinc-900 sticky top-0 bg-black z-50">
@@ -188,13 +185,11 @@
                     </div>
                 </div>
 
-                <!-- STREAMING SERVERS -->
                 <div class="mb-4">
                     <h4 class="text-[9px] font-black text-zinc-600 uppercase mb-4 tracking-widest text-center">Pilih Server Streaming</h4>
                     <div id="serverList" class="space-y-2"></div>
                 </div>
 
-                <!-- DOWNLOAD SERVER (Minimalis) -->
                 <div class="mt-8 pt-6 border-t border-zinc-900">
                     <h4 class="text-[9px] font-black text-zinc-600 uppercase mb-4 tracking-widest text-center">Link Unduhan</h4>
                     <button id="btnDownload" class="server-btn btn-download-minimal"><i class="fa-solid fa-download mr-2"></i> Download (vidsrc.vip)</button>
@@ -223,7 +218,6 @@
         function initYearDropdown() {
             const dropdown = document.getElementById('yearDropdown');
             let html = '<div class="year-item" onclick="setYear(\'\')">SEMUA</div>';
-            // Ubah tahun mulai dari 1930
             for(let y = 2026; y >= 1930; y--) html += `<div class="year-item" onclick="setYear(${y})">${y}</div>`;
             dropdown.innerHTML = html;
         }
@@ -250,14 +244,18 @@
                 let genreParam = currentGenre ? `&with_genres=${currentGenre}` : '';
                 
                 if (actorId) {
-                    // Filter berdasarkan aktor
                     const res = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_cast=${actorId}&with_origin_country=ID&language=id-ID&page=${page}`);
                     const data = await res.json();
                     items = (data.results || []).map(x => ({...x, m_type: 'movie'}));
                 } else if (searchQuery) {
-                    const res = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(searchQuery)}&language=id-ID&page=${page}`);
+                    // Hanya cari di ID (Indonesia)
+                    const res = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(searchQuery)}&language=id-ID&page=${page}&region=ID`);
                     const data = await res.json();
-                    items = (data.results || []).filter(i => i.origin_country?.includes('ID') || i.original_language === 'id' || i.media_type).map(x => ({...x, m_type: x.media_type}));
+                    // Filter ekstra: Pastikan asal negara ID atau bahasa asli Indonesia
+                    items = (data.results || []).filter(i => 
+                        (i.origin_country && i.origin_country.includes('ID')) || 
+                        (i.original_language === 'id')
+                    ).map(x => ({...x, m_type: x.media_type}));
                 } else if (currentType === 'multi') {
                     const [resM, resT] = await Promise.all([
                         fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_origin_country=ID&language=id-ID&page=${page}${genreParam}${yearParam}`),
@@ -308,9 +306,7 @@
                 document.getElementById('mTitle').innerText = d.title || d.name;
                 document.getElementById('mTagline').innerText = d.tagline || dEn.tagline || "";
                 document.getElementById('mMeta').innerText = `${(d.release_date||d.first_air_date||'').split('-')[0]} // ${(d.runtime||d.episode_run_time?.[0]||'0')} MENIT // ${type.toUpperCase()}`;
-                
                 document.getElementById('mDesc').innerText = d.overview || dEn.overview || "Informasi sinopsis belum tersedia.";
-                
                 document.getElementById('infoStatus').innerText = d.status || "N/A";
                 document.getElementById('infoOrigin').innerText = d.production_countries?.[0]?.name || "N/A";
                 document.getElementById('infoBudget').innerText = d.budget ? `$${d.budget.toLocaleString()}` : "N/A";
@@ -351,7 +347,6 @@
             showLoader(100);
         }
 
-        // Fungsi baru untuk pencarian aktor
         function searchByActor(id, name) {
             closeModal();
             actorId = id;
