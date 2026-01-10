@@ -74,7 +74,7 @@
         .modal-player { display: none; position: fixed; inset: 0; z-index: 200; background: #000; overflow-y: auto; }
         #loader { position: fixed; top: 0; left: 0; height: 1.5px; background: #fff; width: 0%; transition: width 0.3s; z-index: 1000; }
         
-        .info-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 20px; }
+        .info-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 20px; }
         .info-box { background: #0a0a0a; border: 1px solid #1c1c1c; padding: 12px; border-radius: 12px; }
         .info-label { font-size: 7px; color: #555; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px; }
         .info-value { font-size: 10px; color: #fff; font-weight: 600; }
@@ -83,7 +83,7 @@
         .cast-item { flex: 0 0 60px; text-align: center; }
         .cast-img { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; margin-bottom: 5px; border: 1px solid #1c1c1c; }
 
-        .server-btn { width: 100%; padding: 14px; border-radius: 12px; font-size: 10px; font-weight: 800; text-transform: uppercase; margin-bottom: 8px; border: 1px solid #1c1c1c; transition: 0.2s; }
+        .server-btn { width: 100%; padding: 14px; border-radius: 12px; font-size: 10px; font-weight: 800; text-transform: uppercase; margin-bottom: 8px; border: 1px solid #1c1c1c; transition: 0.2s; text-align: center; display: block; }
         .server-btn:active { transform: scale(0.98); opacity: 0.8; }
     </style>
 </head>
@@ -130,7 +130,6 @@
                     <div class="circle-icon"><i class="fa-solid fa-border-all"></i></div>
                     <p class="highlight-label">Semua</p>
                 </div>
-                <!-- Genre Buttons remain the same... -->
                 <div class="highlight-item" onclick="setFilter('genre', '27', this)"><div class="circle-icon"><i class="fa-solid fa-ghost"></i></div><p class="highlight-label">Horor</p></div>
                 <div class="highlight-item" onclick="setFilter('genre', '35', this)"><div class="circle-icon"><i class="fa-solid fa-masks-theater"></i></div><p class="highlight-label">Komedi</p></div>
                 <div class="highlight-item" onclick="setFilter('genre', '10749', this)"><div class="circle-icon"><i class="fa-solid fa-heart"></i></div><p class="highlight-label">Romantis</p></div>
@@ -157,16 +156,17 @@
             </div>
 
             <div class="p-6">
-                <!-- Detailed Info -->
                 <div id="mTagline" class="text-xs font-bold italic text-white mb-2"></div>
                 <div id="mMeta" class="text-[9px] text-zinc-500 font-black mb-4 tracking-widest uppercase"></div>
                 <p id="mDesc" class="text-xs text-zinc-400 leading-relaxed mb-6 font-light"></p>
 
                 <div class="info-grid mb-8">
                     <div class="info-box"><p class="info-label">Status</p><p id="infoStatus" class="info-value">-</p></div>
+                    <div class="info-box"><p class="info-label">Asal Negara</p><p id="infoOrigin" class="info-value">-</p></div>
                     <div class="info-box"><p class="info-label">Anggaran</p><p id="infoBudget" class="info-value">-</p></div>
                     <div class="info-box"><p class="info-label">Pendapatan</p><p id="infoRevenue" class="info-value">-</p></div>
                     <div class="info-box"><p class="info-label">Rating</p><p id="infoRating" class="info-value">-</p></div>
+                    <div class="info-box"><p class="info-label">Bahasa</p><p id="infoLang" class="info-value">-</p></div>
                 </div>
 
                 <div class="mb-8">
@@ -184,13 +184,13 @@
                 <!-- STREAMING SERVERS -->
                 <div class="mb-4">
                     <h4 class="text-[9px] font-black text-zinc-600 uppercase mb-4 tracking-widest text-center">Pilih Server Streaming</h4>
-                    <div id="serverList"></div>
+                    <div id="serverList" class="space-y-2"></div>
                 </div>
 
                 <!-- DOWNLOAD SERVER -->
                 <div class="mt-8 pt-6 border-t border-zinc-900">
                     <h4 class="text-[9px] font-black text-zinc-600 uppercase mb-4 tracking-widest text-center">Link Unduhan</h4>
-                    <button id="btnDownload" class="server-btn bg-white text-black border-none"><i class="fa-solid fa-download mr-2"></i> Download (vidsrc.vip)</button>
+                    <button id="btnDownload" class="server-btn bg-white text-black border-none"><i class="fa-solid fa-download mr-2"></i> Download Sekarang (DL vidsrc)</button>
                 </div>
             </div>
         </div>
@@ -200,16 +200,20 @@
         const API_KEY = 'bfa7df5310c9974f62f26c6789a8c00d';
         let page = 1, loading = false, currentType = 'multi', currentGenre = '', currentYear = '', searchQuery = '';
 
-        // Servers from Request
+        // Updated Stream Servers List
         const STREAM_SERVERS = [
-            { name: "Server Utama (XYZ)", url: "https://vidsrc.xyz/embed/" },
-            { name: "Server VidRock", url: "https://vidrock.net/embed/" },
-            { name: "Server VidLink", url: "https://vidlink.pro/embed/" },
-            { name: "Server VidSrc TO", url: "https://vidsrc.to/embed/" },
-            { name: "Server Embed RU", url: "https://vidsrc-embed.ru/embed/" },
-            { name: "Server VidEasy", url: "https://videasy.su/embed/" },
-            { name: "Server VidFast", url: "https://vidfast.pro/embed/" },
-            { name: "Server VidNest", url: "https://vidnest.fun/embed/" }
+            { name: "VidRock", url: "https://vidrock.net/embed/" },
+            { name: "VidStorm", url: "https://vidstorm.ru/embed/" },
+            { name: "VidSrcMe TW", url: "https://vidsrcme.tw/embed/" },
+            { name: "VidSrc ME", url: "https://vidsrc.me/embed/" },
+            { name: "VidSrc NET", url: "https://vidsrc.net/embed/" },
+            { name: "VidSrc IO", url: "https://vidsrc.io/embed/" },
+            { name: "VidSrc BZ", url: "https://vidsrc.bz/embed/" },
+            { name: "VidSrc XYZ", url: "https://vidsrc.xyz/embed/" },
+            { name: "VidSrc GD", url: "https://vidsrc.gd/embed/" },
+            { name: "VidSrc DO", url: "https://vidsrc.do/embed/" },
+            { name: "VidSrc MN", url: "https://vidsrc.mn/embed/" },
+            { name: "VidSrc TW", url: "https://vidsrc.tw/embed/" }
         ];
         const DL_BASE = "https://dl.vidsrc.vip/";
 
@@ -223,7 +227,7 @@
         function initYearDropdown() {
             const dropdown = document.getElementById('yearDropdown');
             let html = '<div class="year-item" onclick="setYear(\'\')">SEMUA</div>';
-            for(let y = 2025; y >= 1970; y--) html += `<div class="year-item" onclick="setYear(${y})">${y}</div>`;
+            for(let y = 2026; y >= 1970; y--) html += `<div class="year-item" onclick="setYear(${y})">${y}</div>`;
             dropdown.innerHTML = html;
         }
 
@@ -251,7 +255,7 @@
                 if (searchQuery) {
                     const res = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(searchQuery)}&language=id-ID&page=${page}`);
                     const data = await res.json();
-                    items = (data.results || []).filter(i => i.origin_country?.includes('ID') || i.original_language === 'id').map(x => ({...x, m_type: x.media_type}));
+                    items = (data.results || []).filter(i => i.origin_country?.includes('ID') || i.original_language === 'id' || i.media_type).map(x => ({...x, m_type: x.media_type}));
                 } else if (currentType === 'multi') {
                     const [resM, resT] = await Promise.all([
                         fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_origin_country=ID&language=id-ID&page=${page}${genreParam}${yearParam}`),
@@ -259,7 +263,7 @@
                     ]);
                     const dM = await resM.json(); const dT = await resT.json();
                     items = [...(dM.results||[]).map(x=>({...x, m_type:'movie'})), ...(dT.results||[]).map(x=>({...x, m_type:'tv'}))];
-                    items.sort(() => Math.random() - 0.5);
+                    items.sort((a,b) => b.popularity - a.popularity);
                 } else {
                     let ep = (currentType === 'tv') ? 'tv' : 'movie';
                     let url = `https://api.themoviedb.org/3/discover/${ep}?api_key=${API_KEY}&with_origin_country=ID&language=id-ID&page=${page}${yearParam}${genreParam}`;
@@ -286,12 +290,13 @@
         }
 
         async function openModal(id, type) {
-            document.getElementById('movieModal').style.display = 'block';
+            const modal = document.getElementById('movieModal');
+            modal.style.display = 'block';
             document.body.style.overflow = 'hidden';
             showLoader(50);
             
             try {
-                // Fetch English data first as fallback for synopsis, then Indonesian
+                // Fetch ID and EN for maximum metadata availability
                 const [resId, resEn] = await Promise.all([
                     fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&language=id-ID&append_to_response=videos,credits`),
                     fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&language=en-US&append_to_response=videos`)
@@ -303,16 +308,18 @@
                 document.getElementById('mTagline').innerText = d.tagline || dEn.tagline || "";
                 document.getElementById('mMeta').innerText = `${(d.release_date||d.first_air_date||'').split('-')[0]} // ${(d.runtime||d.episode_run_time?.[0]||'0')} MIN // ${type.toUpperCase()}`;
                 
-                // Synopsis Fallback
-                document.getElementById('mDesc').innerText = d.overview || dEn.overview || "Maaf, sinopsis untuk judul ini belum tersedia dalam database kami.";
+                // Synopsis Fallback logic
+                document.getElementById('mDesc').innerText = d.overview || dEn.overview || "Informasi sinopsis belum tersedia.";
                 
-                // Detailed Info
-                document.getElementById('infoStatus').innerText = d.status || "-";
+                // Comprehensive Info
+                document.getElementById('infoStatus').innerText = d.status || "N/A";
+                document.getElementById('infoOrigin').innerText = d.production_countries?.[0]?.name || "N/A";
                 document.getElementById('infoBudget').innerText = d.budget ? `$${d.budget.toLocaleString()}` : "N/A";
                 document.getElementById('infoRevenue').innerText = d.revenue ? `$${d.revenue.toLocaleString()}` : "N/A";
                 document.getElementById('infoRating').innerText = `★ ${d.vote_average.toFixed(1)} / 10`;
+                document.getElementById('infoLang').innerText = d.original_language?.toUpperCase() || "N/A";
 
-                // Cast
+                // Cast list
                 document.getElementById('mCast').innerHTML = (d.credits?.cast || []).slice(0, 10).map(c => `
                     <div class="cast-item">
                         <img src="${c.profile_path ? 'https://image.tmdb.org/t/p/w185'+c.profile_path : 'https://via.placeholder.com/100x100?text=Actor'}" class="cast-img">
@@ -320,23 +327,23 @@
                     </div>
                 `).join('');
 
-                // Trailer logic (Search ID, then EN)
+                // Trailer with Autoplay (Check ID then EN)
                 const trailers = [...(d.videos?.results || []), ...(dEn.videos?.results || [])];
                 const officialTrailer = trailers.find(v => v.type === 'Trailer' && v.site === 'YouTube');
                 
                 if (officialTrailer) {
                     document.getElementById('videoPlayer').src = `https://www.youtube.com/embed/${officialTrailer.key}?autoplay=1&mute=0&rel=0`;
                 } else {
-                    // Default to first server if no trailer
+                    // Default to first stream server if no trailer found
                     document.getElementById('videoPlayer').src = STREAM_SERVERS[0].url + `${type}/${id}`;
                 }
 
-                // Servers list
+                // Servers list display
                 document.getElementById('serverList').innerHTML = STREAM_SERVERS.map(s => `
                     <button class="server-btn bg-zinc-950 text-zinc-400" onclick="changeServer('${s.url}${type}/${id}')">${s.name}</button>
                 `).join('');
 
-                // Download Link
+                // Download Button logic
                 document.getElementById('btnDownload').onclick = () => window.open(`${DL_BASE}${type}/${id}`, '_blank');
 
                 if(type === 'tv') {
@@ -346,7 +353,7 @@
                     loadEpisodes();
                 } else { document.getElementById('seriesControl').classList.add('hidden'); }
 
-            } catch(e) { console.error(e); }
+            } catch(e) { console.error("Error loading details:", e); }
             showLoader(100);
         }
 
@@ -365,6 +372,7 @@
 
         function playEpisode() {
             const s = document.getElementById('seasonSel').value; const e = document.getElementById('episodeSel').value;
+            // Default player for episodes
             document.getElementById('videoPlayer').src = `https://vidsrc.xyz/embed/tv/${window.currentSeriesId}/${s}/${e}?autoplay=1`;
         }
 
