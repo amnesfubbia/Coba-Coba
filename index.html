@@ -85,7 +85,6 @@
 
         .server-btn { width: 100%; padding: 14px; border-radius: 12px; font-size: 10px; font-weight: 800; text-transform: uppercase; margin-bottom: 8px; border: 1px solid #1c1c1c; transition: 0.2s; text-align: center; display: block; cursor: pointer; }
         .server-btn:active { transform: scale(0.98); opacity: 0.8; }
-        .server-btn.active { background: #fff; color: #000; border-color: #fff; }
     </style>
 </head>
 <body>
@@ -182,16 +181,16 @@
                     </div>
                 </div>
 
-                <!-- STREAMING SERVERS -->
+                <!-- STREAMING SERVERS (Hanya 2 Server) -->
                 <div class="mb-4">
                     <h4 class="text-[9px] font-black text-zinc-600 uppercase mb-4 tracking-widest text-center">Pilih Server Streaming</h4>
                     <div id="serverList" class="space-y-2"></div>
                 </div>
 
                 <!-- DOWNLOAD SERVER -->
-                <div class="mt-8 pt-6 border-t border-zinc-900 text-center">
-                    <h4 class="text-[9px] font-black text-zinc-600 uppercase mb-4 tracking-widest">Link Unduhan</h4>
-                    <button id="btnDownload" class="server-btn bg-white text-black border-none mx-auto"><i class="fa-solid fa-download mr-2"></i> Download Sekarang (vidsrc.vip)</button>
+                <div class="mt-8 pt-6 border-t border-zinc-900">
+                    <h4 class="text-[9px] font-black text-zinc-600 uppercase mb-4 tracking-widest text-center">Link Unduhan</h4>
+                    <button id="btnDownload" class="server-btn bg-white text-black border-none"><i class="fa-solid fa-download mr-2"></i> Download Sekarang (vidsrc.vip)</button>
                 </div>
             </div>
         </div>
@@ -201,14 +200,10 @@
         const API_KEY = 'bfa7df5310c9974f62f26c6789a8c00d';
         let page = 1, loading = false, currentType = 'multi', currentGenre = '', currentYear = '', searchQuery = '';
 
-        // UPDATE: Using the links you provided as primary servers
+        // Ganti Link Stream hanya ke 2 server ini
         const STREAM_SERVERS = [
-            { name: "Server Utama (VidRock)", url: "https://vidrock.net/embed/" },
-            { name: "Server Alternatif (VidStorm)", url: "https://vidstorm.ru/embed/" },
-            { name: "VidSrc TO", url: "https://vidsrc.to/embed/" },
-            { name: "VidLink PRO", url: "https://vidlink.pro/embed/" },
-            { name: "RGShows RU", url: "https://www.rgshows.ru/?p=1&m=" },
-            { name: "VidSrc XYZ", url: "https://vidsrc.xyz/embed/" }
+            { name: "VidRock", url: "https://vidrock.net/embed/" },
+            { name: "VidStorm", url: "https://vidstorm.ru/embed/" }
         ];
         const DL_BASE = "https://dl.vidsrc.vip/";
 
@@ -301,6 +296,7 @@
                 document.getElementById('mTitle').innerText = d.title || d.name;
                 document.getElementById('mTagline').innerText = d.tagline || dEn.tagline || "";
                 document.getElementById('mMeta').innerText = `${(d.release_date||d.first_air_date||'').split('-')[0]} // ${(d.runtime||d.episode_run_time?.[0]||'0')} MENIT // ${type.toUpperCase()}`;
+                
                 document.getElementById('mDesc').innerText = d.overview || dEn.overview || "Informasi sinopsis belum tersedia.";
                 
                 document.getElementById('infoStatus').innerText = d.status || "N/A";
@@ -317,14 +313,17 @@
                     </div>
                 `).join('');
 
-                // Initial player source (Server 1)
-                document.getElementById('videoPlayer').src = buildEmbedUrl(STREAM_SERVERS[0].url, type, id);
+                const trailers = [...(d.videos?.results || []), ...(dEn.videos?.results || [])];
+                const officialTrailer = trailers.find(v => v.type === 'Trailer' && v.site === 'YouTube');
+                
+                if (officialTrailer) {
+                    document.getElementById('videoPlayer').src = `https://www.youtube.com/embed/${officialTrailer.key}?autoplay=1&mute=0&rel=0`;
+                } else {
+                    document.getElementById('videoPlayer').src = buildEmbedUrl(STREAM_SERVERS[0].url, type, id);
+                }
 
-                document.getElementById('serverList').innerHTML = STREAM_SERVERS.map((s, idx) => `
-                    <button class="server-btn ${idx === 0 ? 'active' : 'bg-zinc-950 text-zinc-400'}" 
-                        onclick="changeServer('${s.url}', '${type}', '${id}', this)">
-                        ${s.name}
-                    </button>
+                document.getElementById('serverList').innerHTML = STREAM_SERVERS.map(s => `
+                    <button class="server-btn bg-zinc-950 text-zinc-400" onclick="changeServer('${s.url}', '${type}', '${id}')">${s.name}</button>
                 `).join('');
 
                 document.getElementById('btnDownload').onclick = () => window.open(`${DL_BASE}${type}/${id}`, '_blank');
@@ -342,10 +341,6 @@
 
         function buildEmbedUrl(baseUrl, type, id, season = null, episode = null) {
             let url = baseUrl;
-            if (baseUrl.includes('rgshows.ru')) {
-                const prefix = (type === 'movie' ? 'm-' : 's-');
-                return `${baseUrl}${prefix}${id}`;
-            }
             if (season && episode) {
                 url += `tv/${id}/${season}/${episode}`;
             } else {
@@ -354,14 +349,7 @@
             return url;
         }
 
-        function changeServer(baseUrl, type, id, el) { 
-            document.querySelectorAll('.server-btn').forEach(b => {
-                b.classList.remove('active');
-                b.classList.add('bg-zinc-950', 'text-zinc-400');
-            });
-            el.classList.add('active');
-            el.classList.remove('bg-zinc-950', 'text-zinc-400');
-            
+        function changeServer(baseUrl, type, id) { 
             document.getElementById('videoPlayer').src = buildEmbedUrl(baseUrl, type, id); 
         }
 
@@ -379,8 +367,8 @@
 
         function playEpisode() {
             const s = document.getElementById('seasonSel').value; const e = document.getElementById('episodeSel').value;
-            // Defaulting to VidSrc for direct episode switch within series
-            document.getElementById('videoPlayer').src = `https://vidsrc.xyz/embed/tv/${window.currentSeriesId}/${s}/${e}?autoplay=1`;
+            // Gunakan VidRock sebagai default untuk series episode jika memungkinkan
+            document.getElementById('videoPlayer').src = `https://vidrock.net/embed/tv/${window.currentSeriesId}/${s}/${e}?autoplay=1`;
         }
 
         function setFilter(type, val, el) {
