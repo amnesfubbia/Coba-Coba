@@ -12,7 +12,7 @@
         body { background-color: #000; color: #fff; font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
 
-        /* HEADER SECTION - PATOKAN UTAMA */
+        /* HEADER SECTION */
         .fixed-header-section {
             position: fixed; top: 0; width: 100%; z-index: 100;
             background: #000; border-bottom: 1px solid #1c1c1c;
@@ -200,21 +200,18 @@
         const API_KEY = 'bfa7df5310c9974f62f26c6789a8c00d';
         let page = 1, loading = false, currentType = 'multi', currentGenre = '', currentYear = '', searchQuery = '';
 
-        // Updated Stream Servers based on user list
+        // Updated Streaming Servers List
         const STREAM_SERVERS = [
             { name: "VidRock", url: "https://vidrock.net/embed/" },
-            { name: "VidSrc WTF", url: "https://vidsrc.wtf/embed/" },
             { name: "VidStorm", url: "https://vidstorm.ru/embed/" },
-            { name: "VidFast IN", url: "https://vidfast.in/embed/" },
-            { name: "VidFast PRO", url: "https://vidfast.pro/embed/" },
-            { name: "VidFast IO", url: "https://vidfast.io/embed/" },
-            { name: "VidFast ME", url: "https://vidfast.me/embed/" },
-            { name: "VidFast NET", url: "https://vidfast.net/embed/" },
-            { name: "VidFast PM", url: "https://vidfast.pm/embed/" },
-            { name: "VidFast XYZ", url: "https://vidfast.xyz/embed/" },
+            { name: "RGShows RU", url: "https://www.rgshows.ru/?p=1&m=" },
+            { name: "VidSrc TO", url: "https://vidsrc.to/embed/" },
             { name: "VidLink PRO", url: "https://vidlink.pro/embed/" },
-            { name: "StreamSVR", url: "https://streamsvr.dll/embed/" },
-            { name: "RGShows RU", url: "https://www.rgshows.ru/embed/" }
+            { name: "VidSrc Embed RU", url: "https://vidsrc-embed.ru/embed/" },
+            { name: "VidEasy", url: "https://videasy.su/embed/" },
+            { name: "VidFast PRO", url: "https://vidfast.pro/embed/" },
+            { name: "VidNest", url: "https://vidnest.fun/embed/" },
+            { name: "VidSrc XYZ", url: "https://vidsrc.xyz/embed/" }
         ];
         const DL_BASE = "https://dl.vidsrc.vip/";
 
@@ -350,13 +347,16 @@
             showLoader(100);
         }
 
-        // Handle various embed URL patterns
+        // Logic for handling different embed URL formats
         function buildEmbedUrl(baseUrl, type, id, season = null, episode = null) {
             let url = baseUrl;
             if (baseUrl.includes('rgshows.ru')) {
-                // Example: rgshows.ru/?p=1&m=m-ID
-                return `https://www.rgshows.ru/?p=1&m=${type === 'movie' ? 'm' : 's'}-${id}`;
+                // Formatting for RGShows: ?p=1&m=m-ID or s-ID
+                const prefix = (type === 'movie' ? 'm-' : 's-');
+                return `${baseUrl}${prefix}${id}`;
             }
+            
+            // Standard formatting for other servers
             if (season && episode) {
                 url += `tv/${id}/${season}/${episode}`;
             } else {
@@ -383,7 +383,7 @@
 
         function playEpisode() {
             const s = document.getElementById('seasonSel').value; const e = document.getElementById('episodeSel').value;
-            // Use vidsrc as default for episode playing logic
+            // Defaults to vidsrc.xyz for specific episode playing
             document.getElementById('videoPlayer').src = `https://vidsrc.xyz/embed/tv/${window.currentSeriesId}/${s}/${e}?autoplay=1`;
         }
 
