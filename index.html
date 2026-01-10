@@ -83,7 +83,7 @@
         .cast-item { flex: 0 0 60px; text-align: center; }
         .cast-img { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; margin-bottom: 5px; border: 1px solid #1c1c1c; }
 
-        .server-btn { width: 100%; padding: 14px; border-radius: 12px; font-size: 10px; font-weight: 800; text-transform: uppercase; margin-bottom: 8px; border: 1px solid #1c1c1c; transition: 0.2s; text-align: center; display: block; }
+        .server-btn { width: 100%; padding: 14px; border-radius: 12px; font-size: 10px; font-weight: 800; text-transform: uppercase; margin-bottom: 8px; border: 1px solid #1c1c1c; transition: 0.2s; text-align: center; display: block; cursor: pointer; }
         .server-btn:active { transform: scale(0.98); opacity: 0.8; }
     </style>
 </head>
@@ -190,7 +190,7 @@
                 <!-- DOWNLOAD SERVER -->
                 <div class="mt-8 pt-6 border-t border-zinc-900">
                     <h4 class="text-[9px] font-black text-zinc-600 uppercase mb-4 tracking-widest text-center">Link Unduhan</h4>
-                    <button id="btnDownload" class="server-btn bg-white text-black border-none"><i class="fa-solid fa-download mr-2"></i> Download Sekarang (DL vidsrc)</button>
+                    <button id="btnDownload" class="server-btn bg-white text-black border-none"><i class="fa-solid fa-download mr-2"></i> Download Sekarang (vidsrc.vip)</button>
                 </div>
             </div>
         </div>
@@ -200,20 +200,21 @@
         const API_KEY = 'bfa7df5310c9974f62f26c6789a8c00d';
         let page = 1, loading = false, currentType = 'multi', currentGenre = '', currentYear = '', searchQuery = '';
 
-        // Updated Stream Servers List
+        // Updated Stream Servers based on user list
         const STREAM_SERVERS = [
             { name: "VidRock", url: "https://vidrock.net/embed/" },
+            { name: "VidSrc WTF", url: "https://vidsrc.wtf/embed/" },
             { name: "VidStorm", url: "https://vidstorm.ru/embed/" },
-            { name: "VidSrcMe TW", url: "https://vidsrcme.tw/embed/" },
-            { name: "VidSrc ME", url: "https://vidsrc.me/embed/" },
-            { name: "VidSrc NET", url: "https://vidsrc.net/embed/" },
-            { name: "VidSrc IO", url: "https://vidsrc.io/embed/" },
-            { name: "VidSrc BZ", url: "https://vidsrc.bz/embed/" },
-            { name: "VidSrc XYZ", url: "https://vidsrc.xyz/embed/" },
-            { name: "VidSrc GD", url: "https://vidsrc.gd/embed/" },
-            { name: "VidSrc DO", url: "https://vidsrc.do/embed/" },
-            { name: "VidSrc MN", url: "https://vidsrc.mn/embed/" },
-            { name: "VidSrc TW", url: "https://vidsrc.tw/embed/" }
+            { name: "VidFast IN", url: "https://vidfast.in/embed/" },
+            { name: "VidFast PRO", url: "https://vidfast.pro/embed/" },
+            { name: "VidFast IO", url: "https://vidfast.io/embed/" },
+            { name: "VidFast ME", url: "https://vidfast.me/embed/" },
+            { name: "VidFast NET", url: "https://vidfast.net/embed/" },
+            { name: "VidFast PM", url: "https://vidfast.pm/embed/" },
+            { name: "VidFast XYZ", url: "https://vidfast.xyz/embed/" },
+            { name: "VidLink PRO", url: "https://vidlink.pro/embed/" },
+            { name: "StreamSVR", url: "https://streamsvr.dll/embed/" },
+            { name: "RGShows RU", url: "https://www.rgshows.ru/embed/" }
         ];
         const DL_BASE = "https://dl.vidsrc.vip/";
 
@@ -296,7 +297,6 @@
             showLoader(50);
             
             try {
-                // Fetch ID and EN for maximum metadata availability
                 const [resId, resEn] = await Promise.all([
                     fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&language=id-ID&append_to_response=videos,credits`),
                     fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&language=en-US&append_to_response=videos`)
@@ -306,12 +306,10 @@
 
                 document.getElementById('mTitle').innerText = d.title || d.name;
                 document.getElementById('mTagline').innerText = d.tagline || dEn.tagline || "";
-                document.getElementById('mMeta').innerText = `${(d.release_date||d.first_air_date||'').split('-')[0]} // ${(d.runtime||d.episode_run_time?.[0]||'0')} MIN // ${type.toUpperCase()}`;
+                document.getElementById('mMeta').innerText = `${(d.release_date||d.first_air_date||'').split('-')[0]} // ${(d.runtime||d.episode_run_time?.[0]||'0')} MENIT // ${type.toUpperCase()}`;
                 
-                // Synopsis Fallback logic
                 document.getElementById('mDesc').innerText = d.overview || dEn.overview || "Informasi sinopsis belum tersedia.";
                 
-                // Comprehensive Info
                 document.getElementById('infoStatus').innerText = d.status || "N/A";
                 document.getElementById('infoOrigin').innerText = d.production_countries?.[0]?.name || "N/A";
                 document.getElementById('infoBudget').innerText = d.budget ? `$${d.budget.toLocaleString()}` : "N/A";
@@ -319,7 +317,6 @@
                 document.getElementById('infoRating').innerText = `★ ${d.vote_average.toFixed(1)} / 10`;
                 document.getElementById('infoLang').innerText = d.original_language?.toUpperCase() || "N/A";
 
-                // Cast list
                 document.getElementById('mCast').innerHTML = (d.credits?.cast || []).slice(0, 10).map(c => `
                     <div class="cast-item">
                         <img src="${c.profile_path ? 'https://image.tmdb.org/t/p/w185'+c.profile_path : 'https://via.placeholder.com/100x100?text=Actor'}" class="cast-img">
@@ -327,23 +324,19 @@
                     </div>
                 `).join('');
 
-                // Trailer with Autoplay (Check ID then EN)
                 const trailers = [...(d.videos?.results || []), ...(dEn.videos?.results || [])];
                 const officialTrailer = trailers.find(v => v.type === 'Trailer' && v.site === 'YouTube');
                 
                 if (officialTrailer) {
                     document.getElementById('videoPlayer').src = `https://www.youtube.com/embed/${officialTrailer.key}?autoplay=1&mute=0&rel=0`;
                 } else {
-                    // Default to first stream server if no trailer found
-                    document.getElementById('videoPlayer').src = STREAM_SERVERS[0].url + `${type}/${id}`;
+                    document.getElementById('videoPlayer').src = buildEmbedUrl(STREAM_SERVERS[0].url, type, id);
                 }
 
-                // Servers list display
                 document.getElementById('serverList').innerHTML = STREAM_SERVERS.map(s => `
-                    <button class="server-btn bg-zinc-950 text-zinc-400" onclick="changeServer('${s.url}${type}/${id}')">${s.name}</button>
+                    <button class="server-btn bg-zinc-950 text-zinc-400" onclick="changeServer('${s.url}', '${type}', '${id}')">${s.name}</button>
                 `).join('');
 
-                // Download Button logic
                 document.getElementById('btnDownload').onclick = () => window.open(`${DL_BASE}${type}/${id}`, '_blank');
 
                 if(type === 'tv') {
@@ -357,7 +350,25 @@
             showLoader(100);
         }
 
-        function changeServer(url) { document.getElementById('videoPlayer').src = url; }
+        // Handle various embed URL patterns
+        function buildEmbedUrl(baseUrl, type, id, season = null, episode = null) {
+            let url = baseUrl;
+            if (baseUrl.includes('rgshows.ru')) {
+                // Example: rgshows.ru/?p=1&m=m-ID
+                return `https://www.rgshows.ru/?p=1&m=${type === 'movie' ? 'm' : 's'}-${id}`;
+            }
+            if (season && episode) {
+                url += `tv/${id}/${season}/${episode}`;
+            } else {
+                url += `${type}/${id}`;
+            }
+            return url;
+        }
+
+        function changeServer(baseUrl, type, id) { 
+            document.getElementById('videoPlayer').src = buildEmbedUrl(baseUrl, type, id); 
+        }
+
         function searchAction() { searchQuery = document.getElementById('searchInp').value; loadFeed(true); }
         function closeModal() { document.getElementById('movieModal').style.display = 'none'; document.getElementById('videoPlayer').src = ''; document.body.style.overflow = 'auto'; }
         function showLoader(w) { const l = document.getElementById('loader'); l.style.width = w + '%'; if(w === 100) setTimeout(() => l.style.width = '0%', 400); }
@@ -372,7 +383,7 @@
 
         function playEpisode() {
             const s = document.getElementById('seasonSel').value; const e = document.getElementById('episodeSel').value;
-            // Default player for episodes
+            // Use vidsrc as default for episode playing logic
             document.getElementById('videoPlayer').src = `https://vidsrc.xyz/embed/tv/${window.currentSeriesId}/${s}/${e}?autoplay=1`;
         }
 
