@@ -80,11 +80,15 @@
         .info-value { font-size: 10px; color: #fff; font-weight: 600; }
 
         .cast-scroll { display: flex; gap: 10px; overflow-x: auto; padding: 10px 0; }
-        .cast-item { flex: 0 0 60px; text-align: center; }
+        .cast-item { flex: 0 0 60px; text-align: center; cursor: pointer; }
         .cast-img { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; margin-bottom: 5px; border: 1px solid #1c1c1c; }
 
         .server-btn { width: 100%; padding: 14px; border-radius: 12px; font-size: 10px; font-weight: 800; text-transform: uppercase; margin-bottom: 8px; border: 1px solid #1c1c1c; transition: 0.2s; text-align: center; display: block; cursor: pointer; }
         .server-btn:active { transform: scale(0.98); opacity: 0.8; }
+        
+        /* Tombol download minimalis */
+        .btn-download-minimal { background: transparent; color: #fff; border: 1px solid #1c1c1c; }
+        .btn-download-minimal:active { background: #fff; color: #000; }
     </style>
 </head>
 <body>
@@ -130,11 +134,14 @@
                     <div class="circle-icon"><i class="fa-solid fa-border-all"></i></div>
                     <p class="highlight-label">Semua</p>
                 </div>
+                <!-- Genre Lengkap Sesuai TMDB -->
                 <div class="highlight-item" onclick="setFilter('genre', '27', this)"><div class="circle-icon"><i class="fa-solid fa-ghost"></i></div><p class="highlight-label">Horor</p></div>
                 <div class="highlight-item" onclick="setFilter('genre', '35', this)"><div class="circle-icon"><i class="fa-solid fa-masks-theater"></i></div><p class="highlight-label">Komedi</p></div>
                 <div class="highlight-item" onclick="setFilter('genre', '10749', this)"><div class="circle-icon"><i class="fa-solid fa-heart"></i></div><p class="highlight-label">Romantis</p></div>
                 <div class="highlight-item" onclick="setFilter('genre', '28', this)"><div class="circle-icon"><i class="fa-solid fa-bolt"></i></div><p class="highlight-label">Aksi</p></div>
                 <div class="highlight-item" onclick="setFilter('genre', '18', this)"><div class="circle-icon"><i class="fa-solid fa-clapperboard"></i></div><p class="highlight-label">Drama</p></div>
+                <div class="highlight-item" onclick="setFilter('genre', '14', this)"><div class="circle-icon"><i class="fa-solid fa-wand-sparkles"></i></div><p class="highlight-label">Fantasi</p></div>
+                <div class="highlight-item" onclick="setFilter('genre', '9648', this)"><div class="circle-icon"><i class="fa-solid fa-magnifying-glass-chart"></i></div><p class="highlight-label">Misteri</p></div>
             </div>
         </div>
     </div>
@@ -181,16 +188,16 @@
                     </div>
                 </div>
 
-                <!-- STREAMING SERVERS (Hanya 2 Server) -->
+                <!-- STREAMING SERVERS -->
                 <div class="mb-4">
                     <h4 class="text-[9px] font-black text-zinc-600 uppercase mb-4 tracking-widest text-center">Pilih Server Streaming</h4>
                     <div id="serverList" class="space-y-2"></div>
                 </div>
 
-                <!-- DOWNLOAD SERVER -->
+                <!-- DOWNLOAD SERVER (Minimalis) -->
                 <div class="mt-8 pt-6 border-t border-zinc-900">
                     <h4 class="text-[9px] font-black text-zinc-600 uppercase mb-4 tracking-widest text-center">Link Unduhan</h4>
-                    <button id="btnDownload" class="server-btn bg-white text-black border-none"><i class="fa-solid fa-download mr-2"></i> Download Sekarang (vidsrc.vip)</button>
+                    <button id="btnDownload" class="server-btn btn-download-minimal"><i class="fa-solid fa-download mr-2"></i> Download (vidsrc.vip)</button>
                 </div>
             </div>
         </div>
@@ -198,9 +205,8 @@
 
     <script>
         const API_KEY = 'bfa7df5310c9974f62f26c6789a8c00d';
-        let page = 1, loading = false, currentType = 'multi', currentGenre = '', currentYear = '', searchQuery = '';
+        let page = 1, loading = false, currentType = 'multi', currentGenre = '', currentYear = '', searchQuery = '', actorId = '';
 
-        // Ganti Link Stream hanya ke 2 server ini
         const STREAM_SERVERS = [
             { name: "VidRock", url: "https://vidrock.net/embed/" },
             { name: "VidStorm", url: "https://vidstorm.ru/embed/" }
@@ -217,7 +223,8 @@
         function initYearDropdown() {
             const dropdown = document.getElementById('yearDropdown');
             let html = '<div class="year-item" onclick="setYear(\'\')">SEMUA</div>';
-            for(let y = 2026; y >= 1970; y--) html += `<div class="year-item" onclick="setYear(${y})">${y}</div>`;
+            // Ubah tahun mulai dari 1930
+            for(let y = 2026; y >= 1930; y--) html += `<div class="year-item" onclick="setYear(${y})">${y}</div>`;
             dropdown.innerHTML = html;
         }
 
@@ -228,7 +235,7 @@
 
         function setYear(y) {
             currentYear = y; document.getElementById('yearVal').innerText = y || 'TAHUN';
-            document.getElementById('yearDropdown').style.display = 'none'; loadFeed(true);
+            document.getElementById('yearDropdown').style.display = 'none'; actorId = ''; loadFeed(true);
         }
 
         async function loadFeed(isNew = true) {
@@ -242,7 +249,12 @@
                 let yearParam = currentYear ? `&primary_release_year=${currentYear}&first_air_date_year=${currentYear}` : '';
                 let genreParam = currentGenre ? `&with_genres=${currentGenre}` : '';
                 
-                if (searchQuery) {
+                if (actorId) {
+                    // Filter berdasarkan aktor
+                    const res = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_cast=${actorId}&with_origin_country=ID&language=id-ID&page=${page}`);
+                    const data = await res.json();
+                    items = (data.results || []).map(x => ({...x, m_type: 'movie'}));
+                } else if (searchQuery) {
                     const res = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(searchQuery)}&language=id-ID&page=${page}`);
                     const data = await res.json();
                     items = (data.results || []).filter(i => i.origin_country?.includes('ID') || i.original_language === 'id' || i.media_type).map(x => ({...x, m_type: x.media_type}));
@@ -307,7 +319,7 @@
                 document.getElementById('infoLang').innerText = d.original_language?.toUpperCase() || "N/A";
 
                 document.getElementById('mCast').innerHTML = (d.credits?.cast || []).slice(0, 10).map(c => `
-                    <div class="cast-item">
+                    <div class="cast-item" onclick="searchByActor('${c.id}', '${c.name.replace(/'/g, "\\'")}')">
                         <img src="${c.profile_path ? 'https://image.tmdb.org/t/p/w185'+c.profile_path : 'https://via.placeholder.com/100x100?text=Actor'}" class="cast-img">
                         <p class="text-[7px] font-bold text-zinc-500 truncate">${c.name}</p>
                     </div>
@@ -339,6 +351,15 @@
             showLoader(100);
         }
 
+        // Fungsi baru untuk pencarian aktor
+        function searchByActor(id, name) {
+            closeModal();
+            actorId = id;
+            searchQuery = '';
+            document.getElementById('searchInp').value = name;
+            loadFeed(true);
+        }
+
         function buildEmbedUrl(baseUrl, type, id, season = null, episode = null) {
             let url = baseUrl;
             if (season && episode) {
@@ -353,7 +374,12 @@
             document.getElementById('videoPlayer').src = buildEmbedUrl(baseUrl, type, id); 
         }
 
-        function searchAction() { searchQuery = document.getElementById('searchInp').value; loadFeed(true); }
+        function searchAction() { 
+            searchQuery = document.getElementById('searchInp').value; 
+            actorId = ''; 
+            loadFeed(true); 
+        }
+        
         function closeModal() { document.getElementById('movieModal').style.display = 'none'; document.getElementById('videoPlayer').src = ''; document.body.style.overflow = 'auto'; }
         function showLoader(w) { const l = document.getElementById('loader'); l.style.width = w + '%'; if(w === 100) setTimeout(() => l.style.width = '0%', 400); }
 
@@ -367,11 +393,11 @@
 
         function playEpisode() {
             const s = document.getElementById('seasonSel').value; const e = document.getElementById('episodeSel').value;
-            // Gunakan VidRock sebagai default untuk series episode jika memungkinkan
             document.getElementById('videoPlayer').src = `https://vidrock.net/embed/tv/${window.currentSeriesId}/${s}/${e}?autoplay=1`;
         }
 
         function setFilter(type, val, el) {
+            actorId = '';
             if(type === 'type') {
                 document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
                 currentType = val; currentGenre = '';
