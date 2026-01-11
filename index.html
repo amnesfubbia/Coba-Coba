@@ -37,6 +37,27 @@
         .modal-player { display: none; position: fixed; inset: 0; z-index: 200; background: #000; overflow-y: auto; }
         .server-btn { width: 100%; padding: 14px; border-radius: 12px; font-size: 10px; font-weight: 800; text-transform: uppercase; border: 1px solid #1c1c1c; text-align: center; cursor: pointer; }
         .skeleton { background: linear-gradient(90deg, #0a0a0a 25%, #1a1a1a 50%, #0a0a0a 75%); background-size: 200% 100%; animation: skeleton-loading 1.5s infinite; }
+        
+        /* Gaya Lingkaran Story Instagram untuk Pemeran */
+        .story-border {
+            padding: 2.5px;
+            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+            border-radius: 50%;
+            display: inline-block;
+        }
+        .story-inner {
+            background: #000;
+            padding: 2px;
+            border-radius: 50%;
+        }
+        .story-img {
+            width: 58px;
+            height: 58px;
+            border-radius: 50%;
+            object-fit: cover;
+            display: block;
+        }
+
         @keyframes skeleton-loading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
     </style>
 </head>
@@ -103,7 +124,9 @@
                 <p id="mTagline" class="text-xs font-bold italic text-white mb-2"></p>
                 <p id="mMeta" class="text-[9px] text-zinc-500 font-black mb-4 uppercase"></p>
                 <p id="mDesc" class="text-xs text-zinc-400 leading-relaxed mb-6"></p>
-                <div class="mb-8"><h4 class="text-[9px] font-black text-zinc-600 uppercase mb-2">Pemeran Utama</h4><div id="mCast" class="flex gap-3 overflow-x-auto no-scrollbar"></div></div>
+                <div class="mb-8"><h4 class="text-[9px] font-black text-zinc-600 uppercase mb-2">Pemeran Utama</h4>
+                    <div id="mCast" class="flex gap-4 overflow-x-auto no-scrollbar py-2"></div>
+                </div>
                 <div id="seriesControl" class="hidden mb-6 p-4 bg-zinc-950 rounded-2xl border border-zinc-900"><div class="grid grid-cols-2 gap-4"><select id="seasonSel" class="bg-zinc-900 text-white text-[10px] font-bold p-3 rounded-xl" onchange="loadEpisodes()"></select><select id="episodeSel" class="bg-zinc-900 text-white text-[10px] font-bold p-3 rounded-xl" onchange="playEpisode()"></select></div></div>
                 <div id="serverList" class="grid grid-cols-2 gap-2 mt-4"></div>
                 <button id="btnDownload" class="server-btn border-zinc-800 text-zinc-400 mt-4"><i class="fa-solid fa-download mr-2"></i> Download Film</button>
@@ -181,16 +204,8 @@
                 const card = document.createElement('div');
                 card.className = 'post-card';
                 card.onclick = () => openModal(m.id, m.m_type === 'short' ? 'movie' : m.m_type);
-                
-                // Logika Badge
-                let badgeText = m.m_type === 'tv' ? 'Series' : 'Film';
-                if(m.m_type === 'short') badgeText = 'Short';
-
-                card.innerHTML = `
-                    <div class="badge-rating"><i class="fa-solid fa-star text-[6px]"></i> ${m.vote_average?.toFixed(1) || '0.0'}</div>
-                    <div class="badge-type">${badgeText}</div>
-                    <img src="https://image.tmdb.org/t/p/w342${m.poster_path}" onload="this.parentElement.classList.remove('skeleton')">
-                `;
+                let badgeText = m.m_type === 'tv' ? 'Series' : (m.m_type === 'short' ? 'Short' : 'Film');
+                card.innerHTML = `<div class="badge-rating"><i class="fa-solid fa-star text-[6px]"></i> ${m.vote_average?.toFixed(1) || '0.0'}</div><div class="badge-type">${badgeText}</div><img src="https://image.tmdb.org/t/p/w342${m.poster_path}" onload="this.parentElement.classList.remove('skeleton')">`;
                 grid.appendChild(card);
             });
         }
@@ -206,31 +221,26 @@
                 ]);
                 const d = await resId.json();
                 const dEn = await resEn.json();
-                
                 document.getElementById('mTitle').innerText = d.title || d.name;
                 document.getElementById('mTagline').innerText = d.tagline || dEn.tagline || "";
                 document.getElementById('mMeta').innerText = `${(d.release_date||d.first_air_date||'').split('-')[0]} // ${type.toUpperCase()}`;
                 document.getElementById('mDesc').innerText = d.overview || dEn.overview || "Sinopsis tidak tersedia.";
                 
-                // TRAILER LOGIC: Cari di data ID dulu, jika tidak ada cari di EN
                 const allVideos = [...(d.videos?.results || []), ...(dEn.videos?.results || [])];
-                const trailer = allVideos.find(v => v.site === 'YouTube' && (v.type === 'Trailer' || v.type === 'Teaser' || v.type === 'Clip'));
-                
-                if(trailer) {
-                    document.getElementById('videoPlayer').src = `https://www.youtube.com/embed/${trailer.key}?autoplay=1&mute=1&rel=0&showinfo=0`;
-                } else {
-                    document.getElementById('videoPlayer').src = `https://vidrock.net/embed/${type}/${id}`;
-                }
+                const trailer = allVideos.find(v => v.site === 'YouTube' && (v.type === 'Trailer' || v.type === 'Teaser'));
+                document.getElementById('videoPlayer').src = trailer ? `https://www.youtube.com/embed/${trailer.key}?autoplay=1&mute=1` : `https://vidrock.net/embed/${type}/${id}`;
 
+                // Render Pemeran dengan Gaya Instagram Story
                 document.getElementById('mCast').innerHTML = (d.credits?.cast || []).slice(0, 10).map(c => `
-                    <div class="flex-shrink-0 w-12 text-center cursor-pointer" onclick="filterByActor('${c.id}')">
-                        <img src="${c.profile_path ? 'https://image.tmdb.org/t/p/w185'+c.profile_path : 'https://via.placeholder.com/100'}" class="w-10 h-10 rounded-full object-cover mx-auto border border-zinc-800">
-                        <p class="text-[6px] text-zinc-500 truncate mt-1">${c.name}</p>
+                    <div class="flex-shrink-0 w-[70px] text-center cursor-pointer" onclick="filterByActor('${c.id}')">
+                        <div class="story-border">
+                            <div class="story-inner">
+                                <img src="${c.profile_path ? 'https://image.tmdb.org/t/p/w185'+c.profile_path : 'https://via.placeholder.com/100'}" class="story-img">
+                            </div>
+                        </div>
+                        <p class="text-[8px] text-zinc-400 truncate mt-2 font-medium">${c.name.split(' ')[0]}</p>
                     </div>
                 `).join('');
-
-                document.getElementById('btnDownload').onclick = () => window.open(`https://dl.vidsrc.vip/${type}/${id}`, '_blank');
-                document.getElementById('serverList').innerHTML = `<button class="server-btn bg-zinc-950 text-zinc-400" onclick="document.getElementById('videoPlayer').src='https://vidrock.net/embed/${type}/${id}'">Server 1</button><button class="server-btn bg-zinc-950 text-zinc-400" onclick="document.getElementById('videoPlayer').src='https://vidstorm.ru/embed/${type}/${id}'">Server 2</button>`;
 
                 if(type === 'tv') {
                     document.getElementById('seriesControl').classList.remove('hidden');
