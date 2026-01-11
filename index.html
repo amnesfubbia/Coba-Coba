@@ -65,7 +65,14 @@
         .movie-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5px; padding-top: 275px; padding-bottom: 50px; }
         .post-card { position: relative; aspect-ratio: 2/3; background: #0a0a0a; overflow: hidden; }
         .post-card img { width: 100%; height: 100%; object-fit: cover; }
+        
+        /* BADGES */
         .badge-type { position: absolute; top: 6px; right: 6px; padding: 2px 5px; border-radius: 2px; font-size: 7px; font-weight: 900; text-transform: uppercase; z-index: 5; background: rgba(0,0,0,0.7); color: #fff; border: 0.5px solid rgba(255,255,255,0.2); }
+        .badge-genre { position: absolute; top: 22px; right: 6px; padding: 2px 5px; border-radius: 2px; font-size: 6px; font-weight: 700; text-transform: uppercase; z-index: 5; background: rgba(0,0,0,0.5); color: #ccc; border: 0.5px solid rgba(255,255,255,0.1); }
+        .badge-rating { position: absolute; top: 6px; left: 6px; padding: 2px 5px; border-radius: 2px; font-size: 7px; font-weight: 900; z-index: 5; background: rgba(255,255,255,0.9); color: #000; }
+
+        /* VERIFIED BADGE */
+        .verified-badge { color: #0095f6; font-size: 11px; margin-left: 4px; }
 
         /* BACK TO TOP */
         #backToTop { display: none; position: fixed; bottom: 25px; right: 20px; width: 40px; height: 40px; background: #fff; color: #000; border-radius: 50%; z-index: 150; border: none; font-size: 14px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); cursor: pointer; }
@@ -74,7 +81,7 @@
         .modal-player { display: none; position: fixed; inset: 0; z-index: 200; background: #000; overflow-y: auto; }
         #loader { position: fixed; top: 0; left: 0; height: 1.5px; background: #fff; width: 0%; transition: width 0.3s; z-index: 1000; }
         
-        .info-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 20px; }
+        .info-grid { display: grid; grid-template-columns: repeat(1, 1fr); gap: 12px; margin-top: 20px; }
         .info-box { background: #0a0a0a; border: 1px solid #1c1c1c; padding: 12px; border-radius: 12px; }
         .info-label { font-size: 7px; color: #555; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px; }
         .info-value { font-size: 10px; color: #fff; font-weight: 600; }
@@ -83,11 +90,14 @@
         .cast-item { flex: 0 0 60px; text-align: center; cursor: pointer; }
         .cast-img { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; margin-bottom: 5px; border: 1px solid #1c1c1c; }
 
-        .server-btn { width: 100%; padding: 14px; border-radius: 12px; font-size: 10px; font-weight: 800; text-transform: uppercase; margin-bottom: 8px; border: 1px solid #1c1c1c; transition: 0.2s; text-align: center; display: block; cursor: pointer; }
+        .server-btn { width: 100%; padding: 14px; border-radius: 12px; font-size: 10px; font-weight: 800; text-transform: uppercase; border: 1px solid #1c1c1c; transition: 0.2s; text-align: center; display: block; cursor: pointer; }
         .server-btn:active { transform: scale(0.98); opacity: 0.8; }
         
-        .btn-download-minimal { background: transparent; color: #fff; border: 1px solid #1c1c1c; }
+        .btn-download-minimal { background: transparent; color: #a1a1aa; border: 1px solid #1c1c1c; }
         .btn-download-minimal:active { background: #fff; color: #000; }
+        
+        .btn-like { color: #555; transition: 0.3s; cursor: pointer; }
+        .btn-like.active { color: #ff2d55; }
     </style>
 </head>
 <body>
@@ -98,9 +108,12 @@
     <div class="fixed-header-section">
         <header class="ig-header">
             <div class="flex justify-between items-center">
-                <h1 class="text-xl font-bold italic lowercase tracking-tight" onclick="location.reload()">
-                    amnesfubbia <span class="text-white opacity-50 font-normal">xx1</span>
-                </h1>
+                <div class="flex items-center">
+                    <h1 class="text-xl font-bold italic lowercase tracking-tight" onclick="location.reload()">
+                        amnesfubbia <span class="text-white opacity-50 font-normal">xx1</span>
+                    </h1>
+                    <i class="fa-solid fa-circle-check verified-badge"></i>
+                </div>
                 <div class="flex gap-6 text-lg">
                     <i class="fa-regular fa-square-plus"></i>
                     <i class="fa-solid fa-bars"></i>
@@ -151,7 +164,10 @@
         <div class="max-w-xl mx-auto pb-20">
             <div class="p-4 flex items-center justify-between border-b border-zinc-900 sticky top-0 bg-black z-50">
                 <i class="fa-solid fa-xmark text-lg" onclick="closeModal()"></i>
-                <h2 id="mTitle" class="text-[11px] font-bold truncate uppercase tracking-widest text-center px-4"></h2>
+                <div class="flex items-center gap-2 overflow-hidden px-4">
+                    <h2 id="mTitle" class="text-[11px] font-bold truncate uppercase tracking-widest text-center"></h2>
+                    <i class="fa-solid fa-heart btn-like text-sm" onclick="this.classList.toggle('active')"></i>
+                </div>
                 <div class="w-5"></div>
             </div>
             
@@ -165,12 +181,7 @@
                 <p id="mDesc" class="text-xs text-zinc-400 leading-relaxed mb-6 font-light"></p>
 
                 <div class="info-grid mb-8">
-                    <div class="info-box"><p class="info-label">Status</p><p id="infoStatus" class="info-value">-</p></div>
-                    <div class="info-box"><p class="info-label">Asal Negara</p><p id="infoOrigin" class="info-value">-</p></div>
-                    <div class="info-box"><p class="info-label">Anggaran</p><p id="infoBudget" class="info-value">-</p></div>
-                    <div class="info-box"><p class="info-label">Pendapatan</p><p id="infoRevenue" class="info-value">-</p></div>
-                    <div class="info-box"><p class="info-label">Rating</p><p id="infoRating" class="info-value">-</p></div>
-                    <div class="info-box"><p class="info-label">Bahasa</p><p id="infoLang" class="info-value">-</p></div>
+                    <div class="info-box"><p class="info-label">Rating TMDB</p><p id="infoRating" class="info-value">-</p></div>
                 </div>
 
                 <div class="mb-8">
@@ -187,7 +198,7 @@
 
                 <div class="mb-4">
                     <h4 class="text-[9px] font-black text-zinc-600 uppercase mb-4 tracking-widest text-center">Pilih Server Streaming</h4>
-                    <div id="serverList" class="space-y-2"></div>
+                    <div id="serverList" class="grid grid-cols-2 gap-2"></div>
                 </div>
 
                 <div class="mt-8 pt-6 border-t border-zinc-900">
@@ -207,6 +218,8 @@
             { name: "VidStorm", url: "https://vidstorm.ru/embed/" }
         ];
         const DL_BASE = "https://dl.vidsrc.vip/";
+
+        const GENRE_MAP = { 28:"Aksi", 12:"Petualang", 16:"Animasi", 35:"Komedi", 80:"Kriminal", 99:"Dokumenter", 18:"Drama", 10751:"Keluarga", 14:"Fantasi", 36:"Sejarah", 27:"Horor", 10402:"Musik", 9648:"Misteri", 10749:"Romantis", 878:"Sci-Fi", 10770:"TV Movie", 53:"Thriller", 10752:"Perang", 37:"Western" };
 
         window.onload = () => { initYearDropdown(); loadFeed(); };
 
@@ -248,10 +261,8 @@
                     const data = await res.json();
                     items = (data.results || []).map(x => ({...x, m_type: 'movie'}));
                 } else if (searchQuery) {
-                    // Hanya cari di ID (Indonesia)
                     const res = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(searchQuery)}&language=id-ID&page=${page}&region=ID`);
                     const data = await res.json();
-                    // Filter ekstra: Pastikan asal negara ID atau bahasa asli Indonesia
                     items = (data.results || []).filter(i => 
                         (i.origin_country && i.origin_country.includes('ID')) || 
                         (i.original_language === 'id')
@@ -282,9 +293,18 @@
                 if (!m.poster_path) return;
                 const card = document.createElement('div');
                 card.className = 'post-card active:opacity-60 transition-opacity';
+                
                 let label = m.m_type === 'tv' ? 'Series' : (m.m_type === 'short' ? 'Short' : 'Film');
+                let rating = m.vote_average ? m.vote_average.toFixed(1) : 'N/A';
+                let genreName = m.genre_ids && m.genre_ids[0] ? (GENRE_MAP[m.genre_ids[0]] || '') : '';
+
                 card.onclick = () => openModal(m.id, (m.m_type === 'short' ? 'movie' : (m.m_type || 'movie')));
-                card.innerHTML = `<div class="badge-type">${label}</div><img src="https://image.tmdb.org/t/p/w342${m.poster_path}" loading="lazy">`;
+                card.innerHTML = `
+                    <div class="badge-rating"><i class="fa-solid fa-star text-[6px]"></i> ${rating}</div>
+                    <div class="badge-type">${label}</div>
+                    ${genreName ? `<div class="badge-genre">${genreName}</div>` : ''}
+                    <img src="https://image.tmdb.org/t/p/w342${m.poster_path}" loading="lazy">
+                `;
                 grid.appendChild(card);
             });
         }
@@ -294,7 +314,8 @@
             modal.style.display = 'block';
             document.body.style.overflow = 'hidden';
             showLoader(50);
-            
+            document.querySelector('.btn-like').classList.remove('active');
+
             try {
                 const [resId, resEn] = await Promise.all([
                     fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&language=id-ID&append_to_response=videos,credits`),
@@ -307,12 +328,7 @@
                 document.getElementById('mTagline').innerText = d.tagline || dEn.tagline || "";
                 document.getElementById('mMeta').innerText = `${(d.release_date||d.first_air_date||'').split('-')[0]} // ${(d.runtime||d.episode_run_time?.[0]||'0')} MENIT // ${type.toUpperCase()}`;
                 document.getElementById('mDesc').innerText = d.overview || dEn.overview || "Informasi sinopsis belum tersedia.";
-                document.getElementById('infoStatus').innerText = d.status || "N/A";
-                document.getElementById('infoOrigin').innerText = d.production_countries?.[0]?.name || "N/A";
-                document.getElementById('infoBudget').innerText = d.budget ? `$${d.budget.toLocaleString()}` : "N/A";
-                document.getElementById('infoRevenue').innerText = d.revenue ? `$${d.revenue.toLocaleString()}` : "N/A";
                 document.getElementById('infoRating').innerText = `★ ${d.vote_average.toFixed(1)} / 10`;
-                document.getElementById('infoLang').innerText = d.original_language?.toUpperCase() || "N/A";
 
                 document.getElementById('mCast').innerHTML = (d.credits?.cast || []).slice(0, 10).map(c => `
                     <div class="cast-item" onclick="searchByActor('${c.id}', '${c.name.replace(/'/g, "\\'")}')">
@@ -407,4 +423,3 @@
     </script>
 </body>
 </html>
-
