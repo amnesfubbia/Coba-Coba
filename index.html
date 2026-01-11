@@ -132,30 +132,41 @@
             const l = document.getElementById('loader'); l.style.width = '30%';
             
             try {
-                let url = '';
-                const base = `https://api.themoviedb.org/3`;
-                // MANDATORY: Parameter Indonesia
+                let items = [];
                 const mandatory = `&with_original_language=id&region=ID&language=id-ID`;
+                const year = currentYear ? (currentType === 'tv' ? `&first_air_date_year=${currentYear}` : `&primary_release_year=${currentYear}`) : '';
+                const genre = currentGenre ? `&with_genres=${currentGenre}` : '';
 
                 if (currentActorId) {
-                    url = `${base}/discover/movie?api_key=${API_KEY}${mandatory}&with_cast=${currentActorId}&page=${page}`;
+                    const res = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}${mandatory}&with_cast=${currentActorId}&page=${page}`);
+                    const data = await res.json();
+                    items = (data.results || []).map(x => ({...x, m_type: 'movie'}));
                 } else if (searchQuery) {
-                    url = `${base}/search/multi?api_key=${API_KEY}${mandatory}&query=${encodeURIComponent(searchQuery)}&page=${page}`;
+                    const res = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}${mandatory}&query=${encodeURIComponent(searchQuery)}&page=${page}`);
+                    const data = await res.json();
+                    items = (data.results || []).map(x => ({...x, m_type: x.media_type}));
+                } else if (currentType === 'multi') {
+                    const [resM, resT] = await Promise.all([
+                        fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}${mandatory}${genre}${currentYear ? '&primary_release_year='+currentYear : ''}&page=${page}`),
+                        fetch(`https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}${mandatory}${genre}${currentYear ? '&first_air_date_year='+currentYear : ''}&page=${page}`)
+                    ]);
+                    const dM = await resM.json(); const dT = await resT.json();
+                    items = [...(dM.results || []).map(x => ({...x, m_type:'movie'})), ...(dT.results || []).map(x => ({...x, m_type:'tv'}))];
+                } else if (currentType === 'short') {
+                    // Filter Film Pendek (Durasi < 40 menit)
+                    const res = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}${mandatory}${genre}${year}&with_runtime.lte=40&page=${page}`);
+                    const data = await res.json();
+                    items = (data.results || []).map(x => ({...x, m_type: 'movie'}));
                 } else {
-                    const type = currentType === 'tv' ? 'tv' : 'movie';
-                    const genre = currentGenre ? `&with_genres=${currentGenre}` : '';
-                    const year = currentYear ? (type === 'tv' ? `&first_air_date_year=${currentYear}` : `&primary_release_year=${currentYear}`) : '';
-                    url = `${base}/discover/${type}?api_key=${API_KEY}${mandatory}${genre}${year}&page=${page}`;
+                    const res = await fetch(`https://api.themoviedb.org/3/discover/${currentType}?api_key=${API_KEY}${mandatory}${genre}${year}&page=${page}`);
+                    const data = await res.json();
+                    items = (data.results || []).map(x => ({...x, m_type: currentType}));
                 }
 
-                const res = await fetch(url);
-                const data = await res.json();
-                
-                // FILTER MANUAL KEDUA: Hanya ambil yang bahasa aslinya Indonesia ('id')
-                const filteredResults = (data.results || []).filter(m => m.original_language === 'id');
-
+                // Filter Hard-Code Bahasa Indonesia
+                const filtered = items.filter(m => m.original_language === 'id');
                 if(isNew) document.getElementById('feedGrid').innerHTML = '';
-                renderFeed(filteredResults.map(x => ({...x, m_type: x.media_type || (currentType === 'tv' ? 'tv' : 'movie')})));
+                renderFeed(filtered);
             } catch (err) { console.error(err); }
             loading = false; l.style.width = '100%'; setTimeout(()=>l.style.width='0%', 400);
         }
@@ -181,20 +192,25 @@
             modal.style.display = 'block';
             document.body.style.overflow = 'hidden';
             try {
-                const res = await fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&language=id-ID&append_to_response=videos,credits`);
-                const d = await res.json();
+                // Fetch ID (Indo) dan EN (English) untuk Fallback Sinopsis
+                const [resId, resEn] = await Promise.all([
+                    fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&language=id-ID&append_to_response=videos,credits`),
+                    fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&language=en-US`)
+                ]);
+                const d = await resId.json();
+                const dEn = await resEn.json();
                 
                 document.getElementById('mTitle').innerText = d.title || d.name;
-                document.getElementById('mTagline').innerText = d.tagline || "";
+                document.getElementById('mTagline').innerText = d.tagline || dEn.tagline || "";
                 document.getElementById('mMeta').innerText = `${(d.release_date||d.first_air_date||'').split('-')[0]} // ${type.toUpperCase()}`;
-                document.getElementById('mDesc').innerText = d.overview || "Sinopsis tidak tersedia.";
                 
-                // Trailer Autoplay (Muted)
+                // Fallback Sinopsis: Jika Indo kosong, pakai English
+                document.getElementById('mDesc').innerText = d.overview || dEn.overview || "Sinopsis tidak tersedia dalam bahasa apapun.";
+                
                 const trailers = d.videos?.results || [];
                 const official = trailers.find(v => v.type === 'Trailer' && v.site === 'YouTube');
                 document.getElementById('videoPlayer').src = official ? `https://www.youtube.com/embed/${official.key}?autoplay=1&mute=1` : `https://vidrock.net/embed/${type}/${id}`;
 
-                // Klik Aktor Filter
                 document.getElementById('mCast').innerHTML = (d.credits?.cast || []).slice(0, 10).map(c => `
                     <div class="flex-shrink-0 w-12 text-center cursor-pointer" onclick="filterByActor('${c.id}')">
                         <img src="${c.profile_path ? 'https://image.tmdb.org/t/p/w185'+c.profile_path : 'https://via.placeholder.com/100'}" class="w-10 h-10 rounded-full object-cover mx-auto border border-zinc-800">
@@ -211,28 +227,20 @@
                     window.currentSeriesId = id; loadEpisodes();
                 } else { document.getElementById('seriesControl').classList.add('hidden'); }
 
-                // Update Liked & Booked
-                const movieData = {id: d.id, poster_path: d.poster_path, m_type: type, vote_average: d.vote_average};
                 updateModalButtons(d.id);
-                document.getElementById('btnLikeModal').onclick = () => toggleItem('likes', movieData);
-                document.getElementById('btnBookModal').onclick = () => toggleItem('bookmarks', movieData);
+                const mData = {id: d.id, poster_path: d.poster_path, m_type: type, vote_average: d.vote_average};
+                document.getElementById('btnLikeModal').onclick = () => toggleItem('likes', mData);
+                document.getElementById('btnBookModal').onclick = () => toggleItem('bookmarks', mData);
             } catch(e) { console.error(e); }
         }
 
-        function filterByActor(actorId) {
-            currentActorId = actorId;
-            searchQuery = ''; // Reset search agar filter aktor prioritas
-            closeModal();
-            loadFeed(true);
-            window.scrollTo({top:0, behavior:'smooth'});
-        }
-
+        function filterByActor(actorId) { currentActorId = actorId; searchQuery = ''; closeModal(); loadFeed(true); window.scrollTo({top:0, behavior:'smooth'}); }
         function showUserProfil() { alert("Amnesfubbia XX1\nWebsite streaming khusus film Indonesia.\n\nBy Amnesfubbia Entertainment"); }
         function updateModalButtons(id) {
             const isLiked = getStore('likes').some(x => x.id == id);
             const isBooked = getStore('bookmarks').some(x => x.id == id);
-            document.getElementById('btnLikeModal').className = isLiked ? 'fa-solid fa-heart active cursor-pointer text-lg' : 'fa-regular fa-heart cursor-pointer text-lg';
-            document.getElementById('btnBookModal').className = isBooked ? 'fa-solid fa-bookmark active cursor-pointer text-lg' : 'fa-regular fa-bookmark cursor-pointer text-lg';
+            document.getElementById('btnLikeModal').className = isLiked ? 'fa-solid fa-heart active cursor-pointer text-lg text-red-500' : 'fa-regular fa-heart cursor-pointer text-lg';
+            document.getElementById('btnBookModal').className = isBooked ? 'fa-solid fa-bookmark active cursor-pointer text-lg text-white' : 'fa-regular fa-bookmark cursor-pointer text-lg';
         }
         function toggleItem(key, movie) {
             let items = getStore(key);
