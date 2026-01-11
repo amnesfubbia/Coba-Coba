@@ -8,85 +8,56 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap');
-        
         body { background-color: #000; color: #fff; font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
-
-        /* HEADER */
         .fixed-header-section { position: fixed; top: 0; width: 100%; z-index: 100; background: #000; border-bottom: 1px solid #1c1c1c; }
         .ig-header { padding: 12px 15px 5px 15px; }
         .search-container { background: #0a0a0a; border-radius: 8px; display: flex; align-items: center; padding: 7px 12px; flex-grow: 1; border: 1px solid #1c1c1c; }
         .search-container input { background: transparent; border: none; color: white; font-size: 13px; width: 100%; outline: none; margin-left: 8px; }
-        
         .year-selector { background: #0a0a0a; border: 1px solid #1c1c1c; border-radius: 8px; padding: 8px 12px; font-size: 9px; font-weight: 800; color: #fff; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; gap: 5px; }
         .year-dropdown { display: none; position: fixed; top: 110px; right: 15px; width: 120px; max-height: 300px; background: #121212; border: 1px solid #1c1c1c; border-radius: 12px; z-index: 101; overflow-y: auto; }
         .year-item { padding: 12px; font-size: 11px; font-weight: 600; text-align: center; border-bottom: 1px solid #1c1c1c; color: #888; cursor: pointer; }
-
-        /* PILLS CATEGORY PRESISI */
         .category-wrapper { padding: 5px 15px 12px 15px; }
         .pill-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
         .pill { background: transparent; border: 1px solid #1c1c1c; color: #fff; padding: 8px 0; border-radius: 8px; font-size: 10px; font-weight: 800; text-transform: uppercase; text-align: center; cursor: pointer; }
         .pill.active { background: #fff; color: #000; border-color: #fff; }
-
-        /* HIGHLIGHTS */
         .highlights-section { padding: 15px 0; border-bottom: 1px solid #1c1c1c; background: #000; }
         .highlights-container { display: flex; gap: 15px; overflow-x: auto; padding: 0 15px; scrollbar-width: none; }
         .highlight-item { flex: 0 0 68px; text-align: center; cursor: pointer; }
         .circle-icon { width: 62px; height: 62px; border-radius: 50%; background: #000; border: 1.5px solid #1c1c1c; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px auto; font-size: 18px; color: #555; }
         .highlight-item.active .circle-icon { border-color: #fff; color: #fff; }
         .highlight-label { font-size: 9px; color: #555; font-weight: 700; text-transform: uppercase; }
-
-        /* GRID */
         .movie-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5px; padding-top: 275px; padding-bottom: 100px; }
         .post-card { position: relative; aspect-ratio: 2/3; background: #0a0a0a; overflow: hidden; cursor: pointer; }
         .post-card img { width: 100%; height: 100%; object-fit: cover; }
-        
-        /* BADGES */
         .badge-type { position: absolute; top: 6px; right: 6px; padding: 2px 5px; border-radius: 2px; font-size: 7px; font-weight: 900; text-transform: uppercase; z-index: 5; background: rgba(0,0,0,0.7); color: #fff; border: 0.5px solid rgba(255,255,255,0.2); }
         .badge-rating { position: absolute; top: 6px; left: 6px; padding: 2px 5px; border-radius: 2px; font-size: 7px; font-weight: 900; z-index: 5; background: rgba(255,255,255,0.9); color: #000; }
-        .verified-badge { color: #0095f6; font-size: 11px; margin-left: 4px; }
-
-        /* BOTTOM NAV */
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #000; border-top: 1px solid #1c1c1c; display: flex; justify-content: space-around; padding: 12px 0; z-index: 150; padding-bottom: calc(12px + env(safe-area-inset-bottom)); }
         .nav-item { color: #fff; font-size: 20px; cursor: pointer; }
-
-        /* MODAL */
         .modal-player { display: none; position: fixed; inset: 0; z-index: 200; background: #000; overflow-y: auto; }
         .btn-like.active { color: #ff2d55; }
         .btn-bookmark.active { color: #fff; }
-        
         .server-btn { width: 100%; padding: 14px; border-radius: 12px; font-size: 10px; font-weight: 800; text-transform: uppercase; border: 1px solid #1c1c1c; text-align: center; cursor: pointer; }
         .skeleton { background: linear-gradient(90deg, #0a0a0a 25%, #1a1a1a 50%, #0a0a0a 75%); background-size: 200% 100%; animation: skeleton-loading 1.5s infinite; }
         @keyframes skeleton-loading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
     </style>
 </head>
 <body>
-
     <div id="loader" style="position:fixed; top:0; left:0; height:1.5px; background:#fff; width:0%; transition:width 0.3s; z-index:1000;"></div>
-
     <div class="fixed-header-section">
         <header class="ig-header">
             <div class="flex justify-between items-center">
                 <div class="flex items-center">
                     <h1 class="text-xl font-bold italic lowercase tracking-tight" onclick="location.reload()">amnesfubbia <span class="text-white opacity-50 font-normal">xx1</span></h1>
-                    <i class="fa-solid fa-circle-check verified-badge"></i>
+                    <i class="fa-solid fa-circle-check text-[#0095f6] text-[11px] ml-1"></i>
                 </div>
-                <div class="flex gap-6 text-lg">
-                    <i class="fa-regular fa-square-plus cursor-pointer" onclick="document.getElementById('searchInp').focus()"></i>
-                    <i class="fa-regular fa-heart cursor-pointer" onclick="showLibrary('likes')"></i>
-                </div>
+                <div class="flex gap-6 text-lg"><i class="fa-regular fa-square-plus cursor-pointer" onclick="document.getElementById('searchInp').focus()"></i><i class="fa-regular fa-heart cursor-pointer" onclick="showLibrary('likes')"></i></div>
             </div>
             <div class="search-area flex items-center gap-2 mt-2">
-                <div class="search-container">
-                    <i class="fa-solid fa-magnifying-glass text-zinc-600 text-[10px]"></i>
-                    <input type="text" id="searchInp" placeholder="Cari sinema Indonesia..." onkeydown="if(event.key==='Enter') searchAction()">
-                </div>
-                <div class="year-selector" onclick="toggleYearDropdown()">
-                    <span id="yearVal">TAHUN</span> <i class="fa-solid fa-chevron-down text-[7px]"></i>
-                </div>
+                <div class="search-container"><i class="fa-solid fa-magnifying-glass text-zinc-600 text-[10px]"></i><input type="text" id="searchInp" placeholder="Cari sinema Indonesia..." onkeydown="if(event.key==='Enter') searchAction()"></div>
+                <div class="year-selector" onclick="toggleYearDropdown()"><span id="yearVal">TAHUN</span> <i class="fa-solid fa-chevron-down text-[7px]"></i></div>
             </div>
         </header>
-
         <div class="category-wrapper">
             <div class="pill-grid">
                 <button class="pill active" onclick="setFilter('type', 'multi', this)">Semua</button>
@@ -95,7 +66,6 @@
                 <button class="pill" onclick="setFilter('type', 'short', this)">Short</button>
             </div>
         </div>
-
         <div class="highlights-section">
             <div class="highlights-container no-scrollbar" id="genreHighlights">
                 <div class="highlight-item active" onclick="setFilter('genre', '', this)"><div class="circle-icon"><i class="fa-solid fa-border-all"></i></div><p class="highlight-label">Semua</p></div>
@@ -123,31 +93,15 @@
             <div class="p-4 flex items-center justify-between border-b border-zinc-900 sticky top-0 bg-black z-50">
                 <i class="fa-solid fa-xmark text-lg cursor-pointer" onclick="closeModal()"></i>
                 <h2 id="mTitle" class="text-[10px] font-bold truncate uppercase tracking-widest text-center px-4"></h2>
-                <div class="flex gap-4">
-                    <i id="btnLikeModal" class="fa-regular fa-heart btn-like cursor-pointer text-lg"></i>
-                    <i id="btnBookModal" class="fa-regular fa-bookmark btn-bookmark cursor-pointer text-lg"></i>
-                </div>
+                <div class="flex gap-4"><i id="btnLikeModal" class="fa-regular fa-heart btn-like cursor-pointer text-lg"></i><i id="btnBookModal" class="fa-regular fa-bookmark btn-bookmark cursor-pointer text-lg"></i></div>
             </div>
-            <div class="aspect-video bg-zinc-900 w-full relative">
-                <iframe id="videoPlayer" class="w-full h-full" allowfullscreen></iframe>
-            </div>
+            <div class="aspect-video bg-zinc-900 w-full relative"><iframe id="videoPlayer" class="w-full h-full" allow="autoplay; fullscreen" allowfullscreen></iframe></div>
             <div class="p-6">
                 <p id="mTagline" class="text-xs font-bold italic text-white mb-2"></p>
                 <p id="mMeta" class="text-[9px] text-zinc-500 font-black mb-4 uppercase"></p>
-                <p id="mDesc" class="text-xs text-zinc-400 leading-relaxed mb-6 font-light"></p>
-                
-                <div class="mb-8">
-                    <h4 class="text-[9px] font-black text-zinc-600 uppercase mb-2">Pemeran Utama</h4>
-                    <div id="mCast" class="flex gap-3 overflow-x-auto no-scrollbar"></div>
-                </div>
-
-                <div id="seriesControl" class="hidden mb-6 p-4 bg-zinc-950 rounded-2xl border border-zinc-900">
-                    <div class="grid grid-cols-2 gap-4">
-                        <select id="seasonSel" class="bg-zinc-900 text-white text-[10px] font-bold p-3 rounded-xl" onchange="loadEpisodes()"></select>
-                        <select id="episodeSel" class="bg-zinc-900 text-white text-[10px] font-bold p-3 rounded-xl" onchange="playEpisode()"></select>
-                    </div>
-                </div>
-
+                <p id="mDesc" class="text-xs text-zinc-400 leading-relaxed mb-6"></p>
+                <div class="mb-8"><h4 class="text-[9px] font-black text-zinc-600 uppercase mb-2">Pemeran Utama</h4><div id="mCast" class="flex gap-3 overflow-x-auto no-scrollbar"></div></div>
+                <div id="seriesControl" class="hidden mb-6 p-4 bg-zinc-950 rounded-2xl border border-zinc-900"><div class="grid grid-cols-2 gap-4"><select id="seasonSel" class="bg-zinc-900 text-white text-[10px] font-bold p-3 rounded-xl" onchange="loadEpisodes()"></select><select id="episodeSel" class="bg-zinc-900 text-white text-[10px] font-bold p-3 rounded-xl" onchange="playEpisode()"></select></div></div>
                 <div id="serverList" class="grid grid-cols-2 gap-2 mt-4"></div>
                 <button id="btnDownload" class="server-btn border-zinc-800 text-zinc-400 mt-4"><i class="fa-solid fa-download mr-2"></i> Download Film</button>
             </div>
@@ -156,7 +110,7 @@
 
     <script>
         const API_KEY = 'bfa7df5310c9974f62f26c6789a8c00d';
-        let page = 1, loading = false, currentType = 'multi', currentGenre = '', currentYear = '', searchQuery = '';
+        let page = 1, loading = false, currentType = 'multi', currentGenre = '', currentYear = '', searchQuery = '', currentActorId = '';
         let currentMovieData = null;
 
         const getStore = (key) => JSON.parse(localStorage.getItem(key) || '[]');
@@ -171,16 +125,8 @@
             for(let y = 2026; y >= 1930; y--) html += `<div class="year-item" onclick="setYear(${y})">${y}</div>`;
             dropdown.innerHTML = html;
         }
-
-        function toggleYearDropdown() {
-            const d = document.getElementById('yearDropdown');
-            d.style.display = (d.style.display === 'block') ? 'none' : 'block';
-        }
-
-        function setYear(y) {
-            currentYear = y; document.getElementById('yearVal').innerText = y || 'TAHUN';
-            document.getElementById('yearDropdown').style.display = 'none'; loadFeed(true);
-        }
+        function toggleYearDropdown() { const d = document.getElementById('yearDropdown'); d.style.display = (d.style.display === 'block') ? 'none' : 'block'; }
+        function setYear(y) { currentYear = y; document.getElementById('yearVal').innerText = y || 'TAHUN'; document.getElementById('yearDropdown').style.display = 'none'; loadFeed(true); }
 
         async function loadFeed(isNew = true) {
             if (loading) return;
@@ -189,9 +135,21 @@
             const l = document.getElementById('loader'); l.style.width = '30%';
             
             try {
-                let url = searchQuery ? 
-                    `https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(searchQuery)}&language=id-ID&page=${page}&region=ID` :
-                    `https://api.themoviedb.org/3/discover/${currentType === 'tv' ? 'tv' : 'movie'}?api_key=${API_KEY}&with_origin_country=ID&language=id-ID&page=${page}${currentGenre ? '&with_genres='+currentGenre : ''}${currentYear ? '&primary_release_year='+currentYear+'&first_air_date_year='+currentYear : ''}`;
+                let url = '';
+                const base = `https://api.themoviedb.org/3`;
+                // Kunci Bahasa Indonesia (id) dan Region ID
+                const idParams = `&with_original_language=id&region=ID&language=id-ID`;
+
+                if (currentActorId) {
+                    url = `${base}/discover/movie?api_key=${API_KEY}${idParams}&with_cast=${currentActorId}&page=${page}`;
+                } else if (searchQuery) {
+                    url = `${base}/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(searchQuery)}${idParams}&page=${page}`;
+                } else {
+                    const type = currentType === 'tv' ? 'tv' : 'movie';
+                    const genre = currentGenre ? `&with_genres=${currentGenre}` : '';
+                    const year = currentYear ? (type === 'tv' ? `&first_air_date_year=${currentYear}` : `&primary_release_year=${currentYear}`) : '';
+                    url = `${base}/discover/${type}?api_key=${API_KEY}${idParams}${genre}${year}&page=${page}`;
+                }
 
                 const res = await fetch(url);
                 const data = await res.json();
@@ -221,38 +179,30 @@
             const modal = document.getElementById('movieModal');
             modal.style.display = 'block';
             document.body.style.overflow = 'hidden';
-            
             try {
-                const [resId, resEn] = await Promise.all([
-                    fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&language=id-ID&append_to_response=videos,credits`),
-                    fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&language=en-US&append_to_response=videos`)
-                ]);
-                const d = await resId.json();
-                const dEn = await resEn.json();
+                const res = await fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&language=id-ID&append_to_response=videos,credits`);
+                const d = await res.json();
                 currentMovieData = {...d, m_type: type};
-
                 document.getElementById('mTitle').innerText = d.title || d.name;
-                document.getElementById('mTagline').innerText = d.tagline || dEn.tagline || "";
+                document.getElementById('mTagline').innerText = d.tagline || "";
                 document.getElementById('mMeta').innerText = `${(d.release_date||d.first_air_date||'').split('-')[0]} // ${type.toUpperCase()}`;
-                document.getElementById('mDesc').innerText = d.overview || dEn.overview || "Sinopsis tidak tersedia.";
+                document.getElementById('mDesc').innerText = d.overview || "Sinopsis tidak tersedia.";
                 
-                // Trailer Handler
-                const trailers = [...(d.videos?.results || []), ...(dEn.videos?.results || [])];
+                // Trailer Autoplay (Muted agar diijinkan browser)
+                const trailers = d.videos?.results || [];
                 const official = trailers.find(v => v.type === 'Trailer' && v.site === 'YouTube');
-                document.getElementById('videoPlayer').src = official ? `https://www.youtube.com/embed/${official.key}?autoplay=1` : `https://vidrock.net/embed/${type}/${id}`;
+                document.getElementById('videoPlayer').src = official ? `https://www.youtube.com/embed/${official.key}?autoplay=1&mute=1` : `https://vidrock.net/embed/${type}/${id}`;
 
-                // Cast Handler
+                // Cast Handler + Klik Aktor
                 document.getElementById('mCast').innerHTML = (d.credits?.cast || []).slice(0, 10).map(c => `
-                    <div class="flex-shrink-0 w-12 text-center">
+                    <div class="flex-shrink-0 w-12 text-center cursor-pointer" onclick="filterByActor('${c.id}')">
                         <img src="${c.profile_path ? 'https://image.tmdb.org/t/p/w185'+c.profile_path : 'https://via.placeholder.com/100'}" class="w-10 h-10 rounded-full object-cover mx-auto border border-zinc-800">
                         <p class="text-[6px] text-zinc-500 truncate mt-1">${c.name}</p>
                     </div>
                 `).join('');
 
-                // Download & Server
                 document.getElementById('btnDownload').onclick = () => window.open(`https://dl.vidsrc.vip/${type}/${id}`, '_blank');
-                document.getElementById('serverList').innerHTML = `<button class="server-btn bg-zinc-950 text-zinc-400" onclick="document.getElementById('videoPlayer').src='https://vidrock.net/embed/${type}/${id}'">Server 1</button>
-                <button class="server-btn bg-zinc-950 text-zinc-400" onclick="document.getElementById('videoPlayer').src='https://vidstorm.ru/embed/${type}/${id}'">Server 2</button>`;
+                document.getElementById('serverList').innerHTML = `<button class="server-btn bg-zinc-950 text-zinc-400" onclick="document.getElementById('videoPlayer').src='https://vidrock.net/embed/${type}/${id}'">Server 1</button><button class="server-btn bg-zinc-950 text-zinc-400" onclick="document.getElementById('videoPlayer').src='https://vidstorm.ru/embed/${type}/${id}'">Server 2</button>`;
 
                 if(type === 'tv') {
                     document.getElementById('seriesControl').classList.remove('hidden');
@@ -266,17 +216,20 @@
             } catch(e) { console.error(e); }
         }
 
-        function showUserProfil() {
-            alert("Amnesfubbia XX1\nWebsite streaming khusus film Indonesia.\n\nBy Amnesfubbia Entertainment");
+        function filterByActor(actorId) {
+            currentActorId = actorId;
+            closeModal();
+            loadFeed(true);
+            window.scrollTo({top:0, behavior:'smooth'});
         }
 
+        function showUserProfil() { alert("Amnesfubbia XX1\nWebsite streaming khusus film Indonesia.\n\nBy Amnesfubbia Entertainment"); }
         function updateModalButtons(id) {
             const isLiked = getStore('likes').some(x => x.id == id);
             const isBooked = getStore('bookmarks').some(x => x.id == id);
             document.getElementById('btnLikeModal').className = isLiked ? 'fa-solid fa-heart btn-like active cursor-pointer text-lg' : 'fa-regular fa-heart btn-like cursor-pointer text-lg';
             document.getElementById('btnBookModal').className = isBooked ? 'fa-solid fa-bookmark btn-bookmark active cursor-pointer text-lg' : 'fa-regular fa-bookmark btn-bookmark cursor-pointer text-lg';
         }
-
         function toggleItem(key, movie) {
             let items = getStore(key);
             const idx = items.findIndex(x => x.id == movie.id);
@@ -285,7 +238,6 @@
             saveStore(key, items);
             updateModalButtons(movie.id);
         }
-
         function showLibrary(key) {
             const items = getStore(key);
             const grid = document.getElementById('feedGrid'); grid.innerHTML = '';
@@ -293,14 +245,13 @@
             else renderFeed(items);
             window.scrollTo({top:0, behavior:'smooth'});
         }
-
         function closeModal() { document.getElementById('movieModal').style.display = 'none'; document.getElementById('videoPlayer').src = ''; document.body.style.overflow = 'auto'; }
-        function searchAction() { searchQuery = document.getElementById('searchInp').value; loadFeed(true); }
+        function searchAction() { currentActorId = ''; searchQuery = document.getElementById('searchInp').value; loadFeed(true); }
         function setFilter(t, v, el) { 
             document.querySelectorAll('.pill, .highlight-item').forEach(p => p.classList.remove('active'));
             el.classList.add('active');
             if(t === 'type') currentType = v; else currentGenre = v;
-            searchQuery = ''; loadFeed(true);
+            searchQuery = ''; currentActorId = ''; loadFeed(true);
         }
         async function loadEpisodes() {
             const s = document.getElementById('seasonSel').value;
