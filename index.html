@@ -47,7 +47,6 @@
             white-space: nowrap; text-transform: uppercase;
         }
         .pill.active { background: #fff; color: #000; border-color: #fff; }
-        .btn-account-circle { background: #0a0a0a; border: 1px solid #1c1c1c; width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 
         .highlights-section { padding: 15px 0; border-bottom: 1px solid #1c1c1c; background: #000; }
         .highlights-container { display: flex; gap: 15px; overflow-x: auto; padding: 0 15px; scrollbar-width: none; }
@@ -59,51 +58,44 @@
         }
         .highlight-item.active .circle-icon { border-color: #fff; color: #fff; }
         .highlight-label { font-size: 9px; color: #555; font-weight: 700; text-transform: uppercase; }
-        .highlight-item.active .highlight-label { color: #fff; }
 
         /* FEED GRID */
-        .movie-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5px; padding-top: 275px; padding-bottom: 50px; }
+        .movie-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5px; padding-top: 275px; padding-bottom: 80px; }
         .post-card { position: relative; aspect-ratio: 2/3; background: #0a0a0a; overflow: hidden; }
         .post-card img { width: 100%; height: 100%; object-fit: cover; }
         
+        /* SKELETON LOADING */
+        .skeleton { background: linear-gradient(90deg, #0a0a0a 25%, #1a1a1a 50%, #0a0a0a 75%); background-size: 200% 100%; animation: skeleton-loading 1.5s infinite; }
+        @keyframes skeleton-loading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
         /* BADGES */
         .badge-type { position: absolute; top: 6px; right: 6px; padding: 2px 5px; border-radius: 2px; font-size: 7px; font-weight: 900; text-transform: uppercase; z-index: 5; background: rgba(0,0,0,0.7); color: #fff; border: 0.5px solid rgba(255,255,255,0.2); }
         .badge-genre { position: absolute; top: 22px; right: 6px; padding: 2px 5px; border-radius: 2px; font-size: 6px; font-weight: 700; text-transform: uppercase; z-index: 5; background: rgba(0,0,0,0.5); color: #ccc; border: 0.5px solid rgba(255,255,255,0.1); }
         .badge-rating { position: absolute; top: 6px; left: 6px; padding: 2px 5px; border-radius: 2px; font-size: 7px; font-weight: 900; z-index: 5; background: rgba(255,255,255,0.9); color: #000; }
 
-        /* VERIFIED BADGE */
         .verified-badge { color: #0095f6; font-size: 11px; margin-left: 4px; }
 
-        /* BACK TO TOP */
-        #backToTop { display: none; position: fixed; bottom: 25px; right: 20px; width: 40px; height: 40px; background: #fff; color: #000; border-radius: 50%; z-index: 150; border: none; font-size: 14px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); cursor: pointer; }
+        /* BOTTOM NAV */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #000; border-top: 1px solid #1c1c1c; display: flex; justify-content: space-around; padding: 12px 0; z-index: 150; padding-bottom: calc(12px + env(safe-area-inset-bottom)); }
+        .nav-item { color: #fff; font-size: 20px; cursor: pointer; }
+        .nav-item.active { color: #fff; }
 
         /* PLAYER MODAL */
         .modal-player { display: none; position: fixed; inset: 0; z-index: 200; background: #000; overflow-y: auto; }
         #loader { position: fixed; top: 0; left: 0; height: 1.5px; background: #fff; width: 0%; transition: width 0.3s; z-index: 1000; }
         
-        .info-grid { display: grid; grid-template-columns: repeat(1, 1fr); gap: 12px; margin-top: 20px; }
         .info-box { background: #0a0a0a; border: 1px solid #1c1c1c; padding: 12px; border-radius: 12px; }
-        .info-label { font-size: 7px; color: #555; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px; }
-        .info-value { font-size: 10px; color: #fff; font-weight: 600; }
-
-        .cast-scroll { display: flex; gap: 10px; overflow-x: auto; padding: 10px 0; }
-        .cast-item { flex: 0 0 60px; text-align: center; cursor: pointer; }
-        .cast-img { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; margin-bottom: 5px; border: 1px solid #1c1c1c; }
-
         .server-btn { width: 100%; padding: 14px; border-radius: 12px; font-size: 10px; font-weight: 800; text-transform: uppercase; border: 1px solid #1c1c1c; transition: 0.2s; text-align: center; display: block; cursor: pointer; }
-        .server-btn:active { transform: scale(0.98); opacity: 0.8; }
-        
         .btn-download-minimal { background: transparent; color: #a1a1aa; border: 1px solid #1c1c1c; }
-        .btn-download-minimal:active { background: #fff; color: #000; }
         
-        .btn-like { color: #555; transition: 0.3s; cursor: pointer; }
+        .btn-like, .btn-bookmark { color: #fff; transition: 0.3s; cursor: pointer; font-size: 18px; }
         .btn-like.active { color: #ff2d55; }
+        .btn-bookmark.active { color: #fff; }
     </style>
 </head>
 <body>
 
     <div id="loader"></div>
-    <button id="backToTop" onclick="window.scrollTo({top:0, behavior:'smooth'})"><i class="fa-solid fa-arrow-up"></i></button>
 
     <div class="fixed-header-section">
         <header class="ig-header">
@@ -116,7 +108,7 @@
                 </div>
                 <div class="flex gap-6 text-lg">
                     <i class="fa-regular fa-square-plus"></i>
-                    <i class="fa-solid fa-bars"></i>
+                    <i class="fa-regular fa-heart"></i>
                 </div>
             </div>
             <div class="search-area">
@@ -137,7 +129,6 @@
                 <button class="pill" onclick="setFilter('type', 'tv', this)">Series</button>
                 <button class="pill" onclick="setFilter('type', 'short', this)">Short</button>
             </div>
-            <div class="btn-account-circle"><i class="fa-regular fa-user text-xs"></i></div>
         </div>
 
         <div class="highlights-section">
@@ -151,8 +142,6 @@
                 <div class="highlight-item" onclick="setFilter('genre', '10749', this)"><div class="circle-icon"><i class="fa-solid fa-heart"></i></div><p class="highlight-label">Romantis</p></div>
                 <div class="highlight-item" onclick="setFilter('genre', '28', this)"><div class="circle-icon"><i class="fa-solid fa-bolt"></i></div><p class="highlight-label">Aksi</p></div>
                 <div class="highlight-item" onclick="setFilter('genre', '18', this)"><div class="circle-icon"><i class="fa-solid fa-clapperboard"></i></div><p class="highlight-label">Drama</p></div>
-                <div class="highlight-item" onclick="setFilter('genre', '14', this)"><div class="circle-icon"><i class="fa-solid fa-wand-sparkles"></i></div><p class="highlight-label">Fantasi</p></div>
-                <div class="highlight-item" onclick="setFilter('genre', '9648', this)"><div class="circle-icon"><i class="fa-solid fa-magnifying-glass-chart"></i></div><p class="highlight-label">Misteri</p></div>
             </div>
         </div>
     </div>
@@ -160,15 +149,25 @@
     <div id="yearDropdown" class="year-dropdown no-scrollbar"></div>
     <main id="feedGrid" class="movie-grid"></main>
 
+    <nav class="bottom-nav">
+        <div class="nav-item" onclick="location.reload()"><i class="fa-solid fa-house"></i></div>
+        <div class="nav-item" onclick="document.getElementById('searchInp').focus()"><i class="fa-solid fa-magnifying-glass"></i></div>
+        <div class="nav-item" onclick="alert('Fitur Bookmark Segera Hadir')"><i class="fa-regular fa-bookmark"></i></div>
+        <div class="nav-item"><i class="fa-regular fa-user"></i></div>
+    </nav>
+
     <div id="movieModal" class="modal-player">
         <div class="max-w-xl mx-auto pb-20">
             <div class="p-4 flex items-center justify-between border-b border-zinc-900 sticky top-0 bg-black z-50">
                 <i class="fa-solid fa-xmark text-lg" onclick="closeModal()"></i>
-                <div class="flex items-center gap-2 overflow-hidden px-4">
-                    <h2 id="mTitle" class="text-[11px] font-bold truncate uppercase tracking-widest text-center"></h2>
-                    <i class="fa-solid fa-heart btn-like text-sm" onclick="this.classList.toggle('active')"></i>
+                <div class="flex flex-col items-center overflow-hidden px-4">
+                    <span class="text-[7px] text-zinc-500 uppercase tracking-widest mb-0.5">Sedang Menonton</span>
+                    <h2 id="mTitle" class="text-[10px] font-bold truncate uppercase tracking-widest text-center"></h2>
                 </div>
-                <div class="w-5"></div>
+                <div class="flex gap-4">
+                    <i class="fa-regular fa-heart btn-like" onclick="toggleLike(this)"></i>
+                    <i class="fa-regular fa-bookmark btn-bookmark" onclick="toggleBookmark(this)"></i>
+                </div>
             </div>
             
             <div class="aspect-video bg-zinc-900 w-full relative">
@@ -180,13 +179,13 @@
                 <div id="mMeta" class="text-[9px] text-zinc-500 font-black mb-4 tracking-widest uppercase"></div>
                 <p id="mDesc" class="text-xs text-zinc-400 leading-relaxed mb-6 font-light"></p>
 
-                <div class="info-grid mb-8">
-                    <div class="info-box"><p class="info-label">Rating TMDB</p><p id="infoRating" class="info-value">-</p></div>
+                <div class="grid grid-cols-1 gap-12 mb-8">
+                    <div class="info-box"><p class="text-[7px] color-[#555] font-black uppercase mb-1">Rating TMDB</p><p id="infoRating" class="text-[10px] text-white font-bold">-</p></div>
                 </div>
 
                 <div class="mb-8">
                     <h4 class="text-[9px] font-black text-zinc-600 uppercase mb-2 tracking-widest">Pemeran Utama</h4>
-                    <div id="mCast" class="cast-scroll no-scrollbar"></div>
+                    <div id="mCast" class="cast-scroll no-scrollbar flex gap-2 overflow-x-auto"></div>
                 </div>
 
                 <div id="seriesControl" class="hidden mb-6 p-4 bg-zinc-950 rounded-2xl border border-zinc-900">
@@ -197,14 +196,11 @@
                 </div>
 
                 <div class="mb-4">
-                    <h4 class="text-[9px] font-black text-zinc-600 uppercase mb-4 tracking-widest text-center">Pilih Server Streaming</h4>
+                    <h4 class="text-[9px] font-black text-zinc-600 uppercase mb-4 tracking-widest text-center">Server Streaming</h4>
                     <div id="serverList" class="grid grid-cols-2 gap-2"></div>
                 </div>
 
-                <div class="mt-8 pt-6 border-t border-zinc-900">
-                    <h4 class="text-[9px] font-black text-zinc-600 uppercase mb-4 tracking-widest text-center">Link Unduhan</h4>
-                    <button id="btnDownload" class="server-btn btn-download-minimal"><i class="fa-solid fa-download mr-2"></i> Download (vidsrc.vip)</button>
-                </div>
+                <button id="btnDownload" class="server-btn btn-download-minimal mt-4"><i class="fa-solid fa-download mr-2"></i> Download Film</button>
             </div>
         </div>
     </div>
@@ -212,21 +208,11 @@
     <script>
         const API_KEY = 'bfa7df5310c9974f62f26c6789a8c00d';
         let page = 1, loading = false, currentType = 'multi', currentGenre = '', currentYear = '', searchQuery = '', actorId = '';
-
-        const STREAM_SERVERS = [
-            { name: "VidRock", url: "https://vidrock.net/embed/" },
-            { name: "VidStorm", url: "https://vidstorm.ru/embed/" }
-        ];
-        const DL_BASE = "https://dl.vidsrc.vip/";
-
-        const GENRE_MAP = { 28:"Aksi", 12:"Petualang", 16:"Animasi", 35:"Komedi", 80:"Kriminal", 99:"Dokumenter", 18:"Drama", 10751:"Keluarga", 14:"Fantasi", 36:"Sejarah", 27:"Horor", 10402:"Musik", 9648:"Misteri", 10749:"Romantis", 878:"Sci-Fi", 10770:"TV Movie", 53:"Thriller", 10752:"Perang", 37:"Western" };
+        const STREAM_SERVERS = [{ name: "VidRock", url: "https://vidrock.net/embed/" }, { name: "VidStorm", url: "https://vidstorm.ru/embed/" }];
+        const GENRE_MAP = { 28:"Aksi", 12:"Petualang", 16:"Animasi", 35:"Komedi", 80:"Kriminal", 99:"Dokumenter", 18:"Drama", 10751:"Keluarga", 14:"Fantasi", 36:"Sejarah", 27:"Horor", 10402:"Musik", 9648:"Misteri", 10749:"Romantis", 878:"Sci-Fi", 53:"Thriller" };
 
         window.onload = () => { initYearDropdown(); loadFeed(); };
-
-        window.onscroll = () => {
-            document.getElementById('backToTop').style.display = window.scrollY > 400 ? 'block' : 'none';
-            if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 900 && !loading) { page++; loadFeed(false); }
-        };
+        window.onscroll = () => { if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 900 && !loading) { page++; loadFeed(false); } };
 
         function initYearDropdown() {
             const dropdown = document.getElementById('yearDropdown');
@@ -242,49 +228,45 @@
 
         function setYear(y) {
             currentYear = y; document.getElementById('yearVal').innerText = y || 'TAHUN';
-            document.getElementById('yearDropdown').style.display = 'none'; actorId = ''; loadFeed(true);
+            document.getElementById('yearDropdown').style.display = 'none'; loadFeed(true);
         }
 
         async function loadFeed(isNew = true) {
             if (loading) return;
             loading = true;
-            if (isNew) { page = 1; document.getElementById('feedGrid').innerHTML = ''; }
-            showLoader(30);
+            if (isNew) { 
+                page = 1; 
+                document.getElementById('feedGrid').innerHTML = Array(12).fill('<div class="post-card skeleton"></div>').join(''); 
+            }
             
             try {
-                let items = [];
                 let yearParam = currentYear ? `&primary_release_year=${currentYear}&first_air_date_year=${currentYear}` : '';
                 let genreParam = currentGenre ? `&with_genres=${currentGenre}` : '';
-                
-                if (actorId) {
-                    const res = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_cast=${actorId}&with_origin_country=ID&language=id-ID&page=${page}`);
-                    const data = await res.json();
-                    items = (data.results || []).map(x => ({...x, m_type: 'movie'}));
-                } else if (searchQuery) {
-                    const res = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(searchQuery)}&language=id-ID&page=${page}&region=ID`);
-                    const data = await res.json();
-                    items = (data.results || []).filter(i => 
-                        (i.origin_country && i.origin_country.includes('ID')) || 
-                        (i.original_language === 'id')
-                    ).map(x => ({...x, m_type: x.media_type}));
+                let url = '';
+
+                if (searchQuery) {
+                    url = `https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(searchQuery)}&language=id-ID&page=${page}&region=ID`;
                 } else if (currentType === 'multi') {
                     const [resM, resT] = await Promise.all([
                         fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_origin_country=ID&language=id-ID&page=${page}${genreParam}${yearParam}`),
                         fetch(`https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}&with_origin_country=ID&language=id-ID&page=${page}${genreParam}${yearParam}`)
                     ]);
                     const dM = await resM.json(); const dT = await resT.json();
-                    items = [...(dM.results||[]).map(x=>({...x, m_type:'movie'})), ...(dT.results||[]).map(x=>({...x, m_type:'tv'}))];
-                    items.sort((a,b) => b.popularity - a.popularity);
+                    let items = [...(dM.results||[]).map(x=>({...x, m_type:'movie'})), ...(dT.results||[]).map(x=>({...x, m_type:'tv'}))];
+                    if(isNew) document.getElementById('feedGrid').innerHTML = '';
+                    renderFeed(items);
+                    loading = false; return;
                 } else {
                     let ep = (currentType === 'tv') ? 'tv' : 'movie';
-                    let url = `https://api.themoviedb.org/3/discover/${ep}?api_key=${API_KEY}&with_origin_country=ID&language=id-ID&page=${page}${yearParam}${genreParam}`;
-                    if(currentType === 'short') url += '&with_runtime.lte=45';
-                    const res = await fetch(url); const d = await res.json();
-                    items = (d.results||[]).map(x=>({...x, m_type: currentType === 'short' ? 'short' : ep}));
+                    url = `https://api.themoviedb.org/3/discover/${ep}?api_key=${API_KEY}&with_origin_country=ID&language=id-ID&page=${page}${yearParam}${genreParam}`;
                 }
-                renderFeed(items);
+
+                const res = await fetch(url);
+                const data = await res.json();
+                if(isNew) document.getElementById('feedGrid').innerHTML = '';
+                renderFeed(data.results.map(x => ({...x, m_type: x.media_type || (currentType === 'tv' ? 'tv' : 'movie')})));
             } catch (err) { console.error(err); }
-            loading = false; showLoader(100);
+            loading = false;
         }
 
         function renderFeed(data) {
@@ -293,17 +275,16 @@
                 if (!m.poster_path) return;
                 const card = document.createElement('div');
                 card.className = 'post-card active:opacity-60 transition-opacity';
-                
-                let label = m.m_type === 'tv' ? 'Series' : (m.m_type === 'short' ? 'Short' : 'Film');
-                let rating = m.vote_average ? m.vote_average.toFixed(1) : 'N/A';
-                let genreName = m.genre_ids && m.genre_ids[0] ? (GENRE_MAP[m.genre_ids[0]] || '') : '';
+                let label = m.m_type === 'tv' ? 'Series' : 'Film';
+                let rating = m.vote_average ? m.vote_average.toFixed(1) : '0.0';
+                let g = m.genre_ids ? (GENRE_MAP[m.genre_ids[0]] || '') : '';
 
-                card.onclick = () => openModal(m.id, (m.m_type === 'short' ? 'movie' : (m.m_type || 'movie')));
+                card.onclick = () => openModal(m.id, m.m_type);
                 card.innerHTML = `
                     <div class="badge-rating"><i class="fa-solid fa-star text-[6px]"></i> ${rating}</div>
                     <div class="badge-type">${label}</div>
-                    ${genreName ? `<div class="badge-genre">${genreName}</div>` : ''}
-                    <img src="https://image.tmdb.org/t/p/w342${m.poster_path}" loading="lazy">
+                    <div class="badge-genre">${g}</div>
+                    <img src="https://image.tmdb.org/t/p/w342${m.poster_path}" onload="this.parentElement.classList.remove('skeleton')">
                 `;
                 grid.appendChild(card);
             });
@@ -313,112 +294,58 @@
             const modal = document.getElementById('movieModal');
             modal.style.display = 'block';
             document.body.style.overflow = 'hidden';
-            showLoader(50);
-            document.querySelector('.btn-like').classList.remove('active');
-
+            
             try {
-                const [resId, resEn] = await Promise.all([
-                    fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&language=id-ID&append_to_response=videos,credits`),
-                    fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&language=en-US&append_to_response=videos`)
-                ]);
-                const d = await resId.json();
-                const dEn = await resEn.json();
-
+                const res = await fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&language=id-ID&append_to_response=videos,credits`);
+                const d = await res.json();
                 document.getElementById('mTitle').innerText = d.title || d.name;
-                document.getElementById('mTagline').innerText = d.tagline || dEn.tagline || "";
-                document.getElementById('mMeta').innerText = `${(d.release_date||d.first_air_date||'').split('-')[0]} // ${(d.runtime||d.episode_run_time?.[0]||'0')} MENIT // ${type.toUpperCase()}`;
-                document.getElementById('mDesc').innerText = d.overview || dEn.overview || "Informasi sinopsis belum tersedia.";
+                document.getElementById('mMeta').innerText = `${(d.release_date||d.first_air_date||'').split('-')[0]} // ${type.toUpperCase()}`;
+                document.getElementById('mDesc').innerText = d.overview || "Sinopsis tidak tersedia.";
                 document.getElementById('infoRating').innerText = `★ ${d.vote_average.toFixed(1)} / 10`;
+                
+                document.getElementById('videoPlayer').src = `https://vidrock.net/embed/${type}/${id}`;
+                document.getElementById('serverList').innerHTML = STREAM_SERVERS.map(s => `<button class="server-btn bg-zinc-950 text-zinc-400" onclick="document.getElementById('videoPlayer').src='${s.url}${type}/${id}'">${s.name}</button>`).join('');
 
-                document.getElementById('mCast').innerHTML = (d.credits?.cast || []).slice(0, 10).map(c => `
-                    <div class="cast-item" onclick="searchByActor('${c.id}', '${c.name.replace(/'/g, "\\'")}')">
-                        <img src="${c.profile_path ? 'https://image.tmdb.org/t/p/w185'+c.profile_path : 'https://via.placeholder.com/100x100?text=Actor'}" class="cast-img">
-                        <p class="text-[7px] font-bold text-zinc-500 truncate">${c.name}</p>
+                document.getElementById('mCast').innerHTML = (d.credits?.cast || []).slice(0, 8).map(c => `
+                    <div class="flex-shrink-0 text-center w-12">
+                        <img src="${c.profile_path ? 'https://image.tmdb.org/t/p/w185'+c.profile_path : 'https://via.placeholder.com/100'}" class="w-10 h-10 rounded-full object-cover mx-auto border border-zinc-800">
+                        <p class="text-[6px] text-zinc-500 truncate mt-1">${c.name}</p>
                     </div>
                 `).join('');
-
-                const trailers = [...(d.videos?.results || []), ...(dEn.videos?.results || [])];
-                const officialTrailer = trailers.find(v => v.type === 'Trailer' && v.site === 'YouTube');
-                
-                if (officialTrailer) {
-                    document.getElementById('videoPlayer').src = `https://www.youtube.com/embed/${officialTrailer.key}?autoplay=1&mute=0&rel=0`;
-                } else {
-                    document.getElementById('videoPlayer').src = buildEmbedUrl(STREAM_SERVERS[0].url, type, id);
-                }
-
-                document.getElementById('serverList').innerHTML = STREAM_SERVERS.map(s => `
-                    <button class="server-btn bg-zinc-950 text-zinc-400" onclick="changeServer('${s.url}', '${type}', '${id}')">${s.name}</button>
-                `).join('');
-
-                document.getElementById('btnDownload').onclick = () => window.open(`${DL_BASE}${type}/${id}`, '_blank');
 
                 if(type === 'tv') {
                     document.getElementById('seriesControl').classList.remove('hidden');
                     document.getElementById('seasonSel').innerHTML = (d.seasons || []).filter(s=>s.season_number > 0).map(s=>`<option value="${s.season_number}">SEASON ${s.season_number}</option>`).join('');
-                    window.currentSeriesId = id;
-                    loadEpisodes();
+                    window.currentSeriesId = id; loadEpisodes();
                 } else { document.getElementById('seriesControl').classList.add('hidden'); }
-
-            } catch(e) { console.error("Error loading details:", e); }
-            showLoader(100);
+            } catch(e) { console.error(e); }
         }
 
-        function searchByActor(id, name) {
-            closeModal();
-            actorId = id;
-            searchQuery = '';
-            document.getElementById('searchInp').value = name;
+        function toggleLike(el) {
+            el.classList.toggle('fa-regular'); el.classList.toggle('fa-solid'); el.classList.toggle('active');
+        }
+        function toggleBookmark(el) {
+            el.classList.toggle('fa-regular'); el.classList.toggle('fa-solid'); el.classList.toggle('active');
+        }
+
+        function closeModal() { document.getElementById('movieModal').style.display = 'none'; document.getElementById('videoPlayer').src = ''; document.body.style.overflow = 'auto'; }
+        function searchAction() { searchQuery = document.getElementById('searchInp').value; loadFeed(true); }
+        function setFilter(type, val, el) {
+            document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+            el.classList.add('active');
+            if(type === 'type') currentType = val; else currentGenre = val;
             loadFeed(true);
         }
-
-        function buildEmbedUrl(baseUrl, type, id, season = null, episode = null) {
-            let url = baseUrl;
-            if (season && episode) {
-                url += `tv/${id}/${season}/${episode}`;
-            } else {
-                url += `${type}/${id}`;
-            }
-            return url;
-        }
-
-        function changeServer(baseUrl, type, id) { 
-            document.getElementById('videoPlayer').src = buildEmbedUrl(baseUrl, type, id); 
-        }
-
-        function searchAction() { 
-            searchQuery = document.getElementById('searchInp').value; 
-            actorId = ''; 
-            loadFeed(true); 
-        }
-        
-        function closeModal() { document.getElementById('movieModal').style.display = 'none'; document.getElementById('videoPlayer').src = ''; document.body.style.overflow = 'auto'; }
-        function showLoader(w) { const l = document.getElementById('loader'); l.style.width = w + '%'; if(w === 100) setTimeout(() => l.style.width = '0%', 400); }
-
         async function loadEpisodes() {
             const s = document.getElementById('seasonSel').value;
-            const res = await fetch(`https://api.themoviedb.org/3/tv/${window.currentSeriesId}/season/${s}?api_key=${API_KEY}&language=id-ID`);
+            const res = await fetch(`https://api.themoviedb.org/3/tv/${window.currentSeriesId}/season/${s}?api_key=${API_KEY}`);
             const d = await res.json();
             document.getElementById('episodeSel').innerHTML = (d.episodes||[]).map(e => `<option value="${e.episode_number}">EPISODE ${e.episode_number}</option>`).join('');
             playEpisode();
         }
-
         function playEpisode() {
             const s = document.getElementById('seasonSel').value; const e = document.getElementById('episodeSel').value;
-            document.getElementById('videoPlayer').src = `https://vidrock.net/embed/tv/${window.currentSeriesId}/${s}/${e}?autoplay=1`;
-        }
-
-        function setFilter(type, val, el) {
-            actorId = '';
-            if(type === 'type') {
-                document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
-                currentType = val; currentGenre = '';
-                document.querySelectorAll('.highlight-item').forEach(p => p.classList.remove('active'));
-                document.querySelector('.highlight-item:first-child').classList.add('active');
-            } else {
-                document.querySelectorAll('.highlight-item').forEach(p => p.classList.remove('active'));
-                currentGenre = val;
-            }
-            el.classList.add('active'); searchQuery = ''; document.getElementById('searchInp').value = ''; loadFeed(true);
+            document.getElementById('videoPlayer').src = `https://vidrock.net/embed/tv/${window.currentSeriesId}/${s}/${e}`;
         }
     </script>
 </body>
