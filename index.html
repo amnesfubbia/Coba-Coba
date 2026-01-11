@@ -23,10 +23,10 @@
         .pill.active { background: #fff; color: #000; border-color: #fff; }
         .highlights-section { padding: 15px 0; border-bottom: 1px solid #1c1c1c; background: #000; }
         .highlights-container { display: flex; gap: 15px; overflow-x: auto; padding: 0 15px; scrollbar-width: none; }
-        .highlight-item { flex: 0 0 68px; text-align: center; cursor: pointer; }
+        .highlight-item { flex: 0 0 75px; text-align: center; cursor: pointer; }
         .circle-icon { width: 62px; height: 62px; border-radius: 50%; background: #000; border: 1.5px solid #1c1c1c; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px auto; font-size: 18px; color: #555; }
         .highlight-item.active .circle-icon { border-color: #fff; color: #fff; }
-        .highlight-label { font-size: 9px; color: #555; font-weight: 700; text-transform: uppercase; }
+        .highlight-label { font-size: 9px; color: #555; font-weight: 700; text-transform: uppercase; white-space: nowrap; }
         .movie-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5px; padding-top: 275px; padding-bottom: 100px; }
         .post-card { position: relative; aspect-ratio: 2/3; background: #0a0a0a; overflow: hidden; cursor: pointer; }
         .post-card img { width: 100%; height: 100%; object-fit: cover; }
@@ -72,6 +72,9 @@
                 <div class="highlight-item" onclick="setFilter('genre', '10749', this)"><div class="circle-icon"><i class="fa-solid fa-heart"></i></div><p class="highlight-label">Romantis</p></div>
                 <div class="highlight-item" onclick="setFilter('genre', '28', this)"><div class="circle-icon"><i class="fa-solid fa-bolt"></i></div><p class="highlight-label">Aksi</p></div>
                 <div class="highlight-item" onclick="setFilter('genre', '18', this)"><div class="circle-icon"><i class="fa-solid fa-clapperboard"></i></div><p class="highlight-label">Drama</p></div>
+                <div class="highlight-item" onclick="setFilter('genre', '99', this)"><div class="circle-icon"><i class="fa-solid fa-camera"></i></div><p class="highlight-label">Dokumenter</p></div>
+                <div class="highlight-item" onclick="setFilter('genre', '10751', this)"><div class="circle-icon"><i class="fa-solid fa-users"></i></div><p class="highlight-label">Keluarga</p></div>
+                <div class="highlight-item" onclick="setFilter('genre', '9648', this)"><div class="circle-icon"><i class="fa-solid fa-magnifying-glass-chart"></i></div><p class="highlight-label">Misteri</p></div>
             </div>
         </div>
     </div>
@@ -93,7 +96,9 @@
                 <h2 id="mTitle" class="text-[10px] font-bold truncate uppercase tracking-widest text-center px-4"></h2>
                 <div class="flex gap-4"><i id="btnLikeModal" class="fa-regular fa-heart btn-like cursor-pointer text-lg"></i><i id="btnBookModal" class="fa-regular fa-bookmark btn-bookmark cursor-pointer text-lg"></i></div>
             </div>
-            <div class="aspect-video bg-zinc-900 w-full relative"><iframe id="videoPlayer" class="w-full h-full" allow="autoplay; fullscreen" allowfullscreen></iframe></div>
+            <div class="aspect-video bg-zinc-900 w-full relative">
+                <iframe id="videoPlayer" class="w-full h-full" allow="autoplay; fullscreen" allowfullscreen></iframe>
+            </div>
             <div class="p-6">
                 <p id="mTagline" class="text-xs font-bold italic text-white mb-2"></p>
                 <p id="mMeta" class="text-[9px] text-zinc-500 font-black mb-4 uppercase"></p>
@@ -153,17 +158,15 @@
                     const dM = await resM.json(); const dT = await resT.json();
                     items = [...(dM.results || []).map(x => ({...x, m_type:'movie'})), ...(dT.results || []).map(x => ({...x, m_type:'tv'}))];
                 } else if (currentType === 'short') {
-                    // Filter Film Pendek (Durasi < 40 menit)
-                    const res = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}${mandatory}${genre}${year}&with_runtime.lte=40&page=${page}`);
+                    const res = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}${mandatory}${genre}${year}&with_runtime.lte=45&page=${page}`);
                     const data = await res.json();
-                    items = (data.results || []).map(x => ({...x, m_type: 'movie'}));
+                    items = (data.results || []).map(x => ({...x, m_type: 'short'}));
                 } else {
                     const res = await fetch(`https://api.themoviedb.org/3/discover/${currentType}?api_key=${API_KEY}${mandatory}${genre}${year}&page=${page}`);
                     const data = await res.json();
                     items = (data.results || []).map(x => ({...x, m_type: currentType}));
                 }
 
-                // Filter Hard-Code Bahasa Indonesia
                 const filtered = items.filter(m => m.original_language === 'id');
                 if(isNew) document.getElementById('feedGrid').innerHTML = '';
                 renderFeed(filtered);
@@ -177,10 +180,15 @@
                 if (!m.poster_path) return;
                 const card = document.createElement('div');
                 card.className = 'post-card';
-                card.onclick = () => openModal(m.id, m.m_type);
+                card.onclick = () => openModal(m.id, m.m_type === 'short' ? 'movie' : m.m_type);
+                
+                // Logika Badge
+                let badgeText = m.m_type === 'tv' ? 'Series' : 'Film';
+                if(m.m_type === 'short') badgeText = 'Short';
+
                 card.innerHTML = `
                     <div class="badge-rating"><i class="fa-solid fa-star text-[6px]"></i> ${m.vote_average?.toFixed(1) || '0.0'}</div>
-                    <div class="badge-type">${m.m_type === 'tv' ? 'Series' : 'Film'}</div>
+                    <div class="badge-type">${badgeText}</div>
                     <img src="https://image.tmdb.org/t/p/w342${m.poster_path}" onload="this.parentElement.classList.remove('skeleton')">
                 `;
                 grid.appendChild(card);
@@ -192,10 +200,9 @@
             modal.style.display = 'block';
             document.body.style.overflow = 'hidden';
             try {
-                // Fetch ID (Indo) dan EN (English) untuk Fallback Sinopsis
                 const [resId, resEn] = await Promise.all([
                     fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&language=id-ID&append_to_response=videos,credits`),
-                    fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&language=en-US`)
+                    fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&language=en-US&append_to_response=videos`)
                 ]);
                 const d = await resId.json();
                 const dEn = await resEn.json();
@@ -203,13 +210,17 @@
                 document.getElementById('mTitle').innerText = d.title || d.name;
                 document.getElementById('mTagline').innerText = d.tagline || dEn.tagline || "";
                 document.getElementById('mMeta').innerText = `${(d.release_date||d.first_air_date||'').split('-')[0]} // ${type.toUpperCase()}`;
+                document.getElementById('mDesc').innerText = d.overview || dEn.overview || "Sinopsis tidak tersedia.";
                 
-                // Fallback Sinopsis: Jika Indo kosong, pakai English
-                document.getElementById('mDesc').innerText = d.overview || dEn.overview || "Sinopsis tidak tersedia dalam bahasa apapun.";
+                // TRAILER LOGIC: Cari di data ID dulu, jika tidak ada cari di EN
+                const allVideos = [...(d.videos?.results || []), ...(dEn.videos?.results || [])];
+                const trailer = allVideos.find(v => v.site === 'YouTube' && (v.type === 'Trailer' || v.type === 'Teaser' || v.type === 'Clip'));
                 
-                const trailers = d.videos?.results || [];
-                const official = trailers.find(v => v.type === 'Trailer' && v.site === 'YouTube');
-                document.getElementById('videoPlayer').src = official ? `https://www.youtube.com/embed/${official.key}?autoplay=1&mute=1` : `https://vidrock.net/embed/${type}/${id}`;
+                if(trailer) {
+                    document.getElementById('videoPlayer').src = `https://www.youtube.com/embed/${trailer.key}?autoplay=1&mute=1&rel=0&showinfo=0`;
+                } else {
+                    document.getElementById('videoPlayer').src = `https://vidrock.net/embed/${type}/${id}`;
+                }
 
                 document.getElementById('mCast').innerHTML = (d.credits?.cast || []).slice(0, 10).map(c => `
                     <div class="flex-shrink-0 w-12 text-center cursor-pointer" onclick="filterByActor('${c.id}')">
