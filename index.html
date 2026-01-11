@@ -35,8 +35,6 @@
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #000; border-top: 1px solid #1c1c1c; display: flex; justify-content: space-around; padding: 12px 0; z-index: 150; padding-bottom: calc(12px + env(safe-area-inset-bottom)); }
         .nav-item { color: #fff; font-size: 20px; cursor: pointer; }
         .modal-player { display: none; position: fixed; inset: 0; z-index: 200; background: #000; overflow-y: auto; }
-        .btn-like.active { color: #ff2d55; }
-        .btn-bookmark.active { color: #fff; }
         .server-btn { width: 100%; padding: 14px; border-radius: 12px; font-size: 10px; font-weight: 800; text-transform: uppercase; border: 1px solid #1c1c1c; text-align: center; cursor: pointer; }
         .skeleton { background: linear-gradient(90deg, #0a0a0a 25%, #1a1a1a 50%, #0a0a0a 75%); background-size: 200% 100%; animation: skeleton-loading 1.5s infinite; }
         @keyframes skeleton-loading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
@@ -111,8 +109,7 @@
     <script>
         const API_KEY = 'bfa7df5310c9974f62f26c6789a8c00d';
         let page = 1, loading = false, currentType = 'multi', currentGenre = '', currentYear = '', searchQuery = '', currentActorId = '';
-        let currentMovieData = null;
-
+        
         const getStore = (key) => JSON.parse(localStorage.getItem(key) || '[]');
         const saveStore = (key, data) => localStorage.setItem(key, JSON.stringify(data));
 
@@ -137,24 +134,28 @@
             try {
                 let url = '';
                 const base = `https://api.themoviedb.org/3`;
-                // Kunci Bahasa Indonesia (id) dan Region ID
-                const idParams = `&with_original_language=id&region=ID&language=id-ID`;
+                // MANDATORY: Parameter Indonesia
+                const mandatory = `&with_original_language=id&region=ID&language=id-ID`;
 
                 if (currentActorId) {
-                    url = `${base}/discover/movie?api_key=${API_KEY}${idParams}&with_cast=${currentActorId}&page=${page}`;
+                    url = `${base}/discover/movie?api_key=${API_KEY}${mandatory}&with_cast=${currentActorId}&page=${page}`;
                 } else if (searchQuery) {
-                    url = `${base}/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(searchQuery)}${idParams}&page=${page}`;
+                    url = `${base}/search/multi?api_key=${API_KEY}${mandatory}&query=${encodeURIComponent(searchQuery)}&page=${page}`;
                 } else {
                     const type = currentType === 'tv' ? 'tv' : 'movie';
                     const genre = currentGenre ? `&with_genres=${currentGenre}` : '';
                     const year = currentYear ? (type === 'tv' ? `&first_air_date_year=${currentYear}` : `&primary_release_year=${currentYear}`) : '';
-                    url = `${base}/discover/${type}?api_key=${API_KEY}${idParams}${genre}${year}&page=${page}`;
+                    url = `${base}/discover/${type}?api_key=${API_KEY}${mandatory}${genre}${year}&page=${page}`;
                 }
 
                 const res = await fetch(url);
                 const data = await res.json();
+                
+                // FILTER MANUAL KEDUA: Hanya ambil yang bahasa aslinya Indonesia ('id')
+                const filteredResults = (data.results || []).filter(m => m.original_language === 'id');
+
                 if(isNew) document.getElementById('feedGrid').innerHTML = '';
-                renderFeed((data.results||[]).map(x => ({...x, m_type: x.media_type || (currentType === 'tv' ? 'tv' : 'movie')})));
+                renderFeed(filteredResults.map(x => ({...x, m_type: x.media_type || (currentType === 'tv' ? 'tv' : 'movie')})));
             } catch (err) { console.error(err); }
             loading = false; l.style.width = '100%'; setTimeout(()=>l.style.width='0%', 400);
         }
@@ -182,18 +183,18 @@
             try {
                 const res = await fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&language=id-ID&append_to_response=videos,credits`);
                 const d = await res.json();
-                currentMovieData = {...d, m_type: type};
+                
                 document.getElementById('mTitle').innerText = d.title || d.name;
                 document.getElementById('mTagline').innerText = d.tagline || "";
                 document.getElementById('mMeta').innerText = `${(d.release_date||d.first_air_date||'').split('-')[0]} // ${type.toUpperCase()}`;
                 document.getElementById('mDesc').innerText = d.overview || "Sinopsis tidak tersedia.";
                 
-                // Trailer Autoplay (Muted agar diijinkan browser)
+                // Trailer Autoplay (Muted)
                 const trailers = d.videos?.results || [];
                 const official = trailers.find(v => v.type === 'Trailer' && v.site === 'YouTube');
                 document.getElementById('videoPlayer').src = official ? `https://www.youtube.com/embed/${official.key}?autoplay=1&mute=1` : `https://vidrock.net/embed/${type}/${id}`;
 
-                // Cast Handler + Klik Aktor
+                // Klik Aktor Filter
                 document.getElementById('mCast').innerHTML = (d.credits?.cast || []).slice(0, 10).map(c => `
                     <div class="flex-shrink-0 w-12 text-center cursor-pointer" onclick="filterByActor('${c.id}')">
                         <img src="${c.profile_path ? 'https://image.tmdb.org/t/p/w185'+c.profile_path : 'https://via.placeholder.com/100'}" class="w-10 h-10 rounded-full object-cover mx-auto border border-zinc-800">
@@ -210,14 +211,17 @@
                     window.currentSeriesId = id; loadEpisodes();
                 } else { document.getElementById('seriesControl').classList.add('hidden'); }
 
-                updateModalButtons(id);
-                document.getElementById('btnLikeModal').onclick = () => toggleItem('likes', currentMovieData);
-                document.getElementById('btnBookModal').onclick = () => toggleItem('bookmarks', currentMovieData);
+                // Update Liked & Booked
+                const movieData = {id: d.id, poster_path: d.poster_path, m_type: type, vote_average: d.vote_average};
+                updateModalButtons(d.id);
+                document.getElementById('btnLikeModal').onclick = () => toggleItem('likes', movieData);
+                document.getElementById('btnBookModal').onclick = () => toggleItem('bookmarks', movieData);
             } catch(e) { console.error(e); }
         }
 
         function filterByActor(actorId) {
             currentActorId = actorId;
+            searchQuery = ''; // Reset search agar filter aktor prioritas
             closeModal();
             loadFeed(true);
             window.scrollTo({top:0, behavior:'smooth'});
@@ -227,14 +231,14 @@
         function updateModalButtons(id) {
             const isLiked = getStore('likes').some(x => x.id == id);
             const isBooked = getStore('bookmarks').some(x => x.id == id);
-            document.getElementById('btnLikeModal').className = isLiked ? 'fa-solid fa-heart btn-like active cursor-pointer text-lg' : 'fa-regular fa-heart btn-like cursor-pointer text-lg';
-            document.getElementById('btnBookModal').className = isBooked ? 'fa-solid fa-bookmark btn-bookmark active cursor-pointer text-lg' : 'fa-regular fa-bookmark btn-bookmark cursor-pointer text-lg';
+            document.getElementById('btnLikeModal').className = isLiked ? 'fa-solid fa-heart active cursor-pointer text-lg' : 'fa-regular fa-heart cursor-pointer text-lg';
+            document.getElementById('btnBookModal').className = isBooked ? 'fa-solid fa-bookmark active cursor-pointer text-lg' : 'fa-regular fa-bookmark cursor-pointer text-lg';
         }
         function toggleItem(key, movie) {
             let items = getStore(key);
             const idx = items.findIndex(x => x.id == movie.id);
             if (idx > -1) items.splice(idx, 1);
-            else items.push({id: movie.id, poster_path: movie.poster_path, m_type: movie.m_type, vote_average: movie.vote_average});
+            else items.push(movie);
             saveStore(key, items);
             updateModalButtons(movie.id);
         }
