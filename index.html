@@ -41,13 +41,10 @@
         .story-border { padding: 2.5px; background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); border-radius: 50%; display: inline-block; }
         .story-inner { background: #000; padding: 2px; border-radius: 50%; }
         .story-img { width: 58px; height: 58px; border-radius: 50%; object-fit: cover; display: block; }
-        
-        /* GRID KHUSUS SERIES - DOWNLOAD & STREAMING */
         .series-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 10px; }
         .ep-box { background: #111; border: 1px solid #1c1c1c; color: #555; font-size: 10px; font-weight: 800; padding: 12px 0; border-radius: 8px; text-align: center; cursor: pointer; transition: 0.2s; }
         .ep-box.active { border-color: #fff; color: #fff; background: #1a1a1a; }
         .dl-link-btn { display: block; width: 100%; margin-top: 15px; padding: 12px; border-radius: 10px; background: #fff; color: #000; font-size: 10px; font-weight: 900; text-transform: uppercase; text-align: center; }
-
         @keyframes skeleton-loading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
     </style>
 </head>
@@ -124,7 +121,6 @@
                     <h4 class="text-[9px] font-black text-zinc-600 uppercase mb-2">Pemeran Utama</h4>
                     <div id="mCast" class="flex gap-4 overflow-x-auto no-scrollbar py-2"></div>
                 </div>
-
                 <div id="seriesControl" class="hidden mb-6 p-4 bg-zinc-950 rounded-2xl border border-zinc-900">
                     <div class="flex justify-between items-center mb-4">
                         <h4 class="text-[9px] font-black text-zinc-400 uppercase">Pilih Episode</h4>
@@ -135,7 +131,6 @@
                         <i class="fa-solid fa-download mr-2"></i> Download Episode <span id="dlEpNum"></span>
                     </a>
                 </div>
-
                 <div id="serverList" class="grid grid-cols-2 gap-2 mt-4"></div>
                 <button id="btnDownloadMain" class="server-btn border-zinc-800 text-zinc-400 mt-4"><i class="fa-solid fa-download mr-2"></i> Download Sinema</button>
             </div>
@@ -144,7 +139,7 @@
 
     <script>
         const API_KEY = 'bfa7df5310c9974f62f26c6789a8c00d';
-        let page = 1, loading = false, currentType = 'multi', currentGenre = '', currentYear = '', searchQuery = '', currentActorId = '';
+        let page = 1, loading = false, currentType = 'multi', currentGenre = '', currentYear = '', searchQuery = '', currentActorId = '', isLibraryMode = false;
         
         const getStore = (key) => JSON.parse(localStorage.getItem(key) || '[]');
         const saveStore = (key, data) => localStorage.setItem(key, JSON.stringify(data));
@@ -153,7 +148,7 @@
         window.onscroll = () => { 
             const btt = document.getElementById('backToTop');
             if (window.scrollY > 500) btt.style.display = 'flex'; else btt.style.display = 'none';
-            if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 900 && !loading) { page++; loadFeed(false); } 
+            if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 900 && !loading && !isLibraryMode) { page++; loadFeed(false); } 
         };
 
         function initYearDropdown() {
@@ -163,11 +158,12 @@
             dropdown.innerHTML = html;
         }
         function toggleYearDropdown() { const d = document.getElementById('yearDropdown'); d.style.display = (d.style.display === 'block') ? 'none' : 'block'; }
-        function setYear(y) { currentYear = y; document.getElementById('yearVal').innerText = y || 'TAHUN'; document.getElementById('yearDropdown').style.display = 'none'; loadFeed(true); }
+        function setYear(y) { isLibraryMode = false; currentYear = y; document.getElementById('yearVal').innerText = y || 'TAHUN'; document.getElementById('yearDropdown').style.display = 'none'; loadFeed(true); }
 
         async function loadFeed(isNew = true) {
             if (loading) return;
             loading = true;
+            isLibraryMode = false;
             if (isNew) { page = 1; document.getElementById('feedGrid').innerHTML = Array(12).fill('<div class="post-card skeleton"></div>').join(''); }
             const l = document.getElementById('loader'); l.style.width = '30%';
             try {
@@ -175,7 +171,6 @@
                 const mandatory = `&with_original_language=id&region=ID&language=id-ID`;
                 const year = currentYear ? (currentType === 'tv' ? `&first_air_date_year=${currentYear}` : `&primary_release_year=${currentYear}`) : '';
                 const genre = currentGenre ? `&with_genres=${currentGenre}` : '';
-
                 if (currentActorId) {
                     const res = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}${mandatory}&with_cast=${currentActorId}&page=${page}`);
                     const data = await res.json(); items = (data.results || []).map(x => ({...x, m_type: 'movie'}));
@@ -183,7 +178,6 @@
                     const res = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}${mandatory}&query=${encodeURIComponent(searchQuery)}&page=${page}`);
                     const data = await res.json(); items = (data.results || []).map(x => ({...x, m_type: x.media_type}));
                 } else if (currentType === 'short') {
-                    // FILTER AKURAT SHORT: Movie saja, durasi <= 45 menit
                     const res = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}${mandatory}${genre}${year}&with_runtime.lte=45&page=${page}`);
                     const data = await res.json(); items = (data.results || []).map(x => ({...x, m_type: 'short'}));
                 } else if (currentType === 'multi') {
@@ -237,16 +231,13 @@
                 document.getElementById('mDesc').innerText = d.overview || dEn.overview || "Sinopsis tidak tersedia.";
                 const allVideos = [...(d.videos?.results || []), ...(dEn.videos?.results || [])];
                 const trailer = allVideos.find(v => v.site === 'YouTube' && (v.type === 'Trailer' || v.type === 'Teaser'));
-                
                 if(type === 'short') document.getElementById('videoPlayer').src = `https://vidrock.net/embed/movie/${id}`;
                 else if(type === 'movie') document.getElementById('videoPlayer').src = trailer ? `https://www.youtube.com/embed/${trailer.key}?autoplay=1&mute=0&rel=0` : `https://vidrock.net/embed/movie/${id}`;
-                
                 document.getElementById('mCast').innerHTML = (d.credits?.cast || []).slice(0, 10).map(c => `
                     <div class="flex-shrink-0 w-[70px] text-center cursor-pointer" onclick="filterByActor('${c.id}')">
                         <div class="story-border"><div class="story-inner"><img src="${c.profile_path ? 'https://image.tmdb.org/t/p/w185'+c.profile_path : 'https://via.placeholder.com/100'}" class="story-img"></div></div>
                         <p class="text-[8px] text-zinc-400 truncate mt-2 font-medium">${c.name.split(' ')[0]}</p>
                     </div>`).join('');
-
                 if(type === 'tv') {
                     document.getElementById('seriesControl').classList.remove('hidden');
                     document.getElementById('btnDownloadMain').classList.add('hidden');
@@ -266,45 +257,28 @@
         }
 
         async function loadEpisodes() {
-            const s = document.getElementById('seasonSel').value;
-            const id = window.currentMediaId;
+            const s = document.getElementById('seasonSel').value, id = window.currentMediaId;
             const res = await fetch(`https://api.themoviedb.org/3/tv/${id}/season/${s}?api_key=${API_KEY}`);
             const d = await res.json();
-            
-            // Render Grid untuk Streaming & Download
-            document.getElementById('episodeGrid').innerHTML = (d.episodes||[]).map(e => `
-                <div class="ep-box" id="ep-${e.episode_number}" onclick="playSeriesEp(${s}, ${e.episode_number})">
-                    ${e.episode_number}
-                </div>
-            `).join('');
-            
-            // Putar episode pertama secara otomatis
+            document.getElementById('episodeGrid').innerHTML = (d.episodes||[]).map(e => `<div class="ep-box" id="ep-${e.episode_number}" onclick="playSeriesEp(${s}, ${e.episode_number})">${e.episode_number}</div>`).join('');
             if(d.episodes && d.episodes.length > 0) playSeriesEp(s, d.episodes[0].episode_number);
         }
 
         function playSeriesEp(s, e) {
             const id = window.currentMediaId;
-            // Update Iframe
             document.getElementById('videoPlayer').src = `https://vidrock.net/embed/tv/${id}/${s}/${e}`;
-            // Highlight Box Aktif
             document.querySelectorAll('.ep-box').forEach(b => b.classList.remove('active'));
-            document.getElementById(`ep-${e}`).classList.add('active');
-            // Update Link Download
-            const dlBtn = document.getElementById('dlSeriesBtn');
-            dlBtn.classList.remove('hidden');
-            dlBtn.href = `https://dl.vidsrc.vip/tv/${id}/${s}/${e}`;
-            document.getElementById('dlEpNum').innerText = e;
-            // Update Server Buttons
-            document.getElementById('serverList').innerHTML = `
-                <button class="server-btn bg-zinc-950 text-zinc-400" onclick="document.getElementById('videoPlayer').src='https://vidrock.net/embed/tv/${id}/${s}/${e}'">Server 1</button>
-                <button class="server-btn bg-zinc-950 text-zinc-400" onclick="document.getElementById('videoPlayer').src='https://vidstorm.ru/embed/tv/${id}/${s}/${e}'">Server 2</button>
-            `;
+            if(document.getElementById(`ep-${e}`)) document.getElementById(`ep-${e}`).classList.add('active');
+            const dlBtn = document.getElementById('dlSeriesBtn'); dlBtn.classList.remove('hidden');
+            dlBtn.href = `https://dl.vidsrc.vip/tv/${id}/${s}/${e}`; document.getElementById('dlEpNum').innerText = e;
+            document.getElementById('serverList').innerHTML = `<button class="server-btn bg-zinc-950 text-zinc-400" onclick="document.getElementById('videoPlayer').src='https://vidrock.net/embed/tv/${id}/${s}/${e}'">Server 1</button><button class="server-btn bg-zinc-950 text-zinc-400" onclick="document.getElementById('videoPlayer').src='https://vidstorm.ru/embed/tv/${id}/${s}/${e}'">Server 2</button>`;
         }
 
         function closeModal() { document.getElementById('movieModal').style.display = 'none'; document.getElementById('videoPlayer').src = ''; document.body.style.overflow = 'auto'; }
         function filterByActor(actorId) { currentActorId = actorId; searchQuery = ''; closeModal(); loadFeed(true); window.scrollTo({top:0, behavior:'smooth'}); }
         function searchAction() { currentActorId = ''; searchQuery = document.getElementById('searchInp').value; loadFeed(true); }
         function setFilter(t, v, el) { 
+            isLibraryMode = false;
             document.querySelectorAll('.pill, .highlight-item').forEach(p => p.classList.remove('active'));
             el.classList.add('active');
             if(t === 'type') currentType = v; else currentGenre = v;
@@ -321,10 +295,21 @@
             if (idx > -1) items.splice(idx, 1); else items.push(movie);
             saveStore(key, items); updateModalButtons(movie.id);
         }
+        
         function showLibrary(key) {
-            const items = getStore(key); const grid = document.getElementById('feedGrid'); grid.innerHTML = '';
-            if (items.length === 0) grid.innerHTML = `<div class="col-span-3 text-center py-20 text-zinc-500 text-xs">Daftar ${key} kosong</div>`;
-            else renderFeed(items); window.scrollTo({top:0, behavior:'smooth'});
+            // PERBAIKAN: Bersihkan grid secara total dan set status library mode
+            isLibraryMode = true; 
+            const grid = document.getElementById('feedGrid');
+            grid.innerHTML = ''; 
+            const items = getStore(key);
+            if (items.length === 0) {
+                grid.innerHTML = `<div class="col-span-3 text-center py-20 text-zinc-500 text-xs uppercase font-black">Daftar ${key} masih kosong</div>`;
+            } else {
+                renderFeed(items);
+            }
+            window.scrollTo({top:0, behavior:'smooth'});
+            // Nonaktifkan highlight kategori saat di mode library
+            document.querySelectorAll('.pill, .highlight-item').forEach(p => p.classList.remove('active'));
         }
         function showUserProfil() { alert("Amnesfubbia XX1\nWebsite streaming khusus film Indonesia."); }
     </script>
