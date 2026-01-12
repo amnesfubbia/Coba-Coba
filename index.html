@@ -17,9 +17,7 @@
         .verified-icon { font-size: 13px; color: #0095f6; margin-left: 5px; }
 
         .search-container { background: #0a0a0a; border-radius: 8px; display: flex; align-items: center; padding: 7px 12px; flex-grow: 1; border: 1px solid #1c1c1c; }
-        .search-container input { 
-            background: transparent !important; border: none !important; color: white !important; font-size: 13px; width: 100%; outline: none !important; box-shadow: none !important; margin-left: 8px; 
-        }
+        .search-container input { background: transparent !important; border: none !important; color: white !important; font-size: 13px; width: 100%; outline: none !important; box-shadow: none !important; margin-left: 8px; }
 
         .year-selector { background: #0a0a0a; border: 1px solid #1c1c1c; border-radius: 8px; padding: 8px 12px; font-size: 9px; font-weight: 800; color: #fff; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; gap: 5px; }
         .year-dropdown { display: none; position: fixed; top: 110px; right: 15px; width: 120px; max-height: 300px; background: #121212; border: 1px solid #1c1c1c; border-radius: 12px; z-index: 101; overflow-y: auto; }
@@ -44,7 +42,6 @@
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #000; border-top: 1px solid #1c1c1c; display: flex; justify-content: space-around; padding: 12px 0; z-index: 300; padding-bottom: calc(12px + env(safe-area-inset-bottom)); }
         .nav-item { color: #fff; font-size: 20px; cursor: pointer; }
         
-        /* MODAL MODULE UPDATED */
         .modal-player { display: none; position: fixed; inset: 0; z-index: 200; background: #000; overflow-y: auto; }
         #mTitle { font-size: 14px; font-weight: 700; color: #fff; letter-spacing: -0.2px; }
         #mMeta { font-size: 11px; color: #a8a8a8; font-weight: 400; margin-bottom: 4px; }
@@ -134,6 +131,10 @@
                 <div class="w-5"></div> 
             </div>
             
+            <div class="py-4 bg-black">
+                <div id="mCast" class="flex gap-4 overflow-x-auto no-scrollbar px-4"></div>
+            </div>
+
             <div class="aspect-video bg-zinc-900 w-full relative">
                 <iframe id="videoPlayer" class="w-full h-full" allow="autoplay; fullscreen" allowfullscreen></iframe>
             </div>
@@ -157,10 +158,6 @@
                 <p id="mMeta"></p>
             </div>
             
-            <div class="py-4 border-t border-zinc-900 mt-4">
-                <div id="mCast" class="flex gap-4 overflow-x-auto no-scrollbar px-4"></div>
-            </div>
-
             <div class="px-4 pt-2">
                 <div id="seriesControl" class="hidden mb-6 p-4 bg-zinc-950 rounded-2xl border border-zinc-900">
                     <div class="flex justify-between items-center mb-4">
@@ -213,6 +210,7 @@
                 const mandatory = `&with_original_language=id&region=ID&language=id-ID`;
                 const year = currentYear ? (currentType === 'tv' ? `&first_air_date_year=${currentYear}` : `&primary_release_year=${currentYear}`) : '';
                 const genre = currentGenre ? `&with_genres=${currentGenre}` : '';
+                
                 if (currentActorId) {
                     const res = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}${mandatory}&with_cast=${currentActorId}&page=${page}`);
                     const data = await res.json(); items = (data.results || []).map(x => ({...x, m_type: 'movie'}));
@@ -220,7 +218,8 @@
                     const res = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}${mandatory}&query=${encodeURIComponent(searchQuery)}&page=${page}`);
                     const data = await res.json(); items = (data.results || []).map(x => ({...x, m_type: x.media_type}));
                 } else if (currentType === 'short') {
-                    const res = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}${mandatory}${genre}${year}&with_runtime.lte=45&page=${page}`);
+                    // Akurasi Short: Ditambahkan filter runtime maksimal 40 menit
+                    const res = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}${mandatory}${genre}${year}&with_runtime.lte=40&page=${page}`);
                     const data = await res.json(); items = (data.results || []).map(x => ({...x, m_type: 'short'}));
                 } else if (currentType === 'multi') {
                     const [resM, resT] = await Promise.all([
@@ -272,16 +271,24 @@
                 document.getElementById('mTitleAlt').innerText = title.toLowerCase().replace(/\s+/g, '');
                 document.getElementById('mTagline').innerText = d.tagline || dEn.tagline || "";
                 document.getElementById('mMeta').innerText = `${(d.release_date||d.first_air_date||'').split('-')[0]} // ${type.toUpperCase()}`;
-                document.getElementById('mDesc').innerText = d.overview || dEn.overview || "Sinopsis tidak tersedia.";
+                
+                // Perbaikan Sinopsis Kosong
+                document.getElementById('mDesc').innerText = d.overview || dEn.overview || "Sinopsis untuk sinema ini belum tersedia secara resmi, silakan tonton trailer atau akses langsung melalui server.";
                 
                 const rating = d.vote_average || 0;
                 const fakeLikes = Math.floor(rating * 1250);
                 document.getElementById('mLikeCount').innerText = `${fakeLikes.toLocaleString('id-ID')} suka`;
 
+                // Perbaikan Trailer Kosong
                 const allVideos = [...(d.videos?.results || []), ...(dEn.videos?.results || [])];
-                const trailer = allVideos.find(v => v.site === 'YouTube' && (v.type === 'Trailer' || v.type === 'Teaser'));
-                if(type === 'short') document.getElementById('videoPlayer').src = `https://vidrock.net/embed/movie/${id}`;
-                else if(type === 'movie') document.getElementById('videoPlayer').src = trailer ? `https://www.youtube.com/embed/${trailer.key}?autoplay=1&mute=0&rel=0` : `https://vidrock.net/embed/movie/${id}`;
+                const trailer = allVideos.find(v => v.site === 'YouTube' && (v.type === 'Trailer' || v.type === 'Teaser' || v.type === 'Clip'));
+                
+                if (trailer) {
+                    document.getElementById('videoPlayer').src = `https://www.youtube.com/embed/${trailer.key}?autoplay=1&mute=0&rel=0`;
+                } else {
+                    // Fallback jika tidak ada trailer YouTube, langsung muat Server 1
+                    document.getElementById('videoPlayer').src = type === 'tv' ? `https://vidrock.net/embed/tv/${id}/1/1` : `https://vidrock.net/embed/movie/${id}`;
+                }
                 
                 document.getElementById('mCast').innerHTML = (d.credits?.cast || []).slice(0, 10).map(c => `
                     <div class="flex-shrink-0 text-center cursor-pointer" onclick="filterByActor('${c.id}')">
@@ -364,3 +371,4 @@
     </script>
 </body>
 </html>
+
