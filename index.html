@@ -277,7 +277,7 @@
                 const finalType = m.m_type === 'short' ? 'short' : (m.m_type === 'tv' ? 'tv' : 'movie');
                 card.onclick = () => openModal(m.id, finalType);
                 
-                // Badge Ikon: Film juga ada badge (ikon play)
+                // Perbaikan: Badge kanan atas untuk Film juga ada (Ikon Play)
                 let badgeHTML = '';
                 if(m.m_type === 'tv') badgeHTML = '<i class="fa-solid fa-clone"></i>';
                 else if(m.m_type === 'short') badgeHTML = '<i class="fa-solid fa-clapperboard"></i>';
@@ -297,25 +297,28 @@
             
             const actualType = (type === 'short' || type === 'movie') ? 'movie' : 'tv';
             try {
+                // Fetch dua bahasa sekaligus
                 const [resId, resEn] = await Promise.all([
                     fetch(`https://api.themoviedb.org/3/${actualType}/${id}?api_key=${API_KEY}&language=id-ID&append_to_response=videos,credits`),
                     fetch(`https://api.themoviedb.org/3/${actualType}/${id}?api_key=${API_KEY}&language=en-US&append_to_response=videos`)
                 ]);
-                const d = await resId.json(); const dEn = await resEn.json();
-                const title = d.title || d.name;
+                const d = await resId.json(); 
+                const dEn = await resEn.json();
                 
+                const title = d.title || d.name;
                 document.getElementById('mTitle').innerText = title;
                 document.getElementById('mTitleAlt').innerText = title.toLowerCase().replace(/\s+/g, '');
                 document.getElementById('mTagline').innerText = d.tagline || dEn.tagline || "";
                 document.getElementById('mMeta').innerText = `${(d.release_date||d.first_air_date||'').split('-')[0]} // ${type.toUpperCase()}`;
                 
-                // Simpan dua versi deskripsi
+                // Perbaikan Terjemahan: Simpan data bahasa Indonesia dan Inggris
                 descIndo = d.overview || ""; 
-                fullDesc = dEn.overview || "Sinopsis belum tersedia."; // Default ke Inggris jika Indo kosong
+                fullDesc = dEn.overview || "No description available.";
+
+                // Tentukan apa yang muncul pertama kali
+                let currentText = descIndo !== "" ? descIndo : fullDesc;
                 
-                // Jika Indo ada, langsung pakai Indo. Jika kosong, pakai Inggris + tombol terjemahan.
-                let currentText = descIndo ? descIndo : fullDesc;
-                
+                // Tampilkan deskripsi (terpotong)
                 if(currentText.length > 100) {
                     document.getElementById('mDesc').innerText = currentText.substring(0, 100) + "...";
                     document.getElementById('readMoreBtn').classList.remove('hidden');
@@ -324,16 +327,15 @@
                     document.getElementById('readMoreBtn').classList.add('hidden');
                 }
 
-                // Munculkan tombol terjemahan HANYA jika sinopsis awal yang ditampilkan adalah bahasa Inggris
+                // Tombol terjemahan hanya muncul jika sinopsis bahasa Indonesia kosong/tidak ada
                 document.getElementById('translateBtn').classList.toggle('hidden', descIndo !== "");
                 document.getElementById('translateBtn').innerText = "Lihat Terjemahan";
 
                 document.getElementById('mTime').innerText = calculateTimeAgo(d.release_date || d.first_air_date);
-
-                const rating = d.vote_average || 0;
-                const fakeLikes = Math.floor(rating * 1250);
+                const fakeLikes = Math.floor((d.vote_average || 0) * 1250);
                 document.getElementById('mLikeCount').innerText = `${fakeLikes.toLocaleString('id-ID')} suka`;
 
+                // Player logic
                 if (type === 'short') {
                     document.getElementById('videoPlayer').src = `https://vidrock.net/embed/movie/${id}`;
                 } else {
@@ -365,35 +367,37 @@
                     document.getElementById('serverList').innerHTML = `<button class="server-btn bg-zinc-950 text-zinc-400" onclick="document.getElementById('videoPlayer').src='https://vidrock.net/embed/movie/${id}'">Server 1</button><button class="server-btn bg-zinc-950 text-zinc-400" onclick="document.getElementById('videoPlayer').src='https://vidstorm.ru/embed/movie/${id}'">Server 2</button>`;
                     document.getElementById('btnDownloadMain').onclick = () => window.open(`https://dl.vidsrc.vip/movie/${id}`, '_blank');
                 }
-                const mData = {id: d.id, poster_path: d.poster_path, m_type: type, vote_average: d.vote_average};
-                document.getElementById('btnLikeModal').onclick = () => toggleItem('likes', mData);
-                document.getElementById('btnBookModal').onclick = () => toggleItem('bookmarks', mData);
                 updateModalButtons(d.id);
+                document.getElementById('btnLikeModal').onclick = () => toggleItem('likes', {id: d.id, poster_path: d.poster_path, m_type: type, vote_average: d.vote_average});
+                document.getElementById('btnBookModal').onclick = () => toggleItem('bookmarks', {id: d.id, poster_path: d.poster_path, m_type: type, vote_average: d.vote_average});
             } catch(e) { console.error(e); }
         }
 
         function expandDesc() { 
-            let fullText = isTranslated ? "[Terjemahan]: " + fullDesc : (descIndo ? descIndo : fullDesc);
-            document.getElementById('mDesc').innerText = fullText; 
+            document.getElementById('mDesc').innerText = isTranslated ? descIndo : (descIndo !== "" ? descIndo : fullDesc); 
             document.getElementById('readMoreBtn').classList.add('hidden'); 
         }
         
-        function toggleTranslation() {
+        // Perbaikan: Fungsi Toggle Terjemahan yang bekerja
+        async function toggleTranslation() {
             const display = document.getElementById('mDesc');
             const btn = document.getElementById('translateBtn');
+            
             if(!isTranslated) {
                 display.innerText = "Menerjemahkan...";
-                setTimeout(() => {
-                    // Dalam simulasi ini, kita anggap 'fullDesc' dari API En adalah sumber yang diterjemahkan
-                    display.innerText = "[Terjemahan]: " + fullDesc;
-                    btn.innerText = "Lihat Asli";
-                    isTranslated = true;
-                    document.getElementById('readMoreBtn').classList.add('hidden');
-                }, 500);
+                // Ambil data bahasa Indonesia jika tadi yang tampil Inggris
+                const actualType = (document.getElementById('mMeta').innerText.includes('TV') || document.getElementById('mMeta').innerText.includes('SERIES')) ? 'tv' : 'movie';
+                const res = await fetch(`https://api.themoviedb.org/3/${actualType}/${window.currentMediaId}?api_key=${API_KEY}&language=id-ID`);
+                const data = await res.json();
+                descIndo = data.overview || "Maaf, terjemahan Indonesia tidak tersedia untuk judul ini.";
+                
+                display.innerText = descIndo;
+                btn.innerText = "Lihat Asli (Inggris)";
+                isTranslated = true;
+                document.getElementById('readMoreBtn').classList.add('hidden');
             } else {
-                let originalText = descIndo ? descIndo : fullDesc;
-                display.innerText = originalText.length > 100 ? originalText.substring(0, 100) + "..." : originalText;
-                if(originalText.length > 100) document.getElementById('readMoreBtn').classList.remove('hidden');
+                display.innerText = fullDesc.length > 100 ? fullDesc.substring(0, 100) + "..." : fullDesc;
+                if(fullDesc.length > 100) document.getElementById('readMoreBtn').classList.remove('hidden');
                 btn.innerText = "Lihat Terjemahan";
                 isTranslated = false;
             }
@@ -439,14 +443,10 @@
         }
         function showLibrary(key) {
             isLibraryMode = true; 
-            const grid = document.getElementById('feedGrid');
-            grid.innerHTML = ''; 
+            const grid = document.getElementById('feedGrid'); grid.innerHTML = ''; 
             const items = getStore(key);
-            if (items.length === 0) {
-                grid.innerHTML = `<div class="col-span-3 text-center py-20 text-zinc-500 text-xs uppercase font-black">Daftar ${key} masih kosong</div>`;
-            } else {
-                renderFeed(items);
-            }
+            if (items.length === 0) grid.innerHTML = `<div class="col-span-3 text-center py-20 text-zinc-500 text-xs uppercase font-black">Daftar ${key} masih kosong</div>`;
+            else renderFeed(items);
             window.scrollTo({top:0, behavior:'smooth'});
             document.querySelectorAll('.pill, .highlight-item').forEach(p => p.classList.remove('active'));
         }
