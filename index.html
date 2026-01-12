@@ -72,11 +72,8 @@
         .series-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 10px; }
         .ep-box { background: #111; border: 1px solid #1c1c1c; color: #555; font-size: 10px; font-weight: 800; padding: 12px 0; border-radius: 8px; text-align: center; cursor: pointer; transition: 0.2s; }
         .ep-box.active { border-color: #fff; color: #fff; background: #1a1a1a; }
-
-        /* EDIT: Menyamakan tampilan tombol download series dengan tombol download film */
         .dl-link-btn { display: block; width: 100%; margin-top: 15px; padding: 14px; border-radius: 12px; background: #000; color: #a1a1aa; font-size: 10px; font-weight: 800; text-transform: uppercase; text-align: center; border: 1px solid #1c1c1c; transition: 0.2s; }
         .dl-link-btn:active { background: #0a0a0a; color: #fff; }
-
         @keyframes skeleton-loading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
     </style>
 </head>
@@ -137,25 +134,38 @@
 
     <div id="movieModal" class="modal-player">
         <div class="max-w-xl mx-auto pb-40">
-            <div class="p-4 flex items-center justify-between border-b border-zinc-900 sticky top-0 bg-black z-50">
+            <div class="p-4 flex items-center border-b border-zinc-900 sticky top-0 bg-black z-50">
                 <i class="fa-solid fa-xmark text-lg cursor-pointer" onclick="closeModal()"></i>
-                <h2 id="mTitle" class="text-[10px] font-bold truncate uppercase tracking-widest text-center px-4"></h2>
-                <div class="flex gap-4">
-                    <i id="btnLikeModal" class="cursor-pointer text-lg"></i>
-                    <i id="btnBookModal" class="cursor-pointer text-lg"></i>
-                </div>
-            </div>
+                <h2 id="mTitle" class="flex-grow text-[10px] font-bold truncate uppercase tracking-widest text-center px-4"></h2>
+                <div class="w-5"></div> </div>
+            
             <div class="aspect-video bg-zinc-900 w-full relative">
                 <iframe id="videoPlayer" class="w-full h-full" allow="autoplay; fullscreen" allowfullscreen></iframe>
             </div>
-            <div class="p-6">
+
+            <div class="px-4 py-3 flex justify-between items-center">
+                <div class="flex gap-4">
+                    <i id="btnLikeModal" class="cursor-pointer text-xl"></i>
+                    <i class="fa-regular fa-comment text-xl opacity-20 cursor-not-allowed"></i>
+                    <i class="fa-regular fa-paper-plane text-xl opacity-20 cursor-not-allowed"></i>
+                </div>
+                <i id="btnBookModal" class="cursor-pointer text-xl"></i>
+            </div>
+
+            <div class="px-4 mb-2">
+                <p id="mLikeCount" class="text-xs font-bold text-white"></p>
+            </div>
+
+            <div class="p-4 pt-0">
                 <p id="mTagline" class="text-xs font-bold italic text-white mb-2"></p>
                 <p id="mMeta" class="text-[9px] text-zinc-500 font-black mb-4 uppercase"></p>
                 <p id="mDesc" class="text-xs text-zinc-400 leading-relaxed mb-6"></p>
+                
                 <div class="mb-8">
                     <h4 class="text-[9px] font-black text-zinc-600 uppercase mb-2">Pemeran Utama</h4>
                     <div id="mCast" class="flex gap-4 overflow-x-auto no-scrollbar py-2"></div>
                 </div>
+
                 <div id="seriesControl" class="hidden mb-6 p-4 bg-zinc-950 rounded-2xl border border-zinc-900">
                     <div class="flex justify-between items-center mb-4">
                         <h4 class="text-[9px] font-black text-zinc-400 uppercase">Pilih Episode</h4>
@@ -166,6 +176,7 @@
                         <i class="fa-solid fa-download mr-2"></i> Download Episode <span id="dlEpNum"></span>
                     </a>
                 </div>
+
                 <div id="serverList" class="grid grid-cols-2 gap-2 mt-4"></div>
                 <button id="btnDownloadMain" class="server-btn border-zinc-800 text-zinc-400 mt-4"><i class="fa-solid fa-download mr-2"></i> Download Sinema</button>
             </div>
@@ -264,6 +275,12 @@
                 document.getElementById('mTagline').innerText = d.tagline || dEn.tagline || "";
                 document.getElementById('mMeta').innerText = `${(d.release_date||d.first_air_date||'').split('-')[0]} // ${type.toUpperCase()}`;
                 document.getElementById('mDesc').innerText = d.overview || dEn.overview || "Sinopsis tidak tersedia.";
+                
+                // EDIT: Dynamic Fake Likes berdasarkan rating
+                const rating = d.vote_average || 0;
+                const fakeLikes = Math.floor(rating * 1250); // Makin tinggi rating, makin banyak like
+                document.getElementById('mLikeCount').innerText = `${fakeLikes.toLocaleString('id-ID')} suka`;
+
                 const allVideos = [...(d.videos?.results || []), ...(dEn.videos?.results || [])];
                 const trailer = allVideos.find(v => v.site === 'YouTube' && (v.type === 'Trailer' || v.type === 'Teaser'));
                 if(type === 'short') document.getElementById('videoPlayer').src = `https://vidrock.net/embed/movie/${id}`;
@@ -324,8 +341,8 @@
         function updateModalButtons(id) {
             const isLiked = getStore('likes').some(x => x.id == id);
             const isBooked = getStore('bookmarks').some(x => x.id == id);
-            document.getElementById('btnLikeModal').className = isLiked ? 'fa-solid fa-heart text-red-500 cursor-pointer text-lg' : 'fa-regular fa-heart cursor-pointer text-lg';
-            document.getElementById('btnBookModal').className = isBooked ? 'fa-solid fa-bookmark text-white cursor-pointer text-lg' : 'fa-regular fa-bookmark cursor-pointer text-lg';
+            document.getElementById('btnLikeModal').className = isLiked ? 'fa-solid fa-heart text-red-500 cursor-pointer' : 'fa-regular fa-heart cursor-pointer';
+            document.getElementById('btnBookModal').className = isBooked ? 'fa-solid fa-bookmark text-white cursor-pointer' : 'fa-regular fa-bookmark cursor-pointer';
         }
         function toggleItem(key, movie) {
             let items = getStore(key); const idx = items.findIndex(x => x.id == movie.id);
@@ -345,10 +362,7 @@
             window.scrollTo({top:0, behavior:'smooth'});
             document.querySelectorAll('.pill, .highlight-item').forEach(p => p.classList.remove('active'));
         }
-        
-        function showUserProfil() { 
-            alert("Amnesfubbia XX1\nTempat Streaming Film Indonesia\n\nAmnesfubbia Entertainment\nBy Anasteas"); 
-        }
+        function showUserProfil() { alert("Amnesfubbia XX1\nTempat Streaming Film Indonesia\n\nAmnesfubbia Entertainment\nBy Anasteas"); }
     </script>
 </body>
 </html>
