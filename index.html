@@ -14,7 +14,6 @@
         .ig-header { padding: 12px 15px 5px 15px; }
         .search-container { background: #0a0a0a; border-radius: 8px; display: flex; align-items: center; padding: 7px 12px; flex-grow: 1; border: 1px solid #1c1c1c; }
         
-        /* PERBAIKAN FINAL: Mematikan paksa warna latar belakang auto-fill & highlight */
         .search-container input { 
             background: transparent !important; 
             border: none !important; 
@@ -30,7 +29,6 @@
             margin-left: 8px; 
         }
 
-        /* Menghilangkan background putih saat auto-fill (Google Chrome) */
         .search-container input:-webkit-autofill,
         .search-container input:-webkit-autofill:hover, 
         .search-container input:-webkit-autofill:focus {
@@ -343,7 +341,10 @@
             window.scrollTo({top:0, behavior:'smooth'});
             document.querySelectorAll('.pill, .highlight-item').forEach(p => p.classList.remove('active'));
         }
-        function showUserProfil() { alert("Amnesfubbia XX1\nWebsite streaming khusus film Indonesia."); }
+        
+        function showUserProfil() { 
+            alert("Amnesfubbia XX1\nTempat Streaming Film Indonesia\n\nAmnesfubbia Entertainment\nBy Anasteas"); 
+        }
     </script>
 </body>
 </html>
