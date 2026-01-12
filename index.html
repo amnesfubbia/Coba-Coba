@@ -19,11 +19,8 @@
         .year-item { padding: 12px; font-size: 11px; font-weight: 600; text-align: center; border-bottom: 1px solid #1c1c1c; color: #888; cursor: pointer; }
         .category-wrapper { padding: 5px 15px 12px 15px; }
         .pill-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
-        
-        /* PERBAIKAN STYLE PILL SESUAI PERMINTAAN */
         .pill { background: transparent; border: 1px solid #1c1c1c; color: #fff; padding: 8px 0; border-radius: 8px; font-size: 10px; font-weight: 800; text-transform: uppercase; text-align: center; cursor: pointer; transition: border-color 0.2s; }
         .pill.active { background: transparent; color: #fff; border-color: #fff; }
-        
         .highlights-section { padding: 15px 0; border-bottom: 1px solid #1c1c1c; background: #000; }
         .highlights-container { display: flex; gap: 15px; overflow-x: auto; padding: 0 15px; scrollbar-width: none; }
         .highlight-item { flex: 0 0 75px; text-align: center; cursor: pointer; }
@@ -40,23 +37,22 @@
         .modal-player { display: none; position: fixed; inset: 0; z-index: 200; background: #000; overflow-y: auto; }
         .server-btn { width: 100%; padding: 14px; border-radius: 12px; font-size: 10px; font-weight: 800; text-transform: uppercase; border: 1px solid #1c1c1c; text-align: center; cursor: pointer; }
         .skeleton { background: linear-gradient(90deg, #0a0a0a 25%, #1a1a1a 50%, #0a0a0a 75%); background-size: 200% 100%; animation: skeleton-loading 1.5s infinite; }
-        
         #backToTop { position: fixed; bottom: 85px; right: 20px; background: #fff; color: #000; width: 40px; height: 40px; border-radius: 50%; display: none; align-items: center; justify-content: center; z-index: 140; box-shadow: 0 4px 12px rgba(0,0,0,0.5); cursor: pointer; transition: 0.3s; }
-
         .story-border { padding: 2.5px; background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); border-radius: 50%; display: inline-block; }
         .story-inner { background: #000; padding: 2px; border-radius: 50%; }
         .story-img { width: 58px; height: 58px; border-radius: 50%; object-fit: cover; display: block; }
         
-        .download-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 10px; }
-        .dl-item { background: #1c1c1c; border: 1px solid #333; color: #fff; font-size: 10px; font-weight: 700; padding: 10px 0; border-radius: 8px; text-align: center; cursor: pointer; }
-        .dl-item:active { background: #fff; color: #000; }
+        /* GRID KHUSUS SERIES - DOWNLOAD & STREAMING */
+        .series-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 10px; }
+        .ep-box { background: #111; border: 1px solid #1c1c1c; color: #555; font-size: 10px; font-weight: 800; padding: 12px 0; border-radius: 8px; text-align: center; cursor: pointer; transition: 0.2s; }
+        .ep-box.active { border-color: #fff; color: #fff; background: #1a1a1a; }
+        .dl-link-btn { display: block; width: 100%; margin-top: 15px; padding: 12px; border-radius: 10px; background: #fff; color: #000; font-size: 10px; font-weight: 900; text-transform: uppercase; text-align: center; }
 
         @keyframes skeleton-loading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
     </style>
 </head>
 <body>
     <div id="loader" style="position:fixed; top:0; left:0; height:1.5px; background:#fff; width:0%; transition:width 0.3s; z-index:1000;"></div>
-    
     <div id="backToTop" onclick="window.scrollTo({top: 0, behavior: 'smooth'})"><i class="fa-solid fa-arrow-up text-sm"></i></div>
 
     <div class="fixed-header-section">
@@ -128,14 +124,16 @@
                     <h4 class="text-[9px] font-black text-zinc-600 uppercase mb-2">Pemeran Utama</h4>
                     <div id="mCast" class="flex gap-4 overflow-x-auto no-scrollbar py-2"></div>
                 </div>
-                
+
                 <div id="seriesControl" class="hidden mb-6 p-4 bg-zinc-950 rounded-2xl border border-zinc-900">
-                    <div class="grid grid-cols-2 gap-4 mb-4">
-                        <select id="seasonSel" class="bg-zinc-900 text-white text-[10px] font-bold p-3 rounded-xl" onchange="loadEpisodes()"></select>
-                        <select id="episodeSel" class="bg-zinc-900 text-white text-[10px] font-bold p-3 rounded-xl" onchange="playEpisode()"></select>
+                    <div class="flex justify-between items-center mb-4">
+                        <h4 class="text-[9px] font-black text-zinc-400 uppercase">Pilih Episode</h4>
+                        <select id="seasonSel" class="bg-zinc-900 text-white text-[10px] font-bold px-3 py-1 rounded-lg border border-zinc-800" onchange="loadEpisodes()"></select>
                     </div>
-                    <h4 class="text-[8px] font-black text-zinc-600 uppercase mb-2">Download Episode</h4>
-                    <div id="downloadGrid" class="download-grid"></div>
+                    <div id="episodeGrid" class="series-grid"></div>
+                    <a id="dlSeriesBtn" href="#" target="_blank" class="dl-link-btn hidden">
+                        <i class="fa-solid fa-download mr-2"></i> Download Episode <span id="dlEpNum"></span>
+                    </a>
                 </div>
 
                 <div id="serverList" class="grid grid-cols-2 gap-2 mt-4"></div>
@@ -184,6 +182,10 @@
                 } else if (searchQuery) {
                     const res = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}${mandatory}&query=${encodeURIComponent(searchQuery)}&page=${page}`);
                     const data = await res.json(); items = (data.results || []).map(x => ({...x, m_type: x.media_type}));
+                } else if (currentType === 'short') {
+                    // FILTER AKURAT SHORT: Movie saja, durasi <= 45 menit
+                    const res = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}${mandatory}${genre}${year}&with_runtime.lte=45&page=${page}`);
+                    const data = await res.json(); items = (data.results || []).map(x => ({...x, m_type: 'short'}));
                 } else if (currentType === 'multi') {
                     const [resM, resT] = await Promise.all([
                         fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}${mandatory}${genre}${currentYear ? '&primary_release_year='+currentYear : ''}&page=${page}`),
@@ -191,9 +193,6 @@
                     ]);
                     const dM = await resM.json(); const dT = await resT.json();
                     items = [...(dM.results || []).map(x => ({...x, m_type:'movie'})), ...(dT.results || []).map(x => ({...x, m_type:'tv'}))];
-                } else if (currentType === 'short') {
-                    const res = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}${mandatory}${genre}${year}&with_runtime.lte=45&page=${page}`);
-                    const data = await res.json(); items = (data.results || []).map(x => ({...x, m_type: 'short'}));
                 } else {
                     const res = await fetch(`https://api.themoviedb.org/3/discover/${currentType}?api_key=${API_KEY}${mandatory}${genre}${year}&page=${page}`);
                     const data = await res.json(); items = (data.results || []).map(x => ({...x, m_type: currentType}));
@@ -211,7 +210,8 @@
                 if (!m.poster_path) return;
                 const card = document.createElement('div');
                 card.className = 'post-card';
-                card.onclick = () => openModal(m.id, m.m_type === 'short' ? 'short' : (m.m_type === 'tv' ? 'tv' : 'movie'));
+                const finalType = m.m_type === 'short' ? 'short' : (m.m_type === 'tv' ? 'tv' : 'movie');
+                card.onclick = () => openModal(m.id, finalType);
                 let badgeText = m.m_type === 'tv' ? 'Series' : (m.m_type === 'short' ? 'Short' : 'Film');
                 card.innerHTML = `<div class="badge-rating"><i class="fa-solid fa-star text-[6px]"></i> ${m.vote_average?.toFixed(1) || '0.0'}</div><div class="badge-type">${badgeText}</div><img src="https://image.tmdb.org/t/p/w342${m.poster_path}" onload="this.parentElement.classList.remove('skeleton')">`;
                 grid.appendChild(card);
@@ -224,9 +224,7 @@
             document.body.style.overflow = 'hidden';
             window.currentMediaId = id;
             window.currentMediaType = type;
-            
             const actualType = (type === 'short' || type === 'movie') ? 'movie' : 'tv';
-
             try {
                 const [resId, resEn] = await Promise.all([
                     fetch(`https://api.themoviedb.org/3/${actualType}/${id}?api_key=${API_KEY}&language=id-ID&append_to_response=videos,credits`),
@@ -237,24 +235,17 @@
                 document.getElementById('mTagline').innerText = d.tagline || dEn.tagline || "";
                 document.getElementById('mMeta').innerText = `${(d.release_date||d.first_air_date||'').split('-')[0]} // ${type.toUpperCase()}`;
                 document.getElementById('mDesc').innerText = d.overview || dEn.overview || "Sinopsis tidak tersedia.";
-                
                 const allVideos = [...(d.videos?.results || []), ...(dEn.videos?.results || [])];
                 const trailer = allVideos.find(v => v.site === 'YouTube' && (v.type === 'Trailer' || v.type === 'Teaser'));
                 
-                if(type === 'short') {
-                    document.getElementById('videoPlayer').src = `https://vidrock.net/embed/movie/${id}`;
-                } else if(type === 'movie') {
-                    document.getElementById('videoPlayer').src = trailer ? `https://www.youtube.com/embed/${trailer.key}?autoplay=1&mute=0&rel=0` : `https://vidrock.net/embed/movie/${id}`;
-                }
-
+                if(type === 'short') document.getElementById('videoPlayer').src = `https://vidrock.net/embed/movie/${id}`;
+                else if(type === 'movie') document.getElementById('videoPlayer').src = trailer ? `https://www.youtube.com/embed/${trailer.key}?autoplay=1&mute=0&rel=0` : `https://vidrock.net/embed/movie/${id}`;
+                
                 document.getElementById('mCast').innerHTML = (d.credits?.cast || []).slice(0, 10).map(c => `
                     <div class="flex-shrink-0 w-[70px] text-center cursor-pointer" onclick="filterByActor('${c.id}')">
-                        <div class="story-border"><div class="story-inner">
-                            <img src="${c.profile_path ? 'https://image.tmdb.org/t/p/w185'+c.profile_path : 'https://via.placeholder.com/100'}" class="story-img">
-                        </div></div>
+                        <div class="story-border"><div class="story-inner"><img src="${c.profile_path ? 'https://image.tmdb.org/t/p/w185'+c.profile_path : 'https://via.placeholder.com/100'}" class="story-img"></div></div>
                         <p class="text-[8px] text-zinc-400 truncate mt-2 font-medium">${c.name.split(' ')[0]}</p>
-                    </div>
-                `).join('');
+                    </div>`).join('');
 
                 if(type === 'tv') {
                     document.getElementById('seriesControl').classList.remove('hidden');
@@ -264,18 +255,13 @@
                 } else {
                     document.getElementById('seriesControl').classList.add('hidden');
                     document.getElementById('btnDownloadMain').classList.remove('hidden');
-                    document.getElementById('serverList').innerHTML = `
-                        <button class="server-btn bg-zinc-950 text-zinc-400" onclick="document.getElementById('videoPlayer').src='https://vidrock.net/embed/movie/${id}'">Server 1</button>
-                        <button class="server-btn bg-zinc-950 text-zinc-400" onclick="document.getElementById('videoPlayer').src='https://vidstorm.ru/embed/movie/${id}'">Server 2</button>
-                    `;
+                    document.getElementById('serverList').innerHTML = `<button class="server-btn bg-zinc-950 text-zinc-400" onclick="document.getElementById('videoPlayer').src='https://vidrock.net/embed/movie/${id}'">Server 1</button><button class="server-btn bg-zinc-950 text-zinc-400" onclick="document.getElementById('videoPlayer').src='https://vidstorm.ru/embed/movie/${id}'">Server 2</button>`;
                     document.getElementById('btnDownloadMain').onclick = () => window.open(`https://dl.vidsrc.vip/movie/${id}`, '_blank');
                 }
-
                 const mData = {id: d.id, poster_path: d.poster_path, m_type: type, vote_average: d.vote_average};
                 document.getElementById('btnLikeModal').onclick = () => toggleItem('likes', mData);
                 document.getElementById('btnBookModal').onclick = () => toggleItem('bookmarks', mData);
                 updateModalButtons(d.id);
-
             } catch(e) { console.error(e); }
         }
 
@@ -284,20 +270,31 @@
             const id = window.currentMediaId;
             const res = await fetch(`https://api.themoviedb.org/3/tv/${id}/season/${s}?api_key=${API_KEY}`);
             const d = await res.json();
-            document.getElementById('episodeSel').innerHTML = (d.episodes||[]).map(e => `<option value="${e.episode_number}">EPISODE ${e.episode_number}</option>`).join('');
-            document.getElementById('downloadGrid').innerHTML = (d.episodes||[]).map(e => `
-                <div class="dl-item" onclick="window.open('https://dl.vidsrc.vip/tv/${id}/${s}/${e.episode_number}', '_blank')">
+            
+            // Render Grid untuk Streaming & Download
+            document.getElementById('episodeGrid').innerHTML = (d.episodes||[]).map(e => `
+                <div class="ep-box" id="ep-${e.episode_number}" onclick="playSeriesEp(${s}, ${e.episode_number})">
                     ${e.episode_number}
                 </div>
             `).join('');
-            playEpisode();
+            
+            // Putar episode pertama secara otomatis
+            if(d.episodes && d.episodes.length > 0) playSeriesEp(s, d.episodes[0].episode_number);
         }
 
-        function playEpisode() {
-            const s = document.getElementById('seasonSel').value;
-            const e = document.getElementById('episodeSel').value;
+        function playSeriesEp(s, e) {
             const id = window.currentMediaId;
+            // Update Iframe
             document.getElementById('videoPlayer').src = `https://vidrock.net/embed/tv/${id}/${s}/${e}`;
+            // Highlight Box Aktif
+            document.querySelectorAll('.ep-box').forEach(b => b.classList.remove('active'));
+            document.getElementById(`ep-${e}`).classList.add('active');
+            // Update Link Download
+            const dlBtn = document.getElementById('dlSeriesBtn');
+            dlBtn.classList.remove('hidden');
+            dlBtn.href = `https://dl.vidsrc.vip/tv/${id}/${s}/${e}`;
+            document.getElementById('dlEpNum').innerText = e;
+            // Update Server Buttons
             document.getElementById('serverList').innerHTML = `
                 <button class="server-btn bg-zinc-950 text-zinc-400" onclick="document.getElementById('videoPlayer').src='https://vidrock.net/embed/tv/${id}/${s}/${e}'">Server 1</button>
                 <button class="server-btn bg-zinc-950 text-zinc-400" onclick="document.getElementById('videoPlayer').src='https://vidstorm.ru/embed/tv/${id}/${s}/${e}'">Server 2</button>
@@ -326,7 +323,7 @@
         }
         function showLibrary(key) {
             const items = getStore(key); const grid = document.getElementById('feedGrid'); grid.innerHTML = '';
-            if (items.length === 0) grid.innerHTML = `<div class="col-span-3 text-center py-20 text-zinc-500 text-xs">Kosong</div>`;
+            if (items.length === 0) grid.innerHTML = `<div class="col-span-3 text-center py-20 text-zinc-500 text-xs">Daftar ${key} kosong</div>`;
             else renderFeed(items); window.scrollTo({top:0, behavior:'smooth'});
         }
         function showUserProfil() { alert("Amnesfubbia XX1\nWebsite streaming khusus film Indonesia."); }
