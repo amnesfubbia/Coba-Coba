@@ -8,253 +8,128 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@1,700&family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #000; color: #fff; font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; }
+        body { background-color: #000; color: #fff; font-family: 'Inter', sans-serif; margin: 0; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         
-        /* Header & Menu System */
+        /* Header Fix */
         .fixed-header-section { position: fixed; top: 0; width: 100%; z-index: 100; background: #000; border-bottom: 1px solid #1c1c1c; }
         .ig-header { padding: 12px 15px 5px 15px; }
         .ig-logo { font-family: 'DM Sans', sans-serif; font-weight: 700; font-style: italic; font-size: 24px; letter-spacing: -0.8px; text-transform: lowercase; }
         .verified-icon { font-size: 13px; color: #0095f6; margin-left: 5px; }
 
-        /* Multi-Row Menu Styling */
-        .menu-scroll-row { display: flex; gap: 8px; overflow-x: auto; padding: 5px 15px; scrollbar-width: none; }
+        /* Row Menu */
+        .menu-scroll-row { display: flex; gap: 8px; overflow-x: auto; padding: 6px 15px; scrollbar-width: none; align-items: center; }
         .menu-pill { 
             background: transparent; border: 1px solid #1c1c1c; color: #fff; 
-            padding: 7px 16px; border-radius: 8px; font-size: 10px; font-weight: 800; 
+            padding: 8px 16px; border-radius: 8px; font-size: 10px; font-weight: 800; 
             text-transform: uppercase; white-space: nowrap; transition: 0.2s; 
         }
         .menu-pill.active { border-color: #fff; background: #fff; color: #000; }
-        .menu-pill i { margin-right: 5px; }
+        
+        /* Filter Lanjutan Animation */
+        #advancedFilter { 
+            max-height: 0; 
+            overflow: hidden; 
+            transition: max-height 0.3s ease-out; 
+            background: #050505;
+        }
+        #advancedFilter.open { max-height: 200px; border-top: 1px solid #1c1c1c; padding-bottom: 10px; }
 
-        /* Grid System */
-        .movie-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; padding-top: 310px; padding-bottom: 100px; }
+        /* Filter Toggle Button */
+        .filter-toggle {
+            background: #121212; border: 1px solid #1c1c1c; color: #fff;
+            padding: 8px 12px; border-radius: 8px; font-size: 10px; font-weight: 800;
+            display: flex; align-items: center; gap: 5px; margin-left: auto;
+        }
+
+        /* Grid */
+        .movie-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; padding-top: 200px; padding-bottom: 100px; transition: padding 0.3s; }
+        .movie-grid.expanded { padding-top: 340px; } /* Menyesuaikan jarak saat filter terbuka */
+        
         .post-card { position: relative; aspect-ratio: 2/3; background: #0a0a0a; overflow: hidden; }
         .post-card img { width: 100%; height: 100%; object-fit: cover; }
-        
-        .badge-type { position: absolute; top: 8px; right: 8px; font-size: 13px; color: #fff; z-index: 5; text-shadow: 0 0 4px rgba(0,0,0,0.8); }
-        .badge-rating { position: absolute; top: 6px; left: 6px; padding: 2px 5px; border-radius: 2px; font-size: 7px; font-weight: 900; z-index: 5; background: rgba(255,255,255,0.9); color: #000; }
-
-        /* Nav Bottom */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #000; border-top: 1px solid #1c1c1c; display: flex; justify-content: space-around; padding: 12px 0; z-index: 300; padding-bottom: calc(12px + env(safe-area-inset-bottom)); }
-        
-        /* Modal & Player */
-        .modal-player { display: none; position: fixed; inset: 0; z-index: 200; background: #000; overflow-y: auto; }
-        .year-dropdown { display: none; position: fixed; top: 180px; left: 15px; width: 120px; max-height: 250px; background: #121212; border: 1px solid #1c1c1c; border-radius: 12px; z-index: 101; overflow-y: auto; }
-        .year-item { padding: 12px; font-size: 11px; font-weight: 600; text-align: center; border-bottom: 1px solid #1c1c1c; }
-        
-        .skeleton { background: linear-gradient(90deg, #0a0a0a 25%, #1a1a1a 50%, #0a0a0a 75%); background-size: 200% 100%; animation: skeleton-loading 1.5s infinite; }
-        @keyframes skeleton-loading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
     </style>
 </head>
 <body>
-
-    <div id="loader" style="position:fixed; top:0; left:0; height:1.5px; background:#fff; width:0%; transition:width 0.3s; z-index:1000;"></div>
 
     <div class="fixed-header-section">
         <header class="ig-header">
             <div class="flex justify-between items-center">
                 <div class="flex items-center">
-                    <h1 class="ig-logo" onclick="location.reload()">amnesfubbia</h1>
+                    <h1 class="ig-logo">amnesfubbia</h1>
                     <i class="fa-solid fa-circle-check verified-icon"></i>
                 </div>
                 <div class="flex gap-5 text-xl">
-                    <i class="fa-regular fa-heart" onclick="showLibrary('likes')"></i>
-                    <i class="fa-solid fa-magnifying-glass" onclick="document.getElementById('searchInp').focus()"></i>
-                </div>
-            </div>
-            <div class="mt-2 mb-2">
-                <div class="bg-zinc-900/50 rounded-lg flex items-center px-3 py-2 border border-zinc-800">
-                    <input type="text" id="searchInp" class="bg-transparent border-none text-white text-xs w-full outline-none" placeholder="Cari judul film dunia..." onkeydown="if(event.key==='Enter') searchAction()">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <i class="fa-regular fa-heart"></i>
                 </div>
             </div>
         </header>
 
         <div class="menu-scroll-row no-scrollbar">
-            <button class="menu-pill active" onclick="setFilter('type', 'multi', this)">Semua</button>
-            <button class="menu-pill" onclick="setFilter('type', 'movie', this)">Film</button>
-            <button class="menu-pill" onclick="setFilter('type', 'tv', this)">Series</button>
-            <button class="menu-pill" onclick="setFilter('type', 'short', this)">Short</button>
-        </div>
-
-        <div class="menu-scroll-row no-scrollbar">
-            <button class="menu-pill" onclick="setFilter('genre', '28', this)">Aksi</button>
-            <button class="menu-pill" onclick="setFilter('genre', '27', this)">Horor</button>
-            <button class="menu-pill" onclick="setFilter('genre', '35', this)">Komedi</button>
-            <button class="menu-pill" onclick="setFilter('genre', '10749', this)">Romantis</button>
-            <button class="menu-pill" onclick="setFilter('genre', '16', this)">Animasi</button>
-            <button class="menu-pill" onclick="setFilter('genre', '878', this)">Sci-Fi</button>
-            <button class="menu-pill" onclick="setFilter('genre', '9648', this)">Misteri</button>
-        </div>
-
-        <div class="menu-scroll-row no-scrollbar">
-            <button class="menu-pill" onclick="toggleYearDropdown()"><i class="fa-solid fa-calendar"></i> <span id="yearVal">Tahun</span></button>
-            <button class="menu-pill" onclick="setFilter('country', 'US', this)">USA</button>
-            <button class="menu-pill" onclick="setFilter('country', 'KR', this)">Korea</button>
-            <button class="menu-pill" onclick="setFilter('country', 'JP', this)">Jepang</button>
-            <button class="menu-pill" onclick="setFilter('country', 'ID', this)">Indonesia</button>
-            <button class="menu-pill" onclick="setFilter('country', 'IN', this)">India</button>
-        </div>
-
-        <div class="menu-scroll-row no-scrollbar">
-            <button class="menu-pill" onclick="setSort('primary_release_date.desc', this)">Terupdate</button>
-            <button class="menu-pill" onclick="setSort('popularity.desc', this)">Terpopuler</button>
-            <button class="menu-pill" onclick="setSort('vote_average.desc', this)">Rating Tertinggi</button>
-        </div>
-
-        <div class="menu-scroll-row no-scrollbar pb-2">
-            <button class="menu-pill border-yellow-600 text-yellow-500" onclick="setFilter('event', 'now_playing', this)">
-                <i class="fa-solid fa-ticket"></i> Jadwal Bioskop Indonesia
+            <button class="menu-pill active">Semua</button>
+            <button class="menu-pill">Film</button>
+            <button class="menu-pill">Series</button>
+            <button class="menu-pill">Short</button>
+            <button class="filter-toggle" onclick="toggleFilter()">
+                <i class="fa-solid fa-sliders"></i> Filter
             </button>
         </div>
-    </div>
 
-    <div id="yearDropdown" class="year-dropdown no-scrollbar"></div>
-    <main id="feedGrid" class="movie-grid"></main>
+        <div class="menu-scroll-row no-scrollbar">
+            <button class="menu-pill">Aksi</button>
+            <button class="menu-pill">Horor</button>
+            <button class="menu-pill">Komedi</button>
+            <button class="menu-pill">Romantis</button>
+            <button class="menu-pill">Anime</button>
+        </div>
 
-    <nav class="bottom-nav">
-        <div class="nav-item" onclick="location.reload()"><i class="fa-solid fa-house"></i></div>
-        <div class="nav-item" onclick="showLibrary('bookmarks')"><i class="fa-regular fa-bookmark"></i></div>
-        <div class="nav-item" onclick="alert('amnesfubbia v2.0')"><i class="fa-regular fa-user"></i></div>
-    </nav>
-
-    <div id="movieModal" class="modal-player">
-        <div class="max-w-xl mx-auto pb-40">
-            <div class="px-4 h-[54px] flex items-center border-b border-zinc-900 sticky top-0 bg-black z-50">
-                <i class="fa-solid fa-chevron-left text-xl" onclick="closeModal()"></i>
-                <div class="flex-grow text-center"><h2 id="mTitle" class="truncate px-10"></h2></div>
+        <div id="advancedFilter">
+            <div class="menu-scroll-row no-scrollbar mt-2">
+                <button class="menu-pill"><i class="fa-solid fa-calendar"></i> Tahun</button>
+                <button class="menu-pill">USA</button>
+                <button class="menu-pill">Korea</button>
+                <button class="menu-pill">Jepang</button>
+                <button class="menu-pill">Indonesia</button>
             </div>
-            <div class="aspect-video bg-zinc-900 w-full">
-                <iframe id="videoPlayer" class="w-full h-full" allowfullscreen></iframe>
+            <div class="menu-scroll-row no-scrollbar">
+                <button class="menu-pill">Terupdate</button>
+                <button class="menu-pill">Populer</button>
+                <button class="menu-pill">Rating</button>
             </div>
-            <div class="p-4">
-                <h3 id="mTitleAlt" class="font-bold text-lg"></h3>
-                <p id="mDesc" class="text-sm text-zinc-400 mt-2"></p>
-                <div id="serverList" class="grid grid-cols-2 gap-2 mt-6"></div>
+            <div class="menu-scroll-row no-scrollbar">
+                <button class="menu-pill border-yellow-600 text-yellow-500">
+                    <i class="fa-solid fa-ticket"></i> Jadwal Bioskop Indonesia
+                </button>
             </div>
         </div>
     </div>
 
+    <main id="feedGrid" class="movie-grid">
+        <div class="post-card"><img src="https://via.placeholder.com/300x450/111/fff?text=Poster+1"></div>
+        <div class="post-card"><img src="https://via.placeholder.com/300x450/111/fff?text=Poster+2"></div>
+        <div class="post-card"><img src="https://via.placeholder.com/300x450/111/fff?text=Poster+3"></div>
+        <div class="post-card"><img src="https://via.placeholder.com/300x450/111/fff?text=Poster+4"></div>
+        <div class="post-card"><img src="https://via.placeholder.com/300x450/111/fff?text=Poster+5"></div>
+        <div class="post-card"><img src="https://via.placeholder.com/300x450/111/fff?text=Poster+6"></div>
+    </main>
+
     <script>
-        const API_KEY = 'bfa7df5310c9974f62f26c6789a8c00d';
-        let page = 1, currentType = 'multi', currentGenre = '', currentYear = '', currentSort = 'popularity.desc', currentCountry = '', currentEvent = '', searchQuery = '';
-        let loading = false;
-
-        window.onload = () => { initYearDropdown(); loadFeed(); };
-
-        function initYearDropdown() {
-            let html = '<div class="year-item" onclick="setYear(\'\')">SEMUA</div>';
-            for(let y = 2026; y >= 1970; y--) html += `<div class="year-item" onclick="setYear(${y})">${y}</div>`;
-            document.getElementById('yearDropdown').innerHTML = html;
-        }
-
-        function toggleYearDropdown() { 
-            const d = document.getElementById('yearDropdown');
-            d.style.display = (d.style.display === 'block') ? 'none' : 'block';
-        }
-
-        function setYear(y) {
-            currentYear = y;
-            document.getElementById('yearVal').innerText = y || 'Tahun';
-            toggleYearDropdown();
-            loadFeed(true);
-        }
-
-        async function loadFeed(isNew = true) {
-            if (loading) return; loading = true;
-            if (isNew) { page = 1; document.getElementById('feedGrid').innerHTML = Array(12).fill('<div class="post-card skeleton"></div>').join(''); }
-            
-            try {
-                let url = '';
-                const base = `https://api.themoviedb.org/3`;
-                const params = `&api_key=${API_KEY}&language=id-ID&page=${page}&include_adult=false`;
-                
-                if (searchQuery) {
-                    url = `${base}/search/multi?query=${searchQuery}${params}`;
-                } else if (currentEvent === 'now_playing') {
-                    url = `${base}/movie/now_playing?region=ID${params}`;
-                } else {
-                    const type = currentType === 'multi' ? 'movie' : currentType;
-                    const yearFilter = currentType === 'tv' ? `&first_air_date_year=${currentYear}` : `&primary_release_year=${currentYear}`;
-                    url = `${base}/discover/${type}?sort_by=${currentSort}&with_genres=${currentGenre}&with_origin_country=${currentCountry}${yearFilter}${params}`;
-                }
-
-                const res = await fetch(url);
-                const data = await res.json();
-                if (isNew) document.getElementById('feedGrid').innerHTML = '';
-                renderFeed(data.results || []);
-            } catch (e) { console.error(e); }
-            loading = false;
-        }
-
-        function renderFeed(data) {
+        function toggleFilter() {
+            const filterDiv = document.getElementById('advancedFilter');
             const grid = document.getElementById('feedGrid');
-            data.forEach(m => {
-                if (!m.poster_path) return;
-                const card = document.createElement('div');
-                card.className = 'post-card';
-                card.onclick = () => openModal(m.id, m.media_type || (currentType === 'multi' ? 'movie' : currentType));
-                card.innerHTML = `
-                    <div class="badge-rating">${m.vote_average?.toFixed(1)}</div>
-                    <div class="badge-type">${m.media_type === 'tv' ? '<i class="fa-solid fa-clone"></i>' : '<i class="fa-solid fa-play"></i>'}</div>
-                    <img src="https://image.tmdb.org/t/p/w342${m.poster_path}">
-                `;
-                grid.appendChild(card);
-            });
-        }
-
-        function setFilter(type, val, el) {
-            // Reset others if needed
-            if(type === 'type') { currentType = val; currentEvent = ''; searchQuery = ''; }
-            if(type === 'genre') { currentGenre = val; currentEvent = ''; }
-            if(type === 'country') { currentCountry = val; currentEvent = ''; }
-            if(type === 'event') { currentEvent = val; searchQuery = ''; }
-
-            // UI Highlight
-            el.parentElement.querySelectorAll('.menu-pill').forEach(b => b.classList.remove('active'));
-            el.classList.add('active');
-            loadFeed(true);
-        }
-
-        function setSort(val, el) {
-            currentSort = val;
-            el.parentElement.querySelectorAll('.menu-pill').forEach(b => b.classList.remove('active'));
-            el.classList.add('active');
-            loadFeed(true);
-        }
-
-        function searchAction() {
-            searchQuery = document.getElementById('searchInp').value;
-            loadFeed(true);
-        }
-
-        async function openModal(id, type) {
-            const modal = document.getElementById('movieModal');
-            modal.style.display = 'block';
-            document.getElementById('videoPlayer').src = type === 'tv' ? `https://vidrock.net/embed/tv/${id}/1/1` : `https://vidrock.net/embed/movie/${id}`;
-            const res = await fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&language=id-ID`);
-            const d = await res.json();
-            document.getElementById('mTitle').innerText = d.title || d.name;
-            document.getElementById('mTitleAlt').innerText = d.title || d.name;
-            document.getElementById('mDesc').innerText = d.overview || "Sinopsis tidak tersedia.";
             
-            document.getElementById('serverList').innerHTML = `
-                <button class="server-btn bg-zinc-900 border border-zinc-800 py-3 rounded-lg text-xs" onclick="document.getElementById('videoPlayer').src='https://vidrock.net/embed/${type}/${id}'">SERVER 1</button>
-                <button class="server-btn bg-zinc-900 border border-zinc-800 py-3 rounded-lg text-xs" onclick="document.getElementById('videoPlayer').src='https://vidstorm.ru/embed/${type}/${id}'">SERVER 2</button>
-            `;
-        }
-
-        function closeModal() {
-            document.getElementById('movieModal').style.display = 'none';
-            document.getElementById('videoPlayer').src = '';
-        }
-
-        window.onscroll = () => {
-            if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 1000 && !loading) {
-                page++;
-                loadFeed(false);
+            filterDiv.classList.toggle('open');
+            grid.classList.toggle('expanded');
+            
+            // Mengubah ikon tombol filter
+            const icon = document.querySelector('.filter-toggle i');
+            if (filterDiv.classList.contains('open')) {
+                icon.className = 'fa-solid fa-xmark';
+            } else {
+                icon.className = 'fa-solid fa-sliders';
             }
-        };
+        }
     </script>
 </body>
 </html>
