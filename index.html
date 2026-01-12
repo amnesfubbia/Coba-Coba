@@ -13,7 +13,37 @@
         .fixed-header-section { position: fixed; top: 0; width: 100%; z-index: 100; background: #000; border-bottom: 1px solid #1c1c1c; }
         .ig-header { padding: 12px 15px 5px 15px; }
         .search-container { background: #0a0a0a; border-radius: 8px; display: flex; align-items: center; padding: 7px 12px; flex-grow: 1; border: 1px solid #1c1c1c; }
-        .search-container input { background: transparent; border: none; color: white; font-size: 13px; width: 100%; outline: none; margin-left: 8px; }
+        
+        /* PERBAIKAN FINAL: Mematikan paksa warna latar belakang auto-fill & highlight */
+        .search-container input { 
+            background: transparent !important; 
+            border: none !important; 
+            color: white !important; 
+            font-size: 13px; 
+            width: 100%; 
+            outline: none !important; 
+            box-shadow: none !important;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            -webkit-tap-highlight-color: transparent !important;
+            margin-left: 8px; 
+        }
+
+        /* Menghilangkan background putih saat auto-fill (Google Chrome) */
+        .search-container input:-webkit-autofill,
+        .search-container input:-webkit-autofill:hover, 
+        .search-container input:-webkit-autofill:focus {
+            -webkit-text-fill-color: white !important;
+            -webkit-box-shadow: 0 0 0px 1000px #0a0a0a inset !important;
+            transition: background-color 5000s ease-in-out 0s;
+        }
+
+        .search-container input:focus {
+            background: transparent !important;
+            outline: none !important;
+        }
+
         .year-selector { background: #0a0a0a; border: 1px solid #1c1c1c; border-radius: 8px; padding: 8px 12px; font-size: 9px; font-weight: 800; color: #fff; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; gap: 5px; }
         .year-dropdown { display: none; position: fixed; top: 110px; right: 15px; width: 120px; max-height: 300px; background: #121212; border: 1px solid #1c1c1c; border-radius: 12px; z-index: 101; overflow-y: auto; }
         .year-item { padding: 12px; font-size: 11px; font-weight: 600; text-align: center; border-bottom: 1px solid #1c1c1c; color: #888; cursor: pointer; }
@@ -62,7 +92,10 @@
                 <div class="flex gap-6 text-lg"><i class="fa-regular fa-square-plus cursor-pointer" onclick="document.getElementById('searchInp').focus()"></i><i class="fa-regular fa-heart cursor-pointer" onclick="showLibrary('likes')"></i></div>
             </div>
             <div class="search-area flex items-center gap-2 mt-2">
-                <div class="search-container"><i class="fa-solid fa-magnifying-glass text-zinc-600 text-[10px]"></i><input type="text" id="searchInp" placeholder="Cari sinema Indonesia..." onkeydown="if(event.key==='Enter') searchAction()"></div>
+                <div class="search-container">
+                    <i class="fa-solid fa-magnifying-glass text-zinc-600 text-[10px]"></i>
+                    <input type="text" id="searchInp" placeholder="Cari sinema Indonesia..." onkeydown="if(event.key==='Enter') searchAction()" autocomplete="off">
+                </div>
                 <div class="year-selector" onclick="toggleYearDropdown()"><span id="yearVal">TAHUN</span> <i class="fa-solid fa-chevron-down text-[7px]"></i></div>
             </div>
         </header>
@@ -241,11 +274,13 @@
                 if(type === 'tv') {
                     document.getElementById('seriesControl').classList.remove('hidden');
                     document.getElementById('btnDownloadMain').classList.add('hidden');
+                    document.getElementById('serverList').classList.add('hidden'); 
                     document.getElementById('seasonSel').innerHTML = (d.seasons || []).filter(s=>s.season_number > 0).map(s=>`<option value="${s.season_number}">SEASON ${s.season_number}</option>`).join('');
                     loadEpisodes();
                 } else {
                     document.getElementById('seriesControl').classList.add('hidden');
                     document.getElementById('btnDownloadMain').classList.remove('hidden');
+                    document.getElementById('serverList').classList.remove('hidden'); 
                     document.getElementById('serverList').innerHTML = `<button class="server-btn bg-zinc-950 text-zinc-400" onclick="document.getElementById('videoPlayer').src='https://vidrock.net/embed/movie/${id}'">Server 1</button><button class="server-btn bg-zinc-950 text-zinc-400" onclick="document.getElementById('videoPlayer').src='https://vidstorm.ru/embed/movie/${id}'">Server 2</button>`;
                     document.getElementById('btnDownloadMain').onclick = () => window.open(`https://dl.vidsrc.vip/movie/${id}`, '_blank');
                 }
@@ -271,7 +306,7 @@
             if(document.getElementById(`ep-${e}`)) document.getElementById(`ep-${e}`).classList.add('active');
             const dlBtn = document.getElementById('dlSeriesBtn'); dlBtn.classList.remove('hidden');
             dlBtn.href = `https://dl.vidsrc.vip/tv/${id}/${s}/${e}`; document.getElementById('dlEpNum').innerText = e;
-            document.getElementById('serverList').innerHTML = `<button class="server-btn bg-zinc-950 text-zinc-400" onclick="document.getElementById('videoPlayer').src='https://vidrock.net/embed/tv/${id}/${s}/${e}'">Server 1</button><button class="server-btn bg-zinc-950 text-zinc-400" onclick="document.getElementById('videoPlayer').src='https://vidstorm.ru/embed/tv/${id}/${s}/${e}'">Server 2</button>`;
+            document.getElementById('serverList').innerHTML = ""; 
         }
 
         function closeModal() { document.getElementById('movieModal').style.display = 'none'; document.getElementById('videoPlayer').src = ''; document.body.style.overflow = 'auto'; }
@@ -295,9 +330,7 @@
             if (idx > -1) items.splice(idx, 1); else items.push(movie);
             saveStore(key, items); updateModalButtons(movie.id);
         }
-        
         function showLibrary(key) {
-            // PERBAIKAN: Bersihkan grid secara total dan set status library mode
             isLibraryMode = true; 
             const grid = document.getElementById('feedGrid');
             grid.innerHTML = ''; 
@@ -308,7 +341,6 @@
                 renderFeed(items);
             }
             window.scrollTo({top:0, behavior:'smooth'});
-            // Nonaktifkan highlight kategori saat di mode library
             document.querySelectorAll('.pill, .highlight-item').forEach(p => p.classList.remove('active'));
         }
         function showUserProfil() { alert("Amnesfubbia XX1\nWebsite streaming khusus film Indonesia."); }
