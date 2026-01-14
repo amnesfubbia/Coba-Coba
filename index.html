@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>amnesfubbia xx1 - Global Animation</title>
+    <title>amnesfubbia xx1 - Animation Global</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@1,700&family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
@@ -13,32 +13,34 @@
         .fixed-header-section { position: fixed; top: 0; width: 100%; z-index: 100; background: #000; border-bottom: 1px solid #1c1c1c; }
         .ig-header { padding: 12px 15px 5px 15px; }
         .ig-logo { font-family: 'DM Sans', sans-serif; font-weight: 700; font-style: italic; font-size: 24px; letter-spacing: -0.8px; text-transform: lowercase; }
-        .search-container { background: #0a0a0a; border-radius: 8px; display: flex; align-items: center; padding: 7px 12px; flex-grow: 1; border: 1px solid #1c1c1c; }
-        .search-container input { background: transparent; border: none; color: white; font-size: 13px; width: 100%; outline: none; margin-left: 8px; }
-        .year-selector { background: #0a0a0a; border: 1px solid #1c1c1c; border-radius: 8px; padding: 8px 12px; font-size: 9px; font-weight: 800; color: #fff; cursor: pointer; display: flex; align-items: center; gap: 5px; }
-        .year-dropdown { display: none; position: fixed; top: 110px; right: 15px; width: 120px; max-height: 300px; background: #121212; border: 1px solid #1c1c1c; border-radius: 12px; z-index: 101; overflow-y: auto; }
-        .year-item { padding: 12px; font-size: 11px; text-align: center; border-bottom: 1px solid #1c1c1c; cursor: pointer; color: #888; }
         
-        /* HIGHLIGHT STUDIO REMAKE BLACK & WHITE */
+        /* SEARCH & YEAR */
+        .search-container { background: #0a0a0a; border-radius: 8px; display: flex; align-items: center; padding: 7px 12px; flex-grow: 1; border: 1px solid #1c1c1c; }
+        .year-selector { background: #0a0a0a; border: 1px solid #1c1c1c; border-radius: 8px; padding: 8px 12px; font-size: 9px; font-weight: 800; cursor: pointer; color: #fff; }
+        .year-dropdown { display: none; position: fixed; top: 110px; right: 15px; width: 120px; max-height: 300px; background: #121212; border: 1px solid #1c1c1c; border-radius: 12px; z-index: 101; overflow-y: auto; }
+        .year-item { padding: 12px; font-size: 11px; text-align: center; border-bottom: 1px solid #1c1c1c; color: #888; cursor: pointer; }
+
+        /* HIGHLIGHT STUDIO - HITAM PUTIH (GRAYSCALE) */
         .highlights-section { padding: 15px 0; border-bottom: 1px solid #1c1c1c; background: #000; }
         .highlights-container { display: flex; gap: 15px; overflow-x: auto; padding: 0 15px; }
         .highlight-item { flex: 0 0 65px; text-align: center; cursor: pointer; }
-        .circle-icon { width: 62px; height: 62px; border-radius: 50%; background: #000; border: 1.5px solid #1c1c1c; display: flex; align-items: center; justify-content: center; margin-bottom: 6px; overflow: hidden; }
-        .circle-icon img { width: 75%; filter: grayscale(100%) brightness(1.2); }
-        .highlight-label { font-size: 8px; color: #555; font-weight: 800; text-transform: uppercase; }
+        .circle-icon { width: 64px; height: 64px; border-radius: 50%; background: #000; border: 1.5px solid #1c1c1c; display: flex; align-items: center; justify-content: center; margin-bottom: 6px; overflow: hidden; }
+        /* Kunci: Grayscale 100% untuk efek Hitam Putih asli */
+        .circle-icon img { width: 75%; filter: grayscale(100%); opacity: 0.8; }
         .highlight-item.active .circle-icon { border-color: #fff; }
-        .highlight-item.active .highlight-label { color: #fff; }
+        .highlight-item.active img { filter: grayscale(0%); opacity: 1; }
+        .highlight-label { font-size: 8px; color: #555; font-weight: 800; text-transform: uppercase; }
 
-        .movie-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; padding-top: 275px; padding-bottom: 100px; }
-        .post-card { position: relative; aspect-ratio: 2/3; background: #0a0a0a; overflow: hidden; }
+        .movie-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; padding-top: 280px; padding-bottom: 100px; }
+        .post-card { aspect-ratio: 2/3; background: #0a0a0a; overflow: hidden; cursor: pointer; }
         .post-card img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* MODAL LENGKAP - TIDAK DIHAPUS */
+        /* MODAL PLAYER & INTERAKSI (PATOKAN ASLI) */
         .modal-player { display: none; position: fixed; inset: 0; z-index: 200; background: #000; overflow-y: auto; }
-        .server-btn { width: 100%; padding: 14px; border-radius: 12px; font-size: 10px; font-weight: 800; text-transform: uppercase; border: 1px solid #1c1c1c; text-align: center; cursor: pointer; margin-top: 8px; }
-        .interaction-icon { font-size: 24px; cursor: pointer; }
+        .interaction-icon { font-size: 22px; cursor: pointer; color: #fff; }
+        .server-btn { width: 100%; padding: 14px; border-radius: 12px; font-size: 10px; font-weight: 800; border: 1px solid #1c1c1c; text-align: center; cursor: pointer; margin-top: 8px; color: #fff; }
         .ep-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 10px; }
-        .ep-box { background: #111; border: 1px solid #1c1c1c; padding: 12px 0; text-align: center; border-radius: 8px; font-size: 10px; font-weight: 800; cursor: pointer; color: #555; }
+        .ep-box { background: #111; border: 1px solid #1c1c1c; padding: 12px 0; text-align: center; border-radius: 8px; font-size: 10px; font-weight: 800; color: #555; }
         .ep-box.active { border-color: #fff; color: #fff; }
 
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #000; border-top: 1px solid #1c1c1c; display: flex; justify-content: space-around; padding: 15px 0; z-index: 300; }
@@ -48,55 +50,30 @@
     <div class="fixed-header-section">
         <header class="ig-header">
             <div class="flex justify-between items-center px-1">
-                <h1 class="ig-logo" onclick="location.reload()">amnesfubbia <span class="text-white opacity-40 font-normal italic">xx1</span></h1>
+                <h1 class="ig-logo" onclick="location.reload()">amnesfubbia <span class="text-white opacity-40">xx1</span></h1>
                 <div class="flex gap-5 text-xl"><i class="fa-regular fa-square-plus"></i><i class="fa-regular fa-heart"></i></div>
             </div>
             <div class="flex items-center gap-2 mt-2 px-1">
-                <div class="search-container">
-                    <i class="fa-solid fa-magnifying-glass text-zinc-600 text-[10px]"></i>
-                    <input type="text" id="searchInp" placeholder="Cari animasi..." onkeydown="if(event.key==='Enter') searchAction()">
-                </div>
+                <div class="search-container"><input type="text" id="searchInp" placeholder="Cari animasi..." onkeydown="if(event.key==='Enter') searchAction()" class="bg-transparent w-full text-xs outline-none"></div>
                 <div class="year-selector" onclick="toggleYear()">TAHUN <i class="fa-solid fa-chevron-down text-[7px] ml-1"></i></div>
             </div>
         </header>
 
         <div class="flex gap-2 p-3 overflow-x-auto no-scrollbar">
-            <button class="pill-btn px-4 py-2 border border-zinc-800 rounded-lg text-[10px] font-extrabold uppercase bg-white text-black" onclick="setMode('multi', this)">Semua</button>
-            <button class="pill-btn px-4 py-2 border border-zinc-800 rounded-lg text-[10px] font-extrabold uppercase" onclick="setMode('movie', this)">Film</button>
-            <button class="pill-btn px-4 py-2 border border-zinc-800 rounded-lg text-[10px] font-extrabold uppercase" onclick="setMode('tv', this)">Series</button>
-            <button class="pill-btn px-4 py-2 border border-zinc-800 rounded-lg text-[10px] font-extrabold uppercase" onclick="setMode('short', this)">Short</button>
+            <button class="px-4 py-2 border border-zinc-800 rounded-lg text-[10px] font-bold uppercase" onclick="setMode('multi')">Semua</button>
+            <button class="px-4 py-2 border border-zinc-800 rounded-lg text-[10px] font-bold uppercase" onclick="setMode('movie')">Film</button>
+            <button class="px-4 py-2 border border-zinc-800 rounded-lg text-[10px] font-bold uppercase" onclick="setMode('tv')">Series</button>
+            <button class="px-4 py-2 border border-zinc-800 rounded-lg text-[10px] font-bold uppercase" onclick="setMode('short')">Short</button>
         </div>
 
         <div class="highlights-section">
             <div class="highlights-container no-scrollbar">
-                <div class="highlight-item active" onclick="setStudio('', this)">
-                    <div class="circle-icon"><i class="fa-solid fa-globe"></i></div>
-                    <p class="highlight-label">Semua</p>
-                </div>
-                <div class="highlight-item" onclick="setStudio('6125', this)">
-                    <div class="circle-icon"><img src="https://upload.wikimedia.org/wikipedia/commons/3/3a/Walt_Disney_Pictures_logo.svg"></div>
-                    <p class="highlight-label">Disney</p>
-                </div>
-                <div class="highlight-item" onclick="setStudio('3', this)">
-                    <div class="circle-icon"><img src="https://upload.wikimedia.org/wikipedia/commons/0/0b/Pixar_Logo.svg"></div>
-                    <p class="highlight-label">Pixar</p>
-                </div>
-                <div class="highlight-item" onclick="setStudio('521', this)">
-                    <div class="circle-icon"><img src="https://upload.wikimedia.org/wikipedia/en/2/22/DreamWorks_Animation_logo.svg"></div>
-                    <p class="highlight-label">Dreamworks</p>
-                </div>
-                <div class="highlight-item" onclick="setStudio('10342', this)">
-                    <div class="circle-icon"><img src="https://upload.wikimedia.org/wikipedia/commons/e/ed/Studio_Ghibli_logo.svg"></div>
-                    <p class="highlight-label">Ghibli</p>
-                </div>
-                <div class="highlight-item" onclick="setStudio('2251', this)">
-                    <div class="circle-icon"><img src="https://upload.wikimedia.org/wikipedia/commons/5/55/Sony_Pictures_Animation_logo.svg"></div>
-                    <p class="highlight-label">Sony</p>
-                </div>
-                <div class="highlight-item" onclick="setStudio('33', this)">
-                    <div class="circle-icon"><img src="https://upload.wikimedia.org/wikipedia/commons/3/31/Illumination_Entertainment_logo.svg"></div>
-                    <p class="highlight-label">Illumination</p>
-                </div>
+                <div class="highlight-item" onclick="setStudio('6125', this)"><div class="circle-icon"><img src="https://upload.wikimedia.org/wikipedia/commons/3/3a/Walt_Disney_Pictures_logo.svg"></div><p class="highlight-label">Disney</p></div>
+                <div class="highlight-item" onclick="setStudio('3', this)"><div class="circle-icon"><img src="https://upload.wikimedia.org/wikipedia/commons/0/0b/Pixar_Logo.svg"></div><p class="highlight-label">Pixar</p></div>
+                <div class="highlight-item" onclick="setStudio('521', this)"><div class="circle-icon"><img src="https://upload.wikimedia.org/wikipedia/en/2/22/DreamWorks_Animation_logo.svg"></div><p class="highlight-label">Dreamworks</p></div>
+                <div class="highlight-item" onclick="setStudio('10342', this)"><div class="circle-icon"><img src="https://upload.wikimedia.org/wikipedia/commons/e/ed/Studio_Ghibli_logo.svg"></div><p class="highlight-label">Ghibli</p></div>
+                <div class="highlight-item" onclick="setStudio('2251', this)"><div class="circle-icon"><img src="https://upload.wikimedia.org/wikipedia/commons/5/55/Sony_Pictures_Animation_logo.svg"></div><p class="highlight-label">Sony</p></div>
+                <div class="highlight-item" onclick="setStudio('33', this)"><div class="circle-icon"><img src="https://upload.wikimedia.org/wikipedia/commons/3/31/Illumination_Entertainment_logo.svg"></div><p class="highlight-label">Illumination</p></div>
             </div>
         </div>
     </div>
@@ -105,23 +82,23 @@
     <main id="feedGrid" class="movie-grid"></main>
 
     <div id="movieModal" class="modal-player">
-        <div class="sticky top-0 bg-black z-50 p-4 border-b border-zinc-900 flex items-center">
+        <div class="p-4 border-b border-zinc-900 sticky top-0 bg-black z-50 flex items-center">
             <i class="fa-solid fa-chevron-left text-xl mr-4" onclick="closeModal()"></i>
-            <h2 id="mTitle" class="font-bold truncate text-sm"></h2>
+            <h2 id="mTitle" class="truncate font-bold text-sm text-white"></h2>
         </div>
         <div class="aspect-video bg-zinc-900">
             <iframe id="videoPlayer" class="w-full h-full" allowfullscreen></iframe>
         </div>
         <div class="p-4">
-            <div class="flex justify-between items-center mb-5">
+            <div class="flex justify-between items-center mb-4">
                 <div class="flex gap-5">
                     <i id="btnLike" class="fa-regular fa-heart interaction-icon"></i>
-                    <i class="fa-solid fa-circle-play text-2xl" id="btnTrailer"></i>
+                    <i id="btnTrailer" class="fa-regular fa-circle-play interaction-icon"></i> <i class="fa-regular fa-paper-plane interaction-icon"></i>
                 </div>
                 <i id="btnSave" class="fa-regular fa-bookmark interaction-icon"></i>
             </div>
-            <p id="mDesc" class="text-xs text-zinc-500 mb-6 leading-relaxed"></p>
-            
+            <p id="mDesc" class="text-xs text-zinc-500 leading-relaxed mb-6"></p>
+
             <div id="seriesBox" class="hidden mb-6">
                 <div class="flex justify-between items-center mb-2">
                     <span class="text-[10px] font-bold text-zinc-600 uppercase">Pilih Episode</span>
@@ -134,7 +111,7 @@
                 <div class="server-btn" onclick="changeServer(1)">SERVER 1</div>
                 <div class="server-btn" onclick="changeServer(2)">SERVER 2</div>
             </div>
-            <button id="dlBtn" class="server-btn border-zinc-700 text-white w-full">DOWNLOAD FILM</button>
+            <button id="dlBtn" class="server-btn border-zinc-700 w-full mt-2">DOWNLOAD FILM</button>
         </div>
     </div>
 
@@ -147,13 +124,13 @@
 
     <script>
         const API_KEY = 'bfa7df5310c9974f62f26c6789a8c00d';
-        let page = 1, currentType = 'multi', currentStudio = '', currentYear = '', searchQuery = '', loading = false;
+        let page = 1, currentType = 'multi', currentStudio = '', currentYear = '', loading = false;
 
         window.onload = () => { initYear(); loadFeed(); };
 
         function initYear() {
             let h = '<div class="year-item" onclick="setYear(\'\')">SEMUA</div>';
-            for(let y=2026; y>=1970; y--) h += `<div class="year-item" onclick="setYear(${y})">${y}</div>`;
+            for(let y=2026; y>=1980; y--) h += `<div class="year-item" onclick="setYear(${y})">${y}</div>`;
             document.getElementById('yearDropdown').innerHTML = h;
         }
 
@@ -161,20 +138,16 @@
             if(loading) return; loading = true;
             if(isNew) { page = 1; document.getElementById('feedGrid').innerHTML = ''; }
             
-            // GLOBAL ANIMASI (GENRE 16) - TANPA FILTER NEGARA
+            // Kunci Genre 16 (Animasi) Global
             let url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_genres=16&page=${page}`;
             if(currentType === 'tv') url = `https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}&with_genres=16&page=${page}`;
             if(currentType === 'short') url += `&with_runtime.lte=40`;
-            
             if(currentStudio) url += `&with_companies=${currentStudio}`;
             if(currentYear) url += (currentType === 'tv' ? `&first_air_date_year=${currentYear}` : `&primary_release_year=${currentYear}`);
-            if(searchQuery) url = `https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${searchQuery}&page=${page}`;
 
-            try {
-                const res = await fetch(url + "&language=id-ID");
-                const data = await res.json();
-                renderFeed(data.results || []);
-            } catch(e) { console.error(e); }
+            const res = await fetch(url + "&language=id-ID");
+            const data = await res.json();
+            renderFeed(data.results || []);
             loading = false;
         }
 
@@ -184,8 +157,7 @@
                 if(!m.poster_path) return;
                 const card = document.createElement('div');
                 card.className = 'post-card';
-                const type = m.media_type || (currentType === 'tv' ? 'tv' : 'movie');
-                card.onclick = () => openModal(m.id, type);
+                card.onclick = () => openModal(m.id, m.media_type || (currentType === 'tv' ? 'tv' : 'movie'));
                 card.innerHTML = `<img src="https://image.tmdb.org/t/p/w342${m.poster_path}">`;
                 grid.appendChild(card);
             });
@@ -196,31 +168,26 @@
             window.activeId = id; window.activeType = type;
             
             const res = await fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&language=id-ID&append_to_response=videos`);
-            let d = await res.json();
+            const d = await res.json();
             
-            // Fallback Sinopsis jika Indo Kosong
-            if(!d.overview) {
-                const resEn = await fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&language=en-US`);
-                const dEn = await resEn.json(); d.overview = dEn.overview;
-            }
-
             document.getElementById('mTitle').innerText = d.title || d.name;
             document.getElementById('mDesc').innerText = d.overview || "Sinopsis tidak tersedia.";
             document.getElementById('videoPlayer').src = `https://vidrock.net/embed/${type}/${id}`;
-            document.getElementById('dlBtn').onclick = () => window.open(`https://dl.vidsrc.vip/${type}/${id}`);
 
-            // Trailer Logic
+            // Trailer Autoplay
             const tr = d.videos?.results.find(v => v.type === 'Trailer');
-            document.getElementById('btnTrailer').onclick = () => { if(tr) document.getElementById('videoPlayer').src = `https://www.youtube.com/embed/${tr.key}?autoplay=1`; };
+            document.getElementById('btnTrailer').onclick = () => { 
+                if(tr) document.getElementById('videoPlayer').src = `https://www.youtube.com/embed/${tr.key}?autoplay=1`;
+                else alert("Trailer tidak ditemukan.");
+            };
 
-            // Series Logic
             if(type === 'tv') {
                 document.getElementById('seriesBox').classList.remove('hidden');
                 document.getElementById('seasonSel').innerHTML = d.seasons.map(s => `<option value="${s.season_number}">Season ${s.season_number}</option>`).join('');
                 loadEpisodes();
             } else { document.getElementById('seriesBox').classList.add('hidden'); }
             
-            updateButtons(id);
+            document.getElementById('dlBtn').onclick = () => window.open(`https://dl.vidsrc.vip/${type}/${id}`);
         }
 
         async function loadEpisodes() {
@@ -241,34 +208,14 @@
             document.getElementById('videoPlayer').src = `https://${b}/embed/${window.activeType}/${window.activeId}`;
         }
 
-        function updateButtons(id) {
-            const lks = JSON.parse(localStorage.getItem('l') || '[]');
-            const svs = JSON.parse(localStorage.getItem('s') || '[]');
-            document.getElementById('btnLike').className = lks.includes(id) ? 'fa-solid fa-heart interaction-icon text-red-600' : 'fa-regular fa-heart interaction-icon';
-            document.getElementById('btnSave').className = svs.includes(id) ? 'fa-solid fa-bookmark interaction-icon text-white' : 'fa-regular fa-bookmark interaction-icon';
-            document.getElementById('btnLike').onclick = () => toggleL('l', id);
-            document.getElementById('btnSave').onclick = () => toggleL('s', id);
-        }
-
-        function toggleL(k, id) {
-            let d = JSON.parse(localStorage.getItem(k) || '[]');
-            if(d.includes(id)) d = d.filter(x => x !== id); else d.push(id);
-            localStorage.setItem(k, JSON.stringify(d)); updateButtons(id);
-        }
-
-        function setMode(m, el) { 
-            document.querySelectorAll('.pill-btn').forEach(b => b.className = 'pill-btn px-4 py-2 border border-zinc-800 rounded-lg text-[10px] font-extrabold uppercase');
-            el.className += ' bg-white text-black'; currentType = m; loadFeed(true); 
-        }
+        function toggleYear() { const d = document.getElementById('yearDropdown'); d.style.display = d.style.display === 'block' ? 'none' : 'block'; }
+        function setYear(y) { currentYear = y; toggleYear(); loadFeed(true); }
+        function setMode(m) { currentType = m; loadFeed(true); }
         function setStudio(id, el) { 
             document.querySelectorAll('.highlight-item').forEach(h => h.classList.remove('active'));
             el.classList.add('active'); currentStudio = id; loadFeed(true); 
         }
-        function toggleYear() { const d = document.getElementById('yearDropdown'); d.style.display = d.style.display === 'block' ? 'none' : 'block'; }
-        function setYear(y) { currentYear = y; toggleYear(); loadFeed(true); }
-        function searchAction() { searchQuery = document.getElementById('searchInp').value; loadFeed(true); }
         function closeModal() { document.getElementById('movieModal').style.display = 'none'; document.getElementById('videoPlayer').src = ''; }
-        
         window.onscroll = () => { if((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 800) { page++; loadFeed(false); } };
     </script>
 </body>
