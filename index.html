@@ -10,113 +10,227 @@
     <style>
         body { background-color: #000; color: #fff; font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        
-        /* Header Fixed */
         .fixed-header-section { position: fixed; top: 0; width: 100%; z-index: 100; background: #000; border-bottom: 1px solid #1c1c1c; }
         .ig-header { padding: 12px 15px 5px 15px; }
-        .ig-logo { font-family: 'DM Sans', sans-serif; font-weight: 700; font-style: italic; font-size: 24px; letter-spacing: -0.8px; text-transform: lowercase; }
-        
-        /* Search & Year */
+
+        .ig-logo { font-family: 'DM Sans', sans-serif; font-weight: 700; font-style: italic; font-size: 24px; letter-spacing: -0.8px; text-transform: lowercase; cursor: pointer; }
+        .verified-icon { font-size: 13px; color: #0095f6; margin-left: 5px; }
+
         .search-container { background: #0a0a0a; border-radius: 8px; display: flex; align-items: center; padding: 7px 12px; flex-grow: 1; border: 1px solid #1c1c1c; }
-        .year-selector { background: #0a0a0a; border: 1px solid #1c1c1c; border-radius: 8px; padding: 8px 12px; font-size: 9px; font-weight: 800; color: #fff; cursor: pointer; }
+        .search-container input { background: transparent !important; border: none !important; color: white !important; font-size: 13px; width: 100%; outline: none !important; box-shadow: none !important; margin-left: 8px; }
 
-        /* Highlight Studio Monokrom */
+        .year-selector { background: #0a0a0a; border: 1px solid #1c1c1c; border-radius: 8px; padding: 8px 12px; font-size: 9px; font-weight: 800; color: #fff; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; gap: 5px; }
+        .year-dropdown { display: none; position: fixed; top: 110px; right: 15px; width: 120px; max-height: 300px; background: #121212; border: 1px solid #1c1c1c; border-radius: 12px; z-index: 101; overflow-y: auto; }
+        .year-item { padding: 12px; font-size: 11px; font-weight: 600; text-align: center; border-bottom: 1px solid #1c1c1c; color: #888; cursor: pointer; }
+        
+        .category-wrapper { padding: 5px 15px 12px 15px; }
+        .pill-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+        .pill { background: transparent; border: 1px solid #1c1c1c; color: #fff; padding: 8px 0; border-radius: 8px; font-size: 10px; font-weight: 800; text-transform: uppercase; text-align: center; cursor: pointer; }
+        .pill.active { border-color: #fff; }
+
+        /* HIGHLIGHT STUDIO REMAKE */
         .highlights-section { padding: 15px 0; border-bottom: 1px solid #1c1c1c; background: #000; }
-        .highlights-container { display: flex; gap: 15px; overflow-x: auto; padding: 0 15px; }
-        .circle-icon { width: 62px; height: 62px; border-radius: 50%; background: #111; border: 1.5px solid #1c1c1c; overflow: hidden; display: flex; align-items: center; justify-content: center; }
-        .circle-icon img { width: 80%; filter: grayscale(100%) invert(1); opacity: 0.7; } /* Logo Jadi Hitam Putih */
-        .highlight-label { font-size: 9px; color: #555; font-weight: 700; text-align: center; margin-top: 5px; text-transform: uppercase; }
+        .highlights-container { display: flex; gap: 15px; overflow-x: auto; padding: 0 15px; scrollbar-width: none; }
+        .highlight-item { flex: 0 0 75px; text-align: center; cursor: pointer; }
+        .circle-icon { width: 64px; height: 64px; border-radius: 50%; background: #000; border: 1.5px solid #1c1c1c; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px auto; overflow: hidden; }
+        /* Efek Hitam Putih Logo */
+        .circle-icon img { width: 75%; height: 75%; object-fit: contain; filter: grayscale(100%) brightness(1.5) contrast(1.2); }
+        .highlight-label { font-size: 9px; color: #555; font-weight: 700; text-transform: uppercase; white-space: nowrap; }
+        .highlight-item.active .circle-icon { border: 2px solid #fff; }
+        .highlight-item.active .highlight-label { color: #fff; }
 
-        /* Grid Film */
-        .movie-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; padding-top: 280px; padding-bottom: 100px; }
+        .movie-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; padding-top: 275px; padding-bottom: 100px; }
         .post-card { position: relative; aspect-ratio: 2/3; background: #0a0a0a; overflow: hidden; cursor: pointer; }
         .post-card img { width: 100%; height: 100%; object-fit: cover; }
         
-        /* Modal & Player */
+        /* Modal & Player Fitur Lengkap */
         .modal-player { display: none; position: fixed; inset: 0; z-index: 200; background: #000; overflow-y: auto; }
-        .server-btn { width: 100%; padding: 14px; border-radius: 12px; font-size: 10px; font-weight: 800; text-transform: uppercase; border: 1px solid #1c1c1c; text-align: center; cursor: pointer; color: #888; margin-top: 8px; }
+        #mTitle { font-size: 14px; font-weight: 700; }
+        .interaction-icon { font-size: 24px; cursor: pointer; color: #fff; }
+        .server-btn { width: 100%; padding: 14px; border-radius: 12px; font-size: 10px; font-weight: 800; text-transform: uppercase; border: 1px solid #1c1c1c; text-align: center; cursor: pointer; }
         
-        /* Bottom Nav */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #000; border-top: 1px solid #1c1c1c; display: flex; justify-content: space-around; padding: 15px 0; z-index: 300; }
+        .series-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 10px; }
+        .ep-box { background: #111; border: 1px solid #1c1c1c; color: #555; font-size: 10px; font-weight: 800; padding: 12px 0; border-radius: 8px; text-align: center; cursor: pointer; }
+        .ep-box.active { border-color: #fff; color: #fff; }
+
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #000; border-top: 1px solid #1c1c1c; display: flex; justify-content: space-around; padding: 12px 0; z-index: 300; padding-bottom: calc(12px + env(safe-area-inset-bottom)); }
+        .nav-item { color: #fff; font-size: 20px; }
+        .skeleton { background: linear-gradient(90deg, #0a0a0a 25%, #1a1a1a 50%, #0a0a0a 75%); background-size: 200% 100%; animation: skeleton-loading 1.5s infinite; }
+        @keyframes skeleton-loading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
     </style>
 </head>
 <body>
+    <div id="loader" style="position:fixed; top:0; left:0; height:1.5px; background:#fff; width:0%; transition:width 0.3s; z-index:1000;"></div>
 
     <div class="fixed-header-section">
         <header class="ig-header">
             <div class="flex justify-between items-center">
-                <h1 class="ig-logo">amnesfubbia <span class="text-white opacity-40">xx1</span></h1>
-                <div class="flex gap-4"><i class="fa-regular fa-heart"></i><i class="fa-regular fa-paper-plane"></i></div>
-            </div>
-            <div class="flex items-center gap-2 mt-2">
-                <div class="search-container">
-                    <input type="text" id="searchInp" placeholder="Cari animasi..." onkeydown="if(event.key==='Enter') searchAction()" class="bg-transparent border-none text-xs w-full outline-none">
+                <div class="flex items-center">
+                    <h1 class="ig-logo" onclick="location.reload()">amnesfubbia <span class="text-white opacity-40 font-normal italic">xx1</span></h1>
+                    <i class="fa-solid fa-circle-check verified-icon"></i>
                 </div>
-                <div class="year-selector" onclick="toggleYear()">TAHUN <i class="fa-solid fa-chevron-down ml-1"></i></div>
+                <div class="flex gap-6 text-xl"><i class="fa-regular fa-square-plus cursor-pointer"></i><i class="fa-regular fa-heart cursor-pointer"></i></div>
+            </div>
+            <div class="search-area flex items-center gap-2 mt-2">
+                <div class="search-container">
+                    <i class="fa-solid fa-magnifying-glass text-zinc-600 text-[10px]"></i>
+                    <input type="text" id="searchInp" placeholder="Cari animasi dunia..." onkeydown="if(event.key==='Enter') searchAction()" autocomplete="off">
+                </div>
+                <div class="year-selector" onclick="toggleYearDropdown()"><span id="yearVal">TAHUN</span> <i class="fa-solid fa-chevron-down text-[7px]"></i></div>
             </div>
         </header>
 
+        <div class="category-wrapper">
+            <div class="pill-grid">
+                <button class="pill active" onclick="setFilter('type', 'multi', this)">Semua</button>
+                <button class="pill" onclick="setFilter('type', 'movie', this)">Film</button>
+                <button class="pill" onclick="setFilter('type', 'tv', this)">Series</button>
+                <button class="pill" onclick="setFilter('type', 'short', this)">Short</button>
+            </div>
+        </div>
+
         <div class="highlights-section">
-            <div class="highlights-container no-scrollbar">
-                <div class="flex-shrink-0 cursor-pointer" onclick="filterByStudio(6125)">
+            <div class="highlights-container no-scrollbar" id="studioHighlights">
+                <div class="highlight-item active" onclick="setStudio('', this)">
+                    <div class="circle-icon"><i class="fa-solid fa-globe text-white text-xl"></i></div>
+                    <p class="highlight-label">Semua</p>
+                </div>
+                <div class="highlight-item" onclick="setStudio('6125', this)">
                     <div class="circle-icon"><img src="https://upload.wikimedia.org/wikipedia/commons/3/3a/Walt_Disney_Pictures_logo.svg"></div>
                     <p class="highlight-label">Disney</p>
                 </div>
-                <div class="flex-shrink-0 cursor-pointer" onclick="filterByStudio(3)">
+                <div class="highlight-item" onclick="setStudio('3', this)">
                     <div class="circle-icon"><img src="https://upload.wikimedia.org/wikipedia/commons/0/0b/Pixar_Logo.svg"></div>
                     <p class="highlight-label">Pixar</p>
                 </div>
-                <div class="flex-shrink-0 cursor-pointer" onclick="filterByStudio(521)">
+                <div class="highlight-item" onclick="setStudio('521', this)">
                     <div class="circle-icon"><img src="https://upload.wikimedia.org/wikipedia/en/2/22/DreamWorks_Animation_logo.svg"></div>
                     <p class="highlight-label">Dreamworks</p>
+                </div>
+                <div class="highlight-item" onclick="setStudio('10342', this)">
+                    <div class="circle-icon"><img src="https://upload.wikimedia.org/wikipedia/commons/e/ed/Studio_Ghibli_logo.svg"></div>
+                    <p class="highlight-label">Ghibli</p>
+                </div>
+                <div class="highlight-item" onclick="setStudio('2251', this)">
+                    <div class="circle-icon"><img src="https://upload.wikimedia.org/wikipedia/commons/5/55/Sony_Pictures_Animation_logo.svg"></div>
+                    <p class="highlight-label">Sony</p>
+                </div>
+                <div class="highlight-item" onclick="setStudio('33', this)">
+                    <div class="circle-icon"><img src="https://upload.wikimedia.org/wikipedia/commons/3/31/Illumination_Entertainment_logo.svg"></div>
+                    <p class="highlight-label">Illumination</p>
                 </div>
             </div>
         </div>
     </div>
 
+    <div id="yearDropdown" class="year-dropdown no-scrollbar"></div>
     <main id="feedGrid" class="movie-grid"></main>
 
     <div id="movieModal" class="modal-player">
-        <div class="p-4 flex items-center border-b border-zinc-900 sticky top-0 bg-black z-50">
-            <i class="fa-solid fa-chevron-left text-xl mr-4" onclick="closeModal()"></i>
-            <h2 id="mTitle" class="font-bold truncate"></h2>
-        </div>
-        <div class="aspect-video bg-zinc-900">
-            <iframe id="videoPlayer" class="w-full h-full" allowfullscreen></iframe>
-        </div>
-        <div class="p-4">
-            <div id="serverList" class="grid grid-cols-2 gap-2"></div>
-            <button id="btnDownload" class="server-btn border-zinc-700 text-white mt-4"><i class="fa-solid fa-download mr-2"></i> DOWNLOAD SEKARANG</button>
-            <p id="mDesc" class="text-xs text-zinc-500 mt-6 leading-relaxed"></p>
+        <div class="max-w-xl mx-auto pb-40">
+            <div class="px-4 h-[54px] flex items-center border-b border-zinc-900 sticky top-0 bg-black z-50">
+                <i class="fa-solid fa-chevron-left text-xl cursor-pointer" onclick="closeModal()"></i>
+                <div class="flex-grow text-center"><h2 id="mTitle" class="truncate"></h2></div>
+            </div>
+
+            <div class="aspect-video bg-zinc-900 w-full relative">
+                <iframe id="videoPlayer" class="w-full h-full" allowfullscreen></iframe>
+            </div>
+
+            <div class="px-4 py-3 flex justify-between items-center">
+                <div class="flex gap-4">
+                    <i id="btnLike" class="fa-regular fa-heart interaction-icon"></i>
+                    <i class="fa-regular fa-comment interaction-icon"></i>
+                    <i class="fa-regular fa-paper-plane interaction-icon"></i>
+                </div>
+                <i id="btnBook" class="fa-regular fa-bookmark interaction-icon"></i>
+            </div>
+
+            <div class="px-4">
+                <p id="mDesc" class="text-sm text-zinc-400 mb-4"></p>
+                
+                <div id="seriesControl" class="hidden mb-6 p-4 bg-zinc-950 rounded-xl border border-zinc-900">
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="text-[10px] font-bold text-zinc-500">PILIH EPISODE</span>
+                        <select id="seasonSel" class="bg-zinc-900 text-xs p-1 rounded" onchange="loadEpisodes()"></select>
+                    </div>
+                    <div id="episodeGrid" class="series-grid"></div>
+                </div>
+
+                <div id="serverList" class="grid grid-cols-2 gap-2 mt-4"></div>
+                <button id="btnDownloadMain" class="server-btn border-zinc-700 text-white mt-4"><i class="fa-solid fa-download mr-2"></i> DOWNLOAD SEKARANG</button>
+            </div>
         </div>
     </div>
 
     <nav class="bottom-nav">
-        <i class="fa-solid fa-house text-xl" onclick="location.reload()"></i>
-        <i class="fa-solid fa-magnifying-glass text-xl"></i>
-        <i class="fa-regular fa-square-plus text-xl"></i>
-        <i class="fa-regular fa-user text-xl"></i>
+        <div class="nav-item" onclick="location.reload()"><i class="fa-solid fa-house"></i></div>
+        <div class="nav-item" onclick="document.getElementById('searchInp').focus()"><i class="fa-solid fa-magnifying-glass"></i></div>
+        <div class="nav-item"><i class="fa-regular fa-bookmark"></i></div>
+        <div class="nav-item"><i class="fa-regular fa-user"></i></div>
     </nav>
 
     <script>
         const API_KEY = 'bfa7df5310c9974f62f26c6789a8c00d';
-        let page = 1, currentStudio = '', currentYear = '';
+        let page = 1, loading = false, currentType = 'multi', currentYear = '', currentStudio = '', searchQuery = '';
 
-        window.onload = () => loadFeed();
+        window.onload = () => { initYearDropdown(); loadFeed(); };
+
+        function initYearDropdown() {
+            const dropdown = document.getElementById('yearDropdown');
+            let html = '<div class="year-item" onclick="setYear(\'\')">SEMUA</div>';
+            for(let y = 2026; y >= 1950; y--) html += `<div class="year-item" onclick="setYear(${y})">${y}</div>`;
+            dropdown.innerHTML = html;
+        }
+
+        function toggleYearDropdown() { 
+            const d = document.getElementById('yearDropdown'); 
+            d.style.display = (d.style.display === 'block') ? 'none' : 'block'; 
+        }
+
+        function setYear(y) { 
+            currentYear = y; 
+            document.getElementById('yearVal').innerText = y || 'TAHUN';
+            document.getElementById('yearDropdown').style.display = 'none';
+            loadFeed(true);
+        }
+
+        function setStudio(id, el) {
+            document.querySelectorAll('.highlight-item').forEach(h => h.classList.remove('active'));
+            el.classList.add('active');
+            currentStudio = id;
+            loadFeed(true);
+        }
+
+        function setFilter(type, val, el) {
+            document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+            el.classList.add('active');
+            currentType = val;
+            loadFeed(true);
+        }
 
         async function loadFeed(isNew = true) {
+            if (loading) return;
+            loading = true;
             if (isNew) { page = 1; document.getElementById('feedGrid').innerHTML = ''; }
             
-            // Fokus ke Animasi (16) dari seluruh dunia
-            let url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_genres=16&page=${page}`;
-            if (currentStudio) url += `&with_companies=${currentStudio}`;
-            if (currentYear) url += `&primary_release_year=${currentYear}`;
+            const l = document.getElementById('loader'); l.style.width = '30%';
+            
+            // DATABASE GLOBAL ANIMASI (GENRE 16)
+            let base = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_genres=16`;
+            if (currentType === 'tv') base = `https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}&with_genres=16`;
+            
+            if (currentStudio) base += `&with_companies=${currentStudio}`;
+            if (currentYear) base += (currentType === 'tv' ? `&first_air_date_year=${currentYear}` : `&primary_release_year=${currentYear}`);
+            if (searchQuery) base = `https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${searchQuery}`;
 
             try {
-                const res = await fetch(url);
+                const res = await fetch(`${base}&page=${page}&language=id-ID`);
                 const data = await res.json();
-                renderFeed(data.results);
+                renderFeed(data.results || []);
             } catch (err) { console.error(err); }
+            
+            loading = false; l.style.width = '100%'; setTimeout(()=>l.style.width='0%', 400);
         }
 
         function renderFeed(items) {
@@ -125,7 +239,8 @@
                 if (!m.poster_path) return;
                 const card = document.createElement('div');
                 card.className = 'post-card';
-                card.onclick = () => openModal(m.id, 'movie');
+                const type = m.media_type || (currentType === 'tv' ? 'tv' : 'movie');
+                card.onclick = () => openModal(m.id, type);
                 card.innerHTML = `<img src="https://image.tmdb.org/t/p/w342${m.poster_path}">`;
                 grid.appendChild(card);
             });
@@ -134,45 +249,68 @@
         async function openModal(id, type) {
             const modal = document.getElementById('movieModal');
             modal.style.display = 'block';
-            document.body.style.overflow = 'hidden';
+            window.currentMediaId = id;
+            window.currentMediaType = type;
 
-            const res = await fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}`);
+            const res = await fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&language=id-ID`);
             const d = await res.json();
-            
+
             document.getElementById('mTitle').innerText = d.title || d.name;
-            document.getElementById('mDesc').innerText = d.overview || "Tidak ada sinopsis.";
+            document.getElementById('mDesc').innerText = d.overview || "Sinopsis tidak tersedia.";
             
-            // Server Streaming
+            // Player & Server
             document.getElementById('videoPlayer').src = `https://vidrock.net/embed/${type}/${id}`;
             document.getElementById('serverList').innerHTML = `
-                <div class="server-btn" onclick="changeServer('${type}', ${id}, 1)">Server 1</div>
-                <div class="server-btn" onclick="changeServer('${type}', ${id}, 2)">Server 2</div>
+                <div class="server-btn" onclick="changeServer(1)">Server 1</div>
+                <div class="server-btn" onclick="changeServer(2)">Server 2</div>
             `;
             
-            // Tombol Download
-            document.getElementById('btnDownload').onclick = () => window.open(`https://dl.vidsrc.vip/${type}/${id}`, '_blank');
+            // Download Main
+            document.getElementById('btnDownloadMain').onclick = () => window.open(`https://dl.vidsrc.vip/${type}/${id}`, '_blank');
+
+            // Fitur Series/Episode
+            if(type === 'tv') {
+                document.getElementById('seriesControl').classList.remove('hidden');
+                document.getElementById('seasonSel').innerHTML = d.seasons.map(s => `<option value="${s.season_number}">Season ${s.season_number}</option>`).join('');
+                loadEpisodes();
+            } else {
+                document.getElementById('seriesControl').classList.add('hidden');
+            }
         }
 
-        function changeServer(type, id, s) {
+        async function loadEpisodes() {
+            const s = document.getElementById('seasonSel').value;
+            const res = await fetch(`https://api.themoviedb.org/3/tv/${window.currentMediaId}/season/${s}?api_key=${API_KEY}`);
+            const d = await res.json();
+            document.getElementById('episodeGrid').innerHTML = d.episodes.map(e => `
+                <div class="ep-box" onclick="playEp(${s}, ${e.episode_number})">${e.episode_number}</div>
+            `).join('');
+        }
+
+        function playEp(s, e) {
+            document.getElementById('videoPlayer').src = `https://vidrock.net/embed/tv/${window.currentMediaId}/${s}/${e}`;
+        }
+
+        function changeServer(s) {
             const base = s === 1 ? 'vidrock.net' : 'vidstorm.ru';
-            document.getElementById('videoPlayer').src = `https://${base}/embed/${type}/${id}`;
+            document.getElementById('videoPlayer').src = `https://${base}/embed/${window.currentMediaType}/${window.currentMediaId}`;
         }
 
-        function closeModal() {
-            document.getElementById('movieModal').style.display = 'none';
+        function closeModal() { 
+            document.getElementById('movieModal').style.display = 'none'; 
             document.getElementById('videoPlayer').src = '';
-            document.body.style.overflow = 'auto';
         }
 
-        function filterByStudio(id) {
-            currentStudio = id;
+        function searchAction() {
+            searchQuery = document.getElementById('searchInp').value;
             loadFeed(true);
         }
 
-        function toggleYear() {
-            const y = prompt("Masukkan Tahun (contoh: 2024):");
-            if (y) { currentYear = y; loadFeed(true); }
-        }
+        window.onscroll = () => {
+            if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 1000 && !loading) {
+                page++; loadFeed(false);
+            }
+        };
     </script>
 </body>
 </html>
