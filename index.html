@@ -8,51 +8,52 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@1,700&family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #000; color: #fff; font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; }
+        body { background-color: #000; color: #fff; font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        .fixed-header-section { position: fixed; top: 0; width: 100%; z-index: 100; background: #000; border-bottom: 0.5px solid #1c1c1c; }
+        .fixed-header-section { position: fixed; top: 0; width: 100%; z-index: 100; background: #000; border-bottom: 1px solid #1c1c1c; }
         .ig-header { padding: 12px 15px 5px 15px; }
 
         .ig-logo { font-family: 'DM Sans', sans-serif; font-weight: 700; font-style: italic; font-size: 24px; letter-spacing: -0.8px; text-transform: lowercase; cursor: pointer; }
         .verified-icon { font-size: 13px; color: #0095f6; margin-left: 5px; }
 
-        .search-container { background: #121212; border-radius: 8px; display: flex; align-items: center; padding: 7px 12px; flex-grow: 1; }
+        .search-container { background: #0a0a0a; border-radius: 8px; display: flex; align-items: center; padding: 7px 12px; flex-grow: 1; border: 1px solid #1c1c1c; }
         .search-container input { background: transparent !important; border: none !important; color: white !important; font-size: 13px; width: 100%; outline: none !important; box-shadow: none !important; margin-left: 8px; }
 
-        .year-selector { background: #121212; border-radius: 8px; padding: 8px 12px; font-size: 9px; font-weight: 800; color: #fff; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; gap: 5px; }
+        .year-selector { background: #0a0a0a; border: 1px solid #1c1c1c; border-radius: 8px; padding: 8px 12px; font-size: 9px; font-weight: 800; color: #fff; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; gap: 5px; }
         .year-dropdown { display: none; position: fixed; top: 110px; right: 15px; width: 120px; max-height: 300px; background: #121212; border: 1px solid #1c1c1c; border-radius: 12px; z-index: 101; overflow-y: auto; }
         .year-item { padding: 12px; font-size: 11px; font-weight: 600; text-align: center; border-bottom: 1px solid #1c1c1c; color: #888; cursor: pointer; }
         
         .category-wrapper { padding: 5px 15px 12px 15px; }
         .pill-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
-        .pill { background: transparent; border: 1px solid #363636; color: #fff; padding: 8px 0; border-radius: 8px; font-size: 10px; font-weight: 800; text-transform: uppercase; text-align: center; cursor: pointer; transition: 0.2s; }
+        .pill { background: transparent; border: 1px solid #1c1c1c; color: #fff; padding: 10px 0; border-radius: 8px; font-size: 10px; font-weight: 800; text-transform: uppercase; text-align: center; cursor: pointer; transition: 0.1s; }
+        .pill:active { transform: scale(0.92); }
         .pill.active { background: #fff; color: #000; border-color: #fff; }
         
-        .highlights-section { padding: 15px 0; border-bottom: 0.5px solid #1c1c1c; background: #000; }
+        .highlights-section { padding: 15px 0; border-bottom: 1px solid #1c1c1c; background: #000; }
         .highlights-container { display: flex; gap: 15px; overflow-x: auto; padding: 0 15px; scrollbar-width: none; }
-        .highlight-item { flex: 0 0 75px; text-align: center; cursor: pointer; transition: transform 0.1s; }
-        .highlight-item:active { transform: scale(0.95); }
-        .circle-icon { width: 62px; height: 62px; border-radius: 50%; background: #000; border: 1.5px solid #363636; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px auto; font-size: 18px; color: #fff; }
+        .highlight-item { flex: 0 0 75px; text-align: center; cursor: pointer; transition: 0.1s; }
+        .highlight-item:active { transform: scale(0.9); }
+        .circle-icon { width: 62px; height: 62px; border-radius: 50%; background: #000; border: 1.5px solid #1c1c1c; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px auto; font-size: 18px; color: #555; }
         .highlight-item.active .circle-icon { 
             border: 2px solid transparent; 
             background: linear-gradient(#000, #000) padding-box, linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%) border-box; 
+            color: #fff; 
         }
-        .highlight-label { font-size: 10px; color: #fff; font-weight: 500; white-space: nowrap; }
+        .highlight-label { font-size: 9px; color: #555; font-weight: 700; text-transform: uppercase; white-space: nowrap; }
         
-        /* Feed Grid Update: Kembali ke tampilan bersih tanpa detail di bawah poster */
-        .movie-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; padding-top: 275px; padding-bottom: 100px; }
+        .movie-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; padding-top: 285px; padding-bottom: 100px; }
         .post-card { position: relative; aspect-ratio: 2/3; background: #0a0a0a; overflow: hidden; cursor: pointer; transition: transform 0.1s; }
-        .post-card:active { transform: scale(0.96); opacity: 0.9; }
+        .post-card:active { transform: scale(0.96); opacity: 0.8; }
         .post-card img { width: 100%; height: 100%; object-fit: cover; }
         
-        .badge-type { position: absolute; top: 8px; right: 8px; font-size: 11px; color: #fff; z-index: 5; text-shadow: 0 0 4px rgba(0,0,0,0.8); }
-        .badge-rating { position: absolute; top: 6px; left: 6px; padding: 2px 5px; border-radius: 3px; font-size: 8px; font-weight: 900; z-index: 5; background: rgba(255,255,255,0.9); color: #000; }
+        .badge-type { position: absolute; top: 8px; right: 8px; font-size: 13px; color: #fff; z-index: 5; text-shadow: 0 0 4px rgba(0,0,0,0.8); }
+        .badge-rating { position: absolute; top: 6px; left: 6px; padding: 2px 5px; border-radius: 2px; font-size: 7px; font-weight: 900; z-index: 5; background: rgba(255,255,255,0.9); color: #000; }
         
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #000; border-top: 0.5px solid #1c1c1c; display: flex; justify-content: space-around; padding: 12px 0; z-index: 300; padding-bottom: calc(12px + env(safe-area-inset-bottom)); }
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #000; border-top: 1px solid #1c1c1c; display: flex; justify-content: space-around; padding: 12px 0; z-index: 300; padding-bottom: calc(12px + env(safe-area-inset-bottom)); }
         .nav-item { color: #fff; font-size: 22px; cursor: pointer; transition: transform 0.1s; }
         .nav-item:active { transform: scale(0.8); }
         
-        /* MODAL TETAP (TIDAK DIUBAH) */
+        /* MODAL TETAP (TIDAK BERUBAH) */
         .modal-player { display: none; position: fixed; inset: 0; z-index: 500; background: #000; overflow-y: auto; }
         #mTitle { font-size: 14px; font-weight: 700; color: #fff; letter-spacing: -0.2px; }
         #mTitleAlt { font-weight: 700; font-size: 14px; color: #fff; } 
@@ -91,7 +92,7 @@
             </div>
             <div class="search-area flex items-center gap-2 mt-2">
                 <div class="search-container">
-                    <i class="fa-solid fa-magnifying-glass text-zinc-500 text-[10px]"></i>
+                    <i class="fa-solid fa-magnifying-glass text-zinc-600 text-[10px]"></i>
                     <input type="text" id="searchInp" placeholder="Cari sinema Indonesia..." onkeydown="if(event.key==='Enter') searchAction()" autocomplete="off">
                 </div>
                 <div class="year-selector" onclick="toggleYearDropdown()"><span id="yearVal">TAHUN</span> <i class="fa-solid fa-chevron-down text-[7px]"></i></div>
@@ -125,10 +126,10 @@
     <main id="feedGrid" class="movie-grid"></main>
 
     <nav class="bottom-nav">
-        <div class="nav-item" onclick="setActiveNav(this); closeModal(); location.reload();"><i class="fa-solid fa-house"></i></div>
-        <div class="nav-item" onclick="setActiveNav(this); closeModal(); document.getElementById('searchInp').focus();"><i class="fa-regular fa-compass"></i></div>
-        <div class="nav-item" onclick="setActiveNav(this); closeModal(); showLibrary('bookmarks');"><i class="fa-regular fa-bookmark"></i></div>
-        <div class="nav-item" onclick="setActiveNav(this); showUserProfil();"><i class="fa-regular fa-user"></i></div>
+        <div class="nav-item" id="nav-home" onclick="setActiveNav(this); closeModal(); location.reload();"><i class="fa-solid fa-house"></i></div>
+        <div class="nav-item" id="nav-search" onclick="setActiveNav(this); closeModal(); document.getElementById('searchInp').focus();"><i class="fa-regular fa-compass"></i></div>
+        <div class="nav-item" id="nav-book" onclick="setActiveNav(this); closeModal(); showLibrary('bookmarks');"><i class="fa-regular fa-bookmark"></i></div>
+        <div class="nav-item" id="nav-user" onclick="setActiveNav(this); showUserProfil();"><i class="fa-regular fa-user"></i></div>
     </nav>
 
     <div id="movieModal" class="modal-player">
@@ -267,7 +268,6 @@
             return `${Math.floor(diffDays/30)} bulan lalu`;
         }
 
-        // KEMBALI KE TAMPILAN ASLI TANPA DETAIL JUDUL DI BAWAH
         function renderFeed(data) {
             const grid = document.getElementById('feedGrid');
             data.forEach(m => {
@@ -278,12 +278,7 @@
                 card.onclick = () => openModal(m.id, finalType);
                 
                 let badgeHTML = m.m_type === 'tv' ? '<i class="fa-solid fa-clone"></i>' : (m.m_type === 'short' ? '<i class="fa-solid fa-clapperboard"></i>' : '<i class="fa-solid fa-play"></i>');
-                
-                card.innerHTML = `
-                    <div class="badge-rating"><i class="fa-solid fa-star text-[6px]"></i> ${m.vote_average?.toFixed(1) || '0.0'}</div>
-                    <div class="badge-type">${badgeHTML}</div>
-                    <img src="https://image.tmdb.org/t/p/w342${m.poster_path}" onload="this.parentElement.classList.remove('skeleton')">
-                `;
+                card.innerHTML = `<div class="badge-rating"><i class="fa-solid fa-star text-[6px]"></i> ${m.vote_average?.toFixed(1) || '0.0'}</div><div class="badge-type">${badgeHTML}</div><img src="https://image.tmdb.org/t/p/w342${m.poster_path}" onload="this.parentElement.classList.remove('skeleton')">`;
                 grid.appendChild(card);
             });
         }
@@ -450,6 +445,7 @@
                 renderFeed(items);
             }
             window.scrollTo({top:0, behavior:'smooth'});
+            document.querySelectorAll('.pill, .highlight-item').forEach(p => p.classList.remove('active'));
         }
         function showUserProfil() { alert("Amnesfubbia XX1\nBy Anasteas"); }
     </script>
