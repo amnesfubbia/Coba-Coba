@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>amnesfubbia xx1 - Animation</title>
+    <title>amnesfubbia xx1</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@1,700&family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
@@ -11,61 +11,55 @@
         body { background-color: #000; color: #fff; font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         
-        /* Header Tetap di Atas */
-        .fixed-header-section { position: fixed; top: 0; width: 100%; z-index: 100; background: #000; }
+        /* Header Fixed */
+        .fixed-header { position: fixed; top: 0; width: 100%; z-index: 100; background: #000; border-bottom: 1px solid #1c1c1c; }
         .ig-header { padding: 12px 15px 5px 15px; }
         .ig-logo { font-family: 'DM Sans', sans-serif; font-weight: 700; font-style: italic; font-size: 24px; letter-spacing: -0.8px; text-transform: lowercase; }
         .verified-icon { font-size: 13px; color: #0095f6; margin-left: 5px; }
 
-        .search-container { background: #0a0a0a; border-radius: 8px; display: flex; align-items: center; padding: 7px 12px; flex-grow: 1; border: 1px solid #1c1c1c; margin-top: 8px; }
-        .search-container input { background: transparent; border: none; color: white; font-size: 13px; width: 100%; outline: none; margin-left: 8px; }
+        .search-bar { background: #121212; border-radius: 8px; display: flex; align-items: center; padding: 8px 12px; margin: 8px 15px; border: 1px solid #1c1c1c; }
+        .search-bar input { background: transparent; border: none; color: white; font-size: 13px; width: 100%; outline: none; margin-left: 8px; }
 
         /* Navigation Pills */
-        .category-wrapper { padding: 10px 15px; background: #000; }
-        .scroll-pills { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px; }
-        .pill { flex: 0 0 auto; background: #121212; border: 1px solid #1c1c1c; color: #888; padding: 6px 16px; border-radius: 20px; font-size: 11px; font-weight: 600; transition: 0.3s; }
+        .pill-container { padding: 5px 15px 10px 15px; display: flex; flex-direction: column; gap: 10px; }
+        .scroll-pills { display: flex; gap: 8px; overflow-x: auto; }
+        .pill { flex: 0 0 auto; background: #121212; border: 1px solid #1c1c1c; color: #888; padding: 6px 16px; border-radius: 20px; font-size: 11px; font-weight: 600; cursor: pointer; transition: 0.3s; }
         .pill.active { background: #fff; color: #000; border-color: #fff; }
 
-        /* Highlights Studio (Instagram Story Style) */
-        .highlights-section { padding: 5px 0 15px 0; background: #000; border-bottom: 1px solid #1c1c1c; }
-        .highlights-container { display: flex; gap: 15px; overflow-x: auto; padding: 0 15px; }
-        .highlight-item { flex: 0 0 70px; text-align: center; }
-        .circle-outer { width: 64px; height: 64px; border-radius: 50%; padding: 2px; background: #1c1c1c; margin-bottom: 6px; position: relative; }
-        .highlight-item.active .circle-outer { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
-        .circle-inner { width: 100%; height: 100%; border-radius: 50%; background: #000; border: 2px solid #000; overflow: hidden; display: flex; align-items: center; justify-content: center; }
-        .circle-inner img { width: 75%; height: 75%; object-fit: contain; filter: grayscale(1) invert(1); }
-        .highlight-item.active .circle-inner img { filter: grayscale(0) invert(0); }
-        .highlight-label { font-size: 10px; color: #888; font-weight: 500; }
-        .highlight-item.active .highlight-label { color: #fff; font-weight: 600; }
+        /* Highlights Studio */
+        .highlights { display: flex; gap: 15px; overflow-x: auto; padding: 10px 15px 15px 15px; border-bottom: 1px solid #1c1c1c; }
+        .studio-item { flex: 0 0 65px; text-align: center; cursor: pointer; }
+        .circle { width: 62px; height: 62px; border-radius: 50%; padding: 2px; background: #1c1c1c; margin-bottom: 6px; }
+        .studio-item.active .circle { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
+        .inner-circle { width: 100%; height: 100%; border-radius: 50%; background: #000; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 2px solid #000; }
+        .inner-circle img { width: 70%; height: 70%; object-fit: contain; filter: brightness(0) invert(1); }
+        .studio-label { font-size: 10px; color: #888; }
+        .studio-item.active .studio-label { color: #fff; font-weight: 600; }
 
-        /* Grid Film */
-        .movie-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; padding-top: 300px; padding-bottom: 80px; }
-        .post-card { aspect-ratio: 1/1.5; background: #0a0a0a; position: relative; overflow: hidden; }
-        .post-card img { width: 100%; height: 100%; object-fit: cover; }
-        .card-meta { position: absolute; bottom: 0; left: 0; right: 0; padding: 10px 5px; background: linear-gradient(transparent, rgba(0,0,0,0.8)); font-size: 9px; }
+        /* Movie Grid */
+        .movie-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; padding-top: 320px; padding-bottom: 80px; }
+        .post { aspect-ratio: 1/1.5; background: #0a0a0a; position: relative; }
+        .post img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* Bottom Sheet Menu (Drawer) */
-        .bottom-sheet { position: fixed; bottom: -100%; left: 0; right: 0; background: #121212; z-index: 1000; border-radius: 20px 20px 0 0; transition: bottom 0.4s cubic-bezier(0.4, 0, 0.2, 1); padding: 20px; max-height: 70vh; overflow-y: auto; }
+        /* Bottom Sheet Menu */
+        .sheet-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 1000; display: none; }
+        .bottom-sheet { position: fixed; bottom: -100%; left: 0; right: 0; background: #121212; z-index: 1001; border-radius: 20px 20px 0 0; transition: 0.3s ease; padding: 20px; max-height: 60vh; overflow-y: auto; }
         .bottom-sheet.show { bottom: 0; }
-        .sheet-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 999; display: none; }
-        .sheet-overlay.show { display: block; }
-        .sheet-handle { width: 40px; height: 4px; background: #333; border-radius: 2px; margin: 0 auto 20px auto; }
-        .sheet-title { font-size: 16px; font-weight: 700; margin-bottom: 20px; text-align: center; }
-        .grid-options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-        .opt-btn { background: #1c1c1c; padding: 12px; border-radius: 10px; text-align: center; font-size: 12px; font-weight: 600; cursor: pointer; }
-        .opt-btn.active { background: #fff; color: #000; }
+        .sheet-option { background: #1c1c1c; padding: 15px; border-radius: 12px; text-align: center; font-size: 13px; font-weight: 600; margin-bottom: 8px; cursor: pointer; }
 
-        /* Navigasi Bawah */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #000; border-top: 1px solid #1c1c1c; display: flex; justify-content: space-around; padding: 15px 0; z-index: 500; }
+        /* Nav Bawah */
+        .nav-bottom { position: fixed; bottom: 0; width: 100%; background: #000; border-top: 1px solid #1c1c1c; display: flex; justify-content: space-around; padding: 12px 0; z-index: 500; }
+        .nav-btn { color: #555; font-size: 22px; cursor: pointer; }
+        .nav-btn.active { color: #fff; }
     </style>
 </head>
 <body>
 
-    <div class="fixed-header-section">
+    <div class="fixed-header">
         <header class="ig-header">
             <div class="flex justify-between items-center">
                 <div class="flex items-center">
-                    <h1 class="ig-logo">amnesfubbia <span class="text-zinc-500 font-normal italic">xx1</span></h1>
+                    <h1 class="ig-logo" onclick="location.reload()">amnesfubbia <span class="text-zinc-600 font-normal">xx1</span></h1>
                     <i class="fa-solid fa-circle-check verified-icon"></i>
                 </div>
                 <div class="flex gap-5 text-xl">
@@ -73,189 +67,171 @@
                     <i class="fa-regular fa-heart"></i>
                 </div>
             </div>
-            <div class="search-container">
-                <i class="fa-solid fa-magnifying-glass text-zinc-600 text-[12px]"></i>
-                <input type="text" id="searchInp" placeholder="Cari animasi...">
-            </div>
         </header>
+        
+        <div class="search-bar">
+            <i class="fa-solid fa-magnifying-glass text-zinc-600"></i>
+            <input type="text" id="searchInput" placeholder="Cari animasi..." onkeyup="doSearch(event)">
+        </div>
 
-        <!-- Menu Bar 1 & 2 -->
-        <div class="category-wrapper">
-            <div class="scroll-pills no-scrollbar mb-3" id="mainTypePills">
-                <button class="pill active" onclick="setMainType('multi', this)">Semua</button>
-                <button class="pill" onclick="setMainType('movie', this)">Film</button>
-                <button class="pill" onclick="setMainType('tv', this)">Series</button>
-                <button class="pill" onclick="setMainType('short', this)">Short</button>
+        <div class="pill-container">
+            <!-- Baris 1: Tipe -->
+            <div class="scroll-pills no-scrollbar" id="typePills">
+                <div class="pill active" onclick="changeType('multi', this)">Semua</div>
+                <div class="pill" onclick="changeType('movie', this)">Film</div>
+                <div class="pill" onclick="changeType('tv', this)">Series</div>
+                <div class="pill" onclick="changeType('short', this)">Short</div>
             </div>
+            <!-- Baris 2: Filter -->
             <div class="scroll-pills no-scrollbar" id="filterPills">
-                <button class="pill active" onclick="resetFilters(this)">Semua</button>
-                <button class="pill" onclick="openSheet('year')">Tahun <i class="fa-solid fa-chevron-down ml-1 text-[8px]"></i></button>
-                <button class="pill" onclick="openSheet('country')">Negara <i class="fa-solid fa-chevron-down ml-1 text-[8px]"></i></button>
-                <button class="pill" onclick="openSheet('genre')">Genre <i class="fa-solid fa-chevron-down ml-1 text-[8px]"></i></button>
+                <div class="pill active" onclick="resetAllFilters(this)">Semua</div>
+                <div class="pill" onclick="showSheet('year')">Tahun <i class="fa-solid fa-chevron-down text-[8px] ml-1"></i></div>
+                <div class="pill" onclick="showSheet('country')">Negara <i class="fa-solid fa-chevron-down text-[8px] ml-1"></i></div>
+                <div class="pill" onclick="showSheet('genre')">Genre <i class="fa-solid fa-chevron-down text-[8px] ml-1"></i></div>
             </div>
         </div>
 
-        <!-- Studio Highlights -->
-        <div class="highlights-section">
-            <div class="highlights-container no-scrollbar" id="studioList">
-                <div class="highlight-item active" onclick="setStudio('', this)">
-                    <div class="circle-outer"><div class="circle-inner"><i class="fa-solid fa-clapperboard text-xl"></i></div></div>
-                    <p class="highlight-label">Semua</p>
-                </div>
-                <div class="highlight-item" onclick="setStudio('Disney', this)">
-                    <div class="circle-outer"><div class="circle-inner"><img src="https://upload.wikimedia.org/wikipedia/commons/3/3a/Walt_Disney_Pictures_logo.svg"></div></div>
-                    <p class="highlight-label">Disney</p>
-                </div>
-                <div class="highlight-item" onclick="setStudio('Pixar', this)">
-                    <div class="circle-outer"><div class="circle-inner"><img src="https://upload.wikimedia.org/wikipedia/commons/0/03/Pixar_logo.svg"></div></div>
-                    <p class="highlight-label">Pixar</p>
-                </div>
-                <div class="highlight-item" onclick="setStudio('DreamWorks', this)">
-                    <div class="circle-outer"><div class="circle-inner"><img src="https://upload.wikimedia.org/wikipedia/en/2/23/DreamWorks_Animation_logo.svg"></div></div>
-                    <p class="highlight-label">Dreamworks</p>
-                </div>
-                <div class="highlight-item" onclick="setStudio('Ghibli', this)">
-                    <div class="circle-outer"><div class="circle-inner"><img src="https://upload.wikimedia.org/wikipedia/en/c/ca/Studio_Ghibli_logo.svg"></div></div>
-                    <p class="highlight-label">Ghibli</p>
-                </div>
+        <div class="highlights no-scrollbar" id="studioList">
+            <div class="studio-item active" onclick="selectStudio('', this)">
+                <div class="circle"><div class="inner-circle"><i class="fa-solid fa-border-all text-zinc-400"></i></div></div>
+                <p class="studio-label">Semua</p>
+            </div>
+            <div class="studio-item" onclick="selectStudio('Disney', this)">
+                <div class="circle"><div class="inner-circle"><img src="https://upload.wikimedia.org/wikipedia/commons/3/3a/Walt_Disney_Pictures_logo.svg"></div></div>
+                <p class="studio-label">Disney</p>
+            </div>
+            <div class="studio-item" onclick="selectStudio('Pixar', this)">
+                <div class="circle"><div class="inner-circle"><img src="https://upload.wikimedia.org/wikipedia/commons/0/03/Pixar_logo.svg"></div></div>
+                <p class="studio-label">Pixar</p>
+            </div>
+            <div class="studio-item" onclick="selectStudio('DreamWorks', this)">
+                <div class="circle"><div class="inner-circle"><img src="https://upload.wikimedia.org/wikipedia/en/2/23/DreamWorks_Animation_logo.svg"></div></div>
+                <p class="studio-label">Dreamworks</p>
+            </div>
+            <div class="studio-item" onclick="selectStudio('Ghibli', this)">
+                <div class="circle"><div class="inner-circle"><img src="https://upload.wikimedia.org/wikipedia/en/c/ca/Studio_Ghibli_logo.svg"></div></div>
+                <p class="studio-label">Ghibli</p>
+            </div>
+            <div class="studio-item" onclick="selectStudio('Sony', this)">
+                <div class="circle"><div class="inner-circle"><img src="https://upload.wikimedia.org/wikipedia/commons/6/63/Sony_Pictures_Animation_logo.svg"></div></div>
+                <p class="studio-label">Sony</p>
             </div>
         </div>
     </div>
 
-    <!-- Overlay & Bottom Sheet -->
-    <div class="sheet-overlay" id="overlay" onclick="closeSheet()"></div>
+    <!-- Interface Filter -->
+    <div class="sheet-overlay" id="sheetOverlay" onclick="hideSheet()"></div>
     <div class="bottom-sheet" id="filterSheet">
-        <div class="sheet-handle"></div>
-        <h3 id="sheetTitle" class="sheet-title">Pilih</h3>
-        <div id="sheetOptions" class="grid-options"></div>
+        <div class="w-10 h-1 bg-zinc-800 rounded mx-auto mb-6"></div>
+        <div id="sheetContent" class="grid grid-cols-2 gap-3"></div>
     </div>
 
-    <!-- Feed Grid -->
-    <main id="feedGrid" class="movie-grid"></main>
+    <main id="movieGrid" class="movie-grid"></main>
 
-    <!-- Bottom Nav -->
-    <nav class="bottom-nav">
-        <i class="fa-solid fa-house text-xl"></i>
-        <i class="fa-solid fa-magnifying-glass text-xl text-zinc-500"></i>
-        <i class="fa-regular fa-square-plus text-xl text-zinc-500"></i>
-        <i class="fa-regular fa-heart text-xl text-zinc-500"></i>
-        <div class="w-6 h-6 rounded-full bg-zinc-800 border border-zinc-700"></div>
+    <nav class="nav-bottom">
+        <div class="nav-btn active" onclick="location.reload()"><i class="fa-solid fa-house"></i></div>
+        <div class="nav-btn" onclick="document.getElementById('searchInput').focus()"><i class="fa-solid fa-magnifying-glass"></i></div>
+        <div class="nav-btn" onclick="alert('Upload')"><i class="fa-regular fa-square-plus"></i></div>
+        <div class="nav-btn" onclick="alert('Likes')"><i class="fa-regular fa-heart"></i></div>
+        <div class="nav-btn"><div class="w-6 h-6 rounded-full bg-zinc-800 border border-zinc-700"></div></div>
     </nav>
 
     <script>
         const API_KEY = 'bfa7df5310c9974f62f26c6789a8c00d';
-        let state = {
-            type: 'multi',
-            studio: '',
-            year: '',
-            genre: '',
-            page: 1
-        };
+        let filters = { type: 'multi', studio: '', year: '', country: '', genre: '', query: '', page: 1 };
 
-        // Inisialisasi
-        window.onload = () => fetchMovies();
+        window.onload = () => loadMovies();
 
-        async function fetchMovies(isNew = true) {
-            const grid = document.getElementById('feedGrid');
-            if(isNew) {
-                state.page = 1;
-                grid.innerHTML = Array(12).fill('<div class="post-card bg-zinc-900 animate-pulse"></div>').join('');
-                window.scrollTo(0,0);
-            }
-
-            try {
-                let url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_genres=16&language=id-ID&page=${state.page}`;
-                
-                if(state.year) url += `&primary_release_year=${state.year}`;
-                if(state.genre) url += `&with_genres=16,${state.genre}`;
-
-                const resp = await fetch(url);
-                const data = await resp.json();
-                
-                if(isNew) grid.innerHTML = '';
-                renderGrid(data.results);
-            } catch (e) {
-                console.error("Gagal memuat data", e);
-            }
-        }
-
-        function renderGrid(movies) {
-            const grid = document.getElementById('feedGrid');
-            movies.forEach(m => {
-                if(!m.poster_path) return;
-                const div = document.createElement('div');
-                div.className = 'post-card';
-                div.innerHTML = `
-                    <img src="https://image.tmdb.org/t/p/w342${m.poster_path}" loading="lazy">
-                    <div class="card-meta">
-                        <span class="font-bold"><i class="fa-solid fa-star text-yellow-500"></i> ${m.vote_average.toFixed(1)}</span>
-                    </div>
-                `;
-                grid.appendChild(div);
-            });
-        }
-
-        function setMainType(type, el) {
-            document.querySelectorAll('#mainTypePills .pill').forEach(p => p.classList.remove('active'));
-            el.classList.add('active');
-            state.type = type;
-            fetchMovies(true);
-        }
-
-        function setStudio(studio, el) {
-            document.querySelectorAll('#studioList .highlight-item').forEach(p => p.classList.remove('active'));
-            el.classList.add('active');
-            state.studio = studio;
-            fetchMovies(true);
-        }
-
-        function openSheet(mode) {
-            const sheet = document.getElementById('filterSheet');
-            const overlay = document.getElementById('overlay');
-            const title = document.getElementById('sheetTitle');
-            const options = document.getElementById('sheetOptions');
+        async function loadMovies(isNew = true) {
+            const grid = document.getElementById('movieGrid');
+            if(isNew) { filters.page = 1; grid.innerHTML = ''; }
             
-            let content = '';
-            if(mode === 'year') {
-                title.innerText = 'Pilih Tahun';
-                for(let y=2025; y>=2015; y--) {
-                    content += `<div class="opt-btn ${state.year == y ? 'active' : ''}" onclick="applyFilter('year', '${y}')">${y}</div>`;
+            try {
+                let url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_genres=16&language=id-ID&page=${filters.page}`;
+                
+                if(filters.query) {
+                    url = `https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${filters.query}&language=id-ID&page=${filters.page}`;
+                } else {
+                    if(filters.year) url += `&primary_release_year=${filters.year}`;
+                    if(filters.country) url += `&with_origin_country=${filters.country}`;
+                    if(filters.genre) url += `&with_genres=16,${filters.genre}`;
                 }
-            } else if(mode === 'genre') {
-                title.innerText = 'Pilih Genre';
-                const g = { '12':'Petualangan', '35':'Komedi', '14':'Fantasi', '10751':'Keluarga' };
-                for(let id in g) {
-                    content += `<div class="opt-btn ${state.genre == id ? 'active' : ''}" onclick="applyFilter('genre', '${id}')">${g[id]}</div>`;
+
+                const res = await fetch(url);
+                const data = await res.json();
+                
+                data.results.forEach(m => {
+                    if(!m.poster_path) return;
+                    const el = document.createElement('div');
+                    el.className = 'post';
+                    el.innerHTML = `<img src="https://image.tmdb.org/t/p/w342${m.poster_path}" loading="lazy">`;
+                    grid.appendChild(el);
+                });
+            } catch (e) { console.error(e); }
+        }
+
+        function changeType(type, el) {
+            document.querySelectorAll('#typePills .pill').forEach(p => p.classList.remove('active'));
+            el.classList.add('active');
+            filters.type = type;
+            loadMovies(true);
+        }
+
+        function selectStudio(studio, el) {
+            document.querySelectorAll('.studio-item').forEach(p => p.classList.remove('active'));
+            el.classList.add('active');
+            filters.query = studio;
+            loadMovies(true);
+        }
+
+        function showSheet(mode) {
+            const sheet = document.getElementById('filterSheet');
+            const content = document.getElementById('sheetContent');
+            let html = '';
+
+            if(mode === 'year') {
+                for(let y=2025; y>=2018; y--) {
+                    html += `<div class="sheet-option" onclick="applyFilter('year', '${y}')">${y}</div>`;
                 }
             } else if(mode === 'country') {
-                title.innerText = 'Pilih Negara';
-                ['USA', 'Japan', 'Korea', 'France'].forEach(c => {
-                    content += `<div class="opt-btn" onclick="applyFilter('country', '${c}')">${c}</div>`;
-                });
+                const c = {'JP': 'Jepang (Anime)', 'US': 'USA', 'KR': 'Korea', 'ID': 'Indonesia'};
+                for(let k in c) {
+                    html += `<div class="sheet-option" onclick="applyFilter('country', '${k}')">${c[k]}</div>`;
+                }
+            } else if(mode === 'genre') {
+                const g = {'12': 'Petualangan', '35': 'Komedi', '14': 'Fantasi', '10751': 'Keluarga'};
+                for(let k in g) {
+                    html += `<div class="sheet-option" onclick="applyFilter('genre', '${k}')">${g[k]}</div>`;
+                }
             }
 
-            options.innerHTML = content;
+            content.innerHTML = html;
             sheet.classList.add('show');
-            overlay.classList.add('show');
+            document.getElementById('sheetOverlay').style.display = 'block';
         }
 
-        function closeSheet() {
+        function hideSheet() {
             document.getElementById('filterSheet').classList.remove('show');
-            document.getElementById('overlay').classList.remove('show');
+            document.getElementById('sheetOverlay').style.display = 'none';
         }
 
-        function applyFilter(type, val) {
-            state[type] = val;
-            closeSheet();
-            fetchMovies(true);
+        function applyFilter(key, val) {
+            filters[key] = val;
+            filters.query = '';
+            hideSheet();
+            loadMovies(true);
         }
 
-        function resetFilters(el) {
+        function resetAllFilters(el) {
             document.querySelectorAll('#filterPills .pill').forEach(p => p.classList.remove('active'));
             el.classList.add('active');
-            state.year = '';
-            state.genre = '';
-            fetchMovies(true);
+            filters = { ...filters, year: '', country: '', genre: '', query: '' };
+            loadMovies(true);
+        }
+
+        function doSearch(e) {
+            filters.query = e.target.value;
+            if(filters.query.length > 2 || filters.query === '') loadMovies(true);
         }
     </script>
 </body>
