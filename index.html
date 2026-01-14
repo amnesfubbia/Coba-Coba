@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>amnesfubbia xx1</title>
+    <title>amnesfubbia xx1 - Animation World</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@1,700&family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
@@ -93,7 +93,7 @@
             <div class="search-area flex items-center gap-2 mt-2">
                 <div class="search-container">
                     <i class="fa-solid fa-magnifying-glass text-zinc-600 text-[10px]"></i>
-                    <input type="text" id="searchInp" placeholder="Cari animasi seluruh dunia..." onkeydown="if(event.key==='Enter') searchAction()" autocomplete="off">
+                    <input type="text" id="searchInp" placeholder="Cari animasi favorit..." onkeydown="if(event.key==='Enter') searchAction()" autocomplete="off">
                 </div>
                 <div class="year-selector" onclick="toggleYearDropdown()"><span id="yearVal">TAHUN</span> <i class="fa-solid fa-chevron-down text-[7px]"></i></div>
             </div>
@@ -108,13 +108,15 @@
         </div>
         <div class="highlights-section">
             <div class="highlights-container no-scrollbar" id="genreHighlights">
-                <div class="highlight-item active" onclick="setFilter('genre', '', this)"><div class="circle-icon"><i class="fa-solid fa-border-all"></i></div><p class="highlight-label">Semua</p></div>
-                <div class="highlight-item" onclick="setFilter('genre', '28', this)"><div class="circle-icon"><i class="fa-solid fa-bolt"></i></div><p class="highlight-label">Aksi</p></div>
-                <div class="highlight-item" onclick="setFilter('genre', '12', this)"><div class="circle-icon"><i class="fa-solid fa-compass"></i></div><p class="highlight-label">Petualang</p></div>
+                <div class="highlight-item active" onclick="setFilter('genre', '16', this)"><div class="circle-icon"><i class="fa-solid fa-dragon"></i></div><p class="highlight-label">Animasi</p></div>
+                <div class="highlight-item" onclick="setFilter('genre', '27', this)"><div class="circle-icon"><i class="fa-solid fa-ghost"></i></div><p class="highlight-label">Horor</p></div>
                 <div class="highlight-item" onclick="setFilter('genre', '35', this)"><div class="circle-icon"><i class="fa-solid fa-masks-theater"></i></div><p class="highlight-label">Komedi</p></div>
+                <div class="highlight-item" onclick="setFilter('genre', '10749', this)"><div class="circle-icon"><i class="fa-solid fa-heart"></i></div><p class="highlight-label">Romantis</p></div>
+                <div class="highlight-item" onclick="setFilter('genre', '28', this)"><div class="circle-icon"><i class="fa-solid fa-bolt"></i></div><p class="highlight-label">Aksi</p></div>
+                <div class="highlight-item" onclick="setFilter('genre', '18', this)"><div class="circle-icon"><i class="fa-solid fa-clapperboard"></i></div><p class="highlight-label">Drama</p></div>
+                <div class="highlight-item" onclick="setFilter('genre', '99', this)"><div class="circle-icon"><i class="fa-solid fa-camera"></i></div><p class="highlight-label">Dokumenter</p></div>
                 <div class="highlight-item" onclick="setFilter('genre', '10751', this)"><div class="circle-icon"><i class="fa-solid fa-users"></i></div><p class="highlight-label">Keluarga</p></div>
-                <div class="highlight-item" onclick="setFilter('genre', '14', this)"><div class="circle-icon"><i class="fa-solid fa-wand-sparkles"></i></div><p class="highlight-label">Fantasi</p></div>
-                <div class="highlight-item" onclick="setFilter('genre', '878', this)"><div class="circle-icon"><i class="fa-solid fa-rocket"></i></div><p class="highlight-label">Sci-Fi</p></div>
+                <div class="highlight-item" onclick="setFilter('genre', '9648', this)"><div class="circle-icon"><i class="fa-solid fa-magnifying-glass-chart"></i></div><p class="highlight-label">Misteri</p></div>
             </div>
         </div>
     </div>
@@ -195,7 +197,8 @@
 
     <script>
         const API_KEY = 'bfa7df5310c9974f62f26c6789a8c00d';
-        let page = 1, loading = false, currentType = 'multi', currentGenre = '', currentYear = '', searchQuery = '', currentActorId = '', isLibraryMode = false, 
+        // Setting awal currentGenre ke '16' (Animasi)
+        let page = 1, loading = false, currentType = 'multi', currentGenre = '16', currentYear = '', searchQuery = '', currentActorId = '', isLibraryMode = false, 
             fullDesc = '', descIndo = '', isTranslated = false;
         
         const getStore = (key) => JSON.parse(localStorage.getItem(key) || '[]');
@@ -225,39 +228,35 @@
             const l = document.getElementById('loader'); l.style.width = '30%';
             try {
                 let items = [];
-                // PERUBAHAN KRUSIAL: Menghapus filter "original_language=id" agar mencakup seluruh dunia
-                // dan menambahkan "with_genres=16" (Animasi) secara default.
-                const baseGenres = currentGenre ? `16,${currentGenre}` : '16';
-                const mandatory = `&language=id-ID&with_genres=${baseGenres}`;
+                // DIEDIT: Menghapus filter negara ID agar data animasi global masuk
+                const mandatory = `&language=id-ID&with_genres=16`;
                 const year = currentYear ? (currentType === 'tv' ? `&first_air_date_year=${currentYear}` : `&primary_release_year=${currentYear}`) : '';
+                const genre = currentGenre ? `&with_genres=${currentGenre}` : '';
                 
                 if (currentActorId) {
                     const res = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}${mandatory}&with_cast=${currentActorId}&page=${page}`);
                     const data = await res.json(); items = (data.results || []).map(x => ({...x, m_type: 'movie'}));
                 } else if (searchQuery) {
-                    // Search API tidak mendukung filter genre langsung dalam URL, jadi kita filter secara manual di bawah
                     const res = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&language=id-ID&query=${encodeURIComponent(searchQuery)}&page=${page}`);
                     const data = await res.json(); items = (data.results || []).map(x => ({...x, m_type: x.media_type}));
                 } else if (currentType === 'short') {
-                    const res = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}${mandatory}${year}&with_runtime.lte=40&page=${page}`);
+                    const res = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}${mandatory}${genre}${year}&with_runtime.lte=40&page=${page}`);
                     const data = await res.json(); items = (data.results || []).map(x => ({...x, m_type: 'short'}));
                 } else if (currentType === 'multi') {
                     const [resM, resT] = await Promise.all([
-                        fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}${mandatory}${currentYear ? '&primary_release_year='+currentYear : ''}&page=${page}`),
-                        fetch(`https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}${mandatory}${currentYear ? '&first_air_date_year='+currentYear : ''}&page=${page}`)
+                        fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}${mandatory}${genre}${currentYear ? '&primary_release_year='+currentYear : ''}&page=${page}`),
+                        fetch(`https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}${mandatory}${genre}${currentYear ? '&first_air_date_year='+currentYear : ''}&page=${page}`)
                     ]);
                     const dM = await resM.json(); const dT = await resT.json();
                     items = [...(dM.results || []).map(x => ({...x, m_type:'movie'})), ...(dT.results || []).map(x => ({...x, m_type:'tv'}))];
                 } else {
-                    const res = await fetch(`https://api.themoviedb.org/3/discover/${currentType}?api_key=${API_KEY}${mandatory}${year}&page=${page}`);
+                    const res = await fetch(`https://api.themoviedb.org/3/discover/${currentType}?api_key=${API_KEY}${mandatory}${genre}${year}&page=${page}`);
                     const data = await res.json(); items = (data.results || []).map(x => ({...x, m_type: currentType}));
                 }
-
-                // FILTERING AKHIR: Memastikan hanya genre Animasi (ID: 16) yang masuk ke grid.
-                const filtered = items.filter(m => m.genre_ids && m.genre_ids.includes(16));
                 
+                // DIEDIT: Menghapus filter manual 'id' agar semua film animasi tampil
                 if(isNew) document.getElementById('feedGrid').innerHTML = '';
-                renderFeed(filtered);
+                renderFeed(items);
             } catch (err) { console.error(err); }
             loading = false; l.style.width = '100%'; setTimeout(()=>l.style.width='0%', 400);
         }
