@@ -2,13 +2,13 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>amnesfubbia xx1</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>amnesfubbia xx1 - Animation World</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@1,700&family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #000; color: #fff; font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
+        body { background-color: #000; color: #fff; font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .fixed-header-section { position: fixed; top: 0; width: 100%; z-index: 100; background: #000; border-bottom: 1px solid #1c1c1c; }
         .ig-header { padding: 12px 15px 5px 15px; }
@@ -22,17 +22,14 @@
         .year-selector { background: #0a0a0a; border: 1px solid #1c1c1c; border-radius: 8px; padding: 8px 12px; font-size: 9px; font-weight: 800; color: #fff; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; gap: 5px; }
         .year-dropdown { display: none; position: fixed; top: 110px; right: 15px; width: 120px; max-height: 300px; background: #121212; border: 1px solid #1c1c1c; border-radius: 12px; z-index: 101; overflow-y: auto; }
         .year-item { padding: 12px; font-size: 11px; font-weight: 600; text-align: center; border-bottom: 1px solid #1c1c1c; color: #888; cursor: pointer; }
-        
         .category-wrapper { padding: 5px 15px 12px 15px; }
         .pill-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
-        .pill { background: transparent; border: 1px solid #1c1c1c; color: #fff; padding: 10px 0; border-radius: 8px; font-size: 10px; font-weight: 800; text-transform: uppercase; text-align: center; cursor: pointer; transition: 0.1s; }
-        .pill:active { transform: scale(0.92); }
-        .pill.active { background: #fff; color: #000; border-color: #fff; }
+        .pill { background: transparent; border: 1px solid #1c1c1c; color: #fff; padding: 8px 0; border-radius: 8px; font-size: 10px; font-weight: 800; text-transform: uppercase; text-align: center; cursor: pointer; transition: border-color 0.2s; }
+        .pill.active { background: transparent; color: #fff; border-color: #fff; }
         
         .highlights-section { padding: 15px 0; border-bottom: 1px solid #1c1c1c; background: #000; }
         .highlights-container { display: flex; gap: 15px; overflow-x: auto; padding: 0 15px; scrollbar-width: none; }
-        .highlight-item { flex: 0 0 75px; text-align: center; cursor: pointer; transition: 0.1s; }
-        .highlight-item:active { transform: scale(0.9); }
+        .highlight-item { flex: 0 0 75px; text-align: center; cursor: pointer; }
         .circle-icon { width: 62px; height: 62px; border-radius: 50%; background: #000; border: 1.5px solid #1c1c1c; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px auto; font-size: 18px; color: #555; }
         .highlight-item.active .circle-icon { 
             border: 2px solid transparent; 
@@ -41,35 +38,38 @@
         }
         .highlight-label { font-size: 9px; color: #555; font-weight: 700; text-transform: uppercase; white-space: nowrap; }
         
-        .movie-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; padding-top: 285px; padding-bottom: 100px; }
-        .post-card { position: relative; aspect-ratio: 2/3; background: #0a0a0a; overflow: hidden; cursor: pointer; transition: transform 0.1s; }
-        .post-card:active { transform: scale(0.96); opacity: 0.8; }
+        .movie-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; padding-top: 275px; padding-bottom: 100px; }
+        .post-card { position: relative; aspect-ratio: 2/3; background: #0a0a0a; overflow: hidden; cursor: pointer; }
         .post-card img { width: 100%; height: 100%; object-fit: cover; }
         
         .badge-type { position: absolute; top: 8px; right: 8px; font-size: 13px; color: #fff; z-index: 5; text-shadow: 0 0 4px rgba(0,0,0,0.8); }
         .badge-rating { position: absolute; top: 6px; left: 6px; padding: 2px 5px; border-radius: 2px; font-size: 7px; font-weight: 900; z-index: 5; background: rgba(255,255,255,0.9); color: #000; }
         
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #000; border-top: 1px solid #1c1c1c; display: flex; justify-content: space-around; padding: 12px 0; z-index: 300; padding-bottom: calc(12px + env(safe-area-inset-bottom)); }
-        .nav-item { color: #fff; font-size: 22px; cursor: pointer; transition: transform 0.1s; }
-        .nav-item:active { transform: scale(0.8); }
+        .nav-item { color: #fff; font-size: 20px; cursor: pointer; }
         
-        /* MODAL TETAP (TIDAK BERUBAH) */
-        .modal-player { display: none; position: fixed; inset: 0; z-index: 500; background: #000; overflow-y: auto; }
+        .modal-player { display: none; position: fixed; inset: 0; z-index: 200; background: #000; overflow-y: auto; }
+        
         #mTitle { font-size: 14px; font-weight: 700; color: #fff; letter-spacing: -0.2px; }
         #mTitleAlt { font-weight: 700; font-size: 14px; color: #fff; } 
         #mDesc { font-size: 13.5px; color: #fff; line-height: 1.4; font-weight: 400; display: inline; }
         #mMeta { font-size: 11px; color: #a8a8a8; font-weight: 400; margin-top: 4px; }
+        
         .read-more-btn, .translate-btn { color: #a8a8a8; cursor: pointer; font-weight: 400; margin-left: 4px; font-size: 13.5px; }
         .time-ago { font-size: 10px; color: #a8a8a8; text-transform: uppercase; letter-spacing: 0.2px; margin-top: 6px; font-weight: 400; }
+
         .interaction-icon { font-size: 24px; cursor: pointer; color: #fff; transition: transform 0.1s; }
         .interaction-icon:active { transform: scale(1.1); }
         .like-count { font-size: 14px; font-weight: 700; color: #fff; margin-top: 2px; }
+        
         .server-btn { width: 100%; padding: 14px; border-radius: 12px; font-size: 10px; font-weight: 800; text-transform: uppercase; border: 1px solid #1c1c1c; text-align: center; cursor: pointer; }
         .skeleton { background: linear-gradient(90deg, #0a0a0a 25%, #1a1a1a 50%, #0a0a0a 75%); background-size: 200% 100%; animation: skeleton-loading 1.5s infinite; }
         #backToTop { position: fixed; bottom: 85px; right: 20px; background: #fff; color: #000; width: 40px; height: 40px; border-radius: 50%; display: none; align-items: center; justify-content: center; z-index: 140; box-shadow: 0 4px 12px rgba(0,0,0,0.5); cursor: pointer; transition: 0.3s; }
+        
         .story-border { padding: 2.5px; background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); border-radius: 50%; display: inline-block; }
         .story-inner { background: #000; padding: 2px; border-radius: 50%; }
         .story-img { width: 56px; height: 56px; border-radius: 50%; object-fit: cover; display: block; }
+
         .series-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 10px; }
         .ep-box { background: #111; border: 1px solid #1c1c1c; color: #555; font-size: 10px; font-weight: 800; padding: 12px 0; border-radius: 8px; text-align: center; cursor: pointer; transition: 0.2s; }
         .ep-box.active { border-color: #fff; color: #fff; background: #1a1a1a; }
@@ -88,12 +88,12 @@
                     <h1 class="ig-logo" onclick="location.reload()">amnesfubbia <span class="text-white opacity-40 font-normal italic">xx1</span></h1>
                     <i class="fa-solid fa-circle-check verified-icon"></i>
                 </div>
-                <div class="flex gap-6 text-xl"><i class="fa-regular fa-square-plus cursor-pointer" onclick="document.getElementById('searchInp').focus()"></i><i class="fa-regular fa-heart cursor-pointer" onclick="setActiveNav(this); showLibrary('likes')"></i></div>
+                <div class="flex gap-6 text-xl"><i class="fa-regular fa-square-plus cursor-pointer" onclick="document.getElementById('searchInp').focus()"></i><i class="fa-regular fa-heart cursor-pointer" onclick="showLibrary('likes')"></i></div>
             </div>
             <div class="search-area flex items-center gap-2 mt-2">
                 <div class="search-container">
                     <i class="fa-solid fa-magnifying-glass text-zinc-600 text-[10px]"></i>
-                    <input type="text" id="searchInp" placeholder="Cari sinema Indonesia..." onkeydown="if(event.key==='Enter') searchAction()" autocomplete="off">
+                    <input type="text" id="searchInp" placeholder="Cari animasi dunia..." onkeydown="if(event.key==='Enter') searchAction()" autocomplete="off">
                 </div>
                 <div class="year-selector" onclick="toggleYearDropdown()"><span id="yearVal">TAHUN</span> <i class="fa-solid fa-chevron-down text-[7px]"></i></div>
             </div>
@@ -109,15 +109,13 @@
         <div class="highlights-section">
             <div class="highlights-container no-scrollbar" id="genreHighlights">
                 <div class="highlight-item active" onclick="setFilter('genre', '', this)"><div class="circle-icon"><i class="fa-solid fa-border-all"></i></div><p class="highlight-label">Semua</p></div>
-                <div class="highlight-item" onclick="setFilter('genre', '16', this)"><div class="circle-icon"><i class="fa-solid fa-dragon"></i></div><p class="highlight-label">Animasi</p></div>
-                <div class="highlight-item" onclick="setFilter('genre', '27', this)"><div class="circle-icon"><i class="fa-solid fa-ghost"></i></div><p class="highlight-label">Horor</p></div>
-                <div class="highlight-item" onclick="setFilter('genre', '35', this)"><div class="circle-icon"><i class="fa-solid fa-masks-theater"></i></div><p class="highlight-label">Komedi</p></div>
-                <div class="highlight-item" onclick="setFilter('genre', '10749', this)"><div class="circle-icon"><i class="fa-solid fa-heart"></i></div><p class="highlight-label">Romantis</p></div>
                 <div class="highlight-item" onclick="setFilter('genre', '28', this)"><div class="circle-icon"><i class="fa-solid fa-bolt"></i></div><p class="highlight-label">Aksi</p></div>
-                <div class="highlight-item" onclick="setFilter('genre', '18', this)"><div class="circle-icon"><i class="fa-solid fa-clapperboard"></i></div><p class="highlight-label">Drama</p></div>
-                <div class="highlight-item" onclick="setFilter('genre', '99', this)"><div class="circle-icon"><i class="fa-solid fa-camera"></i></div><p class="highlight-label">Dokumenter</p></div>
+                <div class="highlight-item" onclick="setFilter('genre', '12', this)"><div class="circle-icon"><i class="fa-solid fa-compass"></i></div><p class="highlight-label">Petualang</p></div>
+                <div class="highlight-item" onclick="setFilter('genre', '35', this)"><div class="circle-icon"><i class="fa-solid fa-masks-theater"></i></div><p class="highlight-label">Komedi</p></div>
                 <div class="highlight-item" onclick="setFilter('genre', '10751', this)"><div class="circle-icon"><i class="fa-solid fa-users"></i></div><p class="highlight-label">Keluarga</p></div>
-                <div class="highlight-item" onclick="setFilter('genre', '9648', this)"><div class="circle-icon"><i class="fa-solid fa-magnifying-glass-chart"></i></div><p class="highlight-label">Misteri</p></div>
+                <div class="highlight-item" onclick="setFilter('genre', '14', this)"><div class="circle-icon"><i class="fa-solid fa-wand-sparkles"></i></div><p class="highlight-label">Fantasi</p></div>
+                <div class="highlight-item" onclick="setFilter('genre', '18', this)"><div class="circle-icon"><i class="fa-solid fa-clapperboard"></i></div><p class="highlight-label">Drama</p></div>
+                <div class="highlight-item" onclick="setFilter('genre', '878', this)"><div class="circle-icon"><i class="fa-solid fa-rocket"></i></div><p class="highlight-label">Sci-Fi</p></div>
             </div>
         </div>
     </div>
@@ -126,10 +124,10 @@
     <main id="feedGrid" class="movie-grid"></main>
 
     <nav class="bottom-nav">
-        <div class="nav-item" id="nav-home" onclick="setActiveNav(this); closeModal(); location.reload();"><i class="fa-solid fa-house"></i></div>
-        <div class="nav-item" id="nav-search" onclick="setActiveNav(this); closeModal(); document.getElementById('searchInp').focus();"><i class="fa-regular fa-compass"></i></div>
-        <div class="nav-item" id="nav-book" onclick="setActiveNav(this); closeModal(); showLibrary('bookmarks');"><i class="fa-regular fa-bookmark"></i></div>
-        <div class="nav-item" id="nav-user" onclick="setActiveNav(this); showUserProfil();"><i class="fa-regular fa-user"></i></div>
+        <div class="nav-item" onclick="closeModal(); location.reload();"><i class="fa-solid fa-house"></i></div>
+        <div class="nav-item" onclick="closeModal(); document.getElementById('searchInp').focus();"><i class="fa-solid fa-magnifying-glass"></i></div>
+        <div class="nav-item" onclick="closeModal(); showLibrary('bookmarks');"><i class="fa-regular fa-bookmark"></i></div>
+        <div class="nav-item" onclick="showUserProfil();"><i class="fa-regular fa-user"></i></div>
     </nav>
 
     <div id="movieModal" class="modal-player">
@@ -137,7 +135,7 @@
             <div class="px-4 h-[54px] flex items-center border-b border-zinc-900 sticky top-0 bg-black z-50">
                 <i class="fa-solid fa-chevron-left text-xl cursor-pointer" onclick="closeModal()"></i>
                 <div class="flex-grow flex flex-col items-center justify-center px-8">
-                    <span class="text-[11px] font-bold text-zinc-500 uppercase tracking-widest leading-none mb-1">Sinema</span>
+                    <span class="text-[11px] font-bold text-zinc-500 uppercase tracking-widest leading-none mb-1">Animasi</span>
                     <h2 id="mTitle" class="truncate w-full text-center leading-none"></h2>
                 </div>
                 <div class="w-5"></div> 
@@ -228,31 +226,35 @@
             const l = document.getElementById('loader'); l.style.width = '30%';
             try {
                 let items = [];
-                const mandatory = `&with_original_language=id&region=ID&language=id-ID`;
+                // PERUBAHAN DI SINI: Menghapus bahasa Indonesia dan wilayah Indonesia, serta mengunci genre Animasi (16)
+                const mandatory = `&language=id-ID&with_genres=16,${currentGenre}`; 
                 const year = currentYear ? (currentType === 'tv' ? `&first_air_date_year=${currentYear}` : `&primary_release_year=${currentYear}`) : '';
-                const genre = currentGenre ? `&with_genres=${currentGenre}` : '';
                 
                 if (currentActorId) {
                     const res = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}${mandatory}&with_cast=${currentActorId}&page=${page}`);
                     const data = await res.json(); items = (data.results || []).map(x => ({...x, m_type: 'movie'}));
                 } else if (searchQuery) {
-                    const res = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}${mandatory}&query=${encodeURIComponent(searchQuery)}&page=${page}`);
+                    // Search tetap pakai keyword, tapi kita filter hasilnya nanti agar tetap animasi
+                    const res = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&language=id-ID&query=${encodeURIComponent(searchQuery)}&page=${page}`);
                     const data = await res.json(); items = (data.results || []).map(x => ({...x, m_type: x.media_type}));
                 } else if (currentType === 'short') {
-                    const res = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}${mandatory}${genre}${year}&with_runtime.lte=40&page=${page}`);
+                    const res = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}${mandatory}${year}&with_runtime.lte=40&page=${page}`);
                     const data = await res.json(); items = (data.results || []).map(x => ({...x, m_type: 'short'}));
                 } else if (currentType === 'multi') {
                     const [resM, resT] = await Promise.all([
-                        fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}${mandatory}${genre}${currentYear ? '&primary_release_year='+currentYear : ''}&page=${page}`),
-                        fetch(`https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}${mandatory}${genre}${currentYear ? '&first_air_date_year='+currentYear : ''}&page=${page}`)
+                        fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}${mandatory}${currentYear ? '&primary_release_year='+currentYear : ''}&page=${page}`),
+                        fetch(`https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}${mandatory}${currentYear ? '&first_air_date_year='+currentYear : ''}&page=${page}`)
                     ]);
                     const dM = await resM.json(); const dT = await resT.json();
                     items = [...(dM.results || []).map(x => ({...x, m_type:'movie'})), ...(dT.results || []).map(x => ({...x, m_type:'tv'}))];
                 } else {
-                    const res = await fetch(`https://api.themoviedb.org/3/discover/${currentType}?api_key=${API_KEY}${mandatory}${genre}${year}&page=${page}`);
+                    const res = await fetch(`https://api.themoviedb.org/3/discover/${currentType}?api_key=${API_KEY}${mandatory}${year}&page=${page}`);
                     const data = await res.json(); items = (data.results || []).map(x => ({...x, m_type: currentType}));
                 }
-                const filtered = items.filter(m => m.original_language === 'id');
+
+                // Filter hasil pencarian agar hanya menampilkan genre Animasi (ID: 16)
+                const filtered = items.filter(m => m.genre_ids && m.genre_ids.includes(16));
+                
                 if(isNew) document.getElementById('feedGrid').innerHTML = '';
                 renderFeed(filtered);
             } catch (err) { console.error(err); }
@@ -277,18 +279,14 @@
                 const finalType = m.m_type === 'short' ? 'short' : (m.m_type === 'tv' ? 'tv' : 'movie');
                 card.onclick = () => openModal(m.id, finalType);
                 
-                let badgeHTML = m.m_type === 'tv' ? '<i class="fa-solid fa-clone"></i>' : (m.m_type === 'short' ? '<i class="fa-solid fa-clapperboard"></i>' : '<i class="fa-solid fa-play"></i>');
+                let badgeHTML = '';
+                if(m.m_type === 'tv') badgeHTML = '<i class="fa-solid fa-clone"></i>';
+                else if(m.m_type === 'short') badgeHTML = '<i class="fa-solid fa-clapperboard"></i>';
+                else badgeHTML = '<i class="fa-solid fa-play"></i>';
+
                 card.innerHTML = `<div class="badge-rating"><i class="fa-solid fa-star text-[6px]"></i> ${m.vote_average?.toFixed(1) || '0.0'}</div><div class="badge-type">${badgeHTML}</div><img src="https://image.tmdb.org/t/p/w342${m.poster_path}" onload="this.parentElement.classList.remove('skeleton')">`;
                 grid.appendChild(card);
             });
-        }
-
-        function setActiveNav(el) {
-            document.querySelectorAll('.nav-item i').forEach(icon => {
-                icon.className = icon.className.replace('fa-solid', 'fa-regular');
-            });
-            const targetIcon = el.querySelector('i');
-            targetIcon.className = targetIcon.className.replace('fa-regular', 'fa-solid');
         }
 
         async function openModal(id, type) {
@@ -316,6 +314,7 @@
                 fullDesc = dEn.overview || "Sinopsis belum tersedia."; 
                 
                 let currentText = descIndo ? descIndo : fullDesc;
+                
                 if(currentText.length > 100) {
                     document.getElementById('mDesc').innerText = currentText.substring(0, 100) + "...";
                     document.getElementById('readMoreBtn').classList.remove('hidden');
@@ -326,6 +325,7 @@
 
                 document.getElementById('translateBtn').classList.toggle('hidden', descIndo !== "");
                 document.getElementById('translateBtn').innerText = "Lihat Terjemahan";
+
                 document.getElementById('mTime').innerText = calculateTimeAgo(d.release_date || d.first_air_date);
 
                 const rating = d.vote_average || 0;
@@ -447,7 +447,7 @@
             window.scrollTo({top:0, behavior:'smooth'});
             document.querySelectorAll('.pill, .highlight-item').forEach(p => p.classList.remove('active'));
         }
-        function showUserProfil() { alert("Amnesfubbia XX1\nBy Anasteas"); }
+        function showUserProfil() { alert("Amnesfubbia XX1 - Animation World\nBy Anasteas"); }
     </script>
 </body>
 </html>
