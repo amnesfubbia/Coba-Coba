@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>amnesfubbia xx1 - Animation World</title>
+    <title>amnesfubbia xx1</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@1,700&family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
@@ -93,7 +93,7 @@
             <div class="search-area flex items-center gap-2 mt-2">
                 <div class="search-container">
                     <i class="fa-solid fa-magnifying-glass text-zinc-600 text-[10px]"></i>
-                    <input type="text" id="searchInp" placeholder="Cari animasi dunia..." onkeydown="if(event.key==='Enter') searchAction()" autocomplete="off">
+                    <input type="text" id="searchInp" placeholder="Cari animasi seluruh dunia..." onkeydown="if(event.key==='Enter') searchAction()" autocomplete="off">
                 </div>
                 <div class="year-selector" onclick="toggleYearDropdown()"><span id="yearVal">TAHUN</span> <i class="fa-solid fa-chevron-down text-[7px]"></i></div>
             </div>
@@ -114,7 +114,6 @@
                 <div class="highlight-item" onclick="setFilter('genre', '35', this)"><div class="circle-icon"><i class="fa-solid fa-masks-theater"></i></div><p class="highlight-label">Komedi</p></div>
                 <div class="highlight-item" onclick="setFilter('genre', '10751', this)"><div class="circle-icon"><i class="fa-solid fa-users"></i></div><p class="highlight-label">Keluarga</p></div>
                 <div class="highlight-item" onclick="setFilter('genre', '14', this)"><div class="circle-icon"><i class="fa-solid fa-wand-sparkles"></i></div><p class="highlight-label">Fantasi</p></div>
-                <div class="highlight-item" onclick="setFilter('genre', '18', this)"><div class="circle-icon"><i class="fa-solid fa-clapperboard"></i></div><p class="highlight-label">Drama</p></div>
                 <div class="highlight-item" onclick="setFilter('genre', '878', this)"><div class="circle-icon"><i class="fa-solid fa-rocket"></i></div><p class="highlight-label">Sci-Fi</p></div>
             </div>
         </div>
@@ -135,7 +134,7 @@
             <div class="px-4 h-[54px] flex items-center border-b border-zinc-900 sticky top-0 bg-black z-50">
                 <i class="fa-solid fa-chevron-left text-xl cursor-pointer" onclick="closeModal()"></i>
                 <div class="flex-grow flex flex-col items-center justify-center px-8">
-                    <span class="text-[11px] font-bold text-zinc-500 uppercase tracking-widest leading-none mb-1">Animasi</span>
+                    <span class="text-[11px] font-bold text-zinc-500 uppercase tracking-widest leading-none mb-1">Sinema Animasi</span>
                     <h2 id="mTitle" class="truncate w-full text-center leading-none"></h2>
                 </div>
                 <div class="w-5"></div> 
@@ -226,15 +225,17 @@
             const l = document.getElementById('loader'); l.style.width = '30%';
             try {
                 let items = [];
-                // PERUBAHAN DI SINI: Menghapus bahasa Indonesia dan wilayah Indonesia, serta mengunci genre Animasi (16)
-                const mandatory = `&language=id-ID&with_genres=16,${currentGenre}`; 
+                // PERUBAHAN KRUSIAL: Menghapus filter "original_language=id" agar mencakup seluruh dunia
+                // dan menambahkan "with_genres=16" (Animasi) secara default.
+                const baseGenres = currentGenre ? `16,${currentGenre}` : '16';
+                const mandatory = `&language=id-ID&with_genres=${baseGenres}`;
                 const year = currentYear ? (currentType === 'tv' ? `&first_air_date_year=${currentYear}` : `&primary_release_year=${currentYear}`) : '';
                 
                 if (currentActorId) {
                     const res = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}${mandatory}&with_cast=${currentActorId}&page=${page}`);
                     const data = await res.json(); items = (data.results || []).map(x => ({...x, m_type: 'movie'}));
                 } else if (searchQuery) {
-                    // Search tetap pakai keyword, tapi kita filter hasilnya nanti agar tetap animasi
+                    // Search API tidak mendukung filter genre langsung dalam URL, jadi kita filter secara manual di bawah
                     const res = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&language=id-ID&query=${encodeURIComponent(searchQuery)}&page=${page}`);
                     const data = await res.json(); items = (data.results || []).map(x => ({...x, m_type: x.media_type}));
                 } else if (currentType === 'short') {
@@ -252,7 +253,7 @@
                     const data = await res.json(); items = (data.results || []).map(x => ({...x, m_type: currentType}));
                 }
 
-                // Filter hasil pencarian agar hanya menampilkan genre Animasi (ID: 16)
+                // FILTERING AKHIR: Memastikan hanya genre Animasi (ID: 16) yang masuk ke grid.
                 const filtered = items.filter(m => m.genre_ids && m.genre_ids.includes(16));
                 
                 if(isNew) document.getElementById('feedGrid').innerHTML = '';
@@ -447,7 +448,7 @@
             window.scrollTo({top:0, behavior:'smooth'});
             document.querySelectorAll('.pill, .highlight-item').forEach(p => p.classList.remove('active'));
         }
-        function showUserProfil() { alert("Amnesfubbia XX1 - Animation World\nBy Anasteas"); }
+        function showUserProfil() { alert("Amnesfubbia XX1\nBy Anasteas"); }
     </script>
 </body>
 </html>
