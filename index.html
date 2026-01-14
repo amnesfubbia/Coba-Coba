@@ -39,18 +39,12 @@
         }
         .highlight-label { font-size: 10px; color: #fff; font-weight: 500; white-space: nowrap; }
         
-        /* Feed Grid Update */
+        /* Feed Grid Update: Kembali ke tampilan bersih tanpa detail di bawah poster */
         .movie-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; padding-top: 275px; padding-bottom: 100px; }
-        .post-card { position: relative; display: flex; flex-direction: column; cursor: pointer; transition: transform 0.1s; }
-        .post-card:active { transform: scale(0.96); opacity: 0.8; }
-        .post-thumb { position: relative; aspect-ratio: 2/3; background: #0a0a0a; overflow: hidden; }
-        .post-thumb img { width: 100%; height: 100%; object-fit: cover; }
+        .post-card { position: relative; aspect-ratio: 2/3; background: #0a0a0a; overflow: hidden; cursor: pointer; transition: transform 0.1s; }
+        .post-card:active { transform: scale(0.96); opacity: 0.9; }
+        .post-card img { width: 100%; height: 100%; object-fit: cover; }
         
-        .post-details { padding: 6px 4px 10px 4px; background: #000; }
-        .post-title { font-size: 10px; font-weight: 700; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 2px; }
-        .post-meta { font-size: 9px; color: #a8a8a8; display: flex; justify-content: space-between; align-items: center; }
-        .post-actions { display: flex; gap: 6px; margin-top: 4px; opacity: 0.6; font-size: 10px; }
-
         .badge-type { position: absolute; top: 8px; right: 8px; font-size: 11px; color: #fff; z-index: 5; text-shadow: 0 0 4px rgba(0,0,0,0.8); }
         .badge-rating { position: absolute; top: 6px; left: 6px; padding: 2px 5px; border-radius: 3px; font-size: 8px; font-weight: 900; z-index: 5; background: rgba(255,255,255,0.9); color: #000; }
         
@@ -229,7 +223,7 @@
             if (loading) return;
             loading = true;
             isLibraryMode = false;
-            if (isNew) { page = 1; document.getElementById('feedGrid').innerHTML = Array(12).fill('<div class="post-card skeleton"><div class="post-thumb"></div></div>').join(''); }
+            if (isNew) { page = 1; document.getElementById('feedGrid').innerHTML = Array(12).fill('<div class="post-card skeleton"></div>').join(''); }
             const l = document.getElementById('loader'); l.style.width = '30%';
             try {
                 let items = [];
@@ -273,7 +267,7 @@
             return `${Math.floor(diffDays/30)} bulan lalu`;
         }
 
-        // UPDATE RENDER FEED DENGAN DETAIL POSTER
+        // KEMBALI KE TAMPILAN ASLI TANPA DETAIL JUDUL DI BAWAH
         function renderFeed(data) {
             const grid = document.getElementById('feedGrid');
             data.forEach(m => {
@@ -284,32 +278,16 @@
                 card.onclick = () => openModal(m.id, finalType);
                 
                 let badgeHTML = m.m_type === 'tv' ? '<i class="fa-solid fa-clone"></i>' : (m.m_type === 'short' ? '<i class="fa-solid fa-clapperboard"></i>' : '<i class="fa-solid fa-play"></i>');
-                const title = m.title || m.name || "Untitled";
-                const year = (m.release_date || m.first_air_date || "").split("-")[0];
-
+                
                 card.innerHTML = `
-                    <div class="post-thumb">
-                        <div class="badge-rating"><i class="fa-solid fa-star text-[6px]"></i> ${m.vote_average?.toFixed(1) || '0.0'}</div>
-                        <div class="badge-type">${badgeHTML}</div>
-                        <img src="https://image.tmdb.org/t/p/w342${m.poster_path}" onload="this.parentElement.classList.remove('skeleton')">
-                    </div>
-                    <div class="post-details">
-                        <p class="post-title">${title}</p>
-                        <div class="post-meta">
-                            <span>${year}</span>
-                            <div class="post-actions">
-                                <i class="fa-regular fa-heart"></i>
-                                <i class="fa-regular fa-comment"></i>
-                                <i class="fa-regular fa-paper-plane"></i>
-                            </div>
-                        </div>
-                    </div>
+                    <div class="badge-rating"><i class="fa-solid fa-star text-[6px]"></i> ${m.vote_average?.toFixed(1) || '0.0'}</div>
+                    <div class="badge-type">${badgeHTML}</div>
+                    <img src="https://image.tmdb.org/t/p/w342${m.poster_path}" onload="this.parentElement.classList.remove('skeleton')">
                 `;
                 grid.appendChild(card);
             });
         }
 
-        // NAVIGASI AKTIF (BOLD EFFECT)
         function setActiveNav(el) {
             document.querySelectorAll('.nav-item i').forEach(icon => {
                 icon.className = icon.className.replace('fa-solid', 'fa-regular');
@@ -318,7 +296,6 @@
             targetIcon.className = targetIcon.className.replace('fa-regular', 'fa-solid');
         }
 
-        // MODAL FUNCTIONS (TIDAK BERUBAH)
         async function openModal(id, type) {
             const modal = document.getElementById('movieModal');
             modal.style.display = 'block';
@@ -391,7 +368,7 @@
                     document.getElementById('serverList').innerHTML = `<button class="server-btn bg-zinc-950 text-zinc-400" onclick="document.getElementById('videoPlayer').src='https://vidrock.net/embed/movie/${id}'">Server 1</button><button class="server-btn bg-zinc-950 text-zinc-400" onclick="document.getElementById('videoPlayer').src='https://vidstorm.ru/embed/movie/${id}'">Server 2</button>`;
                     document.getElementById('btnDownloadMain').onclick = () => window.open(`https://dl.vidsrc.vip/movie/${id}`, '_blank');
                 }
-                const mData = {id: d.id, poster_path: d.poster_path, m_type: type, vote_average: d.vote_average, title: title, release_date: d.release_date || d.first_air_date};
+                const mData = {id: d.id, poster_path: d.poster_path, m_type: type, vote_average: d.vote_average};
                 document.getElementById('btnLikeModal').onclick = () => toggleItem('likes', mData);
                 document.getElementById('btnBookModal').onclick = () => toggleItem('bookmarks', mData);
                 updateModalButtons(d.id);
