@@ -13,47 +13,50 @@
         .fixed-header-section { position: fixed; top: 0; width: 100%; z-index: 100; background: #000; border-bottom: 1px solid #1c1c1c; }
         .ig-header { padding: 12px 15px 5px 15px; }
         .ig-logo { font-family: 'DM Sans', sans-serif; font-weight: 700; font-style: italic; font-size: 24px; letter-spacing: -0.8px; text-transform: lowercase; cursor: pointer; }
-        .verified-icon { font-size: 13px; color: #0095f6; margin-left: 5px; }
         
+        /* Search & Filter Area */
         .search-container { background: #0a0a0a; border-radius: 8px; display: flex; align-items: center; padding: 7px 12px; flex-grow: 1; border: 1px solid #1c1c1c; }
         .search-container input { background: transparent !important; border: none !important; color: white !important; font-size: 13px; width: 100%; outline: none; margin-left: 8px; }
-        
         .year-selector { background: #0a0a0a; border: 1px solid #1c1c1c; border-radius: 8px; padding: 8px 12px; font-size: 9px; font-weight: 800; color: #fff; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; gap: 5px; }
-        .year-dropdown { display: none; position: fixed; top: 110px; right: 15px; width: 120px; max-height: 300px; background: #121212; border: 1px solid #1c1c1c; border-radius: 12px; z-index: 101; overflow-y: auto; }
+        .year-dropdown { display: none; position: fixed; top: 110px; right: 15px; width: 120px; max-height: 300px; background: #121212; border: 1px solid #1c1c1c; border-radius: 12px; z-index: 150; overflow-y: auto; }
         .year-item { padding: 12px; font-size: 11px; font-weight: 600; text-align: center; border-bottom: 1px solid #1c1c1c; color: #888; cursor: pointer; }
-        
+
         .pill { background: transparent; border: 1px solid #1c1c1c; color: #fff; padding: 8px 0; border-radius: 8px; font-size: 10px; font-weight: 800; text-transform: uppercase; text-align: center; cursor: pointer; }
         .pill.active { border-color: #fff; }
 
-        .highlights-section { padding: 15px 0; border-bottom: 1px solid #1c1c1c; background: #000; }
-        .highlight-item { flex: 0 0 75px; text-align: center; cursor: pointer; }
-        .circle-icon { width: 62px; height: 62px; border-radius: 50%; background: #000; border: 1.5px solid #1c1c1c; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px auto; font-size: 18px; color: #555; }
-        .highlight-item.active .circle-icon { border: 2px solid transparent; background: linear-gradient(#000, #000) padding-box, linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%) border-box; color: #fff; }
-
-        .movie-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; padding-top: 360px; padding-bottom: 100px; }
+        /* Movie Grid Fix */
+        .movie-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; padding-top: 360px; padding-bottom: 100px; width: 100%; }
         .post-card { position: relative; aspect-ratio: 2/3; background: #0a0a0a; overflow: hidden; }
         .post-card img { width: 100%; height: 100%; object-fit: cover; }
-        
         .badge-rating { position: absolute; top: 6px; left: 6px; padding: 2px 5px; border-radius: 2px; font-size: 7px; font-weight: 900; z-index: 5; background: rgba(255,255,255,0.9); color: #000; }
-        .interaction-icon { font-size: 24px; cursor: pointer; color: #fff; }
-        
+
+        /* Modal & Interaction */
         .modal-player { display: none; position: fixed; inset: 0; z-index: 500; background: #000; overflow-y: auto; }
+        .interaction-icon { font-size: 24px; cursor: pointer; color: #fff; transition: 0.1s; }
+        .interaction-icon:active { transform: scale(1.2); }
+        
+        /* Back to Top */
+        #backToTop { position: fixed; bottom: 85px; right: 20px; background: #fff; color: #000; width: 40px; height: 40px; border-radius: 50%; display: none; align-items: center; justify-content: center; z-index: 400; box-shadow: 0 4px 12px rgba(0,0,0,0.5); cursor: pointer; }
+
+        /* Story/Cast Border */
         .story-border { padding: 2.5px; background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); border-radius: 50%; display: inline-block; }
         .story-inner { background: #000; padding: 2px; border-radius: 50%; }
         .story-img { width: 56px; height: 56px; border-radius: 50%; object-fit: cover; display: block; }
         
-        .server-btn { width: 100%; padding: 14px; border-radius: 12px; font-size: 10px; font-weight: 800; text-transform: uppercase; border: 1px solid #1c1c1c; text-align: center; cursor: pointer; }
         .ep-box { background: #111; border: 1px solid #1c1c1c; color: #555; font-size: 10px; font-weight: 800; padding: 12px 0; border-radius: 8px; text-align: center; cursor: pointer; }
         .ep-box.active { border-color: #fff; color: #fff; background: #1a1a1a; }
+        .server-btn { width: 100%; padding: 14px; border-radius: 12px; font-size: 10px; font-weight: 800; text-transform: uppercase; border: 1px solid #1c1c1c; text-align: center; cursor: pointer; }
     </style>
 </head>
 <body>
+    <div id="backToTop" onclick="window.scrollTo({top: 0, behavior: 'smooth'})"><i class="fa-solid fa-arrow-up text-sm"></i></div>
+
     <div class="fixed-header-section">
         <header class="ig-header">
             <div class="flex justify-between items-center">
                 <div class="flex items-center">
                     <h1 class="ig-logo" onclick="location.reload()">amnesfubbia <span class="text-white opacity-40 font-normal italic">animation</span></h1>
-                    <i class="fa-solid fa-circle-check verified-icon"></i>
+                    <i class="fa-solid fa-circle-check text-[#0095f6] text-[13px] ml-1"></i>
                 </div>
                 <div class="flex gap-6 text-xl">
                     <i class="fa-regular fa-square-plus" onclick="document.getElementById('searchInp').focus()"></i>
@@ -84,11 +87,11 @@
         </div>
 
         <div class="highlights-section">
-            <div class="flex gap-4 overflow-x-auto no-scrollbar px-4" id="genreHighlights">
-                <div class="highlight-item active" onclick="setFilter('genre', '', this)"><div class="circle-icon"><i class="fa-solid fa-border-all"></i></div><p class="text-[9px] font-bold text-zinc-500 uppercase">Semua</p></div>
-                <div class="highlight-item" onclick="setFilter('lang', 'ja', this)"><div class="circle-icon">🇯🇵</div><p class="text-[9px] font-bold text-zinc-500 uppercase">Anime</p></div>
-                <div class="highlight-item" onclick="setFilter('genre', '12', this)"><div class="circle-icon"><i class="fa-solid fa-compass"></i></div><p class="text-[9px] font-bold text-zinc-500 uppercase">Adventure</p></div>
-                <div class="highlight-item" onclick="setFilter('genre', '14', this)"><div class="circle-icon"><i class="fa-solid fa-wand-sparkles"></i></div><p class="text-[9px] font-bold text-zinc-500 uppercase">Fantasy</p></div>
+            <div class="flex gap-4 overflow-x-auto no-scrollbar px-4">
+                <div class="highlight-item active" onclick="setFilter('genre', '', this)"><div class="circle-icon"><i class="fa-solid fa-border-all"></i></div><p class="text-[9px] font-bold text-center text-zinc-500 uppercase">Semua</p></div>
+                <div class="highlight-item" onclick="setFilter('lang', 'ja', this)"><div class="circle-icon">🇯🇵</div><p class="text-[9px] font-bold text-center text-zinc-500 uppercase">Anime</p></div>
+                <div class="highlight-item" onclick="setFilter('genre', '12', this)"><div class="circle-icon"><i class="fa-solid fa-compass"></i></div><p class="text-[9px] font-bold text-center text-zinc-500 uppercase">Petualangan</p></div>
+                <div class="highlight-item" onclick="setFilter('genre', '35', this)"><div class="circle-icon"><i class="fa-solid fa-masks-theater"></i></div><p class="text-[9px] font-bold text-center text-zinc-500 uppercase">Komedi</p></div>
             </div>
         </div>
     </div>
@@ -100,19 +103,23 @@
         <div class="nav-item" onclick="closeModal(); location.reload();"><i class="fa-solid fa-house"></i></div>
         <div class="nav-item" onclick="closeModal(); document.getElementById('searchInp').focus();"><i class="fa-solid fa-magnifying-glass"></i></div>
         <div class="nav-item" onclick="closeModal(); showLibrary('bookmarks');"><i class="fa-regular fa-bookmark"></i></div>
-        <div class="nav-item" onclick="alert('Amnesfubbia v2.0')"><i class="fa-regular fa-user"></i></div>
+        <div class="nav-item" onclick="alert('Amnesfubbia Animation')"><i class="fa-regular fa-user"></i></div>
     </nav>
 
     <div id="movieModal" class="modal-player">
         <div class="max-w-xl mx-auto pb-40">
             <div class="px-4 h-[54px] flex items-center border-b border-zinc-900 sticky top-0 bg-black z-50">
-                <i class="fa-solid fa-chevron-left text-xl" onclick="closeModal()"></i>
-                <div class="flex-grow text-center"><h2 id="mTitle" class="truncate px-10"></h2></div>
+                <i class="fa-solid fa-chevron-left text-xl cursor-pointer" onclick="closeModal()"></i>
+                <div class="flex-grow text-center"><h2 id="mTitle" class="truncate px-10 text-sm font-bold"></h2></div>
             </div>
             
-            <div class="py-4 bg-black border-b border-zinc-900"><div id="mCast" class="flex gap-4 overflow-x-auto no-scrollbar px-4"></div></div>
+            <div class="py-4 bg-black border-b border-zinc-900">
+                <div id="mCast" class="flex gap-4 overflow-x-auto no-scrollbar px-4"></div>
+            </div>
             
-            <div class="aspect-video bg-zinc-900"><iframe id="videoPlayer" class="w-full h-full" allowfullscreen></iframe></div>
+            <div class="aspect-video bg-zinc-900">
+                <iframe id="videoPlayer" class="w-full h-full" allow="autoplay; fullscreen" allowfullscreen></iframe>
+            </div>
             
             <div class="px-4 py-4">
                 <div class="flex justify-between mb-4">
@@ -124,12 +131,12 @@
                 </div>
                 <p id="mLikeCount" class="font-bold text-sm mb-2"></p>
                 <p class="text-sm"><span id="mTitleAlt" class="font-black mr-2"></span><span id="mTagline" class="italic text-zinc-400"></span></p>
-                <div class="mt-2"><span id="mDesc" class="text-zinc-300 text-sm leading-relaxed"></span></div>
-                <p id="mMeta" class="text-[10px] text-zinc-500 mt-2 uppercase font-bold tracking-widest"></p>
+                <div class="mt-2 text-zinc-300 text-sm leading-relaxed" id="mDesc"></div>
+                <p id="mMeta" class="text-[10px] text-zinc-500 mt-2 uppercase font-bold"></p>
                 
                 <div id="seriesControl" class="hidden mt-6 p-4 bg-zinc-950 rounded-xl border border-zinc-900">
                     <div class="flex justify-between items-center mb-4">
-                        <span class="text-[10px] font-black text-zinc-500">EPISODE LIST</span>
+                        <span class="text-[10px] font-black text-zinc-500">PILIH EPISODE</span>
                         <select id="seasonSel" class="bg-zinc-900 text-xs p-1 rounded border border-zinc-800" onchange="loadEpisodes()"></select>
                     </div>
                     <div id="episodeGrid" class="grid grid-cols-5 gap-2"></div>
@@ -143,12 +150,16 @@
 
     <script>
         const API_KEY = 'bfa7df5310c9974f62f26c6789a8c00d';
-        let page = 1, currentType = 'multi', currentGenre = '', currentYear = '', searchQuery = '', currentSchedule = '';
+        let page = 1, currentType = 'multi', currentGenre = '', currentYear = '', searchQuery = '', currentSchedule = '', currentActorId = '';
 
         const getStore = (k) => JSON.parse(localStorage.getItem('anim_' + k) || '[]');
         const saveStore = (k, v) => localStorage.setItem('anim_' + k, JSON.stringify(v));
 
         window.onload = () => { initYearDropdown(); loadFeed(); };
+        window.onscroll = () => {
+            const btt = document.getElementById('backToTop');
+            if (window.scrollY > 500) btt.style.display = 'flex'; else btt.style.display = 'none';
+        };
 
         function initYearDropdown() {
             const d = document.getElementById('yearDropdown');
@@ -156,108 +167,183 @@
             for(let y=2026; y>=1950; y--) h += `<div class="year-item" onclick="setYear(${y})">${y}</div>`;
             d.innerHTML = h;
         }
-        function toggleYearDropdown() { const d = document.getElementById('yearDropdown'); d.style.display = d.style.display === 'block' ? 'none' : 'block'; }
-        function setYear(y) { currentYear = y; document.getElementById('yearVal').innerText = y || 'TAHUN'; toggleYearDropdown(); loadFeed(true); }
+
+        function toggleYearDropdown() { 
+            const d = document.getElementById('yearDropdown');
+            d.style.display = (d.style.display === 'block') ? 'none' : 'block';
+        }
+
+        function setYear(y) { 
+            currentYear = y; 
+            document.getElementById('yearVal').innerText = y || 'TAHUN'; 
+            toggleYearDropdown(); 
+            loadFeed(true); 
+        }
 
         async function loadFeed(isNew = true) {
             if (isNew) { page = 1; document.getElementById('feedGrid').innerHTML = ''; }
-            let url = `https://api.themoviedb.org/3/discover/${currentType === 'tv' ? 'tv' : 'movie'}?api_key=${API_KEY}&with_genres=16&language=id-ID&page=${page}`;
             
+            let url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_genres=16&language=id-ID&page=${page}`;
+            
+            if (currentType === 'tv') url = url.replace('/movie', '/tv');
+            else if (currentType === 'multi') {
+                // Untuk multi, kita ambil movie saja tapi genre animasi agar hasil konsisten
+                url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_genres=16&language=id-ID&page=${page}`;
+            }
+
+            if (currentType === 'short') url += '&with_runtime.lte=40';
             if (searchQuery) url = `https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${searchQuery}&language=id-ID`;
             if (currentYear) url += (currentType === 'tv' ? `&first_air_date_year=${currentYear}` : `&primary_release_year=${currentYear}`);
             if (currentGenre) url += `&with_genres=16,${currentGenre}`;
-            if (currentSchedule) url = `https://api.themoviedb.org/3/movie/${currentSchedule}?api_key=${API_KEY}&language=id-ID`;
+            if (currentSchedule) url = `https://api.themoviedb.org/3/movie/${currentSchedule}?api_key=${API_KEY}&with_genres=16&language=id-ID`;
+            if (currentActorId) url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_cast=${currentActorId}&with_genres=16&language=id-ID`;
 
             try {
                 const res = await fetch(url);
                 const data = await res.json();
-                renderFeed(data.results.map(m => ({...m, m_type: m.media_type || (currentType === 'tv' ? 'tv' : 'movie')})));
+                const items = data.results.filter(m => m.poster_path).map(m => ({
+                    ...m, 
+                    m_type: m.media_type || (currentType === 'tv' ? 'tv' : 'movie')
+                }));
+                renderFeed(items);
             } catch (e) { console.error(e); }
         }
 
         function renderFeed(items) {
             const grid = document.getElementById('feedGrid');
             items.forEach(m => {
-                if (!m.poster_path) return;
                 const card = document.createElement('div');
                 card.className = 'post-card';
                 card.onclick = () => openModal(m.id, m.m_type);
-                card.innerHTML = `<div class="badge-rating"><i class="fa-solid fa-star mr-1"></i>${m.vote_average.toFixed(1)}</div><img src="https://image.tmdb.org/t/p/w342${m.poster_path}">`;
+                card.innerHTML = `<div class="badge-rating"><i class="fa-solid fa-star mr-1"></i>${(m.vote_average || 0).toFixed(1)}</div><img src="https://image.tmdb.org/t/p/w342${m.poster_path}">`;
                 grid.appendChild(card);
             });
         }
 
         async function openModal(id, type) {
             window.currentMediaId = id;
-            document.getElementById('movieModal').style.display = 'block';
+            window.currentMediaType = type;
+            const modal = document.getElementById('movieModal');
+            modal.style.display = 'block';
             document.body.style.overflow = 'hidden';
             
             const res = await fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&language=id-ID&append_to_response=videos,credits`);
             const d = await res.json();
+
+            // Simpan data lengkap untuk fitur like/bookmark
+            window.activeMovieData = { id: d.id, title: d.title || d.name, poster_path: d.poster_path, vote_average: d.vote_average, m_type: type };
 
             document.getElementById('mTitle').innerText = d.title || d.name;
             document.getElementById('mTitleAlt').innerText = (d.title || d.name).toLowerCase().replace(/\s/g, '');
             document.getElementById('mTagline').innerText = d.tagline ? `"${d.tagline}"` : "";
             document.getElementById('mDesc').innerText = d.overview || "Sinopsis tidak tersedia.";
             document.getElementById('mMeta').innerText = `${(d.release_date || d.first_air_date || '').split('-')[0]} • ${type.toUpperCase()}`;
-            document.getElementById('mLikeCount').innerText = `${Math.floor(d.vote_average * 1000).toLocaleString()} suka`;
+            document.getElementById('mLikeCount').innerText = `${Math.floor((d.vote_average || 0) * 1200).toLocaleString()} suka`;
 
-            // Cast
-            document.getElementById('mCast').innerHTML = (d.credits.cast || []).slice(0, 8).map(c => `
-                <div class="flex-shrink-0 text-center w-[60px]">
+            // Fix: Pemeran (Cast) Klik Berfungsi
+            document.getElementById('mCast').innerHTML = (d.credits.cast || []).slice(0, 10).map(c => `
+                <div class="flex-shrink-0 text-center w-[62px] cursor-pointer" onclick="filterByActor('${c.id}')">
                     <div class="story-border"><div class="story-inner">
                         <img src="https://image.tmdb.org/t/p/w185${c.profile_path}" class="story-img" onerror="this.src='https://via.placeholder.com/100'">
                     </div></div>
-                    <p class="text-[8px] truncate mt-1 text-zinc-500">${c.name.split(' ')[0]}</p>
+                    <p class="text-[8px] truncate mt-1 text-zinc-500 font-bold">${c.name.split(' ')[0]}</p>
                 </div>
             `).join('');
 
-            // Video & Servers
+            // Trailer Autoplay Fix (Muted agar diizinkan browser)
+            const trailer = (d.videos.results || []).find(v => v.type === 'Trailer' && v.site === 'YouTube');
+            if (trailer) {
+                document.getElementById('videoPlayer').src = `https://www.youtube.com/embed/${trailer.key}?autoplay=1&mute=1&rel=0`;
+            } else {
+                document.getElementById('videoPlayer').src = type === 'tv' ? `https://vidrock.net/embed/tv/${id}/1/1` : `https://vidrock.net/embed/movie/${id}`;
+            }
+
             if(type === 'tv') {
                 document.getElementById('seriesControl').classList.remove('hidden');
                 document.getElementById('serverList').classList.add('hidden');
                 document.getElementById('btnDownloadMain').classList.add('hidden');
-                document.getElementById('seasonSel').innerHTML = d.seasons.map(s => `<option value="${s.season_number}">Season ${s.season_number}</option>`).join('');
+                document.getElementById('seasonSel').innerHTML = d.seasons.filter(s => s.season_number > 0).map(s => `<option value="${s.season_number}">Season ${s.season_number}</option>`).join('');
                 loadEpisodes();
             } else {
                 document.getElementById('seriesControl').classList.add('hidden');
                 document.getElementById('serverList').classList.remove('hidden');
                 document.getElementById('btnDownloadMain').classList.remove('hidden');
-                const trailer = d.videos.results.find(v => v.type === 'Trailer');
-                document.getElementById('videoPlayer').src = trailer ? `https://www.youtube.com/embed/${trailer.key}?autoplay=1` : `https://vidrock.net/embed/movie/${id}`;
                 document.getElementById('serverList').innerHTML = `
                     <button class="server-btn bg-zinc-950" onclick="document.getElementById('videoPlayer').src='https://vidrock.net/embed/movie/${id}'">Server 1</button>
                     <button class="server-btn bg-zinc-950" onclick="document.getElementById('videoPlayer').src='https://vidsrc.me/embed/movie/${id}'">Server 2</button>
                 `;
                 document.getElementById('btnDownloadMain').onclick = () => window.open(`https://dl.vidsrc.vip/movie/${id}`, '_blank');
             }
+
+            // Bind Like/Book Buttons
+            document.getElementById('btnLikeModal').onclick = () => toggleItem('likes', window.activeMovieData);
+            document.getElementById('btnBookModal').onclick = () => toggleItem('bookmarks', window.activeMovieData);
             updateModalButtons(id);
+        }
+
+        function filterByActor(actorId) {
+            currentActorId = actorId;
+            searchQuery = '';
+            closeModal();
+            loadFeed(true);
+            window.scrollTo({top: 0, behavior: 'smooth'});
         }
 
         async function loadEpisodes() {
             const s = document.getElementById('seasonSel').value;
             const res = await fetch(`https://api.themoviedb.org/3/tv/${window.currentMediaId}/season/${s}?api_key=${API_KEY}`);
             const d = await res.json();
-            document.getElementById('episodeGrid').innerHTML = d.episodes.map(e => `
-                <div class="ep-box" onclick="playEp(${s}, ${e.episode_number})">${e.episode_number}</div>
+            document.getElementById('episodeGrid').innerHTML = (d.episodes || []).map(e => `
+                <div class="ep-box" id="ep-${e.episode_number}" onclick="playEp(${s}, ${e.episode_number})">${e.episode_number}</div>
             `).join('');
-            playEp(s, 1);
+            if(d.episodes.length) playEp(s, 1);
         }
 
         function playEp(s, e) {
             document.getElementById('videoPlayer').src = `https://vidrock.net/embed/tv/${window.currentMediaId}/${s}/${e}`;
-            document.querySelectorAll('.ep-box').forEach((b, i) => b.classList.toggle('active', i === e-1));
+            document.querySelectorAll('.ep-box').forEach(b => b.classList.remove('active'));
+            const activeBox = document.getElementById(`ep-${e}`);
+            if(activeBox) activeBox.classList.add('active');
         }
 
-        function closeModal() { document.getElementById('movieModal').style.display = 'none'; document.getElementById('videoPlayer').src = ''; document.body.style.overflow = 'auto'; }
-        function searchAction() { searchQuery = document.getElementById('searchInp').value; loadFeed(true); }
-        function setFilter(t, v, el) { 
+        function closeModal() { 
+            document.getElementById('movieModal').style.display = 'none'; 
+            document.getElementById('videoPlayer').src = ''; 
+            document.body.style.overflow = 'auto'; 
+        }
+
+        function setFilter(t, v, el) {
             document.querySelectorAll('.pill, .highlight-item').forEach(p => p.classList.remove('active'));
             el.classList.add('active');
-            if(t==='type') currentType = v; else if(t==='genre') currentGenre = v;
+            currentActorId = '';
+            searchQuery = '';
+            if(t === 'type') { currentType = v; currentGenre = ''; }
+            else if(t === 'genre') { currentGenre = v; }
+            else if(t === 'lang') { currentGenre = ''; }
             loadFeed(true);
         }
-        function setSchedule(v, el) { currentSchedule = v; loadFeed(true); }
+
+        function setSchedule(v, el) {
+            currentSchedule = v;
+            document.getElementById('btnAllSchedule').parentElement.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+            el.classList.add('active');
+            loadFeed(true);
+        }
+
+        function searchAction() {
+            searchQuery = document.getElementById('searchInp').value;
+            currentActorId = '';
+            loadFeed(true);
+        }
+
+        function toggleItem(key, movie) {
+            let items = getStore(key);
+            const idx = items.findIndex(x => x.id == movie.id);
+            if(idx > -1) items.splice(idx, 1); 
+            else items.push(movie);
+            saveStore(key, items);
+            updateModalButtons(movie.id);
+        }
 
         function updateModalButtons(id) {
             const isLiked = getStore('likes').some(x => x.id == id);
@@ -266,20 +352,16 @@
             document.getElementById('btnBookModal').className = isBooked ? 'fa-solid fa-bookmark text-white interaction-icon' : 'fa-regular fa-bookmark interaction-icon';
         }
 
-        function toggleItem(key, id) {
-            let items = getStore(key);
-            const idx = items.findIndex(x => x.id == id);
-            if(idx > -1) items.splice(idx, 1); else items.push({id});
-            saveStore(key, items);
-            updateModalButtons(id);
-        }
-
-        function showLibrary(k) {
+        function showLibrary(key) {
+            const items = getStore(key);
             const grid = document.getElementById('feedGrid');
             grid.innerHTML = '';
-            const items = getStore(k);
-            if(!items.length) grid.innerHTML = '<div class="col-span-3 text-center py-20 uppercase text-xs font-black">Kosong</div>';
-            else loadFeed(); // Untuk demo, panggil feed lagi (biasanya ambil data dari storage)
+            if (!items.length) {
+                grid.innerHTML = `<div class="col-span-3 text-center py-20 uppercase text-xs font-black text-zinc-600">Daftar ${key} Kosong</div>`;
+            } else {
+                renderFeed(items);
+            }
+            window.scrollTo({top: 0, behavior: 'smooth'});
         }
     </script>
 </body>
