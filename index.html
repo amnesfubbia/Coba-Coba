@@ -10,53 +10,68 @@
     <style>
         body { background-color: #000; color: #fff; font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        
-        /* Header & Nav */
         .fixed-header-section { position: fixed; top: 0; width: 100%; z-index: 100; background: #000; border-bottom: 1px solid #1c1c1c; }
-        .ig-logo { font-family: 'DM Sans', sans-serif; font-weight: 700; font-style: italic; font-size: 24px; text-transform: lowercase; }
+        .ig-header { padding: 12px 15px 5px 15px; }
+        .ig-logo { font-family: 'DM Sans', sans-serif; font-weight: 700; font-style: italic; font-size: 24px; letter-spacing: -0.8px; text-transform: lowercase; }
+        .search-container { background: #0a0a0a; border-radius: 8px; display: flex; align-items: center; padding: 7px 12px; flex-grow: 1; border: 1px solid #1c1c1c; }
+        .search-container input { background: transparent !important; border: none !important; color: white !important; font-size: 13px; width: 100%; outline: none !important; margin-left: 8px; }
         
+        /* Baris Filter Baru */
+        .filter-bar { display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #1c1c1c; background: #000; }
+        .filter-btn { font-size: 9px; font-weight: 800; color: #555; text-transform: uppercase; letter-spacing: 1px; }
+
         /* Studio Highlights Monokrom */
-        .studio-item { flex: 0 0 80px; text-align: center; cursor: pointer; }
-        .studio-circle { width: 60px; height: 60px; border-radius: 50%; background: #0a0a0a; border: 1px solid #1c1c1c; display: flex; align-items: center; justify-content: center; margin: 0 auto 5px; overflow: hidden; }
-        .studio-logo { width: 40px; filter: grayscale(100%) brightness(0.8); transition: 0.3s; }
+        .studio-circle { width: 55px; height: 55px; border-radius: 50%; background: #000; border: 1.5px solid #1c1c1c; display: flex; align-items: center; justify-content: center; margin-bottom: 5px; }
+        .studio-logo { width: 35px; filter: grayscale(100%) brightness(0.7); transition: 0.3s; }
         .studio-item.active .studio-logo { filter: grayscale(0%) brightness(1); }
         .studio-item.active .studio-circle { border-color: #fff; }
 
-        /* Filter Bar Baru */
-        .filter-bar { display: flex; justify-content: space-around; padding: 12px 0; border-bottom: 1px solid #1c1c1c; background: #000; }
-        .filter-btn { font-size: 10px; font-weight: 800; color: #555; text-transform: uppercase; letter-spacing: 1px; }
-        .filter-btn.active { color: #fff; }
+        /* Movie Grid */
+        .movie-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; padding-top: 380px; padding-bottom: 100px; }
+        .post-card { position: relative; aspect-ratio: 2/3; background: #0a0a0a; cursor: pointer; }
+        .post-card img { width: 100%; height: 100%; object-fit: cover; }
 
         /* Bottom Sheet */
         .sheet-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; z-index: 400; backdrop-filter: blur(4px); }
-        .bottom-sheet { position: fixed; bottom: -100%; left: 0; width: 100%; height: 75%; background: #0a0a0a; border-top: 1px solid #1c1c1c; border-radius: 20px 20px 0 0; z-index: 500; transition: bottom 0.4s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; }
+        .bottom-sheet { position: fixed; bottom: -100%; left: 0; width: 100%; height: 75%; background: #0a0a0a; border-top: 1px solid #1c1c1c; border-radius: 20px 20px 0 0; z-index: 500; transition: bottom 0.4s ease; display: flex; flex-direction: column; }
         .bottom-sheet.active { bottom: 0; }
-        .sheet-header { padding: 20px; border-bottom: 1px solid #1c1c1c; display: flex; justify-content: space-between; align-items: center; }
-        .sheet-body { flex-grow: 1; overflow-y: auto; padding: 10px 20px; }
-        .list-item { padding: 15px 0; border-bottom: 1px solid #111; display: flex; justify-content: space-between; align-items: center; font-size: 14px; cursor: pointer; }
-        .list-item.selected { color: #fff; font-weight: 700; }
-        
-        /* Grid Movies */
-        .movie-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; padding-top: 360px; padding-bottom: 100px; }
-        .post-card { aspect-ratio: 2/3; background: #0a0a0a; position: relative; }
-        .post-card img { width: 100%; height: 100%; object-fit: cover; }
+        .list-item { padding: 15px 20px; border-bottom: 1px solid #111; display: flex; justify-content: space-between; font-size: 13px; cursor: pointer; color: #666; }
+        .list-item.selected { color: #fff; font-weight: 800; }
 
-        /* Bottom Nav */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #000; border-top: 1px solid #1c1c1c; display: flex; justify-content: space-around; padding: 15px 0; z-index: 300; }
+        /* Modal Player */
+        .modal-player { display: none; position: fixed; inset: 0; z-index: 600; background: #000; overflow-y: auto; }
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #000; border-top: 1px solid #1c1c1c; display: flex; justify-content: space-around; padding: 12px 0; z-index: 300; padding-bottom: calc(12px + env(safe-area-inset-bottom)); }
+        .nav-item { color: #fff; font-size: 20px; cursor: pointer; }
+        
+        .pill { background: #0a0a0a; border: 1px solid #1c1c1c; color: #555; padding: 8px 15px; border-radius: 8px; font-size: 9px; font-weight: 800; text-transform: uppercase; }
+        .pill.active { border-color: #fff; color: #fff; }
     </style>
 </head>
 <body>
+    <div id="loader" style="position:fixed; top:0; left:0; height:1.5px; background:#fff; width:0%; transition:width 0.3s; z-index:1000;"></div>
 
     <div class="fixed-header-section">
-        <div class="p-4 flex justify-between items-center">
-            <h1 class="ig-logo">amnesfubbia <span class="opacity-40 font-normal">animation</span></h1>
-            <div class="flex gap-4 text-xl"><i class="fa-regular fa-heart"></i><i class="fa-regular fa-paper-plane"></i></div>
-        </div>
+        <header class="ig-header">
+            <div class="flex justify-between items-center">
+                <h1 class="ig-logo" onclick="location.reload()">amnesfubbia <span class="text-white opacity-40 font-normal">animation</span></h1>
+                <div class="flex gap-6 text-xl">
+                    <i class="fa-regular fa-square-plus" onclick="document.getElementById('searchInp').focus()"></i>
+                    <i class="fa-regular fa-heart" onclick="showLibrary('likes')"></i>
+                </div>
+            </div>
+            <div class="flex items-center gap-2 mt-2">
+                <div class="search-container">
+                    <i class="fa-solid fa-magnifying-glass text-zinc-600 text-[10px]"></i>
+                    <input type="text" id="searchInp" placeholder="Cari animasi..." onkeydown="if(event.key==='Enter') searchAction()">
+                </div>
+            </div>
+        </header>
 
-        <div class="px-4 pb-2 flex gap-2">
-            <button class="px-4 py-2 rounded-lg bg-zinc-900 text-[10px] font-bold uppercase" onclick="setFilter('type', 'movie')">Film</button>
-            <button class="px-4 py-2 rounded-lg bg-zinc-900 text-[10px] font-bold uppercase" onclick="setFilter('type', 'tv')">Series</button>
-            <button class="px-4 py-2 rounded-lg bg-zinc-900 text-[10px] font-bold uppercase" onclick="setFilter('type', 'short')">Short</button>
+        <div class="px-4 py-2 flex gap-2">
+            <button class="pill active" onclick="setFilter('type', 'multi', this)">Semua</button>
+            <button class="pill" onclick="setFilter('type', 'movie', this)">Film</button>
+            <button class="pill" onclick="setFilter('type', 'tv', this)">Series</button>
+            <button class="pill" onclick="setFilter('type', 'short', this)">Short</button>
         </div>
 
         <div class="filter-bar">
@@ -65,159 +80,222 @@
             <button class="filter-btn" onclick="openSheet('negara')">Negara <i class="fa-solid fa-chevron-down text-[7px]"></i></button>
         </div>
 
-        <div class="py-4 overflow-x-auto no-scrollbar flex px-4 gap-4 bg-black">
-            <div class="studio-item" onclick="setStudio('2', this)">
+        <div class="py-4 overflow-x-auto no-scrollbar flex px-4 gap-4 bg-black border-b border-zinc-900">
+            <div class="studio-item flex-shrink-0 text-center" onclick="setStudio('2', this)">
                 <div class="studio-circle"><img src="https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney_logo.svg" class="studio-logo"></div>
-                <p class="text-[8px] font-bold uppercase text-zinc-500">Disney</p>
+                <p class="text-[7px] font-bold text-zinc-600 uppercase">Disney</p>
             </div>
-            <div class="studio-item" onclick="setStudio('3', this)">
+            <div class="studio-item flex-shrink-0 text-center" onclick="setStudio('3', this)">
                 <div class="studio-circle"><img src="https://upload.wikimedia.org/wikipedia/commons/d/d5/Pixar_Animation_Studios_Logo.svg" class="studio-logo"></div>
-                <p class="text-[8px] font-bold uppercase text-zinc-500">Pixar</p>
+                <p class="text-[7px] font-bold text-zinc-600 uppercase">Pixar</p>
             </div>
-            <div class="studio-item" onclick="setStudio('521', this)">
-                <div class="studio-circle"><img src="https://upload.wikimedia.org/wikipedia/en/2/2a/DreamWorks_Animation_logo.svg" class="studio-logo"></div>
-                <p class="text-[8px] font-bold uppercase text-zinc-500">Dreamworks</p>
-            </div>
-            <div class="studio-item" onclick="setStudio('10342', this)">
+            <div class="studio-item flex-shrink-0 text-center" onclick="setStudio('10342', this)">
                 <div class="studio-circle"><img src="https://upload.wikimedia.org/wikipedia/id/0/03/Studio_Ghibli_logo.svg" class="studio-logo"></div>
-                <p class="text-[8px] font-bold uppercase text-zinc-500">Ghibli</p>
+                <p class="text-[7px] font-bold text-zinc-600 uppercase">Ghibli</p>
             </div>
-            <div class="studio-item" onclick="setStudio('33', this)">
-                <div class="studio-circle"><img src="https://upload.wikimedia.org/wikipedia/commons/5/5f/Illumination_Logo.svg" class="studio-logo"></div>
-                <p class="text-[8px] font-bold uppercase text-zinc-500">Illumination</p>
+            <div class="studio-item flex-shrink-0 text-center" onclick="setStudio('521', this)">
+                <div class="studio-circle"><img src="https://upload.wikimedia.org/wikipedia/en/2/2a/DreamWorks_Animation_logo.svg" class="studio-logo"></div>
+                <p class="text-[7px] font-bold text-zinc-600 uppercase">Dreamworks</p>
             </div>
         </div>
     </div>
 
     <div id="sheetOverlay" class="sheet-overlay" onclick="closeSheet()"></div>
     <div id="bottomSheet" class="bottom-sheet">
-        <div class="sheet-header">
-            <h2 id="sheetTitle" class="text-xs font-black uppercase tracking-tighter">PILIH</h2>
-            <i class="fa-solid fa-xmark cursor-pointer" onclick="closeSheet()"></i>
+        <div class="p-5 border-b border-zinc-900 flex justify-between items-center">
+            <h2 id="sheetTitle" class="text-xs font-black uppercase tracking-widest">PILIH</h2>
+            <i class="fa-solid fa-xmark" onclick="closeSheet()"></i>
         </div>
-        <div class="px-5 py-3">
-            <div class="bg-zinc-900 flex items-center px-3 py-2 rounded-xl">
-                <i class="fa-solid fa-magnifying-glass text-zinc-500 text-xs"></i>
-                <input type="text" id="sheetSearch" placeholder="Cari..." class="bg-transparent border-none text-xs ml-2 w-full outline-none" oninput="filterSheetList()">
-            </div>
-        </div>
-        <div id="sheetBody" class="sheet-body no-scrollbar"></div>
-        <div class="p-5 border-t border-zinc-900">
-            <button class="w-full bg-white text-black py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest" onclick="applySheetFilter()">Terapkan Pilihan</button>
-        </div>
+        <div class="p-4"><input type="text" id="sheetSearch" placeholder="Cari..." class="w-full bg-zinc-900 p-3 rounded-xl text-xs outline-none" oninput="filterSheetList()"></div>
+        <div id="sheetBody" class="flex-grow overflow-y-auto no-scrollbar"></div>
+        <div class="p-4"><button class="w-full bg-white text-black py-4 rounded-2xl font-black text-[10px] uppercase" onclick="applySheetFilter()">Terapkan</button></div>
     </div>
 
     <main id="feedGrid" class="movie-grid"></main>
 
     <nav class="bottom-nav">
-        <i class="fa-solid fa-house text-xl"></i>
-        <i class="fa-solid fa-magnifying-glass text-xl text-zinc-600"></i>
-        <i class="fa-regular fa-square-plus text-xl text-zinc-600"></i>
-        <i class="fa-regular fa-circle-user text-xl text-zinc-600"></i>
+        <div class="nav-item" onclick="closeModal(); location.reload();"><i class="fa-solid fa-house"></i></div>
+        <div class="nav-item" onclick="closeModal(); document.getElementById('searchInp').focus();"><i class="fa-solid fa-magnifying-glass"></i></div>
+        <div class="nav-item" onclick="closeModal(); showLibrary('bookmarks');"><i class="fa-regular fa-bookmark"></i></div>
+        <div class="nav-item" onclick="alert('Amnesfubbia Animation By Anasteas')"><i class="fa-regular fa-user"></i></div>
     </nav>
+
+    <div id="movieModal" class="modal-player">
+        <div class="max-w-xl mx-auto pb-40">
+            <div class="px-4 h-[54px] flex items-center border-b border-zinc-900 sticky top-0 bg-black z-50">
+                <i class="fa-solid fa-chevron-left text-xl cursor-pointer" onclick="closeModal()"></i>
+                <div class="flex-grow text-center"><h2 id="mTitle" class="text-sm font-bold truncate"></h2></div>
+            </div>
+            <div class="aspect-video bg-zinc-900 relative">
+                <iframe id="videoPlayer" class="w-full h-full" allow="autoplay; fullscreen" allowfullscreen></iframe>
+            </div>
+            <div class="px-5 py-6">
+                <div class="flex gap-6 mb-6">
+                    <i id="btnLikeModal" class="fa-regular fa-heart text-2xl"></i>
+                    <i id="btnBookModal" class="fa-regular fa-bookmark text-2xl"></i>
+                </div>
+                <div id="mDesc" class="text-sm text-zinc-300 leading-relaxed mb-4"></div>
+                <div id="translateBtn" class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest cursor-pointer underline" onclick="toggleTranslation()">Terjemahkan ke Inggris</div>
+            </div>
+        </div>
+    </div>
 
     <script>
         const API_KEY = 'bfa7df5310c9974f62f26c6789a8c00d';
-        let currentType = 'movie', currentYears = [], currentGenres = [], currentCountries = [], currentStudio = '', sheetMode = '';
+        let currentType = 'multi', currentYears = [], currentGenres = [], currentCountries = [], currentStudio = '', searchQuery = '', sheetMode = '';
+        let fullDesc = '', descIndo = '', isTranslated = false;
 
-        // Data Mock untuk Negara & Genre
-        const genresList = [{id:12, name:'Adventure'}, {id:35, name:'Comedy'}, {id:14, name:'Fantasy'}, {id:10751, name:'Family'}, {id:878, name:'Sci-Fi'}, {id:28, name:'Action'}];
-        const countriesList = [{id:'US', name:'United States'}, {id:'JP', name:'Japan'}, {id:'FR', name:'France'}, {id:'KR', name:'South Korea'}, {id:'ID', name:'Indonesia'}, {id:'GB', name:'United Kingdom'}, {id:'CA', name:'Canada'}];
+        const getStore = (k) => JSON.parse(localStorage.getItem(k) || '[]');
+        const saveStore = (k, v) => localStorage.setItem(k, JSON.stringify(v));
 
         window.onload = () => loadFeed();
 
-        async function loadFeed() {
+        async function loadFeed(isNew = true) {
             const grid = document.getElementById('feedGrid');
-            grid.innerHTML = Array(12).fill('<div class="post-card bg-zinc-900 animate-pulse"></div>').join('');
+            if (isNew) grid.innerHTML = '';
             
-            let url = `https://api.themoviedb.org/3/discover/${currentType === 'short' ? 'movie' : currentType}?api_key=${API_KEY}&with_genres=16&language=id-ID`;
+            let typeUrl = currentType === 'tv' ? 'tv' : 'movie';
+            if (currentType === 'multi') typeUrl = 'movie'; // Fallback logic
+
+            let url = `https://api.themoviedb.org/3/discover/${typeUrl}?api_key=${API_KEY}&with_genres=16&language=id-ID`;
             
+            if (searchQuery) url = `https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${searchQuery}&language=id-ID`;
             if (currentYears.length) url += `&primary_release_year=${currentYears.join('|')}`;
             if (currentGenres.length) url += `&with_genres=16,${currentGenres.join(',')}`;
             if (currentCountries.length) url += `&with_origin_country=${currentCountries.join('|')}`;
             if (currentStudio) url += `&with_companies=${currentStudio}`;
             if (currentType === 'short') url += `&with_runtime.lte=40`;
 
-            const res = await fetch(url);
-            const data = await res.json();
-            
-            grid.innerHTML = '';
-            data.results.forEach(m => {
-                const card = document.createElement('div');
-                card.className = 'post-card';
-                card.innerHTML = `<img src="https://image.tmdb.org/t/p/w342${m.poster_path}" loading="lazy">`;
-                grid.appendChild(card);
-            });
+            try {
+                const res = await fetch(url);
+                const data = await res.json();
+                data.results.forEach(m => {
+                    if (!m.poster_path) return;
+                    const card = document.createElement('div');
+                    card.className = 'post-card';
+                    card.onclick = () => openModal(m.id, m.media_type || (currentType === 'tv' ? 'tv' : 'movie'));
+                    card.innerHTML = `<img src="https://image.tmdb.org/t/p/w342${m.poster_path}" loading="lazy">`;
+                    grid.appendChild(card);
+                });
+            } catch (e) { console.error(e); }
+        }
+
+        async function openModal(id, type) {
+            const modal = document.getElementById('movieModal');
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+
+            const [resId, resEn] = await Promise.all([
+                fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&language=id-ID&append_to_response=videos`),
+                fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&language=en-US&append_to_response=videos`)
+            ]);
+            const d = await resId.json(); const dEn = await resEn.json();
+
+            document.getElementById('mTitle').innerText = d.title || d.name;
+            descIndo = d.overview || ""; fullDesc = dEn.overview || "No description.";
+            document.getElementById('mDesc').innerText = descIndo || fullDesc;
+            isTranslated = false;
+            document.getElementById('translateBtn').innerText = "Terjemahkan ke Inggris";
+
+            const vids = [...(d.videos?.results || []), ...(dEn.videos?.results || [])];
+            const trailer = vids.find(v => v.type === 'Trailer' && v.site === 'YouTube') || vids[0];
+            document.getElementById('videoPlayer').src = trailer ? `https://www.youtube.com/embed/${trailer.key}?autoplay=1` : `https://vidrock.net/embed/${type}/${id}`;
+
+            updateModalButtons(id);
+            document.getElementById('btnLikeModal').onclick = () => toggleItem('likes', d, id);
+            document.getElementById('btnBookModal').onclick = () => toggleItem('bookmarks', d, id);
+        }
+
+        function toggleTranslation() {
+            isTranslated = !isTranslated;
+            document.getElementById('mDesc').innerText = isTranslated ? fullDesc : (descIndo || fullDesc);
+            document.getElementById('translateBtn').innerText = isTranslated ? "Lihat Indonesia" : "Terjemahkan ke Inggris";
+        }
+
+        function updateModalButtons(id) {
+            const isLiked = getStore('likes').some(x => x.id == id);
+            const isBooked = getStore('bookmarks').some(x => x.id == id);
+            document.getElementById('btnLikeModal').className = isLiked ? 'fa-solid fa-heart text-red-500 text-2xl' : 'fa-regular fa-heart text-2xl';
+            document.getElementById('btnBookModal').className = isBooked ? 'fa-solid fa-bookmark text-white text-2xl' : 'fa-regular fa-bookmark text-2xl';
+        }
+
+        function toggleItem(key, data, id) {
+            let items = getStore(key);
+            const idx = items.findIndex(x => x.id == id);
+            if(idx > -1) items.splice(idx, 1); else items.push(data);
+            saveStore(key, items);
+            updateModalButtons(id);
         }
 
         function openSheet(mode) {
             sheetMode = mode;
-            const title = document.getElementById('sheetTitle');
             const body = document.getElementById('sheetBody');
             body.innerHTML = '';
-            document.getElementById('sheetSearch').value = '';
-
-            if (mode === 'tahun') {
-                title.innerText = 'PILIH TAHUN';
-                for (let y = 2026; y >= 1930; y--) body.appendChild(createItem(y, y, currentYears));
-            } else if (mode === 'genre') {
-                title.innerText = 'PILIH GENRE';
-                genresList.forEach(g => body.appendChild(createItem(g.id, g.name, currentGenres)));
-            } else if (mode === 'negara') {
-                title.innerText = 'PILIH NEGARA (A-Z)';
-                countriesList.sort((a,b) => a.name.localeCompare(b.name)).forEach(c => body.appendChild(createItem(c.id, c.name, currentCountries)));
-            }
-
-            document.getElementById('sheetOverlay').style.display = 'block';
+            document.getElementById('sheetTitle').innerText = 'PILIH ' + mode.toUpperCase();
             document.getElementById('bottomSheet').classList.add('active');
+            document.getElementById('sheetOverlay').style.display = 'block';
+            
+            if(mode === 'tahun') {
+                for(let y=2026; y>=1930; y--) body.appendChild(createListItem(y, y, currentYears));
+            } else if(mode === 'negara') {
+                const countries = [
+                    {id:'JP', n:'Jepang'}, {id:'US', n:'USA'}, {id:'ID', n:'Indonesia'}, 
+                    {id:'KR', n:'Korea'}, {id:'FR', n:'Prancis'}, {id:'GB', n:'Inggris'},
+                    {id:'CN', n:'Tiongkok'}, {id:'CA', n:'Kanada'}, {id:'AU', n:'Australia'}
+                ].sort((a,b) => a.n.localeCompare(b.n));
+                countries.forEach(c => body.appendChild(createListItem(c.id, c.n, currentCountries)));
+            } else if(mode === 'genre') {
+                const genres = [
+                    {id:12, n:'Petualangan'}, {id:35, n:'Komedi'}, {id:14, n:'Fantasi'}, 
+                    {id:10751, n:'Keluarga'}, {id:28, n:'Aksi'}, {id:878, n:'Sci-Fi'},
+                    {id:9648, n:'Misteri'}, {id:10402, n:'Musik'}
+                ];
+                genres.forEach(g => body.appendChild(createListItem(g.id, g.n, currentGenres)));
+            }
         }
 
-        function createItem(id, name, activeArray) {
-            const div = document.createElement('div');
-            div.className = `list-item ${activeArray.includes(id) ? 'selected' : ''}`;
-            div.innerHTML = `<span>${name}</span> ${activeArray.includes(id) ? '<i class="fa-solid fa-check text-[10px]"></i>' : ''}`;
-            div.onclick = () => {
-                if (activeArray.includes(id)) {
-                    activeArray.splice(activeArray.indexOf(id), 1);
-                } else {
-                    activeArray.push(id);
-                }
-                openSheet(sheetMode); // Refresh list
+        function createListItem(id, name, arr) {
+            const d = document.createElement('div');
+            d.className = `list-item ${arr.includes(id) ? 'selected' : ''}`;
+            d.innerHTML = `<span>${name}</span> ${arr.includes(id) ? '<i class="fa-solid fa-check"></i>' : ''}`;
+            d.onclick = () => { 
+                if(arr.includes(id)) arr.splice(arr.indexOf(id), 1); 
+                else arr.push(id); 
+                openSheet(sheetMode); 
             };
-            return div;
+            return d;
         }
 
-        function applySheetFilter() {
-            closeSheet();
-            loadFeed();
+        function applySheetFilter() { closeSheet(); loadFeed(true); }
+        function closeSheet() { document.getElementById('bottomSheet').classList.remove('active'); document.getElementById('sheetOverlay').style.display = 'none'; }
+        function closeModal() { document.getElementById('movieModal').style.display = 'none'; document.getElementById('videoPlayer').src = ''; document.body.style.overflow = 'auto'; }
+        function searchAction() { searchQuery = document.getElementById('searchInp').value; loadFeed(true); }
+        function setFilter(t, v, el) { 
+            document.querySelectorAll('.pill').forEach(b => b.classList.remove('active'));
+            el.classList.add('active');
+            currentType = v; loadFeed(true); 
         }
-
-        function closeSheet() {
-            document.getElementById('bottomSheet').classList.remove('active');
-            document.getElementById('sheetOverlay').style.display = 'none';
+        function setStudio(id, el) { 
+            document.querySelectorAll('.studio-item').forEach(s => s.classList.remove('active'));
+            if(currentStudio === id) currentStudio = ''; else { currentStudio = id; el.classList.add('active'); }
+            loadFeed(true); 
         }
-
+        function showLibrary(k) { 
+            const items = getStore(k);
+            const grid = document.getElementById('feedGrid');
+            grid.innerHTML = '';
+            items.forEach(m => {
+                const card = document.createElement('div'); card.className = 'post-card';
+                card.onclick = () => openModal(m.id, m.media_type || 'movie');
+                card.innerHTML = `<img src="https://image.tmdb.org/t/p/w342${m.poster_path}">`;
+                grid.appendChild(card);
+            });
+        }
         function filterSheetList() {
             const q = document.getElementById('sheetSearch').value.toLowerCase();
             document.querySelectorAll('.list-item').forEach(item => {
                 item.style.display = item.innerText.toLowerCase().includes(q) ? 'flex' : 'none';
             });
-        }
-
-        function setStudio(id, el) {
-            document.querySelectorAll('.studio-item').forEach(s => s.classList.remove('active'));
-            if (currentStudio === id) {
-                currentStudio = '';
-            } else {
-                currentStudio = id;
-                el.classList.add('active');
-            }
-            loadFeed();
-        }
-
-        function setFilter(type, val) {
-            currentType = val;
-            loadFeed();
         }
     </script>
 </body>
