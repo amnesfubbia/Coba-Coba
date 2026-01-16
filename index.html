@@ -10,21 +10,28 @@
     <style>
         body { background-color: #000; color: #fff; font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
+        
+        /* Header Section */
         .fixed-header-section { position: fixed; top: 0; width: 100%; z-index: 100; background: #000; border-bottom: 1px solid #1c1c1c; }
         .ig-header { padding: 12px 15px 5px 15px; }
         .ig-logo { font-family: 'DM Sans', sans-serif; font-weight: 700; font-style: italic; font-size: 24px; letter-spacing: -0.8px; text-transform: lowercase; }
+        
         .search-container { background: #0a0a0a; border-radius: 8px; display: flex; align-items: center; padding: 7px 12px; flex-grow: 1; border: 1px solid #1c1c1c; }
         .search-container input { background: transparent !important; border: none !important; color: white !important; font-size: 13px; width: 100%; outline: none !important; margin-left: 8px; }
         
-        /* Baris Filter Baru */
+        /* Filter Pills & Bar */
+        .pill { background: #0a0a0a; border: 1px solid #1c1c1c; color: #555; padding: 8px 15px; border-radius: 8px; font-size: 9px; font-weight: 800; text-transform: uppercase; transition: 0.2s; }
+        .pill.active { border-color: #fff; color: #fff; background: #111; }
+        
         .filter-bar { display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #1c1c1c; background: #000; }
-        .filter-btn { font-size: 9px; font-weight: 800; color: #555; text-transform: uppercase; letter-spacing: 1px; }
+        .filter-btn { font-size: 9px; font-weight: 800; color: #555; text-transform: uppercase; letter-spacing: 1px; outline: none; }
 
         /* Studio Highlights Monokrom */
-        .studio-circle { width: 55px; height: 55px; border-radius: 50%; background: #000; border: 1.5px solid #1c1c1c; display: flex; align-items: center; justify-content: center; margin-bottom: 5px; }
+        .studio-item { flex-shrink: 0; text-center; cursor: pointer; }
+        .studio-circle { width: 55px; height: 55px; border-radius: 50%; background: #000; border: 1.5px solid #1c1c1c; display: flex; align-items: center; justify-content: center; margin-bottom: 5px; transition: 0.3s; }
         .studio-logo { width: 35px; filter: grayscale(100%) brightness(0.7); transition: 0.3s; }
         .studio-item.active .studio-logo { filter: grayscale(0%) brightness(1); }
-        .studio-item.active .studio-circle { border-color: #fff; }
+        .studio-item.active .studio-circle { border-color: #fff; background: #111; }
 
         /* Movie Grid */
         .movie-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; padding-top: 380px; padding-bottom: 100px; }
@@ -35,20 +42,19 @@
         .sheet-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; z-index: 400; backdrop-filter: blur(4px); }
         .bottom-sheet { position: fixed; bottom: -100%; left: 0; width: 100%; height: 75%; background: #0a0a0a; border-top: 1px solid #1c1c1c; border-radius: 20px 20px 0 0; z-index: 500; transition: bottom 0.4s ease; display: flex; flex-direction: column; }
         .bottom-sheet.active { bottom: 0; }
-        .list-item { padding: 15px 20px; border-bottom: 1px solid #111; display: flex; justify-content: space-between; font-size: 13px; cursor: pointer; color: #666; }
-        .list-item.selected { color: #fff; font-weight: 800; }
+        .list-item { padding: 15px 20px; border-bottom: 1px solid #111; display: flex; justify-content: space-between; font-size: 13px; cursor: pointer; color: #666; transition: 0.2s; }
+        .list-item.selected { color: #fff; font-weight: 800; background: #0f0f0f; }
 
         /* Modal Player */
         .modal-player { display: none; position: fixed; inset: 0; z-index: 600; background: #000; overflow-y: auto; }
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #000; border-top: 1px solid #1c1c1c; display: flex; justify-content: space-around; padding: 12px 0; z-index: 300; padding-bottom: calc(12px + env(safe-area-inset-bottom)); }
-        .nav-item { color: #fff; font-size: 20px; cursor: pointer; }
         
-        .pill { background: #0a0a0a; border: 1px solid #1c1c1c; color: #555; padding: 8px 15px; border-radius: 8px; font-size: 9px; font-weight: 800; text-transform: uppercase; }
-        .pill.active { border-color: #fff; color: #fff; }
+        /* Navigation */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #000; border-top: 1px solid #1c1c1c; display: flex; justify-content: space-around; padding: 12px 0; z-index: 300; padding-bottom: calc(12px + env(safe-area-inset-bottom)); }
+        .nav-item { color: #fff; font-size: 20px; cursor: pointer; opacity: 0.5; }
+        .nav-item.active { opacity: 1; }
     </style>
 </head>
 <body>
-    <div id="loader" style="position:fixed; top:0; left:0; height:1.5px; background:#fff; width:0%; transition:width 0.3s; z-index:1000;"></div>
 
     <div class="fixed-header-section">
         <header class="ig-header">
@@ -67,7 +73,7 @@
             </div>
         </header>
 
-        <div class="px-4 py-2 flex gap-2">
+        <div class="px-4 py-2 flex gap-2 overflow-x-auto no-scrollbar">
             <button class="pill active" onclick="setFilter('type', 'multi', this)">Semua</button>
             <button class="pill" onclick="setFilter('type', 'movie', this)">Film</button>
             <button class="pill" onclick="setFilter('type', 'tv', this)">Series</button>
@@ -75,27 +81,31 @@
         </div>
 
         <div class="filter-bar">
-            <button class="filter-btn" onclick="openSheet('tahun')">Tahun <i class="fa-solid fa-chevron-down text-[7px]"></i></button>
-            <button class="filter-btn" onclick="openSheet('genre')">Genre <i class="fa-solid fa-chevron-down text-[7px]"></i></button>
-            <button class="filter-btn" onclick="openSheet('negara')">Negara <i class="fa-solid fa-chevron-down text-[7px]"></i></button>
+            <button class="filter-btn" id="btn-tahun" onclick="openSheet('tahun')">Tahun <i class="fa-solid fa-chevron-down text-[7px]"></i></button>
+            <button class="filter-btn" id="btn-genre" onclick="openSheet('genre')">Genre <i class="fa-solid fa-chevron-down text-[7px]"></i></button>
+            <button class="filter-btn" id="btn-negara" onclick="openSheet('negara')">Negara <i class="fa-solid fa-chevron-down text-[7px]"></i></button>
         </div>
 
         <div class="py-4 overflow-x-auto no-scrollbar flex px-4 gap-4 bg-black border-b border-zinc-900">
-            <div class="studio-item flex-shrink-0 text-center" onclick="setStudio('2', this)">
+            <div class="studio-item" onclick="setStudio('2', this)">
                 <div class="studio-circle"><img src="https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney_logo.svg" class="studio-logo"></div>
-                <p class="text-[7px] font-bold text-zinc-600 uppercase">Disney</p>
+                <p class="text-[7px] font-bold text-zinc-600 text-center uppercase">Disney</p>
             </div>
-            <div class="studio-item flex-shrink-0 text-center" onclick="setStudio('3', this)">
+            <div class="studio-item" onclick="setStudio('3', this)">
                 <div class="studio-circle"><img src="https://upload.wikimedia.org/wikipedia/commons/d/d5/Pixar_Animation_Studios_Logo.svg" class="studio-logo"></div>
-                <p class="text-[7px] font-bold text-zinc-600 uppercase">Pixar</p>
+                <p class="text-[7px] font-bold text-zinc-600 text-center uppercase">Pixar</p>
             </div>
-            <div class="studio-item flex-shrink-0 text-center" onclick="setStudio('10342', this)">
+            <div class="studio-item" onclick="setStudio('10342', this)">
                 <div class="studio-circle"><img src="https://upload.wikimedia.org/wikipedia/id/0/03/Studio_Ghibli_logo.svg" class="studio-logo"></div>
-                <p class="text-[7px] font-bold text-zinc-600 uppercase">Ghibli</p>
+                <p class="text-[7px] font-bold text-zinc-600 text-center uppercase">Ghibli</p>
             </div>
-            <div class="studio-item flex-shrink-0 text-center" onclick="setStudio('521', this)">
+            <div class="studio-item" onclick="setStudio('521', this)">
                 <div class="studio-circle"><img src="https://upload.wikimedia.org/wikipedia/en/2/2a/DreamWorks_Animation_logo.svg" class="studio-logo"></div>
-                <p class="text-[7px] font-bold text-zinc-600 uppercase">Dreamworks</p>
+                <p class="text-[7px] font-bold text-zinc-600 text-center uppercase">Dreamworks</p>
+            </div>
+            <div class="studio-item" onclick="setStudio('33', this)">
+                <div class="studio-circle"><img src="https://upload.wikimedia.org/wikipedia/commons/5/5f/Illumination_Logo.svg" class="studio-logo"></div>
+                <p class="text-[7px] font-bold text-zinc-600 text-center uppercase">Illumination</p>
             </div>
         </div>
     </div>
@@ -104,27 +114,31 @@
     <div id="bottomSheet" class="bottom-sheet">
         <div class="p-5 border-b border-zinc-900 flex justify-between items-center">
             <h2 id="sheetTitle" class="text-xs font-black uppercase tracking-widest">PILIH</h2>
-            <i class="fa-solid fa-xmark" onclick="closeSheet()"></i>
+            <i class="fa-solid fa-xmark text-xl" onclick="closeSheet()"></i>
         </div>
-        <div class="p-4"><input type="text" id="sheetSearch" placeholder="Cari..." class="w-full bg-zinc-900 p-3 rounded-xl text-xs outline-none" oninput="filterSheetList()"></div>
+        <div class="p-4">
+            <input type="text" id="sheetSearch" placeholder="Cari..." class="w-full bg-zinc-900 p-3 rounded-xl text-xs outline-none border border-zinc-800 focus:border-zinc-500" oninput="filterSheetList()">
+        </div>
         <div id="sheetBody" class="flex-grow overflow-y-auto no-scrollbar"></div>
-        <div class="p-4"><button class="w-full bg-white text-black py-4 rounded-2xl font-black text-[10px] uppercase" onclick="applySheetFilter()">Terapkan</button></div>
+        <div class="p-4">
+            <button class="w-full bg-white text-black py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest" onclick="applySheetFilter()">Terapkan</button>
+        </div>
     </div>
 
     <main id="feedGrid" class="movie-grid"></main>
 
     <nav class="bottom-nav">
-        <div class="nav-item" onclick="closeModal(); location.reload();"><i class="fa-solid fa-house"></i></div>
+        <div class="nav-item active" onclick="closeModal(); location.reload();"><i class="fa-solid fa-house"></i></div>
         <div class="nav-item" onclick="closeModal(); document.getElementById('searchInp').focus();"><i class="fa-solid fa-magnifying-glass"></i></div>
         <div class="nav-item" onclick="closeModal(); showLibrary('bookmarks');"><i class="fa-regular fa-bookmark"></i></div>
-        <div class="nav-item" onclick="alert('Amnesfubbia Animation By Anasteas')"><i class="fa-regular fa-user"></i></div>
+        <div class="nav-item" onclick="alert('amnesfubbia animation - minimal version')"><i class="fa-regular fa-user"></i></div>
     </nav>
 
     <div id="movieModal" class="modal-player">
         <div class="max-w-xl mx-auto pb-40">
             <div class="px-4 h-[54px] flex items-center border-b border-zinc-900 sticky top-0 bg-black z-50">
                 <i class="fa-solid fa-chevron-left text-xl cursor-pointer" onclick="closeModal()"></i>
-                <div class="flex-grow text-center"><h2 id="mTitle" class="text-sm font-bold truncate"></h2></div>
+                <div class="flex-grow text-center px-10"><h2 id="mTitle" class="text-sm font-bold truncate"></h2></div>
             </div>
             <div class="aspect-video bg-zinc-900 relative">
                 <iframe id="videoPlayer" class="w-full h-full" allow="autoplay; fullscreen" allowfullscreen></iframe>
@@ -133,6 +147,7 @@
                 <div class="flex gap-6 mb-6">
                     <i id="btnLikeModal" class="fa-regular fa-heart text-2xl"></i>
                     <i id="btnBookModal" class="fa-regular fa-bookmark text-2xl"></i>
+                    <i class="fa-regular fa-paper-plane text-2xl ml-auto"></i>
                 </div>
                 <div id="mDesc" class="text-sm text-zinc-300 leading-relaxed mb-4"></div>
                 <div id="translateBtn" class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest cursor-pointer underline" onclick="toggleTranslation()">Terjemahkan ke Inggris</div>
@@ -145,8 +160,9 @@
         let currentType = 'multi', currentYears = [], currentGenres = [], currentCountries = [], currentStudio = '', searchQuery = '', sheetMode = '';
         let fullDesc = '', descIndo = '', isTranslated = false;
 
-        const getStore = (k) => JSON.parse(localStorage.getItem(k) || '[]');
-        const saveStore = (k, v) => localStorage.setItem(k, JSON.stringify(v));
+        // SISTEM PENYIMPANAN TERPISAH (KHUSUS ANIMASI)
+        const getStore = (k) => JSON.parse(localStorage.getItem('anim_' + k) || '[]');
+        const saveStore = (k, v) => localStorage.setItem('anim_' + k, JSON.stringify(v));
 
         window.onload = () => loadFeed();
 
@@ -154,17 +170,18 @@
             const grid = document.getElementById('feedGrid');
             if (isNew) grid.innerHTML = '';
             
-            let typeUrl = currentType === 'tv' ? 'tv' : 'movie';
-            if (currentType === 'multi') typeUrl = 'movie'; // Fallback logic
-
+            let typeUrl = (currentType === 'tv') ? 'tv' : 'movie';
             let url = `https://api.themoviedb.org/3/discover/${typeUrl}?api_key=${API_KEY}&with_genres=16&language=id-ID`;
             
-            if (searchQuery) url = `https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${searchQuery}&language=id-ID`;
-            if (currentYears.length) url += `&primary_release_year=${currentYears.join('|')}`;
-            if (currentGenres.length) url += `&with_genres=16,${currentGenres.join(',')}`;
-            if (currentCountries.length) url += `&with_origin_country=${currentCountries.join('|')}`;
-            if (currentStudio) url += `&with_companies=${currentStudio}`;
-            if (currentType === 'short') url += `&with_runtime.lte=40`;
+            if (searchQuery) {
+                url = `https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(searchQuery)}&language=id-ID`;
+            } else {
+                if (currentYears.length) url += `&primary_release_year=${currentYears.join('|')}`;
+                if (currentGenres.length) url += `&with_genres=16,${currentGenres.join(',')}`;
+                if (currentCountries.length) url += `&with_origin_country=${currentCountries.join('|')}`;
+                if (currentStudio) url += `&with_companies=${currentStudio}`;
+                if (currentType === 'short') url += `&with_runtime.lte=40`;
+            }
 
             try {
                 const res = await fetch(url);
@@ -173,16 +190,15 @@
                     if (!m.poster_path) return;
                     const card = document.createElement('div');
                     card.className = 'post-card';
-                    card.onclick = () => openModal(m.id, m.media_type || (currentType === 'tv' ? 'tv' : 'movie'));
+                    card.onclick = () => openModal(m.id, m.media_type || typeUrl);
                     card.innerHTML = `<img src="https://image.tmdb.org/t/p/w342${m.poster_path}" loading="lazy">`;
                     grid.appendChild(card);
                 });
-            } catch (e) { console.error(e); }
+            } catch (e) { console.error("Error loading feed:", e); }
         }
 
         async function openModal(id, type) {
-            const modal = document.getElementById('movieModal');
-            modal.style.display = 'block';
+            document.getElementById('movieModal').style.display = 'block';
             document.body.style.overflow = 'hidden';
 
             const [resId, resEn] = await Promise.all([
@@ -192,14 +208,14 @@
             const d = await resId.json(); const dEn = await resEn.json();
 
             document.getElementById('mTitle').innerText = d.title || d.name;
-            descIndo = d.overview || ""; fullDesc = dEn.overview || "No description.";
+            descIndo = d.overview || ""; fullDesc = dEn.overview || "No description available.";
             document.getElementById('mDesc').innerText = descIndo || fullDesc;
             isTranslated = false;
             document.getElementById('translateBtn').innerText = "Terjemahkan ke Inggris";
 
             const vids = [...(d.videos?.results || []), ...(dEn.videos?.results || [])];
             const trailer = vids.find(v => v.type === 'Trailer' && v.site === 'YouTube') || vids[0];
-            document.getElementById('videoPlayer').src = trailer ? `https://www.youtube.com/embed/${trailer.key}?autoplay=1` : `https://vidrock.net/embed/${type}/${id}`;
+            document.getElementById('videoPlayer').src = trailer ? `https://www.youtube.com/embed/${trailer.key}?autoplay=1` : "";
 
             updateModalButtons(id);
             document.getElementById('btnLikeModal').onclick = () => toggleItem('likes', d, id);
@@ -241,14 +257,13 @@
                 const countries = [
                     {id:'JP', n:'Jepang'}, {id:'US', n:'USA'}, {id:'ID', n:'Indonesia'}, 
                     {id:'KR', n:'Korea'}, {id:'FR', n:'Prancis'}, {id:'GB', n:'Inggris'},
-                    {id:'CN', n:'Tiongkok'}, {id:'CA', n:'Kanada'}, {id:'AU', n:'Australia'}
+                    {id:'CN', n:'Tiongkok'}, {id:'CA', n:'Kanada'}, {id:'BR', n:'Brasil'}
                 ].sort((a,b) => a.n.localeCompare(b.n));
                 countries.forEach(c => body.appendChild(createListItem(c.id, c.n, currentCountries)));
             } else if(mode === 'genre') {
                 const genres = [
                     {id:12, n:'Petualangan'}, {id:35, n:'Komedi'}, {id:14, n:'Fantasi'}, 
-                    {id:10751, n:'Keluarga'}, {id:28, n:'Aksi'}, {id:878, n:'Sci-Fi'},
-                    {id:9648, n:'Misteri'}, {id:10402, n:'Musik'}
+                    {id:10751, n:'Keluarga'}, {id:28, n:'Aksi'}, {id:878, n:'Sci-Fi'}
                 ];
                 genres.forEach(g => body.appendChild(createListItem(g.id, g.n, currentGenres)));
             }
@@ -257,7 +272,7 @@
         function createListItem(id, name, arr) {
             const d = document.createElement('div');
             d.className = `list-item ${arr.includes(id) ? 'selected' : ''}`;
-            d.innerHTML = `<span>${name}</span> ${arr.includes(id) ? '<i class="fa-solid fa-check"></i>' : ''}`;
+            d.innerHTML = `<span>${name}</span> ${arr.includes(id) ? '<i class="fa-solid fa-check text-white"></i>' : ''}`;
             d.onclick = () => { 
                 if(arr.includes(id)) arr.splice(arr.indexOf(id), 1); 
                 else arr.push(id); 
@@ -266,24 +281,51 @@
             return d;
         }
 
-        function applySheetFilter() { closeSheet(); loadFeed(true); }
+        function applySheetFilter() { 
+            closeSheet(); 
+            // Update label tombol agar terlihat aktif
+            document.getElementById('btn-tahun').style.color = currentYears.length ? '#fff' : '#555';
+            document.getElementById('btn-genre').style.color = currentGenres.length ? '#fff' : '#555';
+            document.getElementById('btn-negara').style.color = currentCountries.length ? '#fff' : '#555';
+            loadFeed(true); 
+        }
+
         function closeSheet() { document.getElementById('bottomSheet').classList.remove('active'); document.getElementById('sheetOverlay').style.display = 'none'; }
         function closeModal() { document.getElementById('movieModal').style.display = 'none'; document.getElementById('videoPlayer').src = ''; document.body.style.overflow = 'auto'; }
-        function searchAction() { searchQuery = document.getElementById('searchInp').value; loadFeed(true); }
+        
+        function searchAction() { 
+            searchQuery = document.getElementById('searchInp').value; 
+            currentYears = []; currentGenres = []; currentCountries = []; // Reset filter saat cari manual
+            loadFeed(true); 
+        }
+
         function setFilter(t, v, el) { 
             document.querySelectorAll('.pill').forEach(b => b.classList.remove('active'));
             el.classList.add('active');
-            currentType = v; loadFeed(true); 
+            currentType = v; searchQuery = ''; loadFeed(true); 
         }
+
         function setStudio(id, el) { 
-            document.querySelectorAll('.studio-item').forEach(s => s.classList.remove('active'));
-            if(currentStudio === id) currentStudio = ''; else { currentStudio = id; el.classList.add('active'); }
+            const items = document.querySelectorAll('.studio-item');
+            if(currentStudio === id) {
+                currentStudio = '';
+                el.classList.remove('active');
+            } else {
+                items.forEach(s => s.classList.remove('active'));
+                currentStudio = id;
+                el.classList.add('active');
+            }
             loadFeed(true); 
         }
+
         function showLibrary(k) { 
             const items = getStore(k);
             const grid = document.getElementById('feedGrid');
             grid.innerHTML = '';
+            if (items.length === 0) {
+                grid.innerHTML = '<div class="col-span-3 text-center py-20 text-zinc-600 text-[10px] uppercase tracking-widest">Koleksi Kosong</div>';
+                return;
+            }
             items.forEach(m => {
                 const card = document.createElement('div'); card.className = 'post-card';
                 card.onclick = () => openModal(m.id, m.media_type || 'movie');
@@ -291,6 +333,7 @@
                 grid.appendChild(card);
             });
         }
+
         function filterSheetList() {
             const q = document.getElementById('sheetSearch').value.toLowerCase();
             document.querySelectorAll('.list-item').forEach(item => {
