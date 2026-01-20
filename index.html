@@ -22,15 +22,32 @@
         .movie-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; padding-top: 255px; padding-bottom: 80px; }
         .post-card { position: relative; aspect-ratio: 2/3; background: #0a0a0a; overflow: hidden; }
         .post-card img { width: 100%; height: 100%; object-fit: cover; }
+        
+        /* Badge Styles */
         .badge-rating { position: absolute; top: 6px; left: 6px; padding: 2px 5px; border-radius: 2px; font-size: 7px; font-weight: 900; z-index: 5; background: rgba(255,255,255,0.9); color: #000; }
+        .badge-type { position: absolute; top: 6px; right: 6px; padding: 2px 5px; border-radius: 2px; font-size: 7px; font-weight: 900; z-index: 5; background: rgba(0,0,0,0.7); color: #fff; text-transform: uppercase; border: 0.5px solid rgba(255,255,255,0.3); }
+
         .filter-dropdown { display: none; position: fixed; background: #121212; border: 1px solid #1c1c1c; border-radius: 12px; z-index: 200; width: 150px; max-height: 300px; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,1); }
         .filter-item { padding: 12px; font-size: 11px; text-align: center; border-bottom: 1px solid #1c1c1c; color: #bbb; cursor: pointer; }
         .filter-item.reset { color: #ff4d4d; font-weight: 800; }
         .modal-player { display: none; position: fixed; inset: 0; z-index: 400; background: #000; overflow-y: auto; }
         .interaction-icon { font-size: 24px; cursor: pointer; color: #fff; }
-        .server-btn { width: 100%; padding: 14px; border-radius: 12px; font-size: 10px; font-weight: 800; text-transform: uppercase; border: 1px solid #1c1c1c; text-align: center; cursor: pointer; }
-        .dl-link-btn { display: block; width: 100%; margin-top: 15px; padding: 14px; border-radius: 12px; background: #000; color: #a1a1aa; font-size: 10px; font-weight: 800; text-transform: uppercase; text-align: center; border: 1px solid #1c1c1c; }
+        
+        /* Server Buttons & Active State */
+        .server-btn { width: 100%; padding: 14px; border-radius: 12px; font-size: 10px; font-weight: 800; text-transform: uppercase; border: 1px solid #1c1c1c; text-align: center; cursor: pointer; background: #0a0a0a; color: #fff; transition: all 0.2s; }
+        .server-btn.active-link { border: 2px solid #fff !important; }
+        .btn-main-server { background: #18181b !important; color: #fff; } /* Warna Server Utama Baru */
+
+        .dl-link-btn { display: block; width: 100%; margin-top: 15px; padding: 14px; border-radius: 12px; background: #000; color: #a1a1aa; font-size: 10px; font-weight: 800; text-transform: uppercase; text-align: center; border: 1px solid #1c1c1c; cursor: pointer; }
+        .dl-link-btn.active-link { border: 2px solid #fff !important; color: #fff; }
+
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #000; border-top: 1px solid #1c1c1c; display: flex; justify-content: space-around; padding: 12px 0; z-index: 300; }
+        
+        .ig-post-content { padding: 0 15px; margin-top: 5px; }
+        .ig-username { font-weight: 700; font-size: 13px; margin-right: 5px; color: #fff; }
+        .ig-caption { font-size: 13px; line-height: 1.4; color: #fff; font-weight: 400; }
+        .ig-hashtags { color: #e0f1ff; display: block; margin-top: 12px; font-size: 13px; word-break: break-word; }
+        .ig-date { color: #a8a8a8; font-size: 11px; margin-top: 8px; text-transform: uppercase; }
     </style>
 </head>
 <body>
@@ -93,18 +110,26 @@
                 <div class="flex gap-4">
                     <i id="btnLikeModal" class="interaction-icon"></i>
                     <i class="fa-regular fa-comment interaction-icon"></i>
+                    <i class="fa-regular fa-paper-plane interaction-icon"></i>
                 </div>
                 <i id="btnBookModal" class="interaction-icon"></i>
             </div>
-            <div class="px-4">
-                <p id="mDesc" class="text-[13.5px] leading-relaxed text-zinc-200 mb-1"></p>
-                <p id="mTranslateBtn" class="text-[10px] text-zinc-500 font-bold mb-4 cursor-pointer hidden">Lihat Terjemahan...</p>
+            
+            <div class="ig-post-content">
+                <div class="mb-1">
+                    <span class="ig-username">amnesfubbia.xx1</span>
+                    <span id="mDesc" class="ig-caption"></span>
+                </div>
+                <p id="mTranslateBtn" class="text-[11px] text-zinc-500 font-bold mb-2 cursor-pointer hidden">Lihat Terjemahan...</p>
+                <div id="mHashtags" class="ig-hashtags"></div>
+                <div id="mDateDisplay" class="ig-date"></div>
+
                 <div id="seriesControl" class="hidden mt-6 p-4 bg-zinc-950 rounded-2xl border border-zinc-900">
                     <div class="flex justify-between items-center mb-4"><h4 class="text-[9px] font-black text-zinc-400 uppercase">Episode</h4><select id="seasonSel" class="bg-zinc-900 text-white text-[10px] px-2 py-1 rounded" onchange="loadEpisodes()"></select></div>
                     <div id="episodeGrid" class="grid grid-cols-5 gap-2"></div>
                 </div>
                 <div id="serverList" class="grid grid-cols-2 gap-2 mt-6"></div>
-                <button id="btnDownloadMain" class="dl-link-btn">Download Sinema</button>
+                <button id="btnDownloadMain" class="dl-link-btn" onclick="highlightBtn(this); window.open(`https://dl.vidsrc.vip/${window.currentMediaType}/${window.currentMediaId}`)">Download Sinema</button>
             </div>
         </div>
     </div>
@@ -124,53 +149,36 @@
         function initFilters() {
             const yD = document.getElementById('yearDropdown');
             yD.innerHTML = '<div class="filter-item reset" onclick="setYear(\'\')">RESET TAHUN</div>';
-            for(let y=2026; y>=1950; y--) yD.innerHTML += `<div class="filter-item" onclick="setYear(${y})">${y}</div>`;
+            for(let y=2026; y>=1900; y--) yD.innerHTML += `<div class="filter-item" onclick="setYear(${y})">${y}</div>`;
             const cD = document.getElementById('countryDropdown');
             cD.innerHTML = '<div class="filter-item reset" onclick="setCountry(\'\',\'Negara\')">RESET NEGARA</div>';
-            [['IN','India'],['TH','Thailand'],['KR','Korea'],['JP','Jepang'],['ID','Indonesia'],['US','USA'],['CN','China']].forEach(c => cD.innerHTML += `<div class="filter-item" onclick="setCountry('${c[0]}','${c[1]}')">${c[1]}</div>`);
+            [['IN','India'],['TH','Thailand'],['KR','Korea'],['JP','Jepang'],['ID','Indonesia'],['US','USA'],['CN','China'],['FR','Prancis'],['ES','Spanyol']].forEach(c => cD.innerHTML += `<div class="filter-item" onclick="setCountry('${c[0]}','${c[1]}')">${c[1]}</div>`);
             const gD = document.getElementById('genreDropdown');
             gD.innerHTML = '<div class="filter-item reset" onclick="setGenre(\'\',\'Genre\')">RESET GENRE</div>';
-            [[28,'Action'],[12,'Adventure'],[16,'Animasi'],[35,'Comedy'],[27,'Horror'],[10749,'Romance'],[878,'Sci-Fi']].forEach(g => gD.innerHTML += `<div class="filter-item" onclick="setGenre('${g[0]}','${g[1]}')">${g[1]}</div>`);
+            [[28,'Action'],[12,'Adventure'],[16,'Animasi'],[35,'Comedy'],[80,'Crime'],[99,'Documentary'],[18,'Drama'],[10751,'Family'],[14,'Fantasy'],[36,'History'],[27,'Horror'],[10402,'Music'],[9648,'Mystery'],[10749,'Romance'],[878,'Sci-Fi'],[10770,'TV Movie'],[53,'Thriller'],[10752,'War'],[37,'Western']].forEach(g => gD.innerHTML += `<div class="filter-item" onclick="setGenre('${g[0]}','${g[1]}')">${g[1]}</div>`);
         }
 
         async function loadFeed(isNew = true) {
             if(loading) return; loading = true;
             if(isNew) { page = 1; document.getElementById('feedGrid').innerHTML = ''; }
-            
             let params = `api_key=${API_KEY}&language=id-ID&page=${page}&include_adult=false`;
-            let endpoint = 'discover/movie';
-            
-            // LOGIKA FILTER KETAT
-            if(currentType === 'tv' || currentType === 'anime') endpoint = 'discover/tv';
-            
+            let endpoint = (currentType === 'tv' || currentType === 'anime') ? 'discover/tv' : 'discover/movie';
             let queryUrl = `https://api.themoviedb.org/3/${endpoint}?${params}`;
 
-            // Handle Sorting
             if(currentSchedule === 'popular') queryUrl += `&sort_by=popularity.desc`;
             else if(currentSchedule === 'now_playing') queryUrl += `&sort_by=release_date.desc`;
             else if(currentSchedule === 'upcoming') queryUrl += `&sort_by=primary_release_date.asc`;
             else queryUrl += `&sort_by=trending.desc`;
 
-            // Filter Anime (Wajib Animasi + Asal Jepang)
-            if(currentType === 'anime') {
-                queryUrl = `https://api.themoviedb.org/3/discover/tv?${params}&with_genres=16&with_original_language=ja&sort_by=popularity.desc`;
-            }
+            if(currentType === 'anime') queryUrl = `https://api.themoviedb.org/3/discover/tv?${params}&with_genres=16&with_original_language=ja&sort_by=popularity.desc`;
+            if(currentType === 'short') queryUrl = `https://api.themoviedb.org/3/discover/movie?${params}&with_runtime.lte=45&with_runtime.gte=2&sort_by=popularity.desc`;
 
-            // Filter Short Movie (Hanya Movie + Durasi < 45 menit)
-            if(currentType === 'short') {
-                queryUrl = `https://api.themoviedb.org/3/discover/movie?${params}&with_runtime.lte=45&with_runtime.gte=2&sort_by=popularity.desc`;
-            }
-
-            // Filter Negara (Termasuk India Series)
             if(currentCountry) {
                 if(currentCountry === 'IN') queryUrl += `&with_origin_country=IN&with_original_language=hi|ta|te|kn|ml`;
                 else queryUrl += `&with_origin_country=${currentCountry}`;
             }
-
             if(currentGenre) queryUrl += `&with_genres=${currentGenre}`;
             if(currentYear) queryUrl += (endpoint.includes('tv') ? `&first_air_date_year=${currentYear}` : `&primary_release_year=${currentYear}`);
-            
-            // Search Mode
             if(searchQuery) queryUrl = `https://api.themoviedb.org/3/search/multi?query=${encodeURIComponent(searchQuery)}&api_key=${API_KEY}&language=en-US&page=${page}`;
 
             try {
@@ -178,17 +186,24 @@
                 const data = await res.json();
                 renderGrid(data.results || []);
             } catch (e) { console.error(e); }
-            
             loading = false;
         }
 
         function renderGrid(items) {
             items.forEach(m => {
                 if(!m.poster_path) return;
+                const mType = m.media_type || (currentType.includes('tv')||currentType==='anime'?'tv':'movie');
+                let displayType = mType === 'tv' ? 'TV' : 'MOVIE';
+                if(currentType === 'anime') displayType = 'ANIME';
+                if(currentType === 'short') displayType = 'SHORT';
+
                 const card = document.createElement('div');
                 card.className = 'post-card';
-                card.onclick = () => openModal(m.id, m.media_type || (currentType.includes('tv')||currentType==='anime'?'tv':'movie'));
-                card.innerHTML = `<div class="badge-rating">★ ${m.vote_average ? m.vote_average.toFixed(1) : '0'}</div><img src="https://image.tmdb.org/t/p/w342${m.poster_path}">`;
+                card.onclick = () => openModal(m.id, mType);
+                card.innerHTML = `
+                    <div class="badge-rating">★ ${m.vote_average ? m.vote_average.toFixed(1) : '0'}</div>
+                    <div class="badge-type">${displayType}</div>
+                    <img src="https://image.tmdb.org/t/p/w342${m.poster_path}">`;
                 document.getElementById('feedGrid').appendChild(card);
             });
         }
@@ -204,8 +219,22 @@
             ]);
             const dId = await rId.json(), dEn = await rEn.json();
 
-            document.getElementById('mTitle').innerText = dId.title || dId.name || dEn.title || dEn.name;
+            const title = dId.title || dId.name || dEn.title || dEn.name;
+            document.getElementById('mTitle').innerText = title;
             document.getElementById('mDesc').innerText = dId.overview || dEn.overview || "Sinopsis tidak tersedia.";
+            
+            const releaseDate = dId.release_date || dId.first_air_date || "";
+            const year = releaseDate ? releaseDate.split('-')[0] : "";
+            const genresArr = (dId.genres || []).slice(0, 2);
+            const genres = genresArr.map(g => "#" + g.name.replace(/\s+/g, '')).join(" ");
+            
+            let categoryLabel = "#LayarLebar";
+            if(type === 'tv') categoryLabel = currentType === 'anime' ? "#Anime" : "#Series";
+            if(currentType === 'short') categoryLabel = "#ShortFilm";
+
+            document.getElementById('mHashtags').innerText = `#${title.replace(/\s+/g, '')} #${year} ${genres} ${categoryLabel}`;
+            document.getElementById('mDateDisplay').innerText = releaseDate ? new Date(releaseDate).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
+
             const btnT = document.getElementById('mTranslateBtn');
             btnT.classList.toggle('hidden', dId.overview || !dEn.overview);
             btnT.onclick = () => window.open(`https://translate.google.com/?sl=en&tl=id&text=${encodeURIComponent(dEn.overview)}&op=translate`);
@@ -214,36 +243,42 @@
             const tr = vids.find(v => v.type === 'Trailer') || vids[0];
             document.getElementById('videoPlayer').src = tr ? `https://www.youtube.com/embed/${tr.key}?autoplay=1&rel=0` : `https://vidrock.net/embed/${type}/${id}${type==='tv'?'/1/1':''}`;
 
+            // Reset selection state and update server list
             document.getElementById('serverList').innerHTML = `
-                <button class="server-btn bg-white text-black" onclick="setVid('https://vidrock.net/embed/${type}/${id}${type==='tv'?'/1/1':''}')">Server Utama</button>
-                <button class="server-btn" onclick="setVid('https://vidsrc.me/embed/${type}?tmdb=${id}')">Server 2</button>
-                <button class="server-btn col-span-2" onclick="setVid('https://embed.smashystream.com/playere.php?tmdb=${id}')">Server 3</button>`;
+                <button class="server-btn btn-main-server" onclick="playVid('https://vidrock.net/embed/${type}/${id}${type==='tv'?'/1/1':''}', this)">Server Utama</button>
+                <button class="server-btn" onclick="playVid('https://vidsrc.me/embed/${type}?tmdb=${id}', this)">Server 2</button>
+                <button class="server-btn col-span-2" onclick="playVid('https://embed.smashystream.com/playere.php?tmdb=${id}', this)">Server 3</button>`;
             
+            document.getElementById('btnDownloadMain').classList.remove('active-link');
+
             if(type === 'tv') {
                 document.getElementById('seriesControl').classList.remove('hidden');
                 document.getElementById('seasonSel').innerHTML = (dId.seasons||[]).filter(s=>s.season_number>0).map(s=>`<option value="${s.season_number}">Season ${s.season_number}</option>`).join('');
                 loadEpisodes();
             } else { document.getElementById('seriesControl').classList.add('hidden'); }
             
-            document.getElementById('btnDownloadMain').onclick = () => window.open(`https://dl.vidsrc.vip/${type}/${id}`);
             updateLibButtons(id);
         }
 
-        function setVid(url) { document.getElementById('videoPlayer').src = url; }
+        function playVid(url, el) { 
+            document.getElementById('videoPlayer').src = url;
+            highlightBtn(el);
+        }
+
+        function highlightBtn(el) {
+            document.querySelectorAll('.server-btn, .dl-link-btn').forEach(b => b.classList.remove('active-link'));
+            el.classList.add('active-link');
+        }
+
         async function loadEpisodes() {
             const s = document.getElementById('seasonSel').value;
             const res = await fetch(`https://api.themoviedb.org/3/tv/${window.currentMediaId}/season/${s}?api_key=${API_KEY}`);
             const d = await res.json();
-            document.getElementById('episodeGrid').innerHTML = (d.episodes||[]).map(e => `<div class="pill text-[10px]" onclick="playEp(${s},${e.episode_number})">${e.episode_number}</div>`).join('');
+            document.getElementById('episodeGrid').innerHTML = (d.episodes||[]).map(e => `<div class="pill text-[10px]" onclick="playVid('https://vidrock.net/embed/tv/${window.currentMediaId}/${s}/${e.episode_number}', this)">${e.episode_number}</div>`).join('');
         }
-        function playEp(s, e) { document.getElementById('videoPlayer').src = `https://vidrock.net/embed/tv/${window.currentMediaId}/${s}/${e}`; }
+
         function closeModal() { document.getElementById('movieModal').style.display = 'none'; document.getElementById('videoPlayer').src = ''; document.body.style.overflow = 'auto'; }
-        
-        function setFilter(t, v, el) { 
-            currentType = v; 
-            // Jika pilih anime, paksa ke TV mode
-            updatePill(el); loadFeed(true); 
-        }
+        function setFilter(t, v, el) { currentType = v; updatePill(el); loadFeed(true); }
         function setSchedule(v, el) { updatePill(el); currentSchedule=v; loadFeed(true); }
         function updatePill(el) { el.parentElement.querySelectorAll('.pill').forEach(p=>p.classList.remove('active')); el.classList.add('active'); }
         function toggleFilter(id) { document.querySelectorAll('.filter-dropdown').forEach(x=>x.style.display='none'); document.getElementById(id).style.display='block'; }
