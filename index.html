@@ -166,21 +166,33 @@
             if(isNew) { page = 1; document.getElementById('feedGrid').innerHTML = ''; }
             
             let params = `api_key=${API_KEY}&language=id-ID&page=${page}&include_adult=false`;
-            
-            // Kembali ke endpoint stabil (discover)
             let endpoint = (currentType === 'tv' || currentType === 'anime') ? 'discover/tv' : 'discover/movie';
             let queryUrl = `https://api.themoviedb.org/3/${endpoint}?${params}`;
 
-            // Perbaikan Logika Sortir saja (Tanpa mengubah endpoint kategori utama)
-            if (currentSchedule === 'trending') queryUrl += `&sort_by=trending.desc`;
-            else if (currentSchedule === 'popular') queryUrl += `&sort_by=popularity.desc`;
-            else if (currentSchedule === 'now_playing') queryUrl += `&sort_by=release_date.desc`;
-            else if (currentSchedule === 'upcoming') queryUrl += `&sort_by=primary_release_date.asc`;
+            const today = new Date().toISOString().split('T')[0];
 
-            // Filter Khusus tetap akurat
-            if(currentType === 'anime') queryUrl = `https://api.themoviedb.org/3/discover/tv?${params}&with_genres=16&with_original_language=ja&sort_by=popularity.desc`;
-            if(currentType === 'short') queryUrl = `https://api.themoviedb.org/3/discover/movie?${params}&with_runtime.lte=45&with_runtime.gte=2&sort_by=popularity.desc`;
-            
+            // LOGIKA FILTER JADWAL YANG DIOPTIMALKAN
+            if (currentSchedule === 'trending') {
+                queryUrl += `&sort_by=trending.desc`;
+            } else if (currentSchedule === 'popular') {
+                queryUrl += `&sort_by=popularity.desc`;
+            } else if (currentSchedule === 'now_playing') {
+                // TAYANG: Film yang rilis dalam 60 hari terakhir sampai hari ini
+                const sixtyDaysAgo = new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+                queryUrl += `&release_date.gte=${sixtyDaysAgo}&release_date.lte=${today}&sort_by=release_date.desc`;
+            } else if (currentSchedule === 'upcoming') {
+                // SEGERA: Film yang rilis mulai besok
+                const tomorrow = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+                queryUrl += `&primary_release_date.gte=${tomorrow}&sort_by=primary_release_date.asc`;
+            }
+
+            // FILTER KATEGORI (TETAP STABIL)
+            if(currentType === 'anime') {
+                queryUrl = `https://api.themoviedb.org/3/discover/tv?${params}&with_genres=16&with_original_language=ja&sort_by=popularity.desc`;
+            } else if(currentType === 'short') {
+                queryUrl = `https://api.themoviedb.org/3/discover/movie?${params}&with_runtime.lte=45&with_runtime.gte=2&sort_by=popularity.desc`;
+            }
+
             if(currentCountry) {
                 if(currentCountry === 'IN') queryUrl += `&with_origin_country=IN&with_original_language=hi|ta|te|kn|ml`;
                 else queryUrl += `&with_origin_country=${currentCountry}`;
