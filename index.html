@@ -25,7 +25,7 @@
         .badge-rating { position: absolute; top: 6px; left: 6px; padding: 2px 5px; border-radius: 2px; font-size: 7px; font-weight: 900; z-index: 5; background: rgba(255,255,255,0.9); color: #000; }
         .filter-dropdown { display: none; position: fixed; background: #121212; border: 1px solid #1c1c1c; border-radius: 12px; z-index: 200; width: 150px; max-height: 300px; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,1); }
         .filter-item { padding: 12px; font-size: 11px; text-align: center; border-bottom: 1px solid #1c1c1c; color: #bbb; cursor: pointer; }
-        .filter-item.reset { color: #ff4d4d; font-weight: bold; }
+        .filter-item.reset { color: #ff4d4d; font-weight: 800; }
         .modal-player { display: none; position: fixed; inset: 0; z-index: 400; background: #000; overflow-y: auto; }
         .interaction-icon { font-size: 24px; cursor: pointer; color: #fff; }
         .server-btn { width: 100%; padding: 14px; border-radius: 12px; font-size: 10px; font-weight: 800; text-transform: uppercase; border: 1px solid #1c1c1c; text-align: center; cursor: pointer; }
@@ -49,7 +49,7 @@
 
         <div class="search-container">
             <i class="fa-solid fa-magnifying-glass text-zinc-600 text-[10px]"></i>
-            <input type="text" id="searchInp" placeholder="Cari film, series, anime..." onkeydown="if(event.key==='Enter') searchAction()">
+            <input type="text" id="searchInp" placeholder="Cari film (contoh: Sultan, Pathaan...)" onkeydown="if(event.key==='Enter') searchAction()">
         </div>
 
         <div class="category-wrapper">
@@ -97,10 +97,8 @@
                 <i id="btnBookModal" class="interaction-icon"></i>
             </div>
             <div class="px-4">
-                <div id="sinopsisBox">
-                    <p id="mDesc" class="text-[13.5px] leading-relaxed text-zinc-200 mb-1"></p>
-                    <p id="mTranslateBtn" class="text-[10px] text-zinc-500 font-bold mb-4 cursor-pointer hidden">Lihat Terjemahan...</p>
-                </div>
+                <p id="mDesc" class="text-[13.5px] leading-relaxed text-zinc-200 mb-1"></p>
+                <p id="mTranslateBtn" class="text-[10px] text-zinc-500 font-bold mb-4 cursor-pointer hidden">Lihat Terjemahan...</p>
                 <div id="seriesControl" class="hidden mt-6 p-4 bg-zinc-950 rounded-2xl border border-zinc-900">
                     <div class="flex justify-between items-center mb-4"><h4 class="text-[9px] font-black text-zinc-400 uppercase">Episode</h4><select id="seasonSel" class="bg-zinc-900 text-white text-[10px] px-2 py-1 rounded" onchange="loadEpisodes()"></select></div>
                     <div id="episodeGrid" class="grid grid-cols-5 gap-2"></div>
@@ -126,11 +124,11 @@
         function initFilters() {
             const yD = document.getElementById('yearDropdown');
             yD.innerHTML = '<div class="filter-item reset" onclick="setYear(\'\')">RESET TAHUN</div>';
-            for(let y=2026; y>=1950; y--) yD.innerHTML += `<div class="filter-item" onclick="setYear(${y})">${y}</div>`;
+            for(let y=2026; y>=1900; y--) yD.innerHTML += `<div class="filter-item" onclick="setYear(${y})">${y}</div>`;
             
             const cD = document.getElementById('countryDropdown');
             cD.innerHTML = '<div class="filter-item reset" onclick="setCountry(\'\',\'Negara\')">RESET NEGARA</div>';
-            [['US','USA'],['ID','Indo'],['JP','Jepang'],['KR','Korea'],['CN','China'],['TH','Thai'],['IN','India'],['GB','UK']].forEach(c => cD.innerHTML += `<div class="filter-item" onclick="setCountry('${c[0]}','${c[1]}')">${c[1]}</div>`);
+            [['IN','India'],['US','USA'],['ID','Indo'],['JP','Jepang'],['KR','Korea'],['CN','China'],['TH','Thai'],['GB','UK']].forEach(c => cD.innerHTML += `<div class="filter-item" onclick="setCountry('${c[0]}','${c[1]}')">${c[1]}</div>`);
             
             const gD = document.getElementById('genreDropdown');
             gD.innerHTML = '<div class="filter-item reset" onclick="setGenre(\'\',\'Genre\')">RESET GENRE</div>';
@@ -144,20 +142,23 @@
             const params = `api_key=${API_KEY}&language=id-ID&page=${page}&include_adult=false`;
             let url = `https://api.themoviedb.org/3/discover/${(currentType==='tv'||currentType==='anime')?'tv':'movie'}?${params}`;
             
-            // Penajaman Filter Populer & Tayang
+            // Pengaturan Sorting Akurat
             if(currentSchedule === 'popular') url += `&sort_by=popularity.desc`;
-            else if(currentSchedule === 'now_playing') url += `&sort_by=release_date.desc&release_date.lte=2026-01-19`;
-            else if(currentSchedule === 'upcoming') url += `&sort_by=primary_release_date.asc&primary_release_date.gte=2026-01-20`;
-            else url += `&sort_by=trending.desc`;
+            else if(currentSchedule === 'now_playing') url += `&sort_by=release_date.desc&release_date.lte=2026-01-20`;
+            else if(currentSchedule === 'upcoming') url += `&sort_by=primary_release_date.asc&primary_release_date.gte=2026-01-21`;
+            else url = `https://api.themoviedb.org/3/trending/${(currentType==='tv'||currentType==='anime')?'tv':'movie'}/day?${params}`;
 
-            // Filter Short Movie Ultra Akurat (Eksklusi Animasi & TV agar tidak nyampur)
             if(currentType === 'short') url = `https://api.themoviedb.org/3/discover/movie?${params}&with_runtime.lte=40&with_runtime.gte=2&without_genres=16`;
             if(currentType === 'anime') url += `&with_genres=16&with_keywords=210024&with_original_language=ja`;
-            
             if(currentGenre) url += `&with_genres=${currentGenre}`;
             if(currentYear) url += (currentType==='tv'||currentType==='anime'?`&first_air_date_year=${currentYear}`:`&primary_release_year=${currentYear}`);
-            if(currentCountry) url += `&with_origin_country=${currentCountry}`;
-            if(searchQuery) url = `https://api.themoviedb.org/3/search/multi?query=${searchQuery}&${params}`;
+            
+            // Smart India Filter: Fokus pada bahasa Hindi/India
+            if(currentCountry === 'IN') url += `&with_original_language=hi|ta|te|kn|ml&with_origin_country=IN`;
+            else if(currentCountry) url += `&with_origin_country=${currentCountry}`;
+
+            // Search Global (Mengabaikan filter bahasa lokal jika mencari nama spesifik)
+            if(searchQuery) url = `https://api.themoviedb.org/3/search/multi?query=${encodeURIComponent(searchQuery)}&api_key=${API_KEY}&language=en-US&page=${page}`;
 
             const res = await fetch(url);
             const data = await res.json();
@@ -171,7 +172,7 @@
                 const card = document.createElement('div');
                 card.className = 'post-card';
                 card.onclick = () => openModal(m.id, m.media_type || (currentType==='tv'||currentType==='anime'?'tv':'movie'));
-                card.innerHTML = `<div class="badge-rating">★ ${m.vote_average.toFixed(1)}</div><img src="https://image.tmdb.org/t/p/w342${m.poster_path}">`;
+                card.innerHTML = `<div class="badge-rating">★ ${m.vote_average ? m.vote_average.toFixed(1) : '0'}</div><img src="https://image.tmdb.org/t/p/w342${m.poster_path}">`;
                 document.getElementById('feedGrid').appendChild(card);
             });
         }
@@ -187,10 +188,10 @@
             ]);
             const dId = await rId.json(), dEn = await rEn.json();
 
-            document.getElementById('mTitle').innerText = dId.title || dId.name;
+            document.getElementById('mTitle').innerText = dId.title || dId.name || dEn.title || dEn.name;
             
-            // SIMULASI AUTO-TRANSLATE: Jika ID kosong, pakai EN dan tampilkan tombol transparan
-            let sinopsis = dId.overview || dEn.overview || "Sinopsis segera hadir.";
+            // Auto-Translate Logic: Jika Indo kosong, pakai English otomatis
+            let sinopsis = dId.overview || dEn.overview || "Sinopsis belum tersedia dalam bahasa ini.";
             document.getElementById('mDesc').innerText = sinopsis;
             const btnT = document.getElementById('mTranslateBtn');
             btnT.classList.toggle('hidden', dId.overview || !dEn.overview);
@@ -198,15 +199,12 @@
 
             const vids = [...(dId.videos?.results || []), ...(dEn.videos?.results || [])];
             const tr = vids.find(v => v.type === 'Trailer') || vids[0];
-            document.getElementById('videoPlayer').src = tr ? `https://www.youtube.com/embed/${tr.key}?autoplay=1&rel=0` : `https://vidrock.net/embed/${type==='movie'?'movie':'tv'}/${id}${type==='tv'?'/1/1':''}`;
+            document.getElementById('videoPlayer').src = tr ? `https://www.youtube.com/embed/${tr.key}?autoplay=1&rel=0` : `https://vidrock.net/embed/${type}/${id}${type==='tv'?'/1/1':''}`;
 
-            // 3 Link Streaming (Server Utama, Server 2, Server 3)
-            let servers = `
+            document.getElementById('serverList').innerHTML = `
                 <button class="server-btn bg-white text-black" onclick="setVid('https://vidrock.net/embed/${type}/${id}${type==='tv'?'/1/1':''}')">Server Utama</button>
                 <button class="server-btn" onclick="setVid('https://vidsrc.me/embed/${type}?tmdb=${id}')">Server 2</button>
                 <button class="server-btn col-span-2" onclick="setVid('https://embed.smashystream.com/playere.php?tmdb=${id}')">Server 3 (Internasional)</button>`;
-            
-            document.getElementById('serverList').innerHTML = servers;
             
             if(type === 'tv') {
                 document.getElementById('seriesControl').classList.remove('hidden');
@@ -231,12 +229,9 @@
         function setSchedule(v, el) { updatePill(el); currentSchedule=v; loadFeed(true); }
         function updatePill(el) { el.parentElement.querySelectorAll('.pill').forEach(p=>p.classList.remove('active')); el.classList.add('active'); }
         function toggleFilter(id) { document.querySelectorAll('.filter-dropdown').forEach(x=>x.style.display='none'); document.getElementById(id).style.display='block'; }
-        
-        // Fitur RESET FILTER
         function setYear(y) { currentYear=y; document.getElementById('yearBtn').innerText=y || 'Tahun'; closeD(); loadFeed(true); }
         function setCountry(c, n) { currentCountry=c; document.getElementById('btnCountry').innerText=n; closeD(); loadFeed(true); }
         function setGenre(g, n) { currentGenre=g; document.getElementById('btnGenre').innerText=n; closeD(); loadFeed(true); }
-        
         function closeD() { document.querySelectorAll('.filter-dropdown').forEach(d=>d.style.display='none'); }
         function searchAction() { searchQuery = document.getElementById('searchInp').value; loadFeed(true); }
 
