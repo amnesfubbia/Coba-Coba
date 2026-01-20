@@ -27,8 +27,6 @@
         .filter-dropdown { display: none; position: fixed; background: #121212; border: 1px solid #1c1c1c; border-radius: 12px; z-index: 200; width: 150px; max-height: 300px; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,1); }
         .filter-item { padding: 12px; font-size: 11px; text-align: center; border-bottom: 1px solid #1c1c1c; color: #bbb; cursor: pointer; }
         .filter-item.reset { color: #ff4d4d; font-weight: 800; }
-        
-        /* Modal - Tetap Sesuai Versi Stabil */
         .modal-player { display: none; position: fixed; inset: 0; z-index: 400; background: #000; overflow-y: auto; }
         .interaction-icon { font-size: 24px; cursor: pointer; color: #fff; }
         .server-btn { width: 100%; padding: 14px; border-radius: 12px; font-size: 10px; font-weight: 800; text-transform: uppercase; border: 1px solid #1c1c1c; text-align: center; cursor: pointer; background: #0a0a0a; color: #fff; transition: all 0.2s; }
@@ -168,31 +166,21 @@
             if(isNew) { page = 1; document.getElementById('feedGrid').innerHTML = ''; }
             
             let params = `api_key=${API_KEY}&language=id-ID&page=${page}&include_adult=false`;
-            let endpoint = "";
-            let queryUrl = "";
+            
+            // Kembali ke endpoint stabil (discover)
+            let endpoint = (currentType === 'tv' || currentType === 'anime') ? 'discover/tv' : 'discover/movie';
+            let queryUrl = `https://api.themoviedb.org/3/${endpoint}?${params}`;
 
-            // LOGIKA FILTER KATEGORI YANG DIPERBAIKI (Trending, Populer, Tayang, Segera)
-            if (currentSchedule === 'trending') {
-                endpoint = (currentType === 'tv' || currentType === 'anime') ? 'trending/tv/day' : 'trending/movie/day';
-                queryUrl = `https://api.themoviedb.org/3/${endpoint}?${params}`;
-            } else {
-                endpoint = (currentType === 'tv' || currentType === 'anime') ? 'discover/tv' : 'discover/movie';
-                queryUrl = `https://api.themoviedb.org/3/${endpoint}?${params}`;
+            // Perbaikan Logika Sortir saja (Tanpa mengubah endpoint kategori utama)
+            if (currentSchedule === 'trending') queryUrl += `&sort_by=trending.desc`;
+            else if (currentSchedule === 'popular') queryUrl += `&sort_by=popularity.desc`;
+            else if (currentSchedule === 'now_playing') queryUrl += `&sort_by=release_date.desc`;
+            else if (currentSchedule === 'upcoming') queryUrl += `&sort_by=primary_release_date.asc`;
 
-                if (currentSchedule === 'popular') {
-                    queryUrl += `&sort_by=popularity.desc`;
-                } else if (currentSchedule === 'now_playing') {
-                    const today = new Date().toISOString().split('T')[0];
-                    const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
-                    queryUrl += `&release_date.gte=${thirtyDaysAgo}&release_date.lte=${today}&sort_by=release_date.desc`;
-                } else if (currentSchedule === 'upcoming') {
-                    const tomorrow = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().split('T')[0];
-                    queryUrl += `&primary_release_date.gte=${tomorrow}&sort_by=primary_release_date.asc`;
-                }
-            }
-
-            if(currentType === 'anime') queryUrl += `&with_genres=16&with_original_language=ja`;
-            if(currentType === 'short') queryUrl += `&with_runtime.lte=45&with_runtime.gte=2`;
+            // Filter Khusus tetap akurat
+            if(currentType === 'anime') queryUrl = `https://api.themoviedb.org/3/discover/tv?${params}&with_genres=16&with_original_language=ja&sort_by=popularity.desc`;
+            if(currentType === 'short') queryUrl = `https://api.themoviedb.org/3/discover/movie?${params}&with_runtime.lte=45&with_runtime.gte=2&sort_by=popularity.desc`;
+            
             if(currentCountry) {
                 if(currentCountry === 'IN') queryUrl += `&with_origin_country=IN&with_original_language=hi|ta|te|kn|ml`;
                 else queryUrl += `&with_origin_country=${currentCountry}`;
