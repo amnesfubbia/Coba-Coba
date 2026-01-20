@@ -42,25 +42,25 @@
                 <i class="fa-solid fa-circle-check text-[#0095f6] ml-1 text-xs"></i>
             </div>
             <div class="flex gap-4">
-                <i id="navLike" class="fa-regular fa-heart text-xl cursor-pointer" onclick="showLibrary('likes', this)"></i>
-                <i id="navBook" class="fa-regular fa-bookmark text-xl cursor-pointer" onclick="showLibrary('bookmarks', this)"></i>
+                <i class="fa-regular fa-heart text-xl cursor-pointer" onclick="showLibrary('likes', this)"></i>
+                <i class="fa-regular fa-bookmark text-xl cursor-pointer" onclick="showLibrary('bookmarks', this)"></i>
             </div>
         </header>
 
         <div class="search-container">
             <i class="fa-solid fa-magnifying-glass text-zinc-600 text-[10px]"></i>
-            <input type="text" id="searchInp" placeholder="Cari film, series, anime..." onkeydown="if(event.key==='Enter') searchAction()">
+            <input type="text" id="searchInp" placeholder="Cari Sultan, Pathaan, Bad Genius..." onkeydown="if(event.key==='Enter') searchAction()">
         </div>
 
         <div class="category-wrapper">
-            <div id="typeRow" class="pill-grid grid-cols-5">
-                <button class="pill active" onclick="setMasterAll(this)">Semua</button>
+            <div class="pill-grid grid-cols-5">
+                <button class="pill active" onclick="setFilter('type', 'multi', this)">Semua</button>
                 <button class="pill" onclick="setFilter('type', 'movie', this)">Film</button>
                 <button class="pill" onclick="setFilter('type', 'tv', this)">Series</button>
                 <button class="pill" onclick="setFilter('type', 'short', this)">Short</button>
                 <button class="pill" onclick="setFilter('type', 'anime', this)">Anime</button>
             </div>
-            <div id="scheduleRow" class="pill-grid grid-cols-4">
+            <div class="pill-grid grid-cols-4">
                 <button class="pill active" onclick="setSchedule('trending', this)">Trending</button>
                 <button class="pill" onclick="setSchedule('popular', this)">Populer</button>
                 <button class="pill" onclick="setSchedule('now_playing', this)">Tayang</button>
@@ -116,8 +116,6 @@
         const API_KEY = 'bfa7df5310c9974f62f26c6789a8c00d';
         let page = 1, loading = false, currentType = 'multi', currentGenre = '', currentYear = '', currentCountry = '', currentSchedule = 'trending', searchQuery = '';
 
-        const today = "2026-01-20";
-
         window.onload = () => { initFilters(); loadFeed(); };
 
         function initFilters() {
@@ -132,60 +130,35 @@
             [[28,'Action'],[12,'Adventure'],[16,'Animasi'],[35,'Comedy'],[27,'Horror'],[10749,'Romance'],[878,'Sci-Fi']].forEach(g => gD.innerHTML += `<div class="filter-item" onclick="setGenre('${g[0]}','${g[1]}')">${g[1]}</div>`);
         }
 
-        // FUNGSI SEMUA: Reset total
-        function setMasterAll(el) {
-            currentType = 'multi'; currentGenre = ''; currentYear = ''; currentCountry = ''; currentSchedule = 'trending'; searchQuery = '';
-            document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
-            el.classList.add('active');
-            document.querySelector('#scheduleRow .pill:first-child').classList.add('active');
-            document.getElementById('btnCountry').innerText = 'Negara';
-            document.getElementById('btnGenre').innerText = 'Genre';
-            document.getElementById('yearBtn').innerText = 'Tahun';
-            loadFeed(true);
-        }
-
         async function loadFeed(isNew = true) {
             if(loading) return; loading = true;
             if(isNew) { page = 1; document.getElementById('feedGrid').innerHTML = ''; }
             
-            let endpoint = (currentType === 'tv' || currentType === 'anime') ? 'discover/tv' : 'discover/movie';
+            let endpoint = (currentType === 'tv' || currentType === 'anime') ? 'tv' : 'movie';
             let params = `api_key=${API_KEY}&language=id-ID&page=${page}&include_adult=false`;
+            let url = `https://api.themoviedb.org/3/discover/${endpoint}?${params}`;
 
-            let queryUrl = `https://api.themoviedb.org/3/${endpoint}?${params}`;
+            // Logic Schedule Akurat
+            if(currentSchedule === 'popular') url += `&sort_by=popularity.desc`;
+            else if(currentSchedule === 'now_playing') url = `https://api.themoviedb.org/3/${endpoint}/${endpoint==='movie'?'now_playing':'on_the_air'}?${params}`;
+            else if(currentSchedule === 'upcoming' && endpoint === 'movie') url = `https://api.themoviedb.org/3/movie/upcoming?${params}`;
+            else if(currentSchedule === 'trending') url = `https://api.themoviedb.org/3/trending/${endpoint}/day?${params}`;
 
-            // 1. Akurasi Schedule
-            if (currentSchedule === 'trending') {
-                queryUrl = `https://api.themoviedb.org/3/trending/${endpoint === 'discover/tv' ? 'tv' : 'movie'}/day?${params}`;
-            } else if (currentSchedule === 'popular') {
-                queryUrl += `&sort_by=popularity.desc`;
-            } else if (currentSchedule === 'now_playing') {
-                queryUrl += `&sort_by=release_date.desc&release_date.lte=${today}`;
-            } else if (currentSchedule === 'upcoming') {
-                queryUrl += `&sort_by=primary_release_date.asc&primary_release_date.gte=${today}`;
-            }
+            // Logic Anime & Short Akurat
+            if(currentType === 'anime') url = `https://api.themoviedb.org/3/discover/tv?${params}&with_genres=16&with_original_language=ja&sort_by=popularity.desc`;
+            if(currentType === 'short') url = `https://api.themoviedb.org/3/discover/movie?${params}&with_runtime.lte=45&sort_by=popularity.desc`;
 
-            // 2. Akurasi Anime
-            if(currentType === 'anime') {
-                queryUrl = `https://api.themoviedb.org/3/discover/tv?${params}&with_genres=16&with_original_language=ja&sort_by=popularity.desc`;
-            }
-
-            // 3. Akurasi Short
-            if(currentType === 'short') {
-                queryUrl = `https://api.themoviedb.org/3/discover/movie?${params}&with_runtime.lte=45&sort_by=popularity.desc`;
-            }
-
-            // 4. Akurasi Filter Tambahan
-            if(currentCountry) queryUrl += currentCountry === 'IN' ? `&with_origin_country=IN&with_original_language=hi|ta|te` : `&with_origin_country=${currentCountry}`;
-            if(currentGenre) queryUrl += `&with_genres=${currentGenre}`;
-            if(currentYear) queryUrl += endpoint.includes('tv') ? `&first_air_date_year=${currentYear}` : `&primary_release_year=${currentYear}`;
-            
-            if(searchQuery) queryUrl = `https://api.themoviedb.org/3/search/multi?query=${encodeURIComponent(searchQuery)}&api_key=${API_KEY}&language=en-US&page=${page}`;
+            // Logic Negara & Lainnya
+            if(currentCountry) url += (currentCountry === 'IN' ? `&with_origin_country=IN&with_original_language=hi|ta|te` : `&with_origin_country=${currentCountry}`);
+            if(currentGenre) url += `&with_genres=${currentGenre}`;
+            if(currentYear) url += (endpoint === 'tv' ? `&first_air_date_year=${currentYear}` : `&primary_release_year=${currentYear}`);
+            if(searchQuery) url = `https://api.themoviedb.org/3/search/multi?query=${encodeURIComponent(searchQuery)}&api_key=${API_KEY}&language=en-US&page=${page}`;
 
             try {
-                const res = await fetch(queryUrl);
+                const res = await fetch(url);
                 const data = await res.json();
                 renderGrid(data.results || []);
-            } catch (e) { console.error(e); }
+            } catch (e) { console.log(e); }
             loading = false;
         }
 
@@ -239,7 +212,11 @@
         }
         function playEp(s, e) { document.getElementById('videoPlayer').src = `https://vidrock.net/embed/tv/${window.currentMediaId}/${s}/${e}`; }
         function closeModal() { document.getElementById('movieModal').style.display = 'none'; document.getElementById('videoPlayer').src = ''; document.body.style.overflow = 'auto'; }
-        function setFilter(t, v, el) { currentType = v; updatePill(el); loadFeed(true); }
+        
+        function setFilter(t, v, el) { 
+            if(v === 'multi') { location.reload(); return; }
+            currentType = v; updatePill(el); loadFeed(true); 
+        }
         function setSchedule(v, el) { currentSchedule = v; updatePill(el); loadFeed(true); }
         function updatePill(el) { el.parentElement.querySelectorAll('.pill').forEach(p=>p.classList.remove('active')); el.classList.add('active'); }
         function toggleFilter(id) { document.querySelectorAll('.filter-dropdown').forEach(x=>x.style.display='none'); document.getElementById(id).style.display='block'; }
