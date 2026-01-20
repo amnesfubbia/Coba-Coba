@@ -170,10 +170,13 @@
 
         async function loadFeed(isNew = true) {
             if(loading) return; loading = true;
-            if(isNew) { page = 1; document.getElementById('feedGrid').innerHTML = ''; }
+            const grid = document.getElementById('feedGrid');
+            if(isNew) { page = 1; grid.innerHTML = ''; }
+            
             let params = `api_key=${API_KEY}&language=id-ID&page=${page}&include_adult=false`;
             let endpoint = (currentType === 'tv' || currentType === 'anime') ? 'discover/tv' : 'discover/movie';
             let queryUrl = `https://api.themoviedb.org/3/${endpoint}?${params}`;
+            
             const today = new Date().toISOString().split('T')[0];
             if (currentSchedule === 'trending') queryUrl += `&sort_by=trending.desc`;
             else if (currentSchedule === 'popular') queryUrl += `&sort_by=popularity.desc`;
@@ -184,29 +187,40 @@
                 const tomorrow = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().split('T')[0];
                 queryUrl += `&primary_release_date.gte=${tomorrow}&sort_by=primary_release_date.asc`;
             }
+            
             if(currentType === 'anime') queryUrl = `https://api.themoviedb.org/3/discover/tv?${params}&with_genres=16&with_original_language=ja&sort_by=popularity.desc`;
             else if(currentType === 'short') queryUrl = `https://api.themoviedb.org/3/discover/movie?${params}&with_runtime.lte=45&with_runtime.gte=2&sort_by=popularity.desc`;
             if(currentCountry) queryUrl += (currentCountry === 'IN' ? `&with_origin_country=IN&with_original_language=hi|ta|te|kn|ml` : `&with_origin_country=${currentCountry}`);
             if(currentGenre) queryUrl += `&with_genres=${currentGenre}`;
             if(currentYear) queryUrl += (endpoint.includes('tv') ? `&first_air_date_year=${currentYear}` : `&primary_release_year=${currentYear}`);
             if(searchQuery) queryUrl = `https://api.themoviedb.org/3/search/multi?query=${encodeURIComponent(searchQuery)}&api_key=${API_KEY}&language=en-US&page=${page}`;
-            try { const res = await fetch(queryUrl); const data = await res.json(); renderGrid(data.results || []); } catch (e) { console.error(e); }
+            
+            try { 
+                const res = await fetch(queryUrl); 
+                const data = await res.json(); 
+                renderGrid(data.results || []); 
+            } catch (e) { console.error(e); }
             loading = false;
         }
 
         function renderGrid(items) {
+            const grid = document.getElementById('feedGrid');
             items.forEach(m => {
                 if(!m.poster_path) return;
+                if (document.querySelector(`[data-id="${m.id}"]`)) return;
+
                 const mType = m.media_type || (currentType.includes('tv')||currentType==='anime'?'tv':'movie');
                 let displayType = 'FILM';
                 if(mType === 'tv') displayType = 'SERIES';
                 if(currentType === 'anime') displayType = 'ANIME';
                 if(currentType === 'short') displayType = 'SHORT';
+                
                 const card = document.createElement('div');
                 card.className = 'post-card';
+                card.setAttribute('data-id', m.id);
                 card.onclick = () => openModal(m.id, mType);
                 card.innerHTML = `<div class="badge-rating">★ ${m.vote_average ? m.vote_average.toFixed(1) : '0'}</div><div class="badge-type">${displayType}</div><img src="https://image.tmdb.org/t/p/w342${m.poster_path}">`;
-                document.getElementById('feedGrid').appendChild(card);
+                grid.appendChild(card);
             });
         }
 
@@ -259,11 +273,13 @@
             searchQuery = ""; loading = true; page = 1;
             document.getElementById('feedGrid').innerHTML = '';
             try {
+                // Menghapus filter bahasa agar aktor seperti Salman Khan muncul semua filmnya (Hindi, dll)
                 const res = await fetch(`https://api.themoviedb.org/3/person/${actorId}/combined_credits?api_key=${API_KEY}&language=id-ID`);
                 const data = await res.json();
-                const filtered = (data.cast || []).filter(m => m.poster_path && (m.original_language === 'en' || m.original_language === 'id' || m.original_language === 'ko' || m.original_language === 'ja'));
+                // Hanya filter yang punya poster agar tampilan rapi
+                const filtered = (data.cast || []).filter(m => m.poster_path);
                 const sorted = filtered.sort((a, b) => (b.popularity || 0) - (a.popularity || 0));
-                renderGrid(sorted.slice(0, 30));
+                renderGrid(sorted.slice(0, 60)); // Ambil lebih banyak hasil (60 film)
                 window.scrollTo({top: 0, behavior: 'smooth'});
             } catch (e) { console.error(e); }
             loading = false;
@@ -310,7 +326,7 @@
             loading = true;
             const items = JSON.parse(localStorage.getItem(k) || '[]');
             const grid = document.getElementById('feedGrid');
-            grid.innerHTML = ''; // Kosongkan total
+            grid.innerHTML = ''; 
             window.scrollTo({top: 0, behavior: 'smooth'});
             
             if (!items.length) {
@@ -319,13 +335,9 @@
                 return;
             }
 
-            for (const item of items) {
-                try {
-                    const res = await fetch(`https://api.themoviedb.org/3/${item.type}/${item.id}?api_key=${API_KEY}&language=id-ID`);
-                    const m = await res.json();
-                    if(m.id) renderGrid([m]);
-                } catch(e) {}
-            }
+            const promises = items.map(item => fetch(`https://api.themoviedb.org/3/${item.type}/${item.id}?api_key=${API_KEY}&language=id-ID`).then(r => r.json()));
+            const results = await Promise.all(promises);
+            renderGrid(results.filter(m => m.id));
             loading = false;
         }
     </script>
