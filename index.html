@@ -29,27 +29,29 @@
         .badge-rating { position: absolute; top: 6px; left: 6px; padding: 2px 5px; border-radius: 2px; font-size: 7px; font-weight: 900; z-index: 5; background: rgba(255,255,255,0.9); color: #000; }
         .badge-type { position: absolute; top: 6px; right: 6px; padding: 2px 5px; border-radius: 2px; font-size: 7px; font-weight: 900; z-index: 5; background: rgba(0,0,0,0.7); color: #fff; text-transform: uppercase; border: 0.5px solid rgba(255,255,255,0.3); }
 
-        /* CAROUSEL SLIDE UTAMA */
+        /* CAROUSEL FIXED */
         .carousel-container { position: relative; width: 100%; aspect-ratio: 16/9; overflow: hidden; background: #000; }
-        .carousel-track { display: flex; transition: transform 0.3s ease-in-out; height: 100%; }
-        .carousel-slide { min-width: 100%; height: 100%; }
+        .carousel-track { display: flex; transition: transform 0.3s ease-in-out; height: 100%; width: 100%; }
+        .carousel-slide { min-width: 100%; height: 100%; position: relative; }
         
-        .carousel-dots { display: flex; gap: 4px; align-items: center; }
+        .carousel-dots { display: flex; gap: 5px; justify-content: center; align-items: center; }
         .dot { width: 6px; height: 6px; background: #333; border-radius: 50%; transition: 0.3s; }
-        .dot.active { background: #fff; transform: scale(1.2); }
+        .dot.active { background: #fff; transform: scale(1.3); }
 
         .modal-player { display: none; position: fixed; inset: 0; z-index: 400; background: #000; overflow-y: auto; }
         .interaction-icon { font-size: 24px; cursor: pointer; color: #fff; }
         
         .filter-dropdown { display: none; position: fixed; background: #121212; border: 1px solid #1c1c1c; border-radius: 12px; z-index: 200; width: 150px; max-height: 300px; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,1); }
+        .dropdown-sticky-header { position: sticky; top: 0; z-index: 10; background: #121212; border-bottom: 1px solid #1c1c1c; }
         .filter-item { padding: 12px; font-size: 11px; text-align: center; border-bottom: 1px solid #1c1c1c; color: #bbb; cursor: pointer; }
 
         .cast-wrapper { display: flex; overflow-x: auto; gap: 15px; padding: 15px 0; scrollbar-width: none; }
-        .cast-item { flex: 0 0 65px; text-align: center; }
-        .cast-img-border { width: 64px; height: 64px; border-radius: 50%; padding: 2px; border: 2px solid #333; margin-bottom: 5px; overflow: hidden; }
-        .cast-img-border img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+        .cast-item { flex: 0 0 65px; text-align: center; cursor: pointer; }
+        .cast-img-border { width: 64px; height: 64px; border-radius: 50%; padding: 2px; border: 2px solid #333; margin-bottom: 5px; }
+        .cast-img-border img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; background: #1c1c1c; }
+        .cast-name { font-size: 9px; color: #a8a8a8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; width: 100%; }
 
-        .server-btn { width: 100%; padding: 12px 5px; border-radius: 8px; font-size: 8px; font-weight: 800; text-transform: uppercase; border: 1px solid #1c1c1c; text-align: center; cursor: pointer; background: #0a0a0a; color: #fff; }
+        .server-btn { width: 100%; padding: 12px 5px; border-radius: 8px; font-size: 8px; font-weight: 800; text-transform: uppercase; border: 1px solid #1c1c1c; text-align: center; cursor: pointer; background: #0a0a0a; color: #fff; transition: 0.2s; }
         .server-btn.active-link { border: 2px solid #fff !important; }
         .dl-link-btn { width: 100%; padding: 14px; border-radius: 12px; background: #000; color: #a1a1aa; font-size: 10px; font-weight: 800; text-transform: uppercase; text-align: center; border: 1px solid #1c1c1c; cursor: pointer; }
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #000; border-top: 1px solid #1c1c1c; display: flex; justify-content: space-around; padding: 12px 0; z-index: 300; }
@@ -59,10 +61,12 @@
 
     <div class="fixed-header-section">
         <header class="ig-header flex justify-between items-center">
-            <h1 class="ig-logo" onclick="location.reload()">amnesfubbia <span class="text-white opacity-40 font-normal italic">xx1</span></h1>
+            <div class="flex items-center" onclick="location.reload()">
+                <h1 class="ig-logo">amnesfubbia <span class="text-white opacity-40 font-normal italic">xx1</span></h1>
+            </div>
             <div class="flex gap-4">
-                <i class="fa-regular fa-heart text-xl" onclick="showLibrary('likes')"></i>
-                <i class="fa-regular fa-bookmark text-xl" onclick="showLibrary('bookmarks')"></i>
+                <i class="fa-regular fa-heart text-xl cursor-pointer" onclick="showLibrary('likes')"></i>
+                <i class="fa-regular fa-bookmark text-xl cursor-pointer" onclick="showLibrary('bookmarks')"></i>
             </div>
         </header>
         <div class="search-container">
@@ -117,11 +121,19 @@
             
             <div class="px-4">
                 <span id="mLikeDisplay" class="font-bold text-[13px] block mb-1"></span>
-                <div class="text-[13px]">
+                <div class="text-[13px] leading-relaxed">
                     <span class="font-bold mr-1">amnesfubbia.xx1</span>
                     <span id="mDesc" class="text-zinc-300"></span>
                 </div>
                 <div id="mDateDisplay" class="text-[10px] text-zinc-500 uppercase mt-2 mb-6"></div>
+
+                <div id="seriesControl" class="hidden mt-6 p-4 bg-zinc-950 rounded-2xl border border-zinc-900">
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="text-[10px] font-black text-zinc-400 uppercase">Episode</span>
+                        <select id="seasonSel" class="bg-zinc-900 text-white text-[10px] px-2 py-1 rounded" onchange="loadEpisodes()"></select>
+                    </div>
+                    <div id="episodeGrid" class="grid grid-cols-5 gap-2"></div>
+                </div>
 
                 <div id="serverList" class="grid grid-cols-3 gap-2 mt-6"></div>
                 
@@ -134,27 +146,49 @@
     </div>
 
     <nav class="bottom-nav">
-        <i class="fa-solid fa-house" onclick="location.reload()"></i>
-        <i class="fa-solid fa-magnifying-glass"></i>
-        <i class="fa-regular fa-user"></i>
+        <i class="fa-solid fa-house cursor-pointer" onclick="location.reload()"></i>
+        <i class="fa-solid fa-magnifying-glass cursor-pointer"></i>
+        <i class="fa-regular fa-user cursor-pointer"></i>
     </nav>
 
     <script>
         const API_KEY = 'bfa7df5310c9974f62f26c6789a8c00d';
+        let page = 1, loading = false, currentType = 'multi', currentGenre = '', currentYear = '', currentCountry = '', currentSchedule = 'trending', searchQuery = '';
         let currentSlide = 0, slides = [];
 
         window.onload = () => { initFilters(); loadFeed(); };
 
         function initFilters() {
             const yD = document.getElementById('yearDropdown');
-            for(let y=2026; y>=1950; y--) yD.innerHTML += `<div class="filter-item" onclick="setYear(${y})">${y}</div>`;
-            // ... (Fungsi init lainnya sama seperti aslinya)
+            yD.innerHTML = '<div class="dropdown-sticky-header"><div class="filter-item" onclick="setYear(\'\')">Semua</div></div>';
+            for(let y=2026; y>=1900; y--) yD.innerHTML += `<div class="filter-item" onclick="setYear(${y})">${y}</div>`;
+            
+            const cD = document.getElementById('countryDropdown');
+            cD.innerHTML = '<div class="dropdown-sticky-header"><div class="filter-item" onclick="setCountry(\'\',\'Negara\')">Semua</div></div>';
+            [['IN','India'],['TH','Thailand'],['KR','Korea'],['JP','Jepang'],['ID','Indonesia'],['US','USA'],['CN','China']].forEach(c => {
+                cD.innerHTML += `<div class="filter-item" onclick="setCountry('${c[0]}','${c[1]}')">${c[1]}</div>`;
+            });
+
+            const gD = document.getElementById('genreDropdown');
+            gD.innerHTML = '<div class="dropdown-sticky-header"><div class="filter-item" onclick="setGenre(\'\',\'Genre\')">Semua</div></div>';
+            [[28,'Action'],[35,'Comedy'],[18,'Drama'],[27,'Horror'],[10749,'Romance'],[878,'Sci-Fi']].forEach(g => {
+                gD.innerHTML += `<div class="filter-item" onclick="setGenre('${g[0]}','${g[1]}')">${g[1]}</div>`;
+            });
         }
 
-        async function loadFeed() {
-            const res = await fetch(`https://api.themoviedb.org/3/trending/all/day?api_key=${API_KEY}&language=id-ID`);
+        async function loadFeed(isNew = true) {
+            if(loading) return; loading = true;
+            if(isNew) { page = 1; document.getElementById('feedGrid').innerHTML = ''; }
+            let url = `https://api.themoviedb.org/3/discover/${currentType === 'tv' ? 'tv' : 'movie'}?api_key=${API_KEY}&language=id-ID&page=${page}&sort_by=popularity.desc`;
+            if(currentGenre) url += `&with_genres=${currentGenre}`;
+            if(currentYear) url += `&primary_release_year=${currentYear}`;
+            if(currentCountry) url += `&with_origin_country=${currentCountry}`;
+            if(searchQuery) url = `https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${searchQuery}&page=${page}`;
+
+            const res = await fetch(url);
             const data = await res.json();
-            renderGrid(data.results);
+            renderGrid(data.results || []);
+            loading = false;
         }
 
         function renderGrid(items) {
@@ -163,7 +197,11 @@
                 if(!m.poster_path) return;
                 const card = document.createElement('div');
                 card.className = 'post-card';
-                card.innerHTML = `<img src="https://image.tmdb.org/t/p/w342${m.poster_path}" onclick="openModal(${m.id}, '${m.media_type || 'movie'}')">`;
+                card.innerHTML = `
+                    <div class="badge-rating">★ ${m.vote_average?.toFixed(1) || 0}</div>
+                    <div class="badge-type">${m.media_type === 'tv' ? 'SERIES' : 'FILM'}</div>
+                    <img src="https://image.tmdb.org/t/p/w342${m.poster_path}" onclick="openModal(${m.id}, '${m.media_type || (currentType==='tv'?'tv':'movie')}')">
+                `;
                 grid.appendChild(card);
             });
         }
@@ -184,40 +222,42 @@
             const dCast = await rCast.json();
 
             document.getElementById('mTitle').innerText = dId.title || dId.name;
-            document.getElementById('mDesc').innerText = dId.overview || dEn.overview;
-            document.getElementById('mLikeDisplay').innerText = `${Math.floor(dId.vote_average * 1000).toLocaleString()} suka`;
+            document.getElementById('mDesc').innerText = dId.overview || dEn.overview || "Sinopsis tidak tersedia.";
+            document.getElementById('mLikeDisplay').innerText = `${Math.floor(dId.vote_average * 1234).toLocaleString()} suka`;
             document.getElementById('mDateDisplay').innerText = dId.release_date || dId.first_air_date;
 
-            // Render Cast Sesuai HTML Perfect
+            // Render Cast LENGKAP Sesuai Perfect HTML
             document.getElementById('castContainer').innerHTML = (dCast.cast || []).slice(0, 10).map(c => `
-                <div class="cast-item">
-                    <div class="cast-img-border"><img src="https://image.tmdb.org/t/p/w185${c.profile_path}"></div>
-                    <div class="text-[9px] text-zinc-500 truncate w-16">${c.name}</div>
+                <div class="cast-item" onclick="searchActor(${c.id}, '${c.name.replace(/'/g, "\\'")}')">
+                    <div class="cast-img-border"><img src="${c.profile_path ? 'https://image.tmdb.org/t/p/w185'+c.profile_path : ''}"></div>
+                    <span class="cast-name">${c.name}</span>
                 </div>
             `).join('');
 
-            // SETUP CAROUSEL (Trailer & Teaser Saja)
-            const vids = [...(dId.videos.results || []), ...(dEn.videos.results || [])]
-                        .filter(v => v.type === 'Trailer' || v.type === 'Teaser');
+            // CAROUSEL LOGIC
+            const vids = [...(dId.videos?.results || []), ...(dEn.videos?.results || [])].filter(v => v.type === 'Trailer' || v.type === 'Teaser');
             setupCarousel(vids, dId.backdrop_path);
 
-            // Server List 3 Server Utuh
             document.getElementById('serverList').innerHTML = `
-                <button class="server-btn" onclick="playS('https://vidrock.net/embed/${type}/${id}')">Server 1</button>
-                <button class="server-btn" onclick="playS('https://vidsrc.me/embed/${type}?tmdb=${id}')">Server 2</button>
-                <button class="server-btn" onclick="playS('https://multiembed.mov/directstream.php?video_id=${id}&tmdb=1')">Server 3</button>
+                <button class="server-btn active-link" onclick="playS('https://vidrock.net/embed/${type}/${id}', this)">Server 1</button>
+                <button class="server-btn" onclick="playS('https://vidsrc.me/embed/${type}?tmdb=${id}', this)">Server 2</button>
+                <button class="server-btn" onclick="playS('https://multiembed.mov/directstream.php?video_id=${id}&tmdb=1', this)">Server 3</button>
             `;
             
             document.getElementById('dl1').onclick = () => window.open(`https://dl.vidsrc.vip/${type}/${id}`);
             document.getElementById('dl2').onclick = () => window.open(`https://multiembed.mov/directstream.php?video_id=${id}&tmdb=1`);
+            
+            if(type === 'tv') { document.getElementById('seriesControl').classList.remove('hidden'); loadSeasons(dId.seasons); }
+            else { document.getElementById('seriesControl').classList.add('hidden'); }
+            updateLibButtons(id);
         }
 
         function setupCarousel(vids, backup) {
             const track = document.getElementById('carouselTrack');
             const dots = document.getElementById('carouselDots');
             track.innerHTML = ''; dots.innerHTML = '';
-            currentSlide = 0;
-            
+            currentSlide = 0; track.style.transform = 'translateX(0)';
+
             if(vids.length === 0) {
                 track.innerHTML = `<div class="carousel-slide"><img src="https://image.tmdb.org/t/p/original${backup}" class="w-full h-full object-cover"></div>`;
                 return;
@@ -225,11 +265,7 @@
 
             slides = vids.slice(0, 5);
             slides.forEach((v, i) => {
-                track.innerHTML += `
-                    <div class="carousel-slide">
-                        <iframe id="player-${i}" class="w-full h-full" src="https://www.youtube.com/embed/${v.key}?enablejsapi=1&autoplay=${i===0?1:0}&mute=${i===0?1:0}" allowfullscreen></iframe>
-                    </div>
-                `;
+                track.innerHTML += `<div class="carousel-slide"><iframe id="player-${i}" class="w-full h-full" src="https://www.youtube.com/embed/${v.key}?enablejsapi=1&autoplay=${i===0?1:0}&mute=${i===0?1:0}" allow="autoplay; fullscreen"></iframe></div>`;
                 if(slides.length > 1) dots.innerHTML += `<div class="dot ${i===0?'active':''}"></div>`;
             });
 
@@ -241,22 +277,26 @@
         }
 
         function moveSlide(dir) {
-            const track = document.getElementById('carouselTrack');
-            const dots = document.querySelectorAll('.dot');
-            const oldPlayer = document.getElementById(`player-${currentSlide}`);
-            if(oldPlayer) oldPlayer.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
-
+            if(slides.length <= 1) return;
+            const oldP = document.getElementById(`player-${currentSlide}`);
+            if(oldP) oldP.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
             currentSlide = (currentSlide + dir + slides.length) % slides.length;
-            track.style.transform = `translateX(-${currentSlide * 100}%)`;
-            
-            const newPlayer = document.getElementById(`player-${currentSlide}`);
-            if(newPlayer) newPlayer.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
-            dots.forEach((d, i) => d.classList.toggle('active', i === currentSlide));
+            document.getElementById('carouselTrack').style.transform = `translateX(-${currentSlide * 100}%)`;
+            const newP = document.getElementById(`player-${currentSlide}`);
+            if(newP) newP.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+            document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === currentSlide));
         }
 
-        function playS(url) { document.getElementById('carousel').innerHTML = `<iframe class="w-full h-full" src="${url}" allowfullscreen></iframe>`; }
+        window.onscroll = () => { if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 1000 && !loading) { page++; loadFeed(false); } };
+        function playS(url, btn) { document.getElementById('carousel').innerHTML = `<iframe class="w-full h-full" src="${url}" allowfullscreen></iframe>`; document.querySelectorAll('.server-btn').forEach(b=>b.classList.remove('active-link')); btn.classList.add('active-link'); }
         function closeModal() { document.getElementById('movieModal').style.display = 'none'; document.getElementById('carouselTrack').innerHTML = ''; document.body.style.overflow = 'auto'; }
-        function toggleFilter(id) { document.querySelectorAll('.filter-dropdown').forEach(d => d.style.display = 'none'); document.getElementById(id).style.display = 'block'; }
+        function setFilter(t, v, el) { currentType = v; document.querySelectorAll('.pill').forEach(p=>p.classList.remove('active')); el.classList.add('active'); loadFeed(true); }
+        function toggleFilter(id) { const el = document.getElementById(id); const display = el.style.display; document.querySelectorAll('.filter-dropdown').forEach(d=>d.style.display='none'); el.style.display = display === 'block' ? 'none' : 'block'; }
+        function setYear(y) { currentYear = y; document.getElementById('yearBtn').innerText = y || 'Tahun'; toggleFilter('yearDropdown'); loadFeed(true); }
+        function setGenre(g, n) { currentGenre = g; document.getElementById('btnGenre').innerText = n; toggleFilter('genreDropdown'); loadFeed(true); }
+        function setCountry(c, n) { currentCountry = c; document.getElementById('btnCountry').innerText = n; toggleFilter('countryDropdown'); loadFeed(true); }
+        function searchAction() { searchQuery = document.getElementById('searchInp').value; loadFeed(true); }
+        function setSchedule(v, el) { currentSchedule = v; document.querySelectorAll('.pill').forEach(p=>p.classList.remove('active')); el.classList.add('active'); loadFeed(true); }
     </script>
 </body>
 </html>
