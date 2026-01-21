@@ -15,8 +15,20 @@
         .ig-logo { font-family: 'DM Sans', sans-serif; font-weight: 700; font-style: italic; font-size: 22px; letter-spacing: -0.5px; text-transform: lowercase; cursor: pointer; }
         
         .search-container { background: #0a0a0a; border-radius: 8px; display: flex; align-items: center; padding: 7px 12px; border: 1px solid #1c1c1c; margin: 0 15px 10px 15px; }
-        .search-container input { background: transparent !important; border: none !important; color: white !important; font-size: 13px; width: 100%; outline: none !important; margin-left: 8px; box-shadow: none !important; }
-        .search-container input:-webkit-autofill { -webkit-text-fill-color: white !important; -webkit-box-shadow: 0 0 0px 1000px #0a0a0a inset !important; }
+        .search-container input { 
+            background: transparent !important; 
+            border: none !important; 
+            color: white !important; 
+            font-size: 13px; 
+            width: 100%; 
+            outline: none !important; 
+            margin-left: 8px;
+            box-shadow: none !important;
+        }
+        .search-container input:-webkit-autofill {
+            -webkit-text-fill-color: white !important;
+            -webkit-box-shadow: 0 0 0px 1000px #0a0a0a inset !important;
+        }
 
         .category-wrapper { padding: 0 15px; }
         .pill-grid { display: grid; gap: 6px; margin-bottom: 8px; }
@@ -28,33 +40,43 @@
         .badge-rating { position: absolute; top: 6px; left: 6px; padding: 2px 5px; border-radius: 2px; font-size: 7px; font-weight: 900; z-index: 5; background: rgba(255,255,255,0.9); color: #000; }
         .badge-type { position: absolute; top: 6px; right: 6px; padding: 2px 5px; border-radius: 2px; font-size: 7px; font-weight: 900; z-index: 5; background: rgba(0,0,0,0.7); color: #fff; text-transform: uppercase; border: 0.5px solid rgba(255,255,255,0.3); }
         
-        .filter-dropdown { display: none; position: fixed; background: #121212; border: 1px solid #1c1c1c; border-radius: 12px; z-index: 200; width: 150px; max-height: 300px; overflow-y: auto; }
+        .filter-dropdown { display: none; position: fixed; background: #121212; border: 1px solid #1c1c1c; border-radius: 12px; z-index: 200; width: 150px; max-height: 300px; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,1); }
         .dropdown-sticky-header { position: sticky; top: 0; z-index: 10; background: #121212; border-bottom: 1px solid #1c1c1c; }
         .filter-item { padding: 12px; font-size: 11px; text-align: center; border-bottom: 1px solid #1c1c1c; color: #bbb; cursor: pointer; }
+        .filter-item.reset { color: #fff; font-weight: 800; background: #1c1c1c; }
         
+        #backToTop { display: none; position: fixed; bottom: 85px; right: 15px; z-index: 99; background: #fff; color: #000; width: 40px; height: 40px; border-radius: 50%; justify-content: center; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.5); cursor: pointer; transition: 0.3s; }
+        
+        .cast-wrapper { display: flex; overflow-x: auto; gap: 15px; padding: 15px 0; scrollbar-width: none; }
+        .cast-item { flex: 0 0 65px; text-align: center; cursor: pointer; }
+        .cast-img-border { width: 64px; height: 64px; border-radius: 50%; padding: 2px; border: 2px solid #333; margin-bottom: 5px; }
+        .cast-img-border img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; background: #1c1c1c; }
+        .cast-name { font-size: 9px; color: #a8a8a8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; width: 100%; }
+
         .modal-player { display: none; position: fixed; inset: 0; z-index: 400; background: #000; overflow-y: auto; }
         .interaction-icon { font-size: 24px; cursor: pointer; color: #fff; }
-        .server-btn { width: 100%; padding: 12px 5px; border-radius: 8px; font-size: 8px; font-weight: 800; text-transform: uppercase; border: 1px solid #1c1c1c; text-align: center; cursor: pointer; background: #0a0a0a; color: #fff; }
+        .server-btn { width: 100%; padding: 12px 5px; border-radius: 8px; font-size: 8px; font-weight: 800; text-transform: uppercase; border: 1px solid #1c1c1c; text-align: center; cursor: pointer; background: #0a0a0a; color: #fff; transition: all 0.2s; }
         .server-btn.active-link { border: 2px solid #fff !important; }
+        .dl-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 15px; }
+        .dl-link-btn { width: 100%; padding: 14px; border-radius: 12px; background: #000; color: #a1a1aa; font-size: 10px; font-weight: 800; text-transform: uppercase; text-align: center; border: 1px solid #1c1c1c; cursor: pointer; }
         
-        /* CAROUSEL IMPROVED */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #000; border-top: 1px solid #1c1c1c; display: flex; justify-content: space-around; padding: 12px 0; z-index: 300; }
+        .ig-post-content { padding: 0 15px; margin-top: 5px; }
+        .ig-likes-count { font-weight: 700; font-size: 13px; margin-bottom: 5px; color: #fff; display: block; }
+        .ig-username { font-weight: 700; font-size: 13px; margin-right: 5px; color: #fff; }
+        .ig-caption { font-size: 13px; line-height: 1.5; color: #fff; font-weight: 400; }
+        .toggle-btn { color: #a8a8a8; cursor: pointer; font-weight: 500; margin-left: 4px; font-size: 13px; }
+        .ig-hashtags { color: #e0f1ff; display: block; margin-top: 10px; font-size: 13px; word-break: break-word; }
+        .ig-date { color: #a8a8a8; font-size: 11px; margin-top: 8px; text-transform: uppercase; letter-spacing: 0.2px; }
+
+        /* CAROUSEL FIXED */
         .carousel-container { position: relative; width: 100%; overflow: hidden; background: #000; }
-        .carousel-track { display: flex; transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1); width: 100%; }
-        .carousel-slide { min-width: 100%; aspect-ratio: 16/9; position: relative; background: #000; }
-        /* Overlay transparan untuk deteksi swipe di atas iframe */
+        .carousel-track { display: flex; transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1); width: 100%; will-change: transform; }
+        .carousel-slide { min-width: 100%; aspect-ratio: 16/9; position: relative; }
         .swipe-overlay { position: absolute; inset: 0; z-index: 10; background: transparent; }
         .carousel-dots { display: flex; justify-content: center; gap: 6px; padding: 12px 0; }
         .dot { width: 6px; height: 6px; border-radius: 50%; background: #333; transition: 0.3s; }
         .dot.active { background: #0095f6; transform: scale(1.3); }
-
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #000; border-top: 1px solid #1c1c1c; display: flex; justify-content: space-around; padding: 12px 0; z-index: 300; }
-        .ig-post-content { padding: 0 15px; }
-        .ig-likes-count { font-weight: 700; font-size: 13px; margin-bottom: 5px; color: #fff; }
-        .ig-username { font-weight: 700; font-size: 13px; margin-right: 5px; }
-        .ig-caption { font-size: 13px; line-height: 1.5; }
-        .ig-hashtags { color: #e0f1ff; display: block; margin-top: 10px; font-size: 13px; }
-        .ig-date { color: #a8a8a8; font-size: 11px; margin-top: 8px; text-transform: uppercase; }
-        #backToTop { display: none; position: fixed; bottom: 85px; right: 15px; z-index: 99; background: #fff; color: #000; width: 40px; height: 40px; border-radius: 50%; justify-content: center; align-items: center; }
     </style>
 </head>
 <body>
@@ -66,14 +88,16 @@
                 <i class="fa-solid fa-circle-check text-[#0095f6] ml-1 text-[10px]"></i>
             </div>
             <div class="flex gap-4">
-                <i class="fa-regular fa-heart text-xl cursor-pointer" onclick="showLibrary('likes')"></i>
-                <i class="fa-regular fa-bookmark text-xl cursor-pointer" onclick="showLibrary('bookmarks')"></i>
+                <i id="navLike" class="fa-regular fa-heart text-xl cursor-pointer" onclick="showLibrary('likes')"></i>
+                <i id="navBook" class="fa-regular fa-bookmark text-xl cursor-pointer" onclick="showLibrary('bookmarks')"></i>
             </div>
         </header>
+
         <div class="search-container">
             <i class="fa-solid fa-magnifying-glass text-zinc-600 text-[10px]"></i>
             <input type="text" id="searchInp" placeholder="Cari film, series, anime..." onkeydown="if(event.key==='Enter') searchAction()" autocomplete="off">
         </div>
+
         <div class="category-wrapper">
             <div class="pill-grid grid-cols-5">
                 <button class="pill active" onclick="setFilter('type', 'multi', this)">Semua</button>
@@ -132,7 +156,7 @@
                 <div class="mb-1">
                     <span class="ig-username">amnesfubbia.xx1</span>
                     <span id="mDesc" class="ig-caption"></span>
-                    <span id="mToggleBtn" class="text-zinc-500 hidden" onclick="handleToggleDesc()">... selengkapnya</span>
+                    <span id="mToggleBtn" class="toggle-btn hidden" onclick="handleToggleDesc()">selengkapnya</span>
                 </div>
                 <div id="mHashtags" class="ig-hashtags"></div>
                 <div id="mDateDisplay" class="ig-date"></div>
@@ -143,10 +167,9 @@
                 </div>
 
                 <div id="serverList" class="grid grid-cols-3 gap-2 mt-6"></div>
-                
-                <div class="dl-grid mt-4 grid grid-cols-2 gap-2">
-                    <button class="dl-link-btn p-3 bg-zinc-900 rounded-lg text-[10px] font-bold uppercase" onclick="window.open(`https://dl.vidsrc.vip/${window.currentMediaType}/${window.currentMediaId}`)">Download 1</button>
-                    <button class="dl-link-btn p-3 bg-zinc-900 rounded-lg text-[10px] font-bold uppercase" onclick="window.open(`https://multiembed.mov/directstream.php?video_id=${window.currentMediaId}&tmdb=1`)">Download 2</button>
+                <div class="dl-grid">
+                    <button class="dl-link-btn" onclick="window.open(`https://dl.vidsrc.vip/${window.currentMediaType}/${window.currentMediaId}`)">Download 1</button>
+                    <button class="dl-link-btn" onclick="window.open(`https://multiembed.mov/directstream.php?video_id=${window.currentMediaId}&tmdb=1`)">Download 2</button>
                 </div>
             </div>
         </div>
@@ -162,21 +185,20 @@
         const API_KEY = 'bfa7df5310c9974f62f26c6789a8c00d';
         let page = 1, loading = false, currentType = 'multi', currentGenre = '', currentYear = '', currentCountry = '', currentSchedule = 'trending', searchQuery = '';
         let isExpanded = false, globalFullDesc = "";
-        
         let startX = 0, currentIdx = 0, isDragging = false, isVideoActive = false;
 
         window.onload = () => { initFilters(); loadFeed(); setupSwipe(); };
 
         function initFilters() {
             const yD = document.getElementById('yearDropdown');
-            yD.innerHTML = '<div class="dropdown-sticky-header"><div class="filter-item" onclick="setYear(\'\')">Semua Tahun</div></div>';
+            yD.innerHTML = '<div class="dropdown-sticky-header"><div class="filter-item reset" onclick="setYear(\'\')">Semua Tahun</div></div>';
             for(let y=2026; y>=1900; y--) yD.innerHTML += `<div class="filter-item" onclick="setYear(${y})">${y}</div>`;
             const cD = document.getElementById('countryDropdown');
-            cD.innerHTML = '<div class="dropdown-sticky-header"><div class="filter-item" onclick="setCountry(\'\',\'Negara\')">Semua</div></div>';
+            cD.innerHTML = '<div class="dropdown-sticky-header"><div class="filter-item reset" onclick="setCountry(\'\',\'Negara\')">Semua Negara</div></div>';
             [['IN','India'],['TH','Thailand'],['KR','Korea'],['JP','Jepang'],['ID','Indonesia'],['US','USA']].forEach(c => cD.innerHTML += `<div class="filter-item" onclick="setCountry('${c[0]}','${c[1]}')">${c[1]}</div>`);
             const gD = document.getElementById('genreDropdown');
-            gD.innerHTML = '<div class="dropdown-sticky-header"><div class="filter-item" onclick="setGenre(\'\',\'Genre\')">Semua</div></div>';
-            [[28,'Action'],[12,'Adventure'],[16,'Anime'],[35,'Comedy'],[27,'Horror'],[10749,'Romance']].forEach(g => gD.innerHTML += `<div class="filter-item" onclick="setGenre('${g[0]}','${g[1]}')">${g[1]}</div>`);
+            gD.innerHTML = '<div class="dropdown-sticky-header"><div class="filter-item reset" onclick="setGenre(\'\',\'Genre\')">Semua Genre</div></div>';
+            [[28,'Action'],[12,'Adventure'],[16,'Animasi'],[35,'Comedy'],[27,'Horror'],[10749,'Romance']].forEach(g => gD.innerHTML += `<div class="filter-item" onclick="setGenre('${g[0]}','${g[1]}')">${g[1]}</div>`);
         }
 
         async function loadFeed(isNew = true) {
@@ -221,7 +243,6 @@
             
             const dId = await rId.json(), dEn = await rEn.json(), dCast = await rCast.json();
             
-            // LOGIKA: Filter Trailer Saja
             const vids = [...(dId.videos?.results || []), ...(dEn.videos?.results || [])]
                 .filter(v => v.site === 'YouTube' && (v.type === 'Trailer' || v.type === 'Teaser'))
                 .filter((v, i, self) => i === self.findIndex(t => t.key === v.key))
@@ -232,34 +253,37 @@
             track.innerHTML = ''; dots.innerHTML = '';
 
             if(vids.length > 0) {
-                // Jika ada trailer, slide 1 adalah trailer
                 vids.forEach((v, i) => {
-                    track.innerHTML += `<div class="carousel-slide"><iframe src="https://www.youtube.com/embed/${v.key}?rel=0" class="w-full h-full" allowfullscreen></iframe></div>`;
+                    const autoplay = i === 0 ? "1" : "0";
+                    track.innerHTML += `<div class="carousel-slide"><iframe src="https://www.youtube.com/embed/${v.key}?rel=0&autoplay=${autoplay}&mute=1" class="w-full h-full" allow="autoplay; fullscreen"></iframe></div>`;
                     dots.innerHTML += `<div class="dot ${i===0?'active':''}"></div>`;
                 });
             } else {
-                // Jika TIDAK ada trailer, slide 1 langsung streaming
-                track.innerHTML = `<div class="carousel-slide"><iframe id="mainStream" src="https://vidrock.net/embed/${type}/${id}${type==='tv'?'/1/1':''}" class="w-full h-full" allowfullscreen></iframe></div>`;
+                track.innerHTML = `<div class="carousel-slide"><iframe src="https://vidrock.net/embed/${type}/${id}${type==='tv'?'/1/1':''}" class="w-full h-full" allowfullscreen></iframe></div>`;
                 dots.innerHTML = `<div class="dot active"></div>`;
-                isVideoActive = true; // Langsung aktif karena ini streaming
+                isVideoActive = true;
                 document.getElementById('swipeOverlay').style.display = 'none'; 
             }
 
             document.getElementById('mTitle').innerText = dId.title || dId.name;
             document.getElementById('mLikeDisplay').innerText = `${Math.floor((dId.vote_average || 0) * 1234).toLocaleString()} suka`;
-            globalFullDesc = dId.overview || "Sinopsis tidak tersedia.";
+            globalFullDesc = dId.overview || dEn.overview || "Sinopsis tidak tersedia.";
             isExpanded = false; renderSynopsis();
             
-            // Server List
+            const rel = dId.release_date || dId.first_air_date || "";
+            const gArr = (dId.genres || []).slice(0, 2);
+            document.getElementById('mHashtags').innerText = `#${(dId.title||dId.name||"").replace(/\s+/g, '')} #${rel.split('-')[0]} ${gArr.map(g => "#" + g.name.replace(/\s+/g, '')).join(" ")}`;
+            document.getElementById('mDateDisplay').innerText = rel ? new Date(rel).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
+
             document.getElementById('serverList').innerHTML = `
                 <button class="server-btn" onclick="playStreaming('https://vidrock.net/embed/${type}/${id}${type==='tv'?'/1/1':''}', this)">Server 1</button>
                 <button class="server-btn" onclick="playStreaming('https://vidsrc.me/embed/${type}?tmdb=${id}', this)">Server 2</button>
                 <button class="server-btn" onclick="playStreaming('https://embed.smashystream.com/playere.php?tmdb=${id}', this)">Server 3</button>`;
             
-            // Cast
-            document.getElementById('castContainer').innerHTML = (dCast.cast || []).slice(0, 10).map(c => `
-                <div class="cast-item">
-                    <div class="cast-img-border"><img src="https://image.tmdb.org/t/p/w185${c.profile_path}" onerror="this.src='https://via.placeholder.com/64'"></div>
+            const castCont = document.getElementById('castContainer');
+            castCont.innerHTML = (dCast.cast || []).slice(0, 10).map(c => `
+                <div class="cast-item" onclick="searchActorMovies(${c.id}, '${c.name.replace(/'/g, "\\'")}')">
+                    <div class="cast-img-border"><img src="${c.profile_path ? 'https://image.tmdb.org/t/p/w185' + c.profile_path : 'https://www.themoviedb.org/assets/2/v4/glyphicons/basic/glyphicons-basic-4-user-3245c3f3347706a035c9744ffaa5d174e48be3b860667e406723f3bc8160f47e.svg'}"></div>
                     <span class="cast-name">${c.name}</span>
                 </div>
             `).join('');
@@ -274,29 +298,16 @@
         function setupSwipe() {
             const container = document.getElementById('carouselMain');
             const overlay = document.getElementById('swipeOverlay');
-
-            // Fungsi pendeteksi klik atau geser pada overlay
-            overlay.addEventListener('touchstart', e => { 
-                startX = e.touches[0].clientX; 
-                isDragging = false; 
-            }, {passive: true});
-
-            overlay.addEventListener('touchmove', e => {
-                let diff = startX - e.touches[0].clientX;
-                if(Math.abs(diff) > 10) isDragging = true;
-            }, {passive: true});
-
+            overlay.addEventListener('touchstart', e => { startX = e.touches[0].clientX; isDragging = false; }, {passive: true});
+            overlay.addEventListener('touchmove', e => { if(Math.abs(startX - e.touches[0].clientX) > 10) isDragging = true; }, {passive: true});
             overlay.addEventListener('touchend', e => {
                 let diff = startX - e.changedTouches[0].clientX;
                 const total = document.querySelectorAll('.carousel-slide').length;
-
                 if(isDragging) {
-                    // Geser Slide
                     if(diff > 50 && currentIdx < total - 1) currentIdx++;
                     else if(diff < -50 && currentIdx > 0) currentIdx--;
                     updateCarousel();
                 } else {
-                    // Klik Sekali: Hilangkan overlay agar video bisa diputar (Play)
                     overlay.style.display = 'none';
                     isVideoActive = true;
                 }
@@ -306,16 +317,11 @@
         function playStreaming(url, el) {
             const track = document.getElementById('carouselTrack');
             const dots = document.getElementById('carouselDots');
-            // Reset ke slide 1 dan ganti isinya dengan streaming
             track.innerHTML = `<div class="carousel-slide"><iframe src="${url}" class="w-full h-full" allowfullscreen></iframe></div>`;
             dots.innerHTML = `<div class="dot active"></div>`;
-            currentIdx = 0;
-            updateCarousel();
-            document.getElementById('swipeOverlay').style.display = 'none'; // Matikan overlay agar streaming lancar
-            if(el) {
-                document.querySelectorAll('.server-btn').forEach(b => b.classList.remove('active-link'));
-                el.classList.add('active-link');
-            }
+            currentIdx = 0; updateCarousel();
+            document.getElementById('swipeOverlay').style.display = 'none';
+            if(el) { document.querySelectorAll('.server-btn').forEach(b => b.classList.remove('active-link')); el.classList.add('active-link'); }
         }
 
         function updateCarousel() {
@@ -323,31 +329,26 @@
             const dots = document.querySelectorAll('.dot');
             track.style.transform = `translateX(-${currentIdx * 100}%)`;
             dots.forEach((d, i) => d.classList.toggle('active', i === currentIdx));
-            // Jika pindah slide, munculkan kembali overlay kecuali jika streaming aktif
             if(!isVideoActive) document.getElementById('swipeOverlay').style.display = 'block';
         }
 
-        function closeModal() { 
-            document.getElementById('movieModal').style.display = 'none'; 
-            document.getElementById('carouselTrack').innerHTML = ''; 
-            document.body.style.overflow = 'auto'; 
-        }
-
-        function renderSynopsis() { 
-            const d = document.getElementById('mDesc'), b = document.getElementById('mToggleBtn'); 
-            d.innerText = isExpanded ? globalFullDesc : globalFullDesc.substring(0, 90) + "...";
-            b.classList.toggle('hidden', globalFullDesc.length <= 90);
-        }
+        function closeModal() { document.getElementById('movieModal').style.display = 'none'; document.getElementById('carouselTrack').innerHTML = ''; document.body.style.overflow = 'auto'; }
+        function renderSynopsis() { const d = document.getElementById('mDesc'), b = document.getElementById('mToggleBtn'); d.innerText = isExpanded ? globalFullDesc : globalFullDesc.substring(0, 90) + "..."; b.classList.toggle('hidden', globalFullDesc.length <= 90); }
         function handleToggleDesc() { isExpanded = !isExpanded; renderSynopsis(); }
-        
-        // Fungsi lainnya tetap sama seperti kode asli Anda (LoadFeed, search, filter, dll)
+        async function loadEpisodes() { const s = document.getElementById('seasonSel').value; const res = await fetch(`https://api.themoviedb.org/3/tv/${window.currentMediaId}/season/${s}?api_key=${API_KEY}`); const d = await res.json(); document.getElementById('episodeGrid').innerHTML = (d.episodes||[]).map(e => `<div class="pill text-[10px]" onclick="playStreaming('https://vidrock.net/embed/tv/${window.currentMediaId}/${s}/${e.episode_number}', this)">${e.episode_number}</div>`).join(''); }
         function setFilter(t, v, el) { currentType = v; updatePill(el); loadFeed(true); }
         function setSchedule(v, el) { updatePill(el); currentSchedule=v; loadFeed(true); }
         function updatePill(el) { el.parentElement.querySelectorAll('.pill').forEach(p=>p.classList.remove('active')); el.classList.add('active'); }
         function toggleFilter(id) { document.querySelectorAll('.filter-dropdown').forEach(d=>d.style.display='none'); document.getElementById(id).style.display='block'; }
         function setYear(y) { currentYear=y; document.getElementById('yearBtn').innerText=y||'Tahun'; loadFeed(true); }
+        function setCountry(c, n) { currentCountry=c; document.getElementById('btnCountry').innerText=n; loadFeed(true); }
+        function setGenre(g, n) { currentGenre=g; document.getElementById('btnGenre').innerText=n; loadFeed(true); }
         function searchAction() { searchQuery = document.getElementById('searchInp').value; loadFeed(true); }
-        function updateLibButtons(id) { /* Sesuai fungsi original anda */ }
+        async function searchActorMovies(actorId, name) { closeModal(); document.getElementById('searchInp').value = name; searchQuery = ""; loading = true; document.getElementById('feedGrid').innerHTML = ''; const res = await fetch(`https://api.themoviedb.org/3/person/${actorId}/combined_credits?api_key=${API_KEY}&language=id-ID`); const data = await res.json(); renderGrid((data.cast || []).filter(m => m.poster_path).sort((a, b) => b.popularity - a.popularity).slice(0, 60)); loading = false; }
+        function toggleLib(k) { let items = JSON.parse(localStorage.getItem(k) || '[]'); const idx = items.findIndex(x => x.id == window.currentMediaId); idx > -1 ? items.splice(idx,1) : items.push({id: window.currentMediaId, type: window.currentMediaType}); localStorage.setItem(k, JSON.stringify(items)); updateLibButtons(window.currentMediaId); }
+        function updateLibButtons(id) { const isL = JSON.parse(localStorage.getItem('likes') || '[]').some(x=>x.id==id); const isB = JSON.parse(localStorage.getItem('bookmarks') || '[]').some(x=>x.id==id); document.getElementById('btnLikeModal').className = isL ? 'fa-solid fa-heart text-red-500 interaction-icon' : 'fa-regular fa-heart interaction-icon'; document.getElementById('btnBookModal').className = isB ? 'fa-solid fa-bookmark text-white interaction-icon' : 'fa-regular fa-bookmark interaction-icon'; document.getElementById('btnLikeModal').onclick = () => toggleLib('likes'); document.getElementById('btnBookModal').onclick = () => toggleLib('bookmarks'); }
+        async function showLibrary(k) { loading = true; const items = JSON.parse(localStorage.getItem(k) || '[]'); const grid = document.getElementById('feedGrid'); grid.innerHTML = ''; if (!items.length) { grid.innerHTML = '<div class="col-span-3 text-center py-20 opacity-40 text-sm">Belum ada daftar.</div>'; loading = false; return; } const promises = items.map(item => fetch(`https://api.themoviedb.org/3/${item.type}/${item.id}?api_key=${API_KEY}&language=id-ID`).then(r => r.json())); const results = await Promise.all(promises); renderGrid(results.filter(m => m.id)); loading = false; }
+        window.onscroll = () => { if(window.scrollY > 500) document.getElementById('backToTop').style.display='flex'; else document.getElementById('backToTop').style.display='none'; if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 1000 && !loading) { if(searchQuery !== "" || currentGenre !== "" || currentYear !== "" || currentCountry !== "") { page++; loadFeed(false); } } };
     </script>
 </body>
 </html>
