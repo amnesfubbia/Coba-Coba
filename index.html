@@ -1,302 +1,62 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>amnesfubbia xx1</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@1,700&family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
-    <style>
-        body { background-color: #000; color: #fff; font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        
-        /* HEADER SECTION */
-        .fixed-header-section { position: fixed; top: 0; width: 100%; z-index: 100; background: #000; border-bottom: 1px solid #1c1c1c; padding-bottom: 10px; }
-        
-        /* INSTAGRAM PROFILE LAYOUT */
-        .profile-section { padding: 15px 15px 5px 15px; display: flex; align-items: center; }
-        .profile-pic-container { position: relative; flex-shrink: 0; }
-        .profile-pic { width: 77px; height: 77px; border-radius: 50%; border: 2px solid #262626; padding: 3px; }
-        
-        /* STATS JARAK DIPERBAIKI AGAR PROPORSIONAL */
-        .stats-wrapper { display: flex; flex-grow: 1; justify-content: space-around; margin-left: 20px; text-align: center; }
-        .stat-item { cursor: pointer; }
-        .stat-num { display: block; font-weight: 700; font-size: 16px; }
-        .stat-label { display: block; font-size: 12px; color: #a8a8a8; }
+<div class="fixed-header-section">
+    <header class="ig-header flex justify-between items-center">
+        <div class="flex items-center" onclick="location.reload()">
+            <h1 class="ig-logo">amnesfubbia <span class="text-white opacity-40 font-normal italic">xx1</span></h1>
+            <i class="fa-solid fa-circle-check text-[#0095f6] ml-1 text-[10px]"></i>
+        </div>
+        <div class="flex gap-5 text-xl">
+            <i class="fa-regular fa-square-plus cursor-pointer"></i>
+            <i class="fa-solid fa-bars cursor-pointer"></i>
+        </div>
+    </header>
 
-        .bio-section { padding: 0 15px; margin-top: 10px; }
-        .bio-title { font-weight: 700; font-size: 14px; display: flex; align-items: center; }
-        .bio-text { font-size: 13px; color: #fff; line-height: 1.4; white-space: pre-line; }
-
-        .search-container { background: #0a0a0a; border-radius: 8px; display: flex; align-items: center; padding: 7px 12px; border: 1px solid #1c1c1c; margin: 10px 15px; }
-        .search-container input { background: transparent; border: none; color: white; font-size: 13px; width: 100%; outline: none; margin-left: 8px; }
-
-        .category-wrapper { padding: 0 15px; }
-        .pill-grid { display: grid; gap: 6px; margin-bottom: 8px; }
-        .pill { background: transparent; border: 1px solid #1c1c1c; color: #fff; padding: 7px 0; border-radius: 8px; font-size: 10px; font-weight: 800; text-transform: uppercase; text-align: center; cursor: pointer; }
-        .pill.active { border-color: #fff; background: rgba(255,255,255,0.1); }
-
-        .movie-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; padding-top: 485px; padding-bottom: 80px; }
-        .post-card { position: relative; aspect-ratio: 2/3; background: #0a0a0a; overflow: hidden; }
-        .post-card img { width: 100%; height: 100%; object-fit: cover; }
-        .badge-rating { position: absolute; top: 6px; left: 6px; padding: 2px 5px; border-radius: 2px; font-size: 7px; font-weight: 900; z-index: 5; background: rgba(255,255,255,0.9); color: #000; }
-        .badge-type { position: absolute; top: 6px; right: 6px; padding: 2px 5px; border-radius: 2px; font-size: 7px; font-weight: 900; z-index: 5; background: rgba(0,0,0,0.7); color: #fff; text-transform: uppercase; border: 0.5px solid rgba(255,255,255,0.3); }
-
-        .filter-dropdown { display: none; position: fixed; background: #121212; border: 1px solid #1c1c1c; border-radius: 12px; z-index: 200; width: 150px; max-height: 300px; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,1); }
-        .filter-item { padding: 12px; font-size: 11px; text-align: center; border-bottom: 1px solid #1c1c1c; color: #bbb; cursor: pointer; }
-        
-        #backToTop { display: none; position: fixed; bottom: 85px; right: 15px; z-index: 99; background: #fff; color: #000; width: 40px; height: 40px; border-radius: 50%; justify-content: center; align-items: center; cursor: pointer; }
-        
-        /* MODAL PLAYER STYLE (KODE ANDA) */
-        .modal-player { display: none; position: fixed; inset: 0; z-index: 400; background: #000; overflow-y: auto; }
-        .carousel-track { display: flex; transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1); width: 100%; }
-        .carousel-slide { min-width: 100%; aspect-ratio: 16/9; position: relative; }
-        .swipe-overlay { position: absolute; inset: 0; z-index: 10; background: transparent; }
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #000; border-top: 1px solid #1c1c1c; display: flex; justify-content: space-around; padding: 12px 0; z-index: 300; }
-    </style>
-</head>
-<body>
-
-    <div class="fixed-header-section">
-        <header class="flex justify-between items-center px-4 pt-3 pb-1">
-            <div class="flex items-center" onclick="location.reload()">
-                <h1 class="font-bold text-xl tracking-tight">amnesfubbia <i class="fa-solid fa-chevron-down text-[10px] opacity-50"></i></h1>
+    <div class="flex items-center px-[15px] py-2">
+        <div class="relative flex-shrink-0">
+            <div class="w-[77px] h-[77px] rounded-full border border-[#262626] p-[3px]">
+                <img src="https://i.ibb.co/pBTXmYV/profile.jpg" class="w-full h-full rounded-full object-cover">
             </div>
-            <div class="flex gap-5 text-xl">
-                <i class="fa-regular fa-square-plus cursor-pointer"></i>
-                <i class="fa-regular fa-heart cursor-pointer" onclick="showLibrary('likes')"></i>
-                <i class="fa-solid fa-bars cursor-pointer"></i>
-            </div>
-        </header>
-
-        <div class="profile-section">
-            <div class="profile-pic-container">
-                <img src="https://i.ibb.co/pBTXmYV/profile.jpg" class="profile-pic">
-                <div class="absolute bottom-0 right-0 bg-blue-500 rounded-full w-5 h-5 flex items-center justify-center border-2 border-black">
-                    <i class="fa-solid fa-plus text-[10px] text-white"></i>
-                </div>
-            </div>
-            <div class="stats-wrapper">
-                <div class="stat-item" onclick="setFilter('type', 'movie', this)">
-                    <span class="stat-num">25.4rb</span>
-                    <span class="stat-label">Film</span>
-                </div>
-                <div class="stat-item" onclick="setFilter('type', 'tv', this)">
-                    <span class="stat-num">8.2rb</span>
-                    <span class="stat-label">Series</span>
-                </div>
-                <div class="stat-item" onclick="setFilter('type', 'short', this)">
-                    <span class="stat-num">1.5rb</span>
-                    <span class="stat-label">Short</span>
-                </div>
+            <div class="absolute bottom-0 right-0 bg-[#0095f6] border-2 border-black rounded-full w-[22px] h-[22px] flex items-center justify-center">
+                <i class="fa-solid fa-plus text-white text-[12px]"></i>
             </div>
         </div>
-
-        <div class="bio-section">
-            <div class="bio-title">amnesfubbia xx1 <i class="fa-solid fa-circle-check text-[#0095f6] ml-1 text-[12px]"></i></div>
-            <div class="bio-text">dari indonesia untuk dunia
-By Anasteas</div>
-        </div>
-
-        <div class="search-container">
-            <i class="fa-solid fa-magnifying-glass text-zinc-600 text-[10px]"></i>
-            <input type="text" id="searchInp" placeholder="Cari film, series, anime..." onkeydown="if(event.key==='Enter') searchAction()">
-        </div>
-
-        <div class="category-wrapper">
-            <div class="pill-grid grid-cols-4">
-                <button class="pill active" onclick="setSchedule('trending', this)">Trending</button>
-                <button class="pill" onclick="setSchedule('popular', this)">Populer</button>
-                <button class="pill" onclick="setSchedule('now_playing', this)">Tayang</button>
-                <button class="pill" onclick="setSchedule('upcoming', this)">Segera</button>
+        
+        <div class="flex flex-grow justify-around ml-5 text-center">
+            <div class="cursor-pointer" onclick="setFilter('type', 'movie', this)">
+                <span class="block font-bold text-[16px]">25.4rb</span>
+                <span class="block text-[12px] text-[#a8a8a8]">Film</span>
             </div>
-            <div class="pill-grid grid-cols-3">
-                <button class="pill" id="btnCountry" onclick="toggleFilter('countryDropdown')">Negara <i class="fa-solid fa-caret-down"></i></button>
-                <button class="pill" id="btnGenre" onclick="toggleFilter('genreDropdown')">Genre <i class="fa-solid fa-caret-down"></i></button>
-                <button class="pill" id="yearBtn" onclick="toggleFilter('yearDropdown')">Tahun <i class="fa-solid fa-caret-down"></i></button>
+            <div class="cursor-pointer" onclick="setFilter('type', 'tv', this)">
+                <span class="block font-bold text-[16px]">8.2rb</span>
+                <span class="block text-[12px] text-[#a8a8a8]">Series</span>
+            </div>
+            <div class="cursor-pointer" onclick="setFilter('type', 'short', this)">
+                <span class="block font-bold text-[16px]">1.5rb</span>
+                <span class="block text-[12px] text-[#a8a8a8]">Short</span>
             </div>
         </div>
     </div>
 
-    <div id="countryDropdown" class="filter-dropdown left-[15px] top-[445px] no-scrollbar"></div>
-    <div id="genreDropdown" class="filter-dropdown left-[35%] top-[445px] no-scrollbar"></div>
-    <div id="yearDropdown" class="filter-dropdown right-[15px] top-[445px] no-scrollbar"></div>
-
-    <main id="feedGrid" class="movie-grid"></main>
-    <div id="backToTop" onclick="window.scrollTo({top:0, behavior:'smooth'})"><i class="fa-solid fa-arrow-up"></i></div>
-
-    <div id="movieModal" class="modal-player">
-        <div class="max-w-xl mx-auto pb-40">
-            <div class="px-4 h-[54px] flex items-center border-b border-zinc-900 sticky top-0 bg-black z-50">
-                <i class="fa-solid fa-chevron-left text-xl cursor-pointer" onclick="closeModal()"></i>
-                <div class="flex-grow text-center text-[14px] font-bold truncate px-8" id="mTitle"></div>
-            </div>
-            <div id="castContainer" class="cast-wrapper px-4 no-scrollbar"></div>
-            <div class="relative overflow-hidden">
-                <div class="swipe-overlay" id="swipeOverlay"></div>
-                <div class="carousel-track" id="carouselTrack"></div>
-                <div id="carouselDots" class="flex justify-center gap-2 py-3"></div>
-            </div>
-            <div class="px-4 py-3 flex justify-between items-center">
-                <div class="flex gap-4">
-                    <i id="btnLikeModal" class="text-2xl cursor-pointer"></i>
-                    <i class="fa-regular fa-comment text-2xl"></i>
-                    <i class="fa-regular fa-paper-plane text-2xl"></i>
-                </div>
-                <i id="btnBookModal" class="text-2xl cursor-pointer"></i>
-            </div>
-            <div class="px-4">
-                <span id="mLikeDisplay" class="font-bold text-[13px] block mb-1"></span>
-                <div class="text-[13px]"><span class="font-bold mr-1">amnesfubbia.xx1</span><span id="mDesc"></span><span id="mToggleBtn" class="text-zinc-500 cursor-pointer ml-1 hidden" onclick="handleToggleDesc()">selengkapnya</span></div>
-                <p id="mTranslateBtn" class="text-[11px] text-zinc-500 font-bold mb-2 cursor-pointer hidden">Lihat Terjemahan...</p>
-                <div id="mHashtags" class="text-[#e0f1ff] text-[13px] mt-2"></div>
-                <div id="mDateDisplay" class="text-[#a8a8a8] text-[11px] mt-2 uppercase"></div>
-                <div id="serverList" class="grid grid-cols-3 gap-2 mt-6"></div>
-                <div class="grid grid-cols-2 gap-2 mt-6">
-                    <button class="pill" onclick="window.open(`https://dl.vidsrc.vip/${window.currentMediaType}/${window.currentMediaId}`)">Download 1</button>
-                    <button class="pill" onclick="window.open(`https://multiembed.mov/directstream.php?video_id=${window.currentMediaId}&tmdb=1`)">Download 2</button>
-                </div>
-            </div>
+    <div class="px-[15px] pt-2 pb-4">
+        <div class="text-[13px] font-bold">amnesfubbia xx1</div>
+        <div class="text-[13px] leading-snug">
+            dari indonesia untuk dunia<br>
+            By Anasteas
         </div>
     </div>
 
-    <nav class="bottom-nav">
-        <i class="fa-solid fa-house text-2xl" onclick="location.reload()"></i>
-        <i class="fa-solid fa-magnifying-glass text-2xl" onclick="document.getElementById('searchInp').focus()"></i>
-        <i class="fa-regular fa-bookmark text-2xl" onclick="showLibrary('bookmarks')"></i>
-    </nav>
+    <div class="flex gap-2 px-[15px] mb-3">
+        <button id="btnTayang" class="flex-1 bg-[#262626] text-white py-1.5 rounded-lg text-[13px] font-semibold" onclick="setSchedule('now_playing', this)">Sedang Tayang</button>
+        <button id="btnSegera" class="flex-1 bg-[#262626] text-white py-1.5 rounded-lg text-[13px] font-semibold" onclick="setSchedule('upcoming', this)">Segera</button>
+        <button class="bg-[#262626] text-white px-3 py-1.5 rounded-lg text-[13px]" onclick="toggleFilterRow()">
+            <i class="fa-solid fa-user-plus text-[12px]"></i>
+        </button>
+    </div>
 
-    <script>
-        const API_KEY = 'bfa7df5310c9974f62f26c6789a8c00d';
-        let page = 1, loading = false, currentType = 'multi', currentGenre = '', currentYear = '', currentCountry = '', currentSchedule = 'trending', searchQuery = '';
-        let isExpanded = false, globalFullDesc = "", currentIdx = 0, startX = 0;
-
-        window.onload = () => { initDropdowns(); loadFeed(true); setupSwipe(); };
-
-        function initDropdowns() {
-            const yD = document.getElementById('yearDropdown');
-            yD.innerHTML = '<div class="filter-item" onclick="setYear(\'\')">Semua Tahun</div>';
-            for(let y=2026; y>=1950; y--) yD.innerHTML += `<div class="filter-item" onclick="setYear(${y})">${y}</div>`;
-            const cD = document.getElementById('countryDropdown');
-            cD.innerHTML = '<div class="filter-item" onclick="setCountry(\'\',\'Negara\')">Semua Negara</div>';
-            [['IN','India'],['TH','Thailand'],['KR','Korea'],['JP','Jepang'],['ID','Indonesia'],['US','USA']].forEach(c => cD.innerHTML += `<div class="filter-item" onclick="setCountry('${c[0]}','${c[1]}')">${c[1]}</div>`);
-            const gD = document.getElementById('genreDropdown');
-            gD.innerHTML = '<div class="filter-item" onclick="setGenre(\'\',\'Genre\')">Semua Genre</div>';
-            [[28,'Action'],[16,'Animasi'],[27,'Horror'],[35,'Comedy'],[10749,'Romance']].forEach(g => gD.innerHTML += `<div class="filter-item" onclick="setGenre('${g[0]}','${g[1]}')">${g[1]}</div>`);
-        }
-
-        async function loadFeed(isNew = true) {
-            if(loading) return; loading = true;
-            const grid = document.getElementById('feedGrid');
-            if(isNew) { page = 1; grid.innerHTML = ''; }
-            
-            let url = `https://api.themoviedb.org/3/discover/${currentType === 'tv' ? 'tv' : 'movie'}?api_key=${API_KEY}&language=id-ID&page=${page}&include_adult=false`;
-            
-            if(currentType === 'multi') url = `https://api.themoviedb.org/3/trending/all/day?api_key=${API_KEY}&language=id-ID&page=${page}`;
-            if(currentType === 'short') url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_runtime.lte=45&page=${page}`;
-            if(currentSchedule === 'upcoming') url = `https://api.themoviedb.org/3/movie/upcoming?api_key=${API_KEY}&page=${page}`;
-            if(currentCountry) url += `&with_origin_country=${currentCountry}`;
-            if(currentGenre) url += `&with_genres=${currentGenre}`;
-            if(currentYear) url += (currentType === 'tv' ? `&first_air_date_year=${currentYear}` : `&primary_release_year=${currentYear}`);
-            if(searchQuery) url = `https://api.themoviedb.org/3/search/multi?query=${encodeURIComponent(searchQuery)}&api_key=${API_KEY}&language=id-ID&page=${page}`;
-
-            const res = await fetch(url);
-            const data = await res.json();
-            renderGrid(data.results || []);
-            loading = false;
-        }
-
-        function renderGrid(items) {
-            const grid = document.getElementById('feedGrid');
-            items.forEach(m => {
-                if(!m.poster_path) return;
-                const mType = m.media_type || (currentType === 'tv' ? 'tv' : 'movie');
-                const div = document.createElement('div');
-                div.className = 'post-card';
-                div.onclick = () => openModal(m.id, mType);
-                div.innerHTML = `<div class="badge-rating">★ ${m.vote_average.toFixed(1)}</div><div class="badge-type">${mType}</div><img src="https://image.tmdb.org/t/p/w342${m.poster_path}">`;
-                grid.appendChild(div);
-            });
-        }
-
-        /* LOGIKA MODAL SEMPURNA ANDA BERLANJUT DI SINI */
-        async function openModal(id, type) {
-            window.currentMediaId = id; window.currentMediaType = type;
-            document.getElementById('movieModal').style.display = 'block';
-            document.body.style.overflow = 'hidden';
-            currentIdx = 0;
-
-            const [rId, rEn, rCast] = await Promise.all([
-                fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&language=id-ID&append_to_response=videos`),
-                fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&language=en-US&append_to_response=videos`),
-                fetch(`https://api.themoviedb.org/3/${type}/${id}/credits?api_key=${API_KEY}`)
-            ]);
-            const dId = await rId.json(), dEn = await rEn.json(), dCast = await rCast.json();
-            
-            const vids = [...(dId.videos?.results || []), ...(dEn.videos?.results || [])].filter(v => v.site === 'YouTube' && (v.type === 'Trailer' || v.type === 'Teaser')).slice(0, 4);
-            const track = document.getElementById('carouselTrack'), dots = document.getElementById('carouselDots');
-            track.innerHTML = ''; dots.innerHTML = ''; track.style.transform = 'translateX(0)';
-
-            if(vids.length > 0) {
-                vids.forEach((v, i) => {
-                    track.innerHTML += `<div class="carousel-slide"><iframe id="yt-${i}" src="https://www.youtube.com/embed/${v.key}?enablejsapi=1&autoplay=${i===0?1:0}&mute=0" class="w-full h-full" allowfullscreen></iframe></div>`;
-                    dots.innerHTML += `<div class="dot w-1.5 h-1.5 rounded-full ${i===0?'bg-blue-500':'bg-zinc-700'}"></div>`;
-                });
-            } else {
-                track.innerHTML = `<div class="carousel-slide"><iframe src="https://vidrock.net/embed/${type}/${id}" class="w-full h-full" allowfullscreen></iframe></div>`;
-                dots.innerHTML = `<div class="dot bg-blue-500 w-1.5 h-1.5 rounded-full"></div>`;
-            }
-
-            document.getElementById('mTitle').innerText = dId.title || dId.name;
-            globalFullDesc = dId.overview || dEn.overview || "No description.";
-            document.getElementById('mDesc').innerText = globalFullDesc.substring(0,90) + "...";
-            document.getElementById('mToggleBtn').classList.remove('hidden');
-            document.getElementById('serverList').innerHTML = `<button class="pill" onclick="playVid('https://vidrock.net/embed/${type}/${id}')">Server 1</button><button class="pill" onclick="playVid('https://vidsrc.me/embed/${type}?tmdb=${id}')">Server 2</button>`;
-            updateLibButtons(id);
-        }
-
-        function setupSwipe() {
-            const overlay = document.getElementById('swipeOverlay');
-            overlay.addEventListener('touchstart', e => { startX = e.touches[0].clientX; });
-            overlay.addEventListener('touchend', e => {
-                let diff = startX - e.changedTouches[0].clientX;
-                const total = document.querySelectorAll('.carousel-slide').length;
-                if(Math.abs(diff) > 50 && total > 1) {
-                    if(diff > 0 && currentIdx < total-1) currentIdx++;
-                    else if(diff < 0 && currentIdx > 0) currentIdx--;
-                    document.getElementById('carouselTrack').style.transform = `translateX(-${currentIdx * 100}%)`;
-                    document.querySelectorAll('.dot').forEach((d, i) => d.className = `dot w-1.5 h-1.5 rounded-full ${i===currentIdx?'bg-blue-500':'bg-zinc-700'}`);
-                }
-            });
-        }
-
-        function setFilter(t, v, el) { currentType = v; updatePill(el); loadFeed(true); }
-        function setSchedule(v, el) { updatePill(el); currentSchedule = v; loadFeed(true); }
-        function updatePill(el) { el.parentElement.querySelectorAll('.pill, .stat-item').forEach(p=>p.classList.remove('active')); el.classList.add('active'); }
-        function toggleFilter(id) { document.querySelectorAll('.filter-dropdown').forEach(d=>d.style.display='none'); document.getElementById(id).style.display='block'; }
-        function setYear(y) { currentYear=y; document.getElementById('yearBtn').innerText=y||'Tahun'; loadFeed(true); }
-        function setCountry(c, n) { currentCountry=c; document.getElementById('btnCountry').innerText=n; loadFeed(true); }
-        function setGenre(g, n) { currentGenre=g; document.getElementById('btnGenre').innerText=n; loadFeed(true); }
-        function searchAction() { searchQuery = document.getElementById('searchInp').value; loadFeed(true); }
-        function closeModal() { document.getElementById('movieModal').style.display='none'; document.getElementById('carouselTrack').innerHTML=''; document.body.style.overflow='auto'; }
-        
-        // FUNGSI LIBRARY
-        function updateLibButtons(id) {
-            const isL = JSON.parse(localStorage.getItem('likes') || '[]').some(x=>x.id==id);
-            const isB = JSON.parse(localStorage.getItem('bookmarks') || '[]').some(x=>x.id==id);
-            document.getElementById('btnLikeModal').className = isL ? 'fa-solid fa-heart text-red-500' : 'fa-regular fa-heart';
-            document.getElementById('btnBookModal').className = isB ? 'fa-solid fa-bookmark' : 'fa-regular fa-bookmark';
-            document.getElementById('btnLikeModal').onclick = () => toggleLib('likes');
-            document.getElementById('btnBookModal').onclick = () => toggleLib('bookmarks');
-        }
-        function toggleLib(k) {
-            let items = JSON.parse(localStorage.getItem(k) || '[]');
-            const idx = items.findIndex(x => x.id == window.currentMediaId);
-            idx > -1 ? items.splice(idx,1) : items.push({id: window.currentMediaId, type: window.currentMediaType});
-            localStorage.setItem(k, JSON.stringify(items));
-            updateLibButtons(window.currentMediaId);
-        }
-    </script>
-</body>
-</html>
+    <div id="filterRow" class="hidden px-[15px] pb-2">
+        <div class="pill-grid grid-cols-3">
+            <button class="pill" id="btnCountry" onclick="toggleFilter('countryDropdown')">Negara <i class="fa-solid fa-caret-down"></i></button>
+            <button class="pill" id="btnGenre" onclick="toggleFilter('genreDropdown')">Genre <i class="fa-solid fa-caret-down"></i></button>
+            <button class="pill" id="yearBtn" onclick="toggleFilter('yearDropdown')">Tahun <i class="fa-solid fa-caret-down"></i></button>
+        </div>
+    </div>
+</div>
