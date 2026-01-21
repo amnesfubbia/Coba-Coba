@@ -6,59 +6,58 @@
     <title>amnesfubbia xx1</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@1,700&family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
     <style>
         body { background-color: #000; color: #fff; font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         
-        /* HEADER PROFIL STYLE */
-        .fixed-header-section { position: fixed; top: 0; width: 100%; z-index: 100; background: #000; border-bottom: 1px solid #1c1c1c; padding-bottom: 10px; }
+        .fixed-header-section { position: fixed; top: 0; width: 100%; z-index: 100; background: #000; border-bottom: 1px solid #1c1c1c; padding-bottom: 5px; }
         .profile-top { padding: 12px 15px; display: flex; align-items: center; justify-content: space-between; }
         
-        /* STATS CONTAINER PROPORSIONAL */
-        .stats-container { display: flex; justify-content: space-between; flex-grow: 1; padding: 0 10px; }
+        .stats-container { display: flex; justify-content: space-around; flex-grow: 1; margin-left: 30px; }
         .stat-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; }
         .stat-num { font-weight: 700; font-size: 16px; }
         .stat-label { font-size: 12px; color: #a8a8a8; }
         
-        .profile-bio { padding: 0 15px; margin-top: 5px; }
+        .profile-bio { padding: 0 15px; margin-top: 8px; }
         .bio-name { font-weight: 700; font-size: 14px; display: flex; align-items: center; }
         .bio-text { font-size: 13px; color: #fff; line-height: 1.4; white-space: pre-line; }
 
         .action-btns { display: flex; gap: 6px; padding: 12px 15px 0 15px; }
-        .btn-insta { flex: 1; background: #1c1c1c; border-radius: 8px; padding: 7px 0; font-size: 12px; font-weight: 600; text-align: center; cursor: pointer; }
-        .btn-insta.active { background: #363636; border: 1px solid #555; }
-        .btn-plus { background: #1c1c1c; padding: 7px 12px; border-radius: 8px; cursor: pointer; }
+        .btn-insta { flex: 1; background: #1c1c1c; border-radius: 8px; padding: 8px 0; font-size: 12px; font-weight: 600; text-align: center; cursor: pointer; }
+        .btn-insta.active { background: #363636; }
+        .btn-plus { background: #1c1c1c; padding: 8px 12px; border-radius: 8px; cursor: pointer; }
 
-        /* HIGHLIGHTS MONOKROM SELARAS */
-        .highlights-wrapper { display: flex; overflow-x: auto; gap: 18px; padding: 15px; }
+        .highlights-wrapper { display: flex; overflow-x: auto; gap: 15px; padding: 15px; }
         .highlight-item { flex: 0 0 62px; text-align: center; cursor: pointer; }
         .highlight-circle { width: 62px; height: 62px; border-radius: 50%; border: 1px solid #262626; display: flex; align-items: center; justify-content: center; margin-bottom: 4px; background: #000; }
-        .highlight-circle i { font-size: 22px; color: #fff; opacity: 0.8; }
-        .highlight-text { font-size: 10px; color: #fff; white-space: nowrap; }
+        .highlight-circle i { font-size: 20px; color: #fff; }
+        .highlight-text { font-size: 10px; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 64px; }
 
-        .grid-tabs { display: flex; border-top: 1px solid #1c1c1c; margin-top: 5px; }
-        .tab-item { flex: 1; text-align: center; padding: 12px; font-size: 20px; color: #8e8e8e; }
+        .grid-tabs { display: flex; border-top: 1px solid #1c1c1c; margin-top: 10px; }
+        .tab-item { flex: 1; text-align: center; padding: 12px; font-size: 20px; color: #8e8e8e; cursor: pointer; }
         .tab-item.active { color: #fff; border-bottom: 2px solid #fff; }
 
-        /* GRID KEMBALI SEPERTI SEMULA */
-        .movie-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; padding-top: 480px; padding-bottom: 80px; }
+        .movie-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; padding-top: 500px; padding-bottom: 80px; }
         .post-card { position: relative; aspect-ratio: 2/3; background: #0a0a0a; overflow: hidden; }
         .post-card img { width: 100%; height: 100%; object-fit: cover; }
-        .badge-rating { position: absolute; top: 6px; left: 6px; padding: 2px 5px; border-radius: 2px; font-size: 7px; font-weight: 900; background: rgba(255,255,255,0.9); color: #000; }
+        .badge-rating { position: absolute; top: 5px; right: 5px; padding: 2px 4px; border-radius: 3px; font-size: 8px; font-weight: 800; background: rgba(0,0,0,0.7); color: #fff; }
 
-        /* OVERLAY SEARCH */
-        #searchOverlay { display: none; position: fixed; inset: 0; background: #000; z-index: 500; padding-top: 10px; }
-        .search-bar { display: flex; align-items: center; padding: 0 15px; gap: 10px; }
+        #searchOverlay { display: none; position: fixed; inset: 0; background: #000; z-index: 500; }
+        .search-bar { display: flex; align-items: center; padding: 10px 15px; gap: 10px; }
         .search-input-wrap { flex: 1; background: #1c1c1c; border-radius: 10px; display: flex; align-items: center; padding: 8px 12px; }
         .search-input-wrap input { background: transparent; border: none; color: #fff; outline: none; width: 100%; font-size: 14px; margin-left: 8px; }
 
-        .filter-bar { display: none; padding: 10px 15px; gap: 8px; overflow-x: auto; }
+        .filter-bar { display: none; padding: 10px 15px; gap: 8px; overflow-x: auto; background: #000; }
         .filter-dropdown { display: none; position: fixed; background: #121212; border: 1px solid #1c1c1c; border-radius: 12px; z-index: 200; width: 150px; max-height: 300px; overflow-y: auto; }
         
         .modal-player { display: none; position: fixed; inset: 0; z-index: 600; background: #000; overflow-y: auto; }
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #000; border-top: 1px solid #1c1c1c; display: flex; justify-content: space-around; padding: 14px 0; z-index: 300; }
-        .bottom-nav i { font-size: 22px; cursor: pointer; }
+        .carousel-track { display: flex; transition: transform 0.4s ease-out; width: 100%; }
+        .carousel-slide { min-width: 100%; aspect-ratio: 16/9; position: relative; }
+        .swipe-overlay { position: absolute; inset: 0; z-index: 10; }
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #000; border-top: 1px solid #1c1c1c; display: flex; justify-content: space-around; padding: 12px 0; z-index: 300; }
+        
+        .cast-wrapper { display: flex; overflow-x: auto; gap: 15px; padding: 15px 0; margin-top: 10px; border-bottom: 1px solid #1c1c1c; }
     </style>
 </head>
 <body>
@@ -66,7 +65,7 @@
     <div class="fixed-header-section">
         <div class="profile-top">
             <div class="flex items-center gap-1">
-                <h1 class="font-bold text-xl">el_zheimer <i class="fa-solid fa-chevron-down text-[10px]"></i></h1>
+                <h1 class="font-bold text-xl">amnesfubbia <i class="fa-solid fa-chevron-down text-[10px]"></i></h1>
                 <div class="w-2 h-2 bg-red-600 rounded-full"></div>
             </div>
             <div class="flex gap-5 text-2xl">
@@ -76,8 +75,8 @@
         </div>
 
         <div class="flex items-center px-4 mt-1">
-            <div class="w-20 h-20 rounded-full border-2 border-zinc-800 p-1 relative">
-                <img src="https://i.ibb.co/pBTXmYV/profile.jpg" class="w-full h-full rounded-full object-cover bg-zinc-900">
+            <div class="w-20 h-20 rounded-full border-2 border-zinc-800 p-1 flex-shrink-0 relative">
+                <img src="https://i.ibb.co/pBTXmYV/profile.jpg" class="w-full h-full rounded-full object-cover">
                 <div class="absolute bottom-0 right-0 bg-blue-500 rounded-full w-5 h-5 flex items-center justify-center border-2 border-black">
                     <i class="fa-solid fa-plus text-[10px]"></i>
                 </div>
@@ -111,31 +110,32 @@ By Anasteas</div>
         </div>
 
         <div id="filterBar" class="filter-bar no-scrollbar">
-            <button class="btn-insta px-4" onclick="toggleFilter('countryDropdown')">NEGARA</button>
-            <button class="btn-insta px-4" onclick="toggleFilter('genreDropdown')">GENRE</button>
-            <button class="btn-insta px-4" onclick="toggleFilter('yearDropdown')">TAHUN</button>
+            <div id="countryDropdown" class="filter-dropdown left-[15px] top-[320px] no-scrollbar"></div>
+            <div id="genreDropdown" class="filter-dropdown left-[35%] top-[320px] no-scrollbar"></div>
+            <div id="yearDropdown" class="filter-dropdown right-[15px] top-[320px] no-scrollbar"></div>
+            <button class="btn-insta" onclick="toggleFilter('countryDropdown')">NEGARA</button>
+            <button class="btn-insta" onclick="toggleFilter('genreDropdown')">GENRE</button>
+            <button class="btn-insta" onclick="toggleFilter('yearDropdown')">TAHUN</button>
         </div>
 
         <div class="highlights-wrapper no-scrollbar">
             <div class="highlight-item" onclick="setHighlight('Anime')"><div class="highlight-circle"><i class="fa-solid fa-ghost"></i></div><span class="highlight-text">Anime</span></div>
             <div class="highlight-item" onclick="setCountry('KR', 'Korea')"><div class="highlight-circle"><i class="fa-solid fa-heart"></i></div><span class="highlight-text">Korea</span></div>
-            <div class="highlight-item" onclick="setCountry('ID', 'Indonesia')"><div class="highlight-circle"><i class="fa-solid fa-clapperboard"></i></div><span class="highlight-text">Indonesia</span></div>
+            <div class="highlight-item" onclick="setCountry('ID', 'Indonesia')"><div class="highlight-circle"><i class="fa-solid fa-flag"></i></div><span class="highlight-text">Indonesia</span></div>
             <div class="highlight-item" onclick="setCountry('IN', 'India')"><div class="highlight-circle"><i class="fa-solid fa-film"></i></div><span class="highlight-text">India</span></div>
             <div class="highlight-item" onclick="setCountry('TH', 'Thailand')"><div class="highlight-circle"><i class="fa-solid fa-sun"></i></div><span class="highlight-text">Thailand</span></div>
-            <div class="highlight-item" onclick="setHighlight('Disney')"><div class="highlight-circle"><i class="fa-solid fa-hat-wizard"></i></div><span class="highlight-text">Disney</span></div>
-            <div class="highlight-item" onclick="setHighlight('Marvel')"><div class="highlight-circle"><i class="fa-solid fa-shield-halved"></i></div><span class="highlight-text">Marvel</span></div>
+            <div class="highlight-item" onclick="setHighlight('Disney')"><div class="highlight-circle"><i class="fa-solid fa-castle"></i></div><span class="highlight-text">Disney</span></div>
+            <div class="highlight-item" onclick="setHighlight('Marvel')"><div class="highlight-circle"><i class="fa-solid fa-shield"></i></div><span class="highlight-text">Marvel</span></div>
             <div class="highlight-item" onclick="setHighlight('Netflix')"><div class="highlight-circle"><i class="fa-solid fa-play"></i></div><span class="highlight-text">Netflix</span></div>
             <div class="highlight-item" onclick="setHighlight('DC')"><div class="highlight-circle"><i class="fa-solid fa-mask"></i></div><span class="highlight-text">DC Universe</span></div>
         </div>
 
         <div class="grid-tabs">
-            <div class="tab-item active"><i class="fa-solid fa-table-cells"></i></div>
+            <div class="tab-item active" onclick="switchTab('grid', this)"><i class="fa-solid fa-table-cells"></i></div>
+            <div class="tab-item" onclick="switchTab('likes', this)"><i class="fa-regular fa-heart"></i></div>
+            <div class="tab-item" onclick="switchTab('bookmarks', this)"><i class="fa-regular fa-bookmark"></i></div>
         </div>
     </div>
-
-    <div id="countryDropdown" class="filter-dropdown left-[15px] top-[320px] no-scrollbar"></div>
-    <div id="genreDropdown" class="filter-dropdown left-[35%] top-[320px] no-scrollbar"></div>
-    <div id="yearDropdown" class="filter-dropdown right-[15px] top-[320px] no-scrollbar"></div>
 
     <main id="feedGrid" class="movie-grid"></main>
 
@@ -151,77 +151,122 @@ By Anasteas</div>
     </div>
 
     <div id="movieModal" class="modal-player">
+        <div class="max-w-xl mx-auto pb-40">
+            <div class="px-4 h-[54px] flex items-center border-b border-zinc-900 sticky top-0 bg-black z-50">
+                <i class="fa-solid fa-chevron-left text-xl cursor-pointer" onclick="closeModal()"></i>
+                <div class="flex-grow text-center text-[14px] font-bold truncate px-8" id="mTitle"></div>
+            </div>
+            <div id="castContainer" class="cast-wrapper px-4 no-scrollbar"></div>
+            <div class="relative overflow-hidden">
+                <div class="swipe-overlay" id="swipeOverlay"></div>
+                <div class="carousel-track" id="carouselTrack"></div>
+                <div id="carouselDots" class="flex justify-center gap-2 py-3"></div>
+            </div>
+            <div class="px-4 py-3 flex justify-between items-center">
+                <div class="flex gap-4">
+                    <i id="btnLikeModal" class="text-2xl cursor-pointer fa-regular fa-heart"></i>
+                    <i class="fa-regular fa-comment text-2xl"></i>
+                    <i class="fa-regular fa-paper-plane text-2xl"></i>
+                </div>
+                <i id="btnBookModal" class="text-2xl cursor-pointer fa-regular fa-bookmark"></i>
+            </div>
+            <div class="px-4">
+                <span id="mLikeDisplay" class="font-bold text-[13px] block mb-1"></span>
+                <div class="text-[13px]"><span class="font-bold mr-1">amnesfubbia.xx1</span><span id="mDesc"></span><span id="mToggleBtn" class="text-zinc-500 cursor-pointer ml-1 hidden" onclick="handleToggleDesc()">selengkapnya</span></div>
+                <p id="mTranslateBtn" class="text-[11px] text-zinc-500 font-bold mb-2 cursor-pointer hidden">Lihat Terjemahan...</p>
+                <div id="mHashtags" class="text-[#e0f1ff] text-[13px] mt-2"></div>
+                <div id="mDateDisplay" class="text-[#a8a8a8] text-[11px] mt-2 uppercase"></div>
+                <div id="serverList" class="grid grid-cols-3 gap-2 mt-6"></div>
+            </div>
         </div>
+    </div>
 
     <nav class="bottom-nav">
-        <i class="fa-solid fa-house" onclick="location.reload()"></i>
-        <i class="fa-solid fa-magnifying-glass" onclick="openSearch()"></i>
-        <i class="fa-regular fa-bookmark" onclick="showLibrary('bookmarks')"></i>
+        <i class="fa-solid fa-house text-2xl" onclick="location.reload()"></i>
+        <i class="fa-solid fa-magnifying-glass text-2xl" onclick="openSearch()"></i>
+        <i class="fa-regular fa-bookmark text-2xl" onclick="switchTab('bookmarks')"></i>
     </nav>
 
     <script>
         const API_KEY = 'bfa7df5310c9974f62f26c6789a8c00d';
         let page = 1, loading = false, currentType = 'movie', currentGenre = '', currentYear = '', currentCountry = '', currentSchedule = 'now_playing', searchQuery = '';
-        let isSearchMode = false;
+        let startX = 0, currentIdx = 0, globalFullDesc = "";
 
-        window.onload = () => { initDropdowns(); loadFeed(); };
+        window.onload = () => { loadFeed(true); initDropdowns(); setupSwipe(); };
 
         async function loadFeed(isNew = true) {
             if(loading) return; loading = true;
-            const grid = isSearchMode ? document.getElementById('searchGrid') : document.getElementById('feedGrid');
+            const grid = document.getElementById('feedGrid');
             if(isNew) { page = 1; grid.innerHTML = ''; }
-            
-            let url = `https://api.themoviedb.org/3/discover/${currentType}?api_key=${API_KEY}&language=id-ID&page=${page}&sort_by=popularity.desc`;
-            
-            if(currentSchedule === 'upcoming' && currentType === 'movie') url += `&primary_release_date.gte=${new Date().toISOString().split('T')[0]}`;
-            if(currentType === 'short') url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_runtime.lte=45&sort_by=popularity.desc&page=${page}`;
+            let url = `https://api.themoviedb.org/3/discover/${currentType === 'short' ? 'movie' : currentType}?api_key=${API_KEY}&language=id-ID&page=${page}&sort_by=popularity.desc`;
+            if(currentType === 'short') url += `&with_runtime.lte=45`;
             if(currentCountry) url += `&with_origin_country=${currentCountry}`;
             if(currentGenre) url += `&with_genres=${currentGenre}`;
             if(currentYear) url += (currentType === 'tv' ? `&first_air_date_year=${currentYear}` : `&primary_release_year=${currentYear}`);
-            if(searchQuery) url = `https://api.themoviedb.org/3/search/multi?query=${encodeURIComponent(searchQuery)}&api_key=${API_KEY}&language=id-ID&page=${page}`;
-
-            try {
-                const res = await fetch(url);
-                const data = await res.json();
-                renderGrid(data.results || [], grid);
-            } catch (e) { console.error(e); }
-            loading = false;
+            const res = await fetch(url); const data = await res.json();
+            renderGrid(data.results || [], grid); loading = false;
         }
 
         function renderGrid(items, target) {
             items.forEach(m => {
                 if(!m.poster_path) return;
                 const div = document.createElement('div'); div.className = 'post-card';
-                div.onclick = () => openModal(m.id, m.media_type || currentType);
-                div.innerHTML = `<div class="badge-rating">★ ${m.vote_average ? m.vote_average.toFixed(1) : '0'}</div><img src="https://image.tmdb.org/t/p/w342${m.poster_path}">`;
+                div.onclick = () => openModal(m.id, m.media_type || (currentType==='short'?'movie':currentType));
+                div.innerHTML = `<div class="badge-rating">★ ${m.vote_average.toFixed(1)}</div><img src="https://image.tmdb.org/t/p/w342${m.poster_path}">`;
                 target.appendChild(div);
             });
         }
 
-        function setFilterType(type) {
-            currentType = type;
-            currentGenre = ''; currentCountry = ''; currentYear = ''; searchQuery = '';
-            loadFeed(true);
-            window.scrollTo({top: 450, behavior: 'smooth'});
+        async function openModal(id, type) {
+            document.getElementById('movieModal').style.display = 'block';
+            document.body.style.overflow = 'hidden'; currentIdx = 0;
+            const [rId, rEn, rCast] = await Promise.all([
+                fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&language=id-ID&append_to_response=videos`),
+                fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&language=en-US&append_to_response=videos`),
+                fetch(`https://api.themoviedb.org/3/${type}/${id}/credits?api_key=${API_KEY}`)
+            ]);
+            const dId = await rId.json(), dEn = await rEn.json(), dCast = await rCast.json();
+            const vids = [...(dId.videos?.results || []), ...(dEn.videos?.results || [])].filter(v => v.site === 'YouTube' && (v.type === 'Trailer' || v.type === 'Teaser')).slice(0, 4);
+            const track = document.getElementById('carouselTrack'), dots = document.getElementById('carouselDots');
+            track.innerHTML = ''; dots.innerHTML = ''; track.style.transform = 'translateX(0)';
+            if(vids.length > 0) {
+                vids.forEach((v, i) => {
+                    track.innerHTML += `<div class="carousel-slide"><iframe id="yt-${i}" src="https://www.youtube.com/embed/${v.key}?enablejsapi=1&autoplay=${i===0?1:0}&mute=0&rel=0" class="w-full h-full" allowfullscreen></iframe></div>`;
+                    dots.innerHTML += `<div class="dot w-1.5 h-1.5 rounded-full ${i===0?'bg-blue-500':'bg-zinc-700'}"></div>`;
+                });
+            } else {
+                track.innerHTML = `<div class="carousel-slide"><iframe src="https://vidrock.net/embed/${type}/${id}" class="w-full h-full" allowfullscreen></iframe></div>`;
+                dots.innerHTML = `<div class="dot bg-blue-500 w-1.5 h-1.5 rounded-full"></div>`;
+            }
+            document.getElementById('mTitle').innerText = dId.title || dId.name;
+            globalFullDesc = dId.overview || dEn.overview || "Tidak ada deskripsi.";
+            document.getElementById('mDesc').innerText = globalFullDesc.substring(0, 90) + "...";
+            document.getElementById('castContainer').innerHTML = (dCast.cast || []).slice(0,10).map(c => `<div class="text-center min-w-[65px]"><img src="https://image.tmdb.org/t/p/w185${c.profile_path}" class="w-16 h-16 rounded-full object-cover mx-auto shadow-lg"><div class="text-[9px] mt-2 text-zinc-400 font-medium">${c.name}</div></div>`).join('');
+            document.getElementById('serverList').innerHTML = `<button class="btn-insta" onclick="alert('Playing...')">Server 1</button><button class="btn-insta">Server 2</button>`;
         }
 
-        function setSchedule(v, el) { 
-            document.querySelectorAll('.btn-insta').forEach(b => b.classList.remove('active'));
-            el.classList.add('active'); currentSchedule = v; isSearchMode = false; loadFeed(true); 
+        function setupSwipe() {
+            const overlay = document.getElementById('swipeOverlay');
+            overlay.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+            overlay.addEventListener('touchend', e => {
+                let diff = startX - e.changedTouches[0].clientX;
+                const total = document.querySelectorAll('.carousel-slide').length;
+                if(Math.abs(diff) > 50 && total > 1) {
+                    if(diff > 0 && currentIdx < total-1) currentIdx++;
+                    else if(diff < 0 && currentIdx > 0) currentIdx--;
+                    document.getElementById('carouselTrack').style.transform = `translateX(-${currentIdx*100}%)`;
+                    document.querySelectorAll('.dot').forEach((d,i) => d.className = `dot w-1.5 h-1.5 rounded-full ${i===currentIdx?'bg-blue-500':'bg-zinc-700'}`);
+                }
+            });
         }
 
-        function openSearch() { document.getElementById('searchOverlay').style.display = 'block'; isSearchMode = true; document.getElementById('searchInp').focus(); }
-        function closeSearch() { document.getElementById('searchOverlay').style.display = 'none'; isSearchMode = false; }
-        function searchAction() { searchQuery = document.getElementById('searchInp').value; loadFeed(true); }
-        function toggleFilterBar() { const fb = document.getElementById('filterBar'); fb.style.display = fb.style.display === 'flex' ? 'none' : 'flex'; }
+        function closeModal() { document.getElementById('movieModal').style.display = 'none'; document.getElementById('carouselTrack').innerHTML = ''; document.body.style.overflow = 'auto'; }
+        function setFilterType(t) { currentType = t; loadFeed(true); window.scrollTo({top: 480, behavior: 'smooth'}); }
+        function openSearch() { document.getElementById('searchOverlay').style.display = 'block'; document.getElementById('searchInp').focus(); }
+        function closeSearch() { document.getElementById('searchOverlay').style.display = 'none'; }
+        function toggleFilterBar() { const fb = document.getElementById('filterBar'); fb.style.display = fb.style.display==='flex'?'none':'flex'; }
         function toggleFilter(id) { document.querySelectorAll('.filter-dropdown').forEach(d=>d.style.display='none'); document.getElementById(id).style.display='block'; }
-        
-        function setCountry(c, n) { currentCountry=c; isSearchMode=false; loadFeed(true); }
-        function initDropdowns() {
-            // Logika pengisian tahun, negara, genre sama seperti sebelumnya
-        }
-
-        // FUNGSI MODAL ANDA TETAP DI SINI...
+        function initDropdowns() { /* Logika Tahun/Genre/Negara */ }
     </script>
 </body>
 </html>
