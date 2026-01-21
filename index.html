@@ -13,10 +13,8 @@
         .fixed-header-section { position: fixed; top: 0; width: 100%; z-index: 100; background: #000; border-bottom: 1px solid #1c1c1c; padding-bottom: 10px; }
         .ig-header { padding: 12px 15px 5px 15px; }
         .ig-logo { font-family: 'DM Sans', sans-serif; font-weight: 700; font-style: italic; font-size: 22px; letter-spacing: -0.5px; text-transform: lowercase; cursor: pointer; }
-        
         .search-container { background: #0a0a0a; border-radius: 8px; display: flex; align-items: center; padding: 7px 12px; border: 1px solid #1c1c1c; margin: 0 15px 10px 15px; }
         .search-container input { background: transparent !important; border: none !important; color: white !important; font-size: 13px; width: 100%; outline: none !important; margin-left: 8px; box-shadow: none !important; }
-
         .category-wrapper { padding: 0 15px; }
         .pill-grid { display: grid; gap: 6px; margin-bottom: 8px; }
         .pill { background: transparent; border: 1px solid #1c1c1c; color: #fff; padding: 7px 0; border-radius: 8px; font-size: 10px; font-weight: 800; text-transform: uppercase; text-align: center; cursor: pointer; }
@@ -26,15 +24,11 @@
         .post-card img { width: 100%; height: 100%; object-fit: cover; }
         .badge-rating { position: absolute; top: 6px; left: 6px; padding: 2px 5px; border-radius: 2px; font-size: 7px; font-weight: 900; z-index: 5; background: rgba(255,255,255,0.9); color: #000; }
         .badge-type { position: absolute; top: 6px; right: 6px; padding: 2px 5px; border-radius: 2px; font-size: 7px; font-weight: 900; z-index: 5; background: rgba(0,0,0,0.7); color: #fff; text-transform: uppercase; border: 0.5px solid rgba(255,255,255,0.3); }
-        
-        .filter-dropdown { display: none; position: fixed; background: #121212; border: 1px solid #1c1c1c; border-radius: 12px; z-index: 200; width: 150px; max-height: 300px; overflow-y: auto; }
-        .filter-item { padding: 12px; font-size: 11px; text-align: center; border-bottom: 1px solid #1c1c1c; color: #bbb; cursor: pointer; }
-        
+        .filter-dropdown { display: none; position: fixed; background: #121212; border: 1px solid #1c1c1c; border-radius: 12px; z-index: 200; width: 150px; max-height: 300px; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,1); }
         .modal-player { display: none; position: fixed; inset: 0; z-index: 400; background: #000; overflow-y: auto; }
-        .carousel-track { display: flex; transition: transform 0.4s ease; width: 100%; }
+        .carousel-track { display: flex; transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1); width: 100%; }
         .carousel-slide { min-width: 100%; aspect-ratio: 16/9; position: relative; }
         .swipe-overlay { position: absolute; inset: 0; z-index: 10; background: transparent; }
-        
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #000; border-top: 1px solid #1c1c1c; display: flex; justify-content: space-around; padding: 12px 0; z-index: 300; }
     </style>
 </head>
@@ -42,21 +36,16 @@
 
     <div class="fixed-header-section">
         <header class="ig-header flex justify-between items-center">
-            <div class="flex items-center" onclick="location.reload()">
-                <h1 class="ig-logo">amnesfubbia <span class="text-white opacity-40 font-normal italic">xx1</span></h1>
-                <i class="fa-solid fa-circle-check text-[#0095f6] ml-1 text-[10px]"></i>
-            </div>
+            <div class="flex items-center" onclick="location.reload()"><h1 class="ig-logo">amnesfubbia <span class="text-white opacity-40 font-normal italic">xx1</span></h1><i class="fa-solid fa-circle-check text-[#0095f6] ml-1 text-[10px]"></i></div>
             <div class="flex gap-4">
                 <i class="fa-regular fa-heart text-xl cursor-pointer" onclick="showLibrary('likes')"></i>
                 <i class="fa-regular fa-bookmark text-xl cursor-pointer" onclick="showLibrary('bookmarks')"></i>
             </div>
         </header>
-
         <div class="search-container">
             <i class="fa-solid fa-magnifying-glass text-zinc-600 text-[10px]"></i>
             <input type="text" id="searchInp" placeholder="Cari film, series, anime..." onkeydown="if(event.key==='Enter') searchAction()">
         </div>
-
         <div class="category-wrapper">
             <div class="pill-grid grid-cols-5">
                 <button class="pill active" onclick="setFilter('type', 'multi', this)">Semua</button>
@@ -91,15 +80,12 @@
                 <i class="fa-solid fa-chevron-left text-xl cursor-pointer" onclick="closeModal()"></i>
                 <div class="flex-grow text-center text-[14px] font-bold truncate px-8" id="mTitle"></div>
             </div>
-
-            <div id="castContainer" class="cast-wrapper px-4 no-scrollbar"></div>
-
-            <div class="carousel-container relative overflow-hidden">
+            <div id="castContainer" class="cast-wrapper px-4 flex overflow-x-auto gap-4 py-4 no-scrollbar"></div>
+            <div class="relative overflow-hidden">
                 <div class="swipe-overlay" id="swipeOverlay"></div>
                 <div class="carousel-track" id="carouselTrack"></div>
                 <div class="flex justify-center gap-2 py-3" id="carouselDots"></div>
             </div>
-
             <div class="px-4 py-3 flex justify-between items-center">
                 <div class="flex gap-4">
                     <i id="btnLikeModal" class="text-2xl cursor-pointer" onclick="toggleLib('likes')"></i>
@@ -108,23 +94,16 @@
                 </div>
                 <i id="btnBookModal" class="text-2xl cursor-pointer" onclick="toggleLib('bookmarks')"></i>
             </div>
-            
             <div class="px-4">
                 <span id="mLikeDisplay" class="font-bold text-[13px] block mb-1"></span>
-                <div class="mb-1">
-                    <span class="font-bold text-[13px] mr-1">amnesfubbia.xx1</span>
-                    <span id="mDesc" class="text-[13px] leading-relaxed"></span>
-                    <span id="mToggleBtn" class="text-zinc-500 cursor-pointer text-[13px] ml-1 hidden" onclick="handleToggleDesc()">selengkapnya</span>
-                </div>
+                <div class="text-[13px]"><span class="font-bold mr-1">amnesfubbia.xx1</span><span id="mDesc"></span><span id="mToggleBtn" class="text-zinc-500 cursor-pointer ml-1 hidden" onclick="handleToggleDesc()">selengkapnya</span></div>
                 <div id="mTranslateBtn" class="text-blue-500 text-[11px] font-bold cursor-pointer mt-1" onclick="translateDesc()">TERJEMAHKAN</div>
                 <div id="mHashtags" class="text-[#e0f1ff] text-[13px] mt-2"></div>
-                <div id="mDateDisplay" class="text-[#a8a8a8] text-[11px] mt-2 uppercase"></div>
-                
-                <div id="seriesControl" class="hidden mt-6 p-4 bg-zinc-950 rounded-2xl border border-zinc-900">
-                    <select id="seasonSel" class="bg-zinc-900 text-white text-[10px] w-full p-2 mb-4" onchange="loadEpisodes()"></select>
+                <div id="mDateDisplay" class="text-[#a8a8a8] text-[11px] mt-2"></div>
+                <div id="seriesControl" class="hidden mt-6 bg-zinc-950 p-4 rounded-xl">
+                    <select id="seasonSel" class="bg-zinc-900 text-white w-full p-2 mb-4 rounded" onchange="loadEpisodes()"></select>
                     <div id="episodeGrid" class="grid grid-cols-5 gap-2"></div>
                 </div>
-
                 <div id="serverList" class="grid grid-cols-3 gap-2 mt-6"></div>
             </div>
         </div>
@@ -159,28 +138,16 @@
             if(loading) return; loading = true;
             if(isNew) { page = 1; document.getElementById('feedGrid').innerHTML = ''; }
             let url = "";
-            
-            // Perbaikan Akurasi Menu
-            if(searchQuery) {
-                url = `https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(searchQuery)}&page=${page}&language=id-ID`;
-            } else if (currentType === 'short') {
-                url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_runtime.lte=45&language=id-ID&page=${page}`;
-            } else {
-                let cat = (currentType === 'tv' || currentType === 'anime') ? 'tv' : 'movie';
-                if(currentSchedule === 'trending') url = `https://api.themoviedb.org/3/trending/${cat}/day?api_key=${API_KEY}&page=${page}&language=id-ID`;
-                else url = `https://api.themoviedb.org/3/${cat}/${currentSchedule}?api_key=${API_KEY}&page=${page}&language=id-ID`;
+            if(searchQuery) url = `https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(searchQuery)}&page=${page}&language=id-ID`;
+            else if(currentType === 'short') url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_runtime.lte=45&language=id-ID&page=${page}`;
+            else {
+                let cat = (currentType==='tv'||currentType==='anime')?'tv':'movie';
+                url = (currentSchedule==='trending') ? `https://api.themoviedb.org/3/trending/${cat}/day?api_key=${API_KEY}&page=${page}&language=id-ID` : `https://api.themoviedb.org/3/${cat}/${currentSchedule}?api_key=${API_KEY}&page=${page}&language=id-ID`;
             }
-
             if(currentGenre) url += `&with_genres=${currentGenre}`;
-            if(currentYear) url += `&${currentType.includes('tv')?'first_air_date_year':'primary_release_year'}=${currentYear}`;
+            if(currentYear) url += `&${(currentType==='tv'?'first_air_date_year':'primary_release_year')}=${currentYear}`;
             if(currentCountry) url += `&with_origin_country=${currentCountry}`;
-
-            try {
-                const res = await fetch(url);
-                const data = await res.json();
-                renderGrid(data.results || []);
-            } catch(e) {}
-            loading = false;
+            const res = await fetch(url); const data = await res.json(); renderGrid(data.results || []); loading = false;
         }
 
         function renderGrid(items) {
@@ -188,9 +155,7 @@
             items.forEach(m => {
                 if(!m.poster_path) return;
                 const type = m.media_type || (currentType.includes('tv')?'tv':'movie');
-                const div = document.createElement('div');
-                div.className = 'post-card';
-                div.onclick = () => openModal(m.id, type);
+                const div = document.createElement('div'); div.className = 'post-card'; div.onclick = () => openModal(m.id, type);
                 div.innerHTML = `<div class="badge-rating">★ ${m.vote_average.toFixed(1)}</div><div class="badge-type">${type.toUpperCase()}</div><img src="https://image.tmdb.org/t/p/w342${m.poster_path}">`;
                 grid.appendChild(div);
             });
@@ -198,73 +163,34 @@
 
         async function openModal(id, type) {
             window.currentMediaId = id; window.currentMediaType = type;
-            document.getElementById('movieModal').style.display = 'block';
-            document.body.style.overflow = 'hidden';
-            currentIdx = 0;
-
+            document.getElementById('movieModal').style.display = 'block'; document.body.style.overflow = 'hidden'; currentIdx = 0;
             const [rId, rEn, rCast] = await Promise.all([
                 fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&language=id-ID&append_to_response=videos`),
                 fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&language=en-US&append_to_response=videos`),
                 fetch(`https://api.themoviedb.org/3/${type}/${id}/credits?api_key=${API_KEY}`)
             ]);
-            
             const dId = await rId.json(), dEn = await rEn.json(), dCast = await rCast.json();
             descID = dId.overview || ""; descEN = dEn.overview || "";
-            
-            const vids = [...(dId.videos?.results || []), ...(dEn.videos?.results || [])]
-                .filter(v => v.site === 'YouTube' && (v.type === 'Trailer' || v.type === 'Teaser')).slice(0, 4);
-
+            const vids = [...(dId.videos?.results || []), ...(dEn.videos?.results || [])].filter(v => v.site === 'YouTube' && (v.type === 'Trailer' || v.type === 'Teaser')).slice(0,4);
             const track = document.getElementById('carouselTrack'), dots = document.getElementById('carouselDots');
             track.innerHTML = ''; dots.innerHTML = '';
-
-            vids.forEach((v, i) => {
-                track.innerHTML += `<div class="carousel-slide"><iframe id="yt-${i}" src="https://www.youtube.com/embed/${v.key}?enablejsapi=1&autoplay=${i===0?1:0}&mute=0" class="w-full h-full" allow="autoplay; fullscreen"></iframe></div>`;
-                dots.innerHTML += `<div class="dot w-1.5 h-1.5 rounded-full ${i===0?'bg-blue-500':'bg-zinc-700'}"></div>`;
-            });
-
+            if(vids.length > 0) {
+                vids.forEach((v, i) => {
+                    track.innerHTML += `<div class="carousel-slide"><iframe id="yt-${i}" src="https://www.youtube.com/embed/${v.key}?enablejsapi=1&autoplay=${i===0?1:0}&mute=0" class="w-full h-full" allow="autoplay; fullscreen"></iframe></div>`;
+                    dots.innerHTML += `<div class="dot w-1.5 h-1.5 rounded-full ${i===0?'bg-blue-500':'bg-zinc-700'}"></div>`;
+                });
+                document.getElementById('swipeOverlay').style.display = 'block';
+            } else {
+                track.innerHTML = `<div class="carousel-slide"><iframe src="https://vidrock.net/embed/${type}/${id}" class="w-full h-full" allowfullscreen></iframe></div>`;
+                dots.innerHTML = `<div class="dot bg-blue-500 w-1.5 h-1.5 rounded-full"></div>`;
+                document.getElementById('swipeOverlay').style.display = 'none';
+            }
             document.getElementById('mTitle').innerText = dId.title || dId.name;
             document.getElementById('mLikeDisplay').innerText = `${Math.floor(dId.vote_average * 1234).toLocaleString()} suka`;
             isExpanded = false; renderSynopsis(descID || descEN);
-            
-            document.getElementById('serverList').innerHTML = `<button class="server-btn" onclick="playStream('https://vidrock.net/embed/${type}/${id}')">SERVER 1</button><button class="server-btn" onclick="playStream('https://vidsrc.me/embed/${type}?tmdb=${id}')">SERVER 2</button>`;
-            
-            document.getElementById('castContainer').innerHTML = (dCast.cast || []).slice(0, 10).map(c => `
-                <div class="cast-item" onclick="searchActorMovies(${c.id}, '${c.name}')">
-                    <div class="cast-img-border"><img src="https://image.tmdb.org/t/p/w185${c.profile_path}"></div>
-                    <span class="cast-name">${c.name}</span>
-                </div>`).join('');
-
+            document.getElementById('serverList').innerHTML = `<button class="pill" onclick="playStream('https://vidrock.net/embed/${type}/${id}')">SERVER 1</button><button class="pill" onclick="playStream('https://vidsrc.me/embed/${type}?tmdb=${id}')">SERVER 2</button>`;
+            document.getElementById('castContainer').innerHTML = (dCast.cast || []).slice(0,10).map(c => `<div class="text-center min-w-[65px]"><img src="https://image.tmdb.org/t/p/w185${c.profile_path}" class="w-16 h-16 rounded-full object-cover border-2 border-zinc-800 mx-auto"><div class="text-[9px] mt-1 text-zinc-400">${c.name}</div></div>`).join('');
             updateLibButtons();
-        }
-
-        function renderSynopsis(text) {
-            const d = document.getElementById('mDesc'), b = document.getElementById('mToggleBtn');
-            d.innerText = isExpanded ? text : text.substring(0, 90) + "...";
-            b.classList.toggle('hidden', text.length <= 90);
-        }
-
-        function translateDesc() {
-            const btn = document.getElementById('mTranslateBtn');
-            const isToEN = btn.innerText === "TERJEMAHKAN";
-            renderSynopsis(isToEN ? descEN : descID);
-            btn.innerText = isToEN ? "LIHAT ASLI (ID)" : "TERJEMAHKAN";
-        }
-
-        function handleToggleDesc() { isExpanded = !isExpanded; renderSynopsis(document.getElementById('mTranslateBtn').innerText === "TERJEMAHKAN" ? descID : descEN); }
-
-        function toggleLib(key) {
-            let items = JSON.parse(localStorage.getItem(key) || '[]');
-            const idx = items.findIndex(x => x.id == window.currentMediaId);
-            idx > -1 ? items.splice(idx, 1) : items.push({id: window.currentMediaId, type: window.currentMediaType});
-            localStorage.setItem(key, JSON.stringify(items));
-            updateLibButtons();
-        }
-
-        function updateLibButtons() {
-            const isL = JSON.parse(localStorage.getItem('likes') || '[]').some(x => x.id == window.currentMediaId);
-            const isB = JSON.parse(localStorage.getItem('bookmarks') || '[]').some(x => x.id == window.currentMediaId);
-            document.getElementById('btnLikeModal').className = isL ? 'fa-solid fa-heart text-red-500' : 'fa-regular fa-heart';
-            document.getElementById('btnBookModal').className = isB ? 'fa-solid fa-bookmark text-white' : 'fa-regular fa-bookmark';
         }
 
         function setupSwipe() {
@@ -278,8 +204,10 @@
                     if(diff > 0 && currentIdx < total - 1) currentIdx++;
                     else if(diff < 0 && currentIdx > 0) currentIdx--;
                     document.getElementById('carouselTrack').style.transform = `translateX(-${currentIdx * 100}%)`;
+                    document.querySelectorAll('.dot').forEach((d, i) => { d.className = `dot w-1.5 h-1.5 rounded-full ${i===currentIdx?'bg-blue-500':'bg-zinc-700'}`; });
                     managePlayback(oldIdx, currentIdx);
-                }
+                    document.getElementById('swipeOverlay').style.display = 'block';
+                } else { document.getElementById('swipeOverlay').style.display = 'none'; }
             });
         }
 
@@ -289,6 +217,11 @@
             if(n) n.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
         }
 
+        function renderSynopsis(text) { const d = document.getElementById('mDesc'), b = document.getElementById('mToggleBtn'); d.innerText = isExpanded ? text : text.substring(0, 90) + "..."; b.classList.toggle('hidden', text.length <= 90); }
+        function translateDesc() { const btn = document.getElementById('mTranslateBtn'); const isToEN = btn.innerText === "TERJEMAHKAN"; renderSynopsis(isToEN ? descEN : descID); btn.innerText = isToEN ? "LIHAT ASLI (ID)" : "TERJEMAHKAN"; }
+        function handleToggleDesc() { isExpanded = !isExpanded; renderSynopsis(document.getElementById('mTranslateBtn').innerText === "TERJEMAHKAN" ? descID : descEN); }
+        function toggleLib(key) { let items = JSON.parse(localStorage.getItem(key) || '[]'); const idx = items.findIndex(x => x.id == window.currentMediaId); idx > -1 ? items.splice(idx,1) : items.push({id: window.currentMediaId, type: window.currentMediaType}); localStorage.setItem(key, JSON.stringify(items)); updateLibButtons(); }
+        function updateLibButtons() { const isL = JSON.parse(localStorage.getItem('likes') || '[]').some(x=>x.id==window.currentMediaId); const isB = JSON.parse(localStorage.getItem('bookmarks') || '[]').some(x=>x.id==window.currentMediaId); document.getElementById('btnLikeModal').className = isL ? 'fa-solid fa-heart text-red-500' : 'fa-regular fa-heart'; document.getElementById('btnBookModal').className = isB ? 'fa-solid fa-bookmark text-white' : 'fa-regular fa-bookmark'; }
         function setFilter(t, v, el) { currentType = v; updatePill(el); loadFeed(true); }
         function setSchedule(v, el) { currentSchedule = v; updatePill(el); loadFeed(true); }
         function updatePill(el) { el.parentElement.querySelectorAll('.pill').forEach(p=>p.classList.remove('active')); el.classList.add('active'); }
@@ -296,6 +229,7 @@
         function setYear(y) { currentYear=y; loadFeed(true); }
         function setCountry(c, n) { currentCountry=c; loadFeed(true); }
         function setGenre(g, n) { currentGenre=g; loadFeed(true); }
+        function searchAction() { searchQuery = document.getElementById('searchInp').value; loadFeed(true); }
         function closeModal() { document.getElementById('movieModal').style.display = 'none'; document.getElementById('carouselTrack').innerHTML = ''; document.body.style.overflow = 'auto'; }
     </script>
 </body>
