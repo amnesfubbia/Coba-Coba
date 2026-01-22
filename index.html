@@ -14,15 +14,22 @@
         /* HEADER & PROFILE */
         .profile-header { padding: 15px 15px 0 15px; background: #000; }
         .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .ig-logo { font-family: 'DM Sans', sans-serif; font-weight: 700; font-style: italic; font-size: 20px; }
+        .ig-logo-wrapper { display: flex; align-items: center; gap: 4px; position: relative; }
+        .ig-logo { font-family: 'Inter', sans-serif; font-weight: 700; font-size: 18px; letter-spacing: -0.5px; }
+        .dot-notify { width: 6px; height: 6px; background-color: #ff3b30; border-radius: 50%; display: inline-block; margin-left: 2px; }
+        
         .profile-info { display: flex; align-items: center; gap: 25px; margin-bottom: 15px; }
+        .profile-pic-container { position: relative; width: 82px; height: 82px; }
         .profile-pic { width: 77px; height: 77px; border-radius: 50%; border: 1px solid #333; padding: 3px; }
         .profile-pic img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; filter: grayscale(1); }
+        .add-story-btn { position: absolute; bottom: 5px; right: 5px; width: 22px; height: 22px; background: #0095f6; border: 2px solid #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; color: #fff; }
+
         .stats { display: flex; flex-grow: 1; justify-content: space-around; text-align: center; }
         .stat-item { cursor: pointer; }
         .stat-val { font-weight: 700; font-size: 16px; display: block; }
         .stat-label { font-size: 12px; color: #a8a8a8; }
         .bio { font-size: 13px; line-height: 1.4; margin-bottom: 15px; }
+        .bio-name-wrapper { display: flex; align-items: center; gap: 4px; margin-bottom: 2px; }
         .bio-name { font-weight: 700; display: block; }
 
         /* ACTION & FILTERS */
@@ -35,7 +42,6 @@
         .pill-grid { display: grid; gap: 6px; }
         .pill { background: transparent; border: 1px solid #1c1c1c; color: #fff; padding: 7px 0; border-radius: 8px; font-size: 10px; font-weight: 800; text-transform: uppercase; text-align: center; cursor: pointer; }
         
-        /* BOTTOM SHEET DROPDOWN */
         .filter-dropdown { 
             display: none; position: fixed; bottom: 0; left: 0; right: 0; background: #121212; border-radius: 20px 20px 0 0; z-index: 5000; max-height: 60vh; overflow-y: auto; box-shadow: 0 -10px 40px rgba(0,0,0,0.8); border-top: 1px solid #333; padding-bottom: 20px; animation: slideUp 0.3s ease-out; overscroll-behavior: contain; -webkit-overflow-scrolling: touch;
         }
@@ -82,10 +88,8 @@
         .smart-name { font-size: 13px; font-weight: 600; color: #fff; }
         .smart-meta { font-size: 11px; color: #8e8e8e; }
 
-        /* BACK TO TOP */
         #backToTop { position: fixed; bottom: 85px; right: 20px; background: rgba(255,255,255,0.3); width: 42px; height: 42px; border-radius: 50%; display: none; align-items: center; justify-content: center; z-index: 100; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); }
 
-        /* MODAL */
         .modal-player { display: none; position: fixed; inset: 0; z-index: 3000; background: #000; overflow-y: auto; }
         .carousel-track { display: flex; transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1); width: 100%; }
         .carousel-slide { min-width: 100%; aspect-ratio: 16/9; position: relative; }
@@ -116,9 +120,10 @@
     <div id="mainProfile">
         <div class="profile-header">
             <div class="top-bar">
-                <div class="flex items-center" onclick="location.reload()">
-                    <h1 class="ig-logo">amnesfubbia <span class="opacity-40 font-normal">xx1</span></h1>
-                    <i class="fa-solid fa-circle-check text-[#0095f6] ml-1 text-[10px]"></i>
+                <div class="ig-logo-wrapper" onclick="location.reload()">
+                    <h1 class="ig-logo">amnesfubbia</h1>
+                    <i class="fa-solid fa-chevron-down text-[10px] ml-0.5"></i>
+                    <span class="dot-notify"></span>
                 </div>
                 <div class="flex gap-5">
                     <i class="fa-regular fa-square-plus text-2xl"></i>
@@ -127,7 +132,12 @@
             </div>
 
             <div class="profile-info">
-                <div class="profile-pic"><img src="https://image.tmdb.org/t/p/w200/o79fH0A9mYt1L405G65kQoR97H5.jpg"></div>
+                <div class="profile-pic-container">
+                    <div class="profile-pic">
+                        <img src="https://image.tmdb.org/t/p/w200/o79fH0A9mYt1L405G65kQoR97H5.jpg">
+                    </div>
+                    <div class="add-story-btn"><i class="fa-solid fa-plus"></i></div>
+                </div>
                 <div class="stats">
                     <div class="stat-item" onclick="setFilter('type', 'movie')"><span class="stat-val">25.4rb</span><span class="stat-label">film</span></div>
                     <div class="stat-item" onclick="setFilter('type', 'tv')"><span class="stat-val">8.2rb</span><span class="stat-label">series</span></div>
@@ -136,7 +146,10 @@
             </div>
 
             <div class="bio">
-                <span class="bio-name">amnesfubbia xx1</span>
+                <div class="bio-name-wrapper">
+                    <span class="bio-name">amnesfubbia xx1</span>
+                    <i class="fa-solid fa-circle-check text-[#0095f6] text-[12px]"></i>
+                </div>
                 <span>dari indonesia untuk dunia</span><br>
                 <span>By Anasteas</span>
             </div>
@@ -182,7 +195,6 @@
     </div>
 
     <div id="backToTop" onclick="window.scrollTo({top: 0, behavior: 'smooth'})"><i class="fa-solid fa-arrow-up"></i></div>
-
     <div id="filterOverlay" onclick="closeD()"></div>
     <div id="countryDropdown" class="filter-dropdown no-scrollbar"></div>
     <div id="genreDropdown" class="filter-dropdown no-scrollbar"></div>
@@ -396,7 +408,6 @@
             document.getElementById('mLikeDisplay').innerText = `${Math.floor((dId.vote_average || 0) * 1234).toLocaleString('id-ID')} suka`;
             document.getElementById('mTitle').innerText = dId.title || dId.name || dEn.title;
             
-            // AUTO TRANSLATE LOGIC
             globalFullDesc = dId.overview;
             globalEnDesc = dEn.overview;
             if(!globalFullDesc && globalEnDesc) {
@@ -434,19 +445,27 @@
         function playVid(url, el) { document.getElementById('carouselTrack').innerHTML = `<div class="carousel-slide"><iframe src="${url}" class="w-full h-full" allowfullscreen></iframe></div>`; document.getElementById('swipeOverlay').style.display = 'none'; highlightBtn(el); }
         function highlightBtn(el) { document.querySelectorAll('.server-btn').forEach(b => b.classList.remove('active-link')); el.classList.add('active-link'); }
         async function loadEpisodes() { const s = document.getElementById('seasonSel').value; const res = await fetch(`https://api.themoviedb.org/3/tv/${window.currentMediaId}/season/${s}?api_key=${API_KEY}`); const d = await res.json(); document.getElementById('episodeGrid').innerHTML = (d.episodes||[]).map(e => `<div class="pill text-[10px]" onclick="playVid('https://vidrock.net/embed/tv/${window.currentMediaId}/${s}/${e.episode_number}', this)">${e.episode_number}</div>`).join(''); }
+        
         function setupSwipe() {
             const overlay = document.getElementById('swipeOverlay');
             overlay.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, {passive:true});
             overlay.addEventListener('touchend', e => {
-                let diff = startX - e.changedTouches[0].clientX; const slides = document.querySelectorAll('.carousel-slide');
+                let diff = startX - e.changedTouches[0].clientX; 
+                const slides = document.querySelectorAll('.carousel-slide');
                 if(Math.abs(diff) > 50 && slides.length > 1) {
+                    let oldIdx = currentIdx;
                     if(diff > 0 && currentIdx < slides.length - 1) currentIdx++;
                     else if(diff < 0 && currentIdx > 0) currentIdx--;
                     document.getElementById('carouselTrack').style.transform = `translateX(-${currentIdx * 100}%)`;
                     document.querySelectorAll('.dot').forEach((d, i) => { d.className = `dot w-1.5 h-1.5 rounded-full ${i===currentIdx?'bg-blue-500':'bg-zinc-700'}`; });
+                    const oldVid = document.getElementById(`yt-${oldIdx}`);
+                    const newVid = document.getElementById(`yt-${currentIdx}`);
+                    if(oldVid) oldVid.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+                    if(newVid) newVid.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
                 }
             });
         }
+
         function updateLibButtons(id) { const isL = JSON.parse(localStorage.getItem('likes') || '[]').some(x=>x.id==id); const isB = JSON.parse(localStorage.getItem('bookmarks') || '[]').some(x=>x.id==id); document.getElementById('btnLikeModal').className = isL ? 'fa-solid fa-heart text-red-500 interaction-icon' : 'fa-regular fa-heart interaction-icon'; document.getElementById('btnBookModal').className = isB ? 'fa-solid fa-bookmark text-white interaction-icon' : 'fa-regular fa-bookmark interaction-icon'; document.getElementById('btnLikeModal').onclick = () => toggleLib('likes'); document.getElementById('btnBookModal').onclick = () => toggleLib('bookmarks'); }
         function toggleLib(k) { let items = JSON.parse(localStorage.getItem(k) || '[]'); const idx = items.findIndex(x => x.id == window.currentMediaId); idx > -1 ? items.splice(idx,1) : items.push({id: window.currentMediaId, type: window.currentMediaType}); localStorage.setItem(k, JSON.stringify(items)); updateLibButtons(window.currentMediaId); }
         async function switchTab(mode, el) { document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active')); el.classList.add('active'); if(mode === 'likes' || mode === 'bookmarks') showLibrary(mode); else { currentType='multi'; currentSchedule='trending'; currentCompany=''; loadFeed(true); } }
