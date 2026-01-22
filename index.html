@@ -105,7 +105,6 @@
         #searchOverlay { display: none; position: fixed; inset: 0; background: #000; z-index: 2000; overflow-y: auto; }
         .search-header { position: sticky; top: 0; background: #000; display: flex; align-items: center; padding: 10px 15px; gap: 10px; border-bottom: 1px solid #1c1c1c; z-index: 100; }
         .search-input-box { flex-grow: 1; background: #262626; border-radius: 10px; padding: 8px 12px; display: flex; align-items: center; }
-        /* PERBAIKAN WARNA INPUT: Memastikan teks tetap putih dan background tidak berubah */
         .search-input-box input { background: transparent !important; border: none !important; outline: none !important; color: #ffffff !important; font-size: 14px; width: 100%; margin-left: 8px; }
         .search-input-box input::placeholder { color: #8e8e8e; }
 
@@ -293,6 +292,7 @@
                     currentGenre = h.g || '';
                     currentCompany = h.com || '';
                     currentSchedule = 'trending'; 
+                    searchQuery = '';
                     if(h.t === 'anime') { currentType = 'tv'; currentCountry = 'JP'; currentGenre = 16; } 
                     else { currentType = 'movie'; }
                     loadFeed(true);
@@ -328,7 +328,7 @@
             if(isNew) { page = 1; grid.innerHTML = ''; }
             
             let url;
-            // PERBAIKAN LOGIKA PENCARIAN: Menggunakan endpoint search/multi untuk akurasi lebih baik saat ada query
+            // AKURASI PENCARIAN: Mengutamakan search/multi jika ada query
             if(searchQuery) {
                 url = `https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&language=id-ID&query=${encodeURIComponent(searchQuery)}&page=${page}&include_adult=false`;
             } else {
@@ -350,12 +350,31 @@
             loading = false;
         }
 
+        // FUNGSI KLIK CAST: Mencari film berdasarkan aktor
+        async function loadActorMovies(personId, personName) {
+            closeModal();
+            openSearch();
+            document.getElementById('searchInp').value = personName;
+            searchQuery = personName;
+            const grid = document.getElementById('searchGrid');
+            grid.innerHTML = '<div class="col-span-3 text-center py-10">Mencari karya ' + personName + '...</div>';
+            
+            const url = `https://api.themoviedb.org/3/person/${personId}/combined_credits?api_key=${API_KEY}&language=id-ID`;
+            try {
+                const res = await fetch(url);
+                const data = await res.json();
+                grid.innerHTML = '';
+                // Gabungkan film dan tv, urutkan berdasarkan kepopuleran
+                const sorted = (data.cast || []).sort((a,b) => b.popularity - a.popularity);
+                renderGrid(sorted, grid);
+            } catch(e) { grid.innerHTML = 'Gagal memuat.'; }
+        }
+
         function renderGrid(items, grid) {
             items.forEach(m => {
                 if(!m.poster_path) return;
-                // Identifikasi tipe media secara dinamis (penting untuk pencarian multi)
                 const mType = m.media_type || (currentType === 'tv' ? 'tv' : 'movie');
-                if(mType === 'person') return; // Abaikan jika hasil pencarian adalah orang
+                if(mType === 'person') return;
 
                 const card = document.createElement('div');
                 card.className = 'post-card';
@@ -389,9 +408,11 @@
             const vids = [...(dId.videos?.results || []), ...(dEn.videos?.results || [])].filter(v => v.site === 'YouTube' && (v.type === 'Trailer' || v.type === 'Teaser')).slice(0, 4);
             const track = document.getElementById('carouselTrack'), dots = document.getElementById('carouselDots');
             track.innerHTML = ''; dots.innerHTML = ''; track.style.transform = 'translateX(0)';
+            
             if(vids.length > 0) {
                 vids.forEach((v, i) => {
-                    track.innerHTML += `<div class="carousel-slide"><iframe id="yt-${i}" src="https://www.youtube.com/embed/${v.key}?enablejsapi=1&autoplay=${i===0?1:0}&mute=0&rel=0" class="w-full h-full" allow="autoplay; fullscreen"></iframe></div>`;
+                    // AUTOPLAY FIXED: enablejsapi=1 ditambahkan untuk kontrol slide
+                    track.innerHTML += `<div class="carousel-slide"><iframe id="yt-player-${i}" src="https://www.youtube.com/embed/${v.key}?enablejsapi=1&autoplay=${i===0?1:0}&mute=0&rel=0" class="w-full h-full" allow="autoplay; fullscreen"></iframe></div>`;
                     dots.innerHTML += `<div class="dot w-1.5 h-1.5 rounded-full ${i===0?'bg-blue-500':'bg-zinc-700'}"></div>`;
                 });
                 document.getElementById('swipeOverlay').style.display = 'block';
@@ -400,7 +421,14 @@
                 dots.innerHTML = `<div class="dot bg-blue-500 w-1.5 h-1.5 rounded-full"></div>`;
                 document.getElementById('swipeOverlay').style.display = 'none';
             }
-            document.getElementById('castContainer').innerHTML = (dCast.cast || []).slice(0, 10).map(c => `<div class="cast-item"><div class="cast-img-border"><img src="${c.profile_path ? 'https://image.tmdb.org/t/p/w185' + c.profile_path : 'https://www.themoviedb.org/assets/2/v4/glyphicons/basic/glyphicons-basic-4-user-3245c3f3347706a035c9744ffaa5d174e48be3b860667e406723f3bc8160f47e.svg'}"></div><span class="cast-name">${c.name}</span></div>`).join('');
+
+            // CAST CLICK FIXED: Menambahkan onclick untuk mencari film aktor
+            document.getElementById('castContainer').innerHTML = (dCast.cast || []).slice(0, 10).map(c => `
+                <div class="cast-item" onclick="loadActorMovies(${c.id}, '${c.name.replace(/'/g, "\\'")}')">
+                    <div class="cast-img-border"><img src="${c.profile_path ? 'https://image.tmdb.org/t/p/w185' + c.profile_path : 'https://www.themoviedb.org/assets/2/v4/glyphicons/basic/glyphicons-basic-4-user-3245c3f3347706a035c9744ffaa5d174e48be3b860667e406723f3bc8160f47e.svg'}"></div>
+                    <span class="cast-name">${c.name}</span>
+                </div>`).join('');
+
             document.getElementById('mLikeDisplay').innerText = `${Math.floor((dId.vote_average || 0) * 1234).toLocaleString('id-ID')} suka`;
             document.getElementById('mTitle').innerText = dId.title || dId.name || dEn.title;
             globalFullDesc = dId.overview || dEn.overview || "Sinopsis tidak tersedia.";
@@ -420,6 +448,8 @@
         function playVid(url, el) { document.getElementById('carouselTrack').innerHTML = `<div class="carousel-slide"><iframe src="${url}" class="w-full h-full" allowfullscreen></iframe></div>`; document.getElementById('swipeOverlay').style.display = 'none'; highlightBtn(el); }
         function highlightBtn(el) { document.querySelectorAll('.server-btn').forEach(b => b.classList.remove('active-link')); el.classList.add('active-link'); }
         async function loadEpisodes() { const s = document.getElementById('seasonSel').value; const res = await fetch(`https://api.themoviedb.org/3/tv/${window.currentMediaId}/season/${s}?api_key=${API_KEY}`); const d = await res.json(); document.getElementById('episodeGrid').innerHTML = (d.episodes||[]).map(e => `<div class="pill text-[10px]" onclick="playVid('https://vidrock.net/embed/tv/${window.currentMediaId}/${s}/${e.episode_number}', this)">${e.episode_number}</div>`).join(''); }
+        
+        // SETUP SWIPE + AUTOPLAY LOGIC
         function setupSwipe() {
             const overlay = document.getElementById('swipeOverlay');
             overlay.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, {passive:true});
@@ -428,11 +458,22 @@
                 if(Math.abs(diff) > 50 && slides.length > 1) {
                     if(diff > 0 && currentIdx < slides.length - 1) currentIdx++;
                     else if(diff < 0 && currentIdx > 0) currentIdx--;
+                    
                     document.getElementById('carouselTrack').style.transform = `translateX(-${currentIdx * 100}%)`;
                     document.querySelectorAll('.dot').forEach((d, i) => { d.className = `dot w-1.5 h-1.5 rounded-full ${i===currentIdx?'bg-blue-500':'bg-zinc-700'}`; });
+                    
+                    // Trigger Autoplay pada slide baru via PostMessage API (YouTube Standard)
+                    document.querySelectorAll('iframe').forEach((ifr, idx) => {
+                        if(idx === currentIdx) {
+                            ifr.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+                        } else {
+                            ifr.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+                        }
+                    });
                 }
             });
         }
+        
         function updateLibButtons(id) { const isL = JSON.parse(localStorage.getItem('likes') || '[]').some(x=>x.id==id); const isB = JSON.parse(localStorage.getItem('bookmarks') || '[]').some(x=>x.id==id); document.getElementById('btnLikeModal').className = isL ? 'fa-solid fa-heart text-red-500 interaction-icon' : 'fa-regular fa-heart interaction-icon'; document.getElementById('btnBookModal').className = isB ? 'fa-solid fa-bookmark text-white interaction-icon' : 'fa-regular fa-bookmark interaction-icon'; document.getElementById('btnLikeModal').onclick = () => toggleLib('likes'); document.getElementById('btnBookModal').onclick = () => toggleLib('bookmarks'); }
         function toggleLib(k) { let items = JSON.parse(localStorage.getItem(k) || '[]'); const idx = items.findIndex(x => x.id == window.currentMediaId); idx > -1 ? items.splice(idx,1) : items.push({id: window.currentMediaId, type: window.currentMediaType}); localStorage.setItem(k, JSON.stringify(items)); updateLibButtons(window.currentMediaId); }
         async function switchTab(mode, el) { document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active')); el.classList.add('active'); if(mode === 'likes' || mode === 'bookmarks') showLibrary(mode); else { currentType='multi'; currentSchedule='trending'; currentCompany=''; searchQuery=''; loadFeed(true); } }
