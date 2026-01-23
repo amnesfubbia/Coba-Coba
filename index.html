@@ -24,7 +24,7 @@
             transition: opacity 0.8s ease, visibility 0.8s;
         }
         .splash-logo-img {
-            width: 75px; /* Ukuran pas untuk splash */
+            width: 70px; /* Ukuran splash diperkecil sedikit agar elegan */
             animation: pulseFade 2s infinite ease-in-out;
         }
         @keyframes pulseFade {
@@ -33,31 +33,31 @@
             100% { opacity: 0.3; transform: scale(0.95); }
         }
 
-        /* --- LOGO RIBBON STYLE (REVISED SIZE) --- */
+        /* --- LOGO PROFIL (POLOS SEPERTI IG) --- */
+        .profile-pic-container { 
+            position: relative; 
+            width: 78px; /* Ukuran total wadah */
+            height: 78px; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center;
+        }
+
         .profile-pic-logo { 
-            width: 68px; /* Lebih kecil & proporsional */
-            height: 82px; 
-            background: #1a1a1a; 
-            position: relative;
+            width: 72px; /* Ukuran logo murni */
+            height: 72px; 
+            border-radius: 50%; /* Bulat sempurna seperti Instagram */
+            overflow: hidden;
             display: flex; 
             align-items: center; 
-            justify-content: center; 
-            clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 50% 88%, 0% 100%);
-            overflow: hidden;
-            border: 1px solid #333;
+            justify-content: center;
+            /* Menghapus background dan border ribbon yang sebelumnya ada */
         }
+
         .profile-pic-logo img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-        }
-
-        .profile-pic-container { 
-            position: relative; 
-            width: 72px; 
-            height: 82px; 
-            display: flex; 
-            justify-content: center; 
         }
 
         /* HEADER & PROFILE */
@@ -68,7 +68,7 @@
         .dot-notify { width: 7px; height: 7px; background-color: #ff3b30; border-radius: 50%; display: inline-block; margin-left: 2px; }
         
         .profile-info { display: flex; align-items: center; gap: 20px; margin-bottom: 15px; }
-        .add-story-btn { position: absolute; bottom: 8px; right: -2px; width: 22px; height: 22px; background: #0095f6; border: 3px solid #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: bold; color: #fff; z-index: 10; }
+        .add-story-btn { position: absolute; bottom: 2px; right: 2px; width: 22px; height: 22px; background: #0095f6; border: 2px solid #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: bold; color: #fff; z-index: 10; }
 
         .stats { display: flex; flex-grow: 1; justify-content: space-around; text-align: center; }
         .stat-val { font-weight: 700; font-size: 15px; display: block; }
