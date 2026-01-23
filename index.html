@@ -101,10 +101,11 @@
         .ig-date { color: #a8a8a8; font-size: 11px; margin-top: 8px; text-transform: uppercase; }
 
         /* OST STYLES */
-        .ost-container { margin-top: 20px; padding: 15px; background: #0a0a0a; border: 1px solid #1c1c1c; border-radius: 16px; }
-        .ost-header { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
-        .ost-header i { color: #1DB954; font-size: 14px; }
+        .ost-container { margin-top: 20px; padding: 12px; background: #121212; border: 1px solid #262626; border-radius: 12px; }
+        .ost-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+        .ost-header i { color: #ff0000; font-size: 14px; }
         .ost-header span { font-size: 10px; font-weight: 800; text-transform: uppercase; color: #a8a8a8; letter-spacing: 1px; }
+        #ostPlayer { border-radius: 8px; overflow: hidden; background: #000; aspect-ratio: 16/9; }
         
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #000; border-top: 1px solid #1c1c1c; display: flex; justify-content: space-around; padding: 12px 0; z-index: 300; }
     </style>
@@ -219,10 +220,10 @@
 
                 <div id="ostSection" class="ost-container hidden">
                     <div class="ost-header">
-                        <i class="fa-brands fa-spotify"></i>
+                        <i class="fa-brands fa-youtube"></i>
                         <span>Soundtrack Original</span>
                     </div>
-                    <div id="spotifyPlayer"></div>
+                    <div id="ostPlayer"></div>
                 </div>
 
                 <div id="seriesControl" class="hidden mt-6 p-4 bg-zinc-950 rounded-2xl border border-zinc-900">
@@ -366,13 +367,22 @@
             updateLibButtons(id);
         }
 
+        // PERBAIKAN: Fungsi loadSoundtrack menggunakan YouTube Search
         function loadSoundtrack(title) {
             const ostSection = document.getElementById('ostSection');
-            const spotifyDiv = document.getElementById('spotifyPlayer');
-            const cleanTitle = encodeURIComponent(title + " soundtrack");
+            const playerDiv = document.getElementById('ostPlayer');
+            const searchQuery = encodeURIComponent(title + " official soundtrack music");
             
-            // Menggunakan Spotify Embed Search
-            spotifyDiv.innerHTML = `<iframe src="https://open.spotify.com/embed/search/${cleanTitle}" width="100%" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media" style="border-radius:12px;"></iframe>`;
+            playerDiv.innerHTML = `
+                <iframe 
+                    src="https://www.youtube.com/embed?listType=search&list=${searchQuery}" 
+                    width="100%" 
+                    height="100%" 
+                    frameborder="0" 
+                    allow="encrypted-media" 
+                    allowfullscreen>
+                </iframe>`;
+            
             ostSection.classList.remove('hidden');
         }
 
