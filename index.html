@@ -49,41 +49,47 @@
         .btn-icon-sq { width: 34px; background: #262626; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
 
         #filterBar { display: none; margin-bottom: 15px; }
-        .pill { background: transparent; border: 1px solid #262626; color: #fff; padding: 6px 0; border-radius: 8px; font-size: 10px; font-weight: 800; text-transform: uppercase; text-align: center; cursor: pointer; }
+        .pill-grid { display: grid; gap: 6px; }
+        .pill { background: transparent; border: 1px solid #262626; color: #fff; padding: 7px 0; border-radius: 8px; font-size: 10px; font-weight: 800; text-transform: uppercase; text-align: center; cursor: pointer; }
         
         .highlights-wrapper { padding: 0 0 15px 10px; overflow-x: auto; display: flex; gap: 18px; }
         .highlight-item { flex: 0 0 64px; text-align: center; cursor: pointer; }
         .highlight-circle { width: 64px; height: 64px; border-radius: 50%; border: 1px solid #262626; margin-bottom: 4px; display: flex; align-items: center; justify-content: center; padding: 3px; }
-        .hl-inner { width: 100%; height: 100%; border-radius: 50%; background: #121212; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; color: #fff; }
+        .hl-inner { width: 100%; height: 100%; border-radius: 50%; background: #121212; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; color: #fff; text-transform: uppercase; }
         .highlight-text { font-size: 11px; color: #fff; font-weight: 400; }
 
         .tab-nav { display: flex; border-top: 1px solid #1c1c1c; }
-        .tab-item { flex: 1; text-align: center; padding: 12px 0; color: #a8a8a8; cursor: pointer; font-size: 22px; }
+        .tab-item { flex: 1; text-align: center; padding: 12px 0; color: #a8a8a8; cursor: pointer; font-size: 20px; }
         .tab-item.active { color: #fff; border-bottom: 1px solid #fff; }
 
         .movie-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; padding-bottom: 80px; }
-        .post-card { position: relative; aspect-ratio: 1/1; background: #0a0a0a; overflow: hidden; }
+        .post-card { position: relative; aspect-ratio: 2/3; background: #0a0a0a; overflow: hidden; }
         .post-card img { width: 100%; height: 100%; object-fit: cover; }
-        .badge-rating { position: absolute; top: 5px; left: 5px; padding: 1px 4px; border-radius: 2px; font-size: 8px; font-weight: 900; background: rgba(255,255,255,0.9); color: #000; z-index: 5; }
-        .badge-type { position: absolute; top: 5px; right: 5px; padding: 1px 4px; border-radius: 2px; font-size: 8px; font-weight: 800; background: rgba(0,0,0,0.6); color: #fff; text-transform: uppercase; border: 0.5px solid rgba(255,255,255,0.2); z-index: 5; }
+        .badge-rating { position: absolute; top: 6px; left: 6px; padding: 2px 5px; border-radius: 2px; font-size: 7px; font-weight: 900; z-index: 5; background: rgba(255,255,255,0.9); color: #000; }
+        .badge-type { position: absolute; top: 6px; right: 6px; padding: 2px 5px; border-radius: 2px; font-size: 7px; font-weight: 900; z-index: 5; background: rgba(0,0,0,0.7); color: #fff; text-transform: uppercase; border: 0.5px solid rgba(255,255,255,0.3); }
 
-        /* MODAL & SEARCH OVERLAYS */
-        #searchOverlay, .modal-player { display: none; position: fixed; inset: 0; background: #000; z-index: 3000; overflow-y: auto; }
+        /* SEARCH & MODAL OVERLAYS */
+        #searchOverlay { display: none; position: fixed; inset: 0; background: #000; z-index: 2000; overflow-y: auto; }
         .search-header { position: sticky; top: 0; background: #000; display: flex; align-items: center; padding: 10px 15px; gap: 10px; border-bottom: 1px solid #1c1c1c; z-index: 100; }
         .search-input-box { flex-grow: 1; background: #262626; border-radius: 10px; padding: 8px 12px; display: flex; align-items: center; position: relative; }
         .search-input-box input { background: transparent; border: none; outline: none; color: #fff; font-size: 14px; width: 100%; margin-left: 8px; }
-        
-        .modal-player { z-index: 4000; }
+        #smartSearchDropdown { position: absolute; top: 100%; left: 0; right: 0; background: #1a1a1a; border-radius: 0 0 10px 10px; display: none; z-index: 500; max-height: 300px; overflow-y: auto; }
+        .smart-item { display: flex; align-items: center; padding: 10px; gap: 12px; border-bottom: 1px solid #262626; }
+        .smart-item img { width: 35px; height: 50px; object-fit: cover; border-radius: 4px; }
+
+        .modal-player { display: none; position: fixed; inset: 0; z-index: 3000; background: #000; overflow-y: auto; }
         .carousel-track { display: flex; transition: transform 0.4s ease; width: 100%; }
         .carousel-slide { min-width: 100%; aspect-ratio: 16/9; position: relative; }
         .swipe-overlay { position: absolute; inset: 0; z-index: 10; }
-        .server-btn { width: 100%; padding: 10px; border-radius: 8px; font-size: 10px; font-weight: 800; border: 1px solid #262626; background: #0a0a0a; color: #fff; }
+        .server-btn { width: 100%; padding: 12px 5px; border-radius: 8px; font-size: 8px; font-weight: 800; text-transform: uppercase; border: 1px solid #1c1c1c; text-align: center; background: #0a0a0a; color: #fff; }
         .server-btn.active-link { border: 2px solid #fff; }
+        .dl-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 15px; }
+        .dl-link-btn { width: 100%; padding: 14px; border-radius: 12px; background: #000; color: #a1a1aa; font-size: 10px; font-weight: 800; text-transform: uppercase; text-align: center; border: 1px solid #1c1c1c; }
 
-        .filter-dropdown { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: #121212; border-radius: 15px 15px 0 0; z-index: 5000; max-height: 50vh; overflow-y: auto; border-top: 1px solid #333; }
-        #filterOverlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 4500; }
-        .filter-item { padding: 15px; font-size: 14px; text-align: center; border-bottom: 1px solid #262626; color: #eee; }
-
+        .filter-dropdown { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: #121212; border-radius: 20px 20px 0 0; z-index: 5000; max-height: 60vh; overflow-y: auto; border-top: 1px solid #333; }
+        #filterOverlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 4000; }
+        .filter-item { padding: 16px; font-size: 14px; text-align: center; border-bottom: 1px solid #262626; color: #eee; cursor: pointer; }
+        
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #000; border-top: 1px solid #1c1c1c; display: flex; justify-content: space-around; padding: 12px 0; z-index: 300; }
     </style>
 </head>
@@ -138,7 +144,7 @@
             </div>
 
             <div id="filterBar">
-                <div class="grid grid-cols-3 gap-1.5">
+                <div class="pill-grid grid-cols-3">
                     <button class="pill" id="btnCountry" onclick="toggleFilter(event, 'countryDropdown')">Negara</button>
                     <button class="pill" id="btnGenre" onclick="toggleFilter(event, 'genreDropdown')">Genre</button>
                     <button class="pill" id="yearBtn" onclick="toggleFilter(event, 'yearDropdown')">Tahun</button>
@@ -163,34 +169,51 @@
             <div class="search-input-box">
                 <i class="fa-solid fa-magnifying-glass text-zinc-500 text-xs"></i>
                 <input type="text" id="searchInp" placeholder="Cari..." onkeydown="if(event.key==='Enter') searchAction()">
+                <div id="smartSearchDropdown" class="no-scrollbar"></div>
             </div>
         </div>
         <div id="searchGrid" class="movie-grid"></div>
     </div>
 
     <div id="movieModal" class="modal-player">
-        <div class="p-4 flex items-center border-b border-zinc-900 sticky top-0 bg-black z-50">
-            <i class="fa-solid fa-chevron-left text-xl" onclick="closeModal()"></i>
-            <div id="mTitle" class="flex-grow text-center font-bold text-sm"></div>
-        </div>
-        <div class="relative overflow-hidden">
-            <div class="swipe-overlay" id="swipeOverlay"></div>
-            <div class="carousel-track" id="carouselTrack"></div>
-        </div>
-        <div class="p-4">
-            <div class="flex gap-4 mb-4">
-                <i id="btnLikeModal" class="fa-regular fa-heart text-2xl"></i>
-                <i id="btnBookModal" class="fa-regular fa-bookmark text-2xl"></i>
+        <div class="pb-20">
+            <div class="p-4 flex items-center border-b border-zinc-900 sticky top-0 bg-black z-50">
+                <i class="fa-solid fa-chevron-left text-xl" onclick="closeModal()"></i>
+                <div id="mTitle" class="flex-grow text-center font-bold text-sm truncate px-8"></div>
             </div>
-            <div id="mDesc" class="text-sm text-zinc-300 mb-6"></div>
-            <div id="serverList" class="grid grid-cols-3 gap-2"></div>
+            <div id="castContainer" class="flex overflow-x-auto gap-4 p-4 no-scrollbar"></div>
+            <div class="relative overflow-hidden">
+                <div class="swipe-overlay" id="swipeOverlay"></div>
+                <div class="carousel-track" id="carouselTrack"></div>
+            </div>
+            <div class="p-4">
+                <div class="flex justify-between items-center mb-4">
+                    <div class="flex gap-4">
+                        <i id="btnLikeModal" class="fa-regular fa-heart text-2xl"></i>
+                        <i class="fa-regular fa-comment text-2xl"></i>
+                    </div>
+                    <i id="btnBookModal" class="fa-regular fa-bookmark text-2xl"></i>
+                </div>
+                <div id="mDesc" class="text-sm text-zinc-300"></div>
+                <div id="mToggleBtn" class="text-zinc-500 text-sm mt-1 hidden" onclick="handleToggleDesc()">selengkapnya</div>
+                <div id="mTranslateBtn" class="text-zinc-500 text-xs mt-2 hidden" onclick="handleTranslate()">Lihat terjemahan</div>
+                <div id="seriesControl" class="hidden mt-6">
+                    <select id="seasonSel" class="bg-zinc-900 text-white p-2 rounded w-full mb-4" onchange="loadEpisodes()"></select>
+                    <div id="episodeGrid" class="grid grid-cols-5 gap-2"></div>
+                </div>
+                <div id="serverList" class="grid grid-cols-3 gap-2 mt-6"></div>
+                <div class="dl-grid">
+                    <button class="dl-link-btn" onclick="window.open(`https://dl.vidsrc.vip/${window.currentMediaType}/${window.currentMediaId}`)">Download 1</button>
+                    <button class="dl-link-btn" onclick="window.open(`https://multiembed.mov/directstream.php?video_id=${window.currentMediaId}&tmdb=1`)">Download 2</button>
+                </div>
+            </div>
         </div>
     </div>
 
     <div id="filterOverlay" onclick="closeD()"></div>
-    <div id="countryDropdown" class="filter-dropdown"></div>
-    <div id="genreDropdown" class="filter-dropdown"></div>
-    <div id="yearDropdown" class="filter-dropdown"></div>
+    <div id="countryDropdown" class="filter-dropdown no-scrollbar"></div>
+    <div id="genreDropdown" class="filter-dropdown no-scrollbar"></div>
+    <div id="yearDropdown" class="filter-dropdown no-scrollbar"></div>
 
     <nav class="bottom-nav">
         <i class="fa-solid fa-house text-xl" onclick="backToHome()"></i>
@@ -200,28 +223,20 @@
 
     <script>
         const API_KEY = 'bfa7df5310c9974f62f26c6789a8c00d';
-        let page = 1, loading = false, currentType = 'movie', currentSchedule = 'trending', currentGenre = '', currentYear = '', currentCountry = '', currentLibMode = false, searchQuery = '';
+        let page = 1, loading = false, currentType = 'movie', currentSchedule = 'trending', searchQuery = '', globalFullDesc = '', isExpanded = false;
 
         window.onload = () => {
-            setTimeout(() => {
-                document.getElementById('splashScreen').style.display = 'none';
-                document.getElementById('mainProfile').style.display = 'block';
-            }, 2500);
-            initHighlights(); initFilters(); loadFeed(); setupSwipe();
+            setTimeout(() => { document.getElementById('splashScreen').style.display = 'none'; document.getElementById('mainProfile').style.display = 'block'; }, 2500);
+            initHighlights(); initFilters(); loadFeed(); setupSwipe(); initSmartSearch();
         };
 
-        function backToHome() {
-            currentType = 'movie'; currentSchedule = 'trending'; searchQuery = ''; 
-            document.querySelectorAll('.btn-ig').forEach(b => b.classList.remove('active'));
-            loadFeed(true);
-        }
-
+        function backToHome() { currentType = 'movie'; currentSchedule = 'trending'; searchQuery = ''; document.querySelectorAll('.btn-ig').forEach(b => b.classList.remove('active')); loadFeed(true); }
+        
         function initHighlights() {
             const hls = [{n:'Disney',l:'DSNY'},{n:'Pixar',l:'PIXR'},{n:'Dreamworks',l:'DRMW'},{n:'Ghibli',l:'GHBL'},{n:'Anime',l:'ANIM'}];
             const cont = document.getElementById('highlightList');
             hls.forEach(h => {
-                const div = document.createElement('div');
-                div.className = 'highlight-item';
+                const div = document.createElement('div'); div.className = 'highlight-item';
                 div.innerHTML = `<div class="highlight-circle"><div class="hl-inner">${h.l}</div></div><div class="highlight-text">${h.n}</div>`;
                 cont.appendChild(div);
             });
@@ -231,32 +246,16 @@
             if(loading) return; loading = true;
             const grid = searchQuery ? document.getElementById('searchGrid') : document.getElementById('feedGrid');
             if(isNew) { page = 1; grid.innerHTML = ''; }
-            
-            let url;
-            if(searchQuery) {
-                url = `https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(searchQuery)}&page=${page}`;
-            } else if(currentType === 'short') {
-                url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_runtime.lte=40&with_runtime.gte=2&without_genres=10770&page=${page}`;
-            } else {
-                let endpoint = (currentType === 'tv') ? 'discover/tv' : 'discover/movie';
-                url = `https://api.themoviedb.org/3/${endpoint}?api_key=${API_KEY}&page=${page}`;
-                if(currentSchedule === 'now_playing') url += '&primary_release_date.gte=2025-11-01';
-                if(currentSchedule === 'upcoming') url += '&primary_release_date.gte=2026-02-01';
-            }
-
-            try {
-                const res = await fetch(url);
-                const data = await res.json();
-                renderGrid(data.results || [], grid);
-            } catch(e) {}
+            let url = (currentType === 'short') ? `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_runtime.lte=40&page=${page}` : `https://api.themoviedb.org/3/discover/${currentType}?api_key=${API_KEY}&page=${page}`;
+            if(searchQuery) url = `https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(searchQuery)}&page=${page}`;
+            try { const res = await fetch(url); const data = await res.json(); renderGrid(data.results || [], grid); } catch(e) {}
             loading = false;
         }
 
         function renderGrid(items, grid) {
             items.forEach(m => {
                 if(!m.poster_path) return;
-                const card = document.createElement('div');
-                card.className = 'post-card';
+                const card = document.createElement('div'); card.className = 'post-card';
                 card.onclick = () => openModal(m.id, m.media_type || currentType);
                 card.innerHTML = `<div class="badge-rating">★ ${(m.vote_average||0).toFixed(1)}</div><div class="badge-type">${currentType==='short'?'SHORT':((m.media_type==='tv'||currentType==='tv')?'SERIES':'FILM')}</div><img src="https://image.tmdb.org/t/p/w342${m.poster_path}">`;
                 grid.appendChild(card);
@@ -264,23 +263,23 @@
         }
 
         async function openModal(id, type) {
+            window.currentMediaId = id; window.currentMediaType = type;
             document.getElementById('movieModal').style.display = 'block';
-            const res = await fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&language=id-ID`);
-            const d = await res.json();
+            const [rId, rCast] = await Promise.all([fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&language=id-ID`), fetch(`https://api.themoviedb.org/3/${type}/${id}/credits?api_key=${API_KEY}`)]);
+            const d = await rId.json(), c = await rCast.json();
             document.getElementById('mTitle').innerText = d.title || d.name;
-            document.getElementById('mDesc').innerText = d.overview || "Tidak ada sinopsis.";
+            globalFullDesc = d.overview || "Sinopsis tidak tersedia.";
+            renderSynopsis();
             document.getElementById('carouselTrack').innerHTML = `<div class="carousel-slide"><iframe src="https://vidrock.net/embed/${type}/${id}" class="w-full h-full" allowfullscreen></iframe></div>`;
             document.getElementById('serverList').innerHTML = `<button class="server-btn active-link" onclick="playVid('https://vidrock.net/embed/${type}/${id}', this)">Server 1</button><button class="server-btn" onclick="playVid('https://vidsrc.me/embed/${type}?tmdb=${id}', this)">Server 2</button>`;
+            if(type === 'tv') { document.getElementById('seriesControl').classList.remove('hidden'); loadSeasons(d.seasons); } else { document.getElementById('seriesControl').classList.add('hidden'); }
         }
 
-        function playVid(url, el) { 
-            document.getElementById('carouselTrack').innerHTML = `<div class="carousel-slide"><iframe src="${url}" class="w-full h-full" allowfullscreen></iframe></div>`;
-            document.querySelectorAll('.server-btn').forEach(b => b.classList.remove('active-link'));
-            el.classList.add('active-link');
-        }
-
+        function renderSynopsis() { const el = document.getElementById('mDesc'), btn = document.getElementById('mToggleBtn'); if(globalFullDesc.length > 100) { btn.classList.remove('hidden'); el.innerText = isExpanded ? globalFullDesc : globalFullDesc.substring(0, 100) + "..."; btn.innerText = isExpanded ? "ringkas" : "selengkapnya"; } else { el.innerText = globalFullDesc; btn.classList.add('hidden'); } }
+        function handleToggleDesc() { isExpanded = !isExpanded; renderSynopsis(); }
+        function playVid(url, el) { document.getElementById('carouselTrack').innerHTML = `<div class="carousel-slide"><iframe src="${url}" class="w-full h-full" allowfullscreen></iframe></div>`; document.querySelectorAll('.server-btn').forEach(b => b.classList.remove('active-link')); el.classList.add('active-link'); }
         function openSearch() { document.getElementById('searchOverlay').style.display = 'block'; }
-        function closeSearch() { document.getElementById('searchOverlay').style.display = 'none'; searchQuery = ''; }
+        function closeSearch() { document.getElementById('searchOverlay').style.display = 'none'; }
         function searchAction() { searchQuery = document.getElementById('searchInp').value; loadFeed(true); }
         function closeModal() { document.getElementById('movieModal').style.display = 'none'; }
         function setFilter(k, v) { currentType = v; loadFeed(true); }
@@ -288,9 +287,10 @@
         function toggleFilterBar() { const b = document.getElementById('filterBar'); b.style.display = b.style.display === 'block' ? 'none' : 'block'; }
         function toggleFilter(e, id) { e.stopPropagation(); document.getElementById(id).style.display = 'block'; document.getElementById('filterOverlay').style.display = 'block'; }
         function closeD() { document.querySelectorAll('.filter-dropdown').forEach(d => d.style.display = 'none'); document.getElementById('filterOverlay').style.display = 'none'; }
-        function setupSwipe() { /* Logic swipe track */ }
-        function initFilters() { /* Year/Genre dropdown builder */ }
-        function switchTab(mode, el) { /* Library/Grid switch */ }
+        function setupSwipe() { /* Swipe Logic */ }
+        function initFilters() { /* Build Dropdowns */ }
+        function initSmartSearch() { /* Smart Search Logic */ }
+        function switchTab(mode, el) { /* Library Switch */ }
     </script>
 </body>
 </html>
