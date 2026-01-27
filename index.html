@@ -310,7 +310,8 @@
                         if(results.length) { 
                             drop.innerHTML = results.map(m => {
                                 const mType = m.media_type || 'movie';
-                                return `<div class="smart-item" onclick="openModal(${m.id}, '${mType}')"><img src="https://image.tmdb.org/t/p/w92${m.poster_path || m.profile_path || ''}"><div class="smart-info"><span class="smart-name">${m.title || m.name}</span><span class="smart-meta">${mType === 'tv' ? 'Series' : 'Film'} • ${m.release_date || m.first_air_date || ''}</span></div></div>`;
+                                if(mType === 'person') return '';
+                                return `<div class="smart-item" onclick="openModal(${m.id}, '${mType}')"><img src="https://image.tmdb.org/t/p/w92${m.poster_path || ''}"><div class="smart-info"><span class="smart-name">${m.title || m.name}</span><span class="smart-meta">${mType === 'tv' ? 'Series' : 'Film'} • ${m.release_date || m.first_air_date || ''}</span></div></div>`;
                             }).join(''); 
                             drop.style.display = 'block'; 
                         } else { drop.style.display = 'none'; } 
@@ -406,6 +407,7 @@
             
             const mainServerUrl = `https://vidrock.net/embed/${type}/${id}${type==='tv'?'/1/1':''}`;
 
+            // LOGIKA SMART FALLBACK: Jika tidak ada trailer, langsung tampilkan Server 1
             if(vids.length > 0) { 
                 vids.forEach((v, i) => { track.innerHTML += `<div class="carousel-slide"><iframe id="yt-${i}" src="https://www.youtube.com/embed/${v.key}?enablejsapi=1&rel=0" class="w-full h-full" allow="autoplay; fullscreen"></iframe></div>`; dots.innerHTML += `<div class="dot w-1.5 h-1.5 rounded-full ${i===currentIdx?'bg-blue-500':'bg-zinc-700'}"></div>`; }); 
                 document.getElementById('swipeOverlay').style.display = 'block'; 
@@ -466,8 +468,8 @@
                     document.getElementById('carouselTrack').style.transform = `translateX(-${currentIdx * 100}%)`; 
                     document.querySelectorAll('.dot').forEach((d, i) => { d.className = `dot w-1.5 h-1.5 rounded-full ${i===currentIdx?'bg-blue-500':'bg-zinc-700'}`; }); 
                     const oldVid = document.getElementById(`yt-${oldIdx}`), newVid = document.getElementById(`yt-${currentIdx}`);
-                    if(oldVid) oldVid.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
-                    if(newVid) newVid.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+                    if(oldVid && oldVid.contentWindow) oldVid.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+                    if(newVid && newVid.contentWindow) newVid.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
                 } 
             }); 
         }
