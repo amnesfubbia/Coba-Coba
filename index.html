@@ -309,9 +309,8 @@
                         const results = (data.results || []).slice(0, 5); 
                         if(results.length) { 
                             drop.innerHTML = results.map(m => {
-                                if(m.media_type === 'person') return `<div class="smart-item" onclick="searchByCast(${m.id})"><img src="https://image.tmdb.org/t/p/w92${m.profile_path || ''}"><div class="smart-info"><span class="smart-name">${m.name}</span><span class="smart-meta">Aktor/Kru</span></div></div>`;
                                 const mType = m.media_type || 'movie';
-                                return `<div class="smart-item" onclick="openModal(${m.id}, '${mType}')"><img src="https://image.tmdb.org/t/p/w92${m.poster_path || ''}"><div class="smart-info"><span class="smart-name">${m.title || m.name}</span><span class="smart-meta">${mType === 'tv' ? 'Series' : 'Film'} • ${m.release_date || m.first_air_date || ''}</span></div></div>`;
+                                return `<div class="smart-item" onclick="openModal(${m.id}, '${mType}')"><img src="https://image.tmdb.org/t/p/w92${m.poster_path || m.profile_path || ''}"><div class="smart-info"><span class="smart-name">${m.title || m.name}</span><span class="smart-meta">${mType === 'tv' ? 'Series' : 'Film'} • ${m.release_date || m.first_air_date || ''}</span></div></div>`;
                             }).join(''); 
                             drop.style.display = 'block'; 
                         } else { drop.style.display = 'none'; } 
@@ -408,7 +407,7 @@
             const mainServerUrl = `https://vidrock.net/embed/${type}/${id}${type==='tv'?'/1/1':''}`;
 
             if(vids.length > 0) { 
-                vids.forEach((v, i) => { track.innerHTML += `<div class="carousel-slide"><iframe id="yt-${i}" src="https://www.youtube.com/embed/${v.key}?enablejsapi=1&autoplay=${i===0?1:0}&mute=1&rel=0" class="w-full h-full" allow="autoplay; fullscreen"></iframe></div>`; dots.innerHTML += `<div class="dot w-1.5 h-1.5 rounded-full ${i===currentIdx?'bg-blue-500':'bg-zinc-700'}"></div>`; }); 
+                vids.forEach((v, i) => { track.innerHTML += `<div class="carousel-slide"><iframe id="yt-${i}" src="https://www.youtube.com/embed/${v.key}?enablejsapi=1&rel=0" class="w-full h-full" allow="autoplay; fullscreen"></iframe></div>`; dots.innerHTML += `<div class="dot w-1.5 h-1.5 rounded-full ${i===currentIdx?'bg-blue-500':'bg-zinc-700'}"></div>`; }); 
                 document.getElementById('swipeOverlay').style.display = 'block'; 
             } else { 
                 track.innerHTML = `<div class="carousel-slide"><iframe src="${mainServerUrl}" class="w-full h-full" allowfullscreen></iframe></div>`; 
@@ -426,13 +425,11 @@
             if(globalEnDesc && globalEnDesc !== originalIndoDesc) { document.getElementById('mTranslateBtn').classList.remove('hidden'); document.getElementById('mTranslateBtn').innerText = (originalIndoDesc) ? "Lihat terjemahan" : "Terjemahkan ke ID"; } else { document.getElementById('mTranslateBtn').classList.add('hidden'); }
             isExpanded = false; renderSynopsis();
 
-            const relYear = (dId.release_date || dId.first_air_date || "2026").split('-')[0];
-            const contentKind = (type === 'tv') ? 'Series' : 'Film';
-            const cleanT = (dId.title||dId.name||"").replace(/[^a-zA-Z0-9]/g, '');
-            const genresArr = [...new Set((dId.genres || []).map(g => `#${g.name.replace(/[^a-zA-Z0-9]/g, '')}`))].slice(0, 3).join(' ');
-            const studiosArr = [...new Set((dId.production_companies || []).map(c => `#${c.name.replace(/[^a-zA-Z0-9]/g, '')}`))].slice(0, 2).join(' ');
-
-            document.getElementById('mHashtags').innerHTML = `#${cleanT} #${relYear} #${contentKind} <br> ${genresArr} ${studiosArr}`;
+            const relYear = (dId.release_date || dId.first_air_date || "").split('-')[0];
+            const genresArr = (dId.genres || []).map(g => `#${g.name.replace(/\s+/g, '')}`).slice(0, 3).join(' ');
+            const studiosArr = (dId.production_companies || []).map(c => `#${c.name.replace(/\s+/g, '')}`).slice(0, 2).join(' ');
+            document.getElementById('mHashtags').innerHTML = `${genresArr} ${studiosArr} #${relYear}`;
+            
             const rel = dId.release_date || dId.first_air_date || ""; document.getElementById('mDateDisplay').innerText = rel ? new Date(rel).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
             
             document.getElementById('serverList').innerHTML = `<button class="server-btn" onclick="playVid('${mainServerUrl}', this)">Server 1</button><button class="server-btn" onclick="playVid('https://vidsrc.me/embed/${type}?tmdb=${id}', this)">Server 2</button><button class="server-btn" onclick="playVid('https://embed.smashystream.com/playere.php?tmdb=${id}', this)">Server 3</button>`;
