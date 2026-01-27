@@ -378,7 +378,16 @@
             }); 
         }
 
-        function openSearch() { document.getElementById('searchOverlay').style.display = 'block'; document.getElementById('searchInp').focus(); document.body.style.overflow='hidden'; if(!currentCastId) document.getElementById('searchGrid').innerHTML = ''; }
+        function openSearch() { 
+            const overlay = document.getElementById('searchOverlay');
+            const input = document.getElementById('searchInp');
+            const grid = document.getElementById('searchGrid');
+            overlay.style.display = 'block'; 
+            input.value = ''; // RESET INPUT
+            grid.innerHTML = ''; // RESET HASIL
+            input.focus(); 
+            document.body.style.overflow='hidden'; 
+        }
         function closeSearch() { document.getElementById('searchOverlay').style.display = 'none'; document.body.style.overflow='auto'; searchQuery=''; currentCastId=''; }
         function searchAction() { currentLibMode = false; currentCastId = ''; searchQuery = document.getElementById('searchInp').value; loadFeed(true); document.getElementById('smartSearchDropdown').style.display = 'none'; }
         function searchByCast(castId) { closeModal(); currentCastId = castId; searchQuery = ''; document.getElementById('searchInp').value = ''; document.getElementById('searchOverlay').style.display = 'block'; document.body.style.overflow='hidden'; loadFeed(true); }
@@ -407,11 +416,16 @@
             
             const mainServerUrl = `https://vidrock.net/embed/${type}/${id}${type==='tv'?'/1/1':''}`;
 
-            // LOGIKA SMART FALLBACK: Jika tidak ada trailer, langsung tampilkan Server 1
             if(vids.length > 0) { 
-                vids.forEach((v, i) => { track.innerHTML += `<div class="carousel-slide"><iframe id="yt-${i}" src="https://www.youtube.com/embed/${v.key}?enablejsapi=1&rel=0" class="w-full h-full" allow="autoplay; fullscreen"></iframe></div>`; dots.innerHTML += `<div class="dot w-1.5 h-1.5 rounded-full ${i===currentIdx?'bg-blue-500':'bg-zinc-700'}"></div>`; }); 
+                vids.forEach((v, i) => { 
+                    // Ditambahkan autoplay=1 untuk slide pertama
+                    const auto = (i === 0) ? "autoplay=1&mute=1" : "autoplay=0";
+                    track.innerHTML += `<div class="carousel-slide"><iframe id="yt-${i}" src="https://www.youtube.com/embed/${v.key}?enablejsapi=1&rel=0&${auto}" class="w-full h-full" allow="autoplay; fullscreen"></iframe></div>`; 
+                    dots.innerHTML += `<div class="dot w-1.5 h-1.5 rounded-full ${i===currentIdx?'bg-blue-500':'bg-zinc-700'}"></div>`; 
+                }); 
                 document.getElementById('swipeOverlay').style.display = 'block'; 
             } else { 
+                // Jika trailer tidak ada, langsung Server 1 tanpa basa-basi
                 track.innerHTML = `<div class="carousel-slide"><iframe src="${mainServerUrl}" class="w-full h-full" allowfullscreen></iframe></div>`; 
                 dots.innerHTML = `<div class="dot bg-blue-500 w-1.5 h-1.5 rounded-full"></div>`; 
                 document.getElementById('swipeOverlay').style.display = 'none'; 
