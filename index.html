@@ -281,8 +281,11 @@
                 document.getElementById('splashScreen').style.display = 'none';
                 document.getElementById('mainProfile').style.display = 'block';
             }, 2500);
+
             initFilters(); initHighlights(); loadFeed(); setupSwipe(); initSmartSearch(); 
-            window.addEventListener('scroll', () => { document.getElementById('backToTop').style.display = window.scrollY > 500 ? 'flex' : 'none'; }); 
+            window.addEventListener('scroll', () => { 
+                document.getElementById('backToTop').style.display = window.scrollY > 500 ? 'flex' : 'none'; 
+            }); 
         };
 
         function updateActiveNav(el) { document.querySelectorAll('.bottom-nav i').forEach(i => i.classList.remove('active-nav')); el.classList.add('active-nav'); }
@@ -290,7 +293,9 @@
         function backToHome() {
             closeModal(); closeSearch(); closeD();
             currentGenre = ''; currentYear = ''; currentCountry = ''; currentSchedule = 'trending'; currentType = 'movie'; searchQuery = ''; currentCastId = '';
-            document.getElementById('btnGenre').innerText = 'Genre'; document.getElementById('yearBtn').innerText = 'Tahun'; document.getElementById('btnCountry').innerText = 'Negara';
+            document.getElementById('btnGenre').innerText = 'Genre';
+            document.getElementById('yearBtn').innerText = 'Tahun';
+            document.getElementById('btnCountry').innerText = 'Negara';
             document.querySelectorAll('.btn-ig').forEach(b => b.classList.remove('active'));
             document.getElementById('filterBar').style.display = 'none';
             switchTab('grid', document.getElementById('tabGrid'));
@@ -298,9 +303,12 @@
         }
 
         function initSmartSearch() { 
-            const inp = document.getElementById('searchInp'); const drop = document.getElementById('smartSearchDropdown'); let timeout = null; 
+            const inp = document.getElementById('searchInp'); 
+            const drop = document.getElementById('smartSearchDropdown'); 
+            let timeout = null; 
             inp.addEventListener('input', () => { 
-                clearTimeout(timeout); const q = inp.value.trim(); 
+                clearTimeout(timeout); 
+                const q = inp.value.trim(); 
                 if(q.length < 2) { drop.style.display = 'none'; return; } 
                 timeout = setTimeout(async () => { 
                     try { 
@@ -310,8 +318,14 @@
                         if(results.length) { 
                             drop.innerHTML = results.map(m => {
                                 const mType = m.media_type || 'movie';
-                                if(mType === 'person') return '';
-                                return `<div class="smart-item" onclick="openModal(${m.id}, '${mType}')"><img src="https://image.tmdb.org/t/p/w92${m.poster_path || ''}"><div class="smart-info"><span class="smart-name">${m.title || m.name}</span><span class="smart-meta">${mType === 'tv' ? 'Series' : 'Film'} • ${m.release_date || m.first_air_date || ''}</span></div></div>`;
+                                const mId = m.id;
+                                return `<div class="smart-item" onclick="openModal(${mId}, '${mType}')">
+                                    <img src="https://image.tmdb.org/t/p/w92${m.poster_path || m.profile_path || ''}">
+                                    <div class="smart-info">
+                                        <span class="smart-name">${m.title || m.name}</span>
+                                        <span class="smart-meta">${mType === 'tv' ? 'Series' : 'Film'} • ${m.release_date || m.first_air_date || ''}</span>
+                                    </div>
+                                </div>`;
                             }).join(''); 
                             drop.style.display = 'block'; 
                         } else { drop.style.display = 'none'; } 
@@ -325,9 +339,11 @@
             const hls = [{n: 'Disney', com: '2|6125|3166|34213', l: 'DSNY', t: 'movie'},{n: 'Pixar', com: '3', l: 'PIXR', t: 'movie'},{n: 'Dreamworks', com: '521|7|1778', l: 'DRMW', t: 'movie'},{n: 'Ghibli', com: '10342', l: 'GHBL', t: 'movie'},{n: 'Anime', g: 16, l: 'ANIM', t: 'movie', c: 'JP'},{n: 'Indonesia', c: 'ID', l: 'INDO', t: 'movie'},{n: 'Korea', c: 'KR', l: 'KOR', t: 'movie'},{n: 'India', c: 'IN', l: 'INDI', t: 'movie'},{n: 'Thailand', c: 'TH', l: 'THAI', t: 'movie'}]; 
             const cont = document.getElementById('highlightList'); 
             hls.forEach(h => { 
-                const div = document.createElement('div'); div.className = 'highlight-item'; 
+                const div = document.createElement('div'); 
+                div.className = 'highlight-item'; 
                 div.onclick = () => { 
-                    document.querySelectorAll('.highlight-item').forEach(i => i.classList.remove('active-hl')); div.classList.add('active-hl');
+                    document.querySelectorAll('.highlight-item').forEach(i => i.classList.remove('active-hl'));
+                    div.classList.add('active-hl');
                     currentLibMode = false; currentCastId = ''; searchQuery = ''; currentCountry = h.c || ''; currentGenre = h.g || ''; currentCompany = h.com || ''; currentSchedule = 'trending'; currentType = h.t; loadFeed(true); 
                 }; 
                 div.innerHTML = `<div class="highlight-circle"><span class="hl-logo">${h.l}</span></div><div class="highlight-text">${h.n}</div>`; 
@@ -336,11 +352,20 @@
         }
 
         function initFilters() { 
-            const yD = document.getElementById('yearDropdown'); let yearHTML = '<div class="filter-item sticky-reset" onclick="setYear(\'\')">Semua Tahun</div>'; for(let y=2026; y>=1900; y--) yearHTML += `<div class="filter-item" onclick="setYear(${y})">${y}</div>`; yD.innerHTML = yearHTML; 
+            const yD = document.getElementById('yearDropdown'); 
+            let yearHTML = '<div class="filter-item sticky-reset" onclick="setYear(\'\')">Semua Tahun</div>'; 
+            for(let y=2026; y>=1900; y--) yearHTML += `<div class="filter-item" onclick="setYear(${y})">${y}</div>`; 
+            yD.innerHTML = yearHTML; 
             const countries = [['ID','Indonesia'],['US','USA'],['KR','Korea Selatan'],['JP','Jepang'],['IN','India'],['TH','Thailand'],['CN','China'],['PH','Filipina'],['GB','Inggris'],['FR','Prancis'],['ES','Spanyol'],['IT','Italia'],['TR','Turki'],['DE','Jerman']]; 
-            const cD = document.getElementById('countryDropdown'); let countryHTML = '<div class="filter-item sticky-reset" onclick="setCountry(\'\',\'Negara\')">Semua Negara</div>'; countries.forEach(c => countryHTML += `<div class="filter-item" onclick="setCountry('${c[0]}','${c[1]}')">${c[1]}</div>`); cD.innerHTML = countryHTML; 
+            const cD = document.getElementById('countryDropdown'); 
+            let countryHTML = '<div class="filter-item sticky-reset" onclick="setCountry(\'\',\'Negara\')">Semua Negara</div>'; 
+            countries.forEach(c => countryHTML += `<div class="filter-item" onclick="setCountry('${c[0]}','${c[1]}')">${c[1]}</div>`); 
+            cD.innerHTML = countryHTML; 
             const genres = [[28,'Action'],[12,'Adventure'],[16,'Animasi'],[35,'Komedi'],[80,'Crime'],[99,'Dokumenter'],[18,'Drama'],[10751,'Family'],[14,'Fantasy'],[36,'History'],[27,'Horror'],[10402,'Music'],[9648,'Misteri'],[10749,'Romance'],[878,'Sci-Fi'],[53,'Thriller']]; 
-            const gD = document.getElementById('genreDropdown'); let genreHTML = '<div class="filter-item sticky-reset" onclick="setGenre(\'\',\'Genre\')">Semua Genre</div>'; genres.forEach(g => genreHTML += `<div class="filter-item" onclick="setGenre('${g[0]}','${g[1]}')">${g[1]}</div>`); gD.innerHTML = genreHTML; 
+            const gD = document.getElementById('genreDropdown'); 
+            let genreHTML = '<div class="filter-item sticky-reset" onclick="setGenre(\'\',\'Genre\')">Semua Genre</div>'; 
+            genres.forEach(g => genreHTML += `<div class="filter-item" onclick="setGenre('${g[0]}','${g[1]}')">${g[1]}</div>`); 
+            gD.innerHTML = genreHTML; 
         }
 
         function toggleFilter(e, id) { e.stopPropagation(); const d = document.getElementById(id); const overlay = document.getElementById('filterOverlay'); document.querySelectorAll('.filter-dropdown').forEach(el => el.style.display = 'none'); d.style.display = 'block'; d.scrollTop = 0; overlay.style.display = 'block'; document.body.style.overflow = 'hidden'; }
@@ -348,7 +373,8 @@
 
         async function loadFeed(isNew = true) {
             if(loading && isNew) { if(abortController) abortController.abort(); }
-            if(loading && !isNew) return; loading = true; abortController = new AbortController();
+            if(loading && !isNew) return;
+            loading = true; abortController = new AbortController();
             const isSearchActive = document.getElementById('searchOverlay').style.display === 'block';
             const grid = isSearchActive ? document.getElementById('searchGrid') : document.getElementById('feedGrid');
             if(isNew) { page = 1; grid.innerHTML = ''; }
@@ -362,6 +388,7 @@
                 if(currentType === 'short') { url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_runtime.lte=40&with_runtime.gte=1&page=${page}&sort_by=popularity.desc`; }
                 if(currentCountry) url += `&with_origin_country=${currentCountry}`;
                 if(currentGenre) url += `&with_genres=${currentGenre}`;
+                if(currentType === 'short') url += `&with_runtime.lte=40&with_runtime.gte=1`;
                 if(currentCompany) url += `&with_companies=${currentCompany}`;
                 if(currentYear) url += (endpoint === 'discover/tv' ? `&first_air_date_year=${currentYear}` : `&primary_release_year=${currentYear}`);
             }
@@ -371,21 +398,23 @@
 
         function renderGrid(items, grid) { 
             items.forEach(m => { 
-                if(!m.poster_path) return; const mId = m.id; const mType = m.media_type || (currentType === 'tv' ? 'tv' : 'movie'); 
-                const card = document.createElement('div'); card.className = 'post-card'; card.onclick = () => openModal(mId, mType); 
+                if(!m.poster_path) return; 
+                // Fix: Menggunakan let agar ter-scoped dengan benar untuk setiap iterasi
+                let mId = m.id; 
+                let mType = m.media_type || (currentType === 'tv' ? 'tv' : 'movie'); 
+                const card = document.createElement('div'); 
+                card.className = 'post-card'; 
+                card.onclick = function() { openModal(mId, mType); }; 
                 card.innerHTML = `<div class="badge-rating">★ ${(m.vote_average||0).toFixed(1)}</div><div class="badge-type">${currentType==='short'?'SHORT':(mType==='tv'?'SERIES':'FILM')}</div><img src="https://image.tmdb.org/t/p/w342${m.poster_path}">`; 
                 grid.appendChild(card); 
             }); 
         }
 
         function openSearch() { 
-            const overlay = document.getElementById('searchOverlay');
-            const input = document.getElementById('searchInp');
-            const grid = document.getElementById('searchGrid');
-            overlay.style.display = 'block'; 
-            input.value = ''; // RESET INPUT
-            grid.innerHTML = ''; // RESET HASIL
-            input.focus(); 
+            document.getElementById('searchOverlay').style.display = 'block'; 
+            document.getElementById('searchInp').value = ''; // Reset input text
+            document.getElementById('searchGrid').innerHTML = ''; // Reset hasil pencarian
+            document.getElementById('searchInp').focus(); 
             document.body.style.overflow='hidden'; 
         }
         function closeSearch() { document.getElementById('searchOverlay').style.display = 'none'; document.body.style.overflow='auto'; searchQuery=''; currentCastId=''; }
@@ -400,7 +429,8 @@
 
         async function openModal(id, type) {
             window.currentMediaId = id; window.currentMediaType = type;
-            document.getElementById('movieModal').style.display = 'block'; document.getElementById('movieModal').scrollTop = 0;
+            document.getElementById('movieModal').style.display = 'block'; 
+            document.getElementById('movieModal').scrollTop = 0;
             document.getElementById('smartSearchDropdown').style.display = 'none'; document.body.style.overflow = 'hidden'; currentIdx = 0; isTranslated = false;
             
             const [rId, rEn, rCast] = await Promise.all([
@@ -414,19 +444,15 @@
             const track = document.getElementById('carouselTrack'), dots = document.getElementById('carouselDots');
             track.innerHTML = ''; dots.innerHTML = ''; track.style.transform = 'translateX(0)';
             
-            const mainServerUrl = `https://vidrock.net/embed/${type}/${id}${type==='tv'?'/1/1':''}`;
-
             if(vids.length > 0) { 
+                // Fix: Mute dihapus (autoplay tetap ada tapi tergantung kebijakan browser untuk audio)
                 vids.forEach((v, i) => { 
-                    // Ditambahkan autoplay=1 untuk slide pertama
-                    const auto = (i === 0) ? "autoplay=1&mute=1" : "autoplay=0";
-                    track.innerHTML += `<div class="carousel-slide"><iframe id="yt-${i}" src="https://www.youtube.com/embed/${v.key}?enablejsapi=1&rel=0&${auto}" class="w-full h-full" allow="autoplay; fullscreen"></iframe></div>`; 
+                    track.innerHTML += `<div class="carousel-slide"><iframe id="yt-${i}" src="https://www.youtube.com/embed/${v.key}?enablejsapi=1&autoplay=${i===0?1:0}&rel=0" class="w-full h-full" allow="autoplay; fullscreen"></iframe></div>`; 
                     dots.innerHTML += `<div class="dot w-1.5 h-1.5 rounded-full ${i===currentIdx?'bg-blue-500':'bg-zinc-700'}"></div>`; 
                 }); 
                 document.getElementById('swipeOverlay').style.display = 'block'; 
             } else { 
-                // Jika trailer tidak ada, langsung Server 1 tanpa basa-basi
-                track.innerHTML = `<div class="carousel-slide"><iframe src="${mainServerUrl}" class="w-full h-full" allowfullscreen></iframe></div>`; 
+                track.innerHTML = `<div class="carousel-slide"><iframe src="https://vidrock.net/embed/${type}/${id}${type==='tv'?'/1/1':''}" class="w-full h-full" allowfullscreen></iframe></div>`; 
                 dots.innerHTML = `<div class="dot bg-blue-500 w-1.5 h-1.5 rounded-full"></div>`; 
                 document.getElementById('swipeOverlay').style.display = 'none'; 
             }
@@ -438,17 +464,26 @@
             globalFullDesc = originalIndoDesc || dEn.overview || "Sinopsis belum tersedia untuk konten ini.";
             globalEnDesc = dEn.overview;
             
-            if(globalEnDesc && globalEnDesc !== originalIndoDesc) { document.getElementById('mTranslateBtn').classList.remove('hidden'); document.getElementById('mTranslateBtn').innerText = (originalIndoDesc) ? "Lihat terjemahan" : "Terjemahkan ke ID"; } else { document.getElementById('mTranslateBtn').classList.add('hidden'); }
-            isExpanded = false; renderSynopsis();
+            if(globalEnDesc && globalEnDesc !== originalIndoDesc) { 
+                document.getElementById('mTranslateBtn').classList.remove('hidden'); 
+                document.getElementById('mTranslateBtn').innerText = (originalIndoDesc) ? "Lihat terjemahan" : "Terjemahkan ke ID"; 
+            } else { document.getElementById('mTranslateBtn').classList.add('hidden'); }
+            
+            isExpanded = false; 
+            renderSynopsis();
 
-            const relYear = (dId.release_date || dId.first_air_date || "").split('-')[0];
-            const genresArr = (dId.genres || []).map(g => `#${g.name.replace(/\s+/g, '')}`).slice(0, 3).join(' ');
-            const studiosArr = (dId.production_companies || []).map(c => `#${c.name.replace(/\s+/g, '')}`).slice(0, 2).join(' ');
-            document.getElementById('mHashtags').innerHTML = `${genresArr} ${studiosArr} #${relYear}`;
+            const relYear = (dId.release_date || dId.first_air_date || "2026").split('-')[0];
+            const contentKind = (type === 'tv') ? 'Series' : 'Film';
+            const genresArr = (dId.genres || []).map(g => `#${g.name.replace(/[^a-zA-Z0-9]/g, '')}`).slice(0, 3).join(' ');
+            const studiosArr = (dId.production_companies || []).map(c => `#${c.name.replace(/[^a-zA-Z0-9]/g, '')}`).slice(0, 2).join(' ');
+            const cleanTitle = (dId.title||dId.name||"").replace(/[^a-zA-Z0-9]/g, '');
+
+            document.getElementById('mHashtags').innerHTML = `#${cleanTitle} #${relYear} #${contentKind} <br> ${genresArr} ${studiosArr}`;
             
-            const rel = dId.release_date || dId.first_air_date || ""; document.getElementById('mDateDisplay').innerText = rel ? new Date(rel).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
+            const rel = dId.release_date || dId.first_air_date || ""; 
+            document.getElementById('mDateDisplay').innerText = rel ? new Date(rel).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
             
-            document.getElementById('serverList').innerHTML = `<button class="server-btn" onclick="playVid('${mainServerUrl}', this)">Server 1</button><button class="server-btn" onclick="playVid('https://vidsrc.me/embed/${type}?tmdb=${id}', this)">Server 2</button><button class="server-btn" onclick="playVid('https://embed.smashystream.com/playere.php?tmdb=${id}', this)">Server 3</button>`;
+            document.getElementById('serverList').innerHTML = `<button class="server-btn" onclick="playVid('https://vidrock.net/embed/${type}/${id}${type==='tv'?'/1/1':''}', this)">Server 1</button><button class="server-btn" onclick="playVid('https://vidsrc.me/embed/${type}?tmdb=${id}', this)">Server 2</button><button class="server-btn" onclick="playVid('https://embed.smashystream.com/playere.php?tmdb=${id}', this)">Server 3</button>`;
             
             if(type === 'tv') { document.getElementById('seriesControl').classList.remove('hidden'); document.getElementById('seasonSel').innerHTML = (dId.seasons||[]).filter(s=>s.season_number>0).map(s=>`<option value="${s.season_number}">Season ${s.season_number}</option>`).join(''); loadEpisodes(); } else { document.getElementById('seriesControl').classList.add('hidden'); }
             updateLibButtons(id);
@@ -457,16 +492,31 @@
         async function handleTranslate() {
             const btn = document.getElementById('mTranslateBtn');
             if(!isTranslated) {
-                const oldText = btn.innerText; btn.innerText = "Menerjemahkan...";
+                const oldText = btn.innerText;
+                btn.innerText = "Menerjemahkan...";
                 try {
                     const res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=id&dt=t&q=${encodeURIComponent(globalEnDesc)}`);
-                    const data = await res.json(); globalFullDesc = data[0].map(x => x[0]).join(''); isTranslated = true;
-                    btn.innerText = "Lihat versi asli"; renderSynopsis();
+                    const data = await res.json();
+                    globalFullDesc = data[0].map(x => x[0]).join('');
+                    isTranslated = true;
+                    btn.innerText = "Lihat versi asli";
+                    renderSynopsis();
                 } catch(e) { btn.innerText = "Gagal menerjemahkan"; setTimeout(()=>btn.innerText=oldText, 2000); }
-            } else { globalFullDesc = originalIndoDesc || globalEnDesc || "Sinopsis tidak tersedia."; isTranslated = false; btn.innerText = "Lihat terjemahan"; renderSynopsis(); }
+            } else {
+                globalFullDesc = originalIndoDesc || globalEnDesc || "Sinopsis tidak tersedia.";
+                isTranslated = false;
+                btn.innerText = "Lihat terjemahan";
+                renderSynopsis();
+            }
         }
         
-        function closeModal() { const track = document.getElementById('carouselTrack'); track.innerHTML = ''; document.getElementById('movieModal').style.display = 'none'; if(document.getElementById('searchOverlay').style.display !== 'block') document.body.style.overflow = 'auto'; }
+        function closeModal() { 
+            const track = document.getElementById('carouselTrack');
+            track.innerHTML = ''; 
+            document.getElementById('movieModal').style.display = 'none'; 
+            if(document.getElementById('searchOverlay').style.display !== 'block') document.body.style.overflow = 'auto'; 
+        }
+
         function renderSynopsis() { const descEl = document.getElementById('mDesc'), toggleBtn = document.getElementById('mToggleBtn'); if (globalFullDesc.length > 90) { toggleBtn.classList.remove('hidden'); descEl.innerText = isExpanded ? globalFullDesc : globalFullDesc.substring(0, 90) + "..."; toggleBtn.innerText = isExpanded ? "ringkas" : "selengkapnya"; } else { descEl.innerText = globalFullDesc; toggleBtn.classList.add('hidden'); } }
         function handleToggleDesc() { isExpanded = !isExpanded; renderSynopsis(); }
         function playVid(url, el) { const track = document.getElementById('carouselTrack'); const dots = document.getElementById('carouselDots'); track.innerHTML = `<div class="carousel-slide"><iframe src="${url}" class="w-full h-full" allowfullscreen></iframe></div>`; track.style.transform = 'translateX(0)'; currentIdx = 0; dots.innerHTML = `<div class="dot bg-blue-500 w-1.5 h-1.5 rounded-full"></div>`; document.getElementById('swipeOverlay').style.display = 'none'; highlightBtn(el); }
@@ -474,16 +524,20 @@
         async function loadEpisodes() { const s = document.getElementById('seasonSel').value; const res = await fetch(`https://api.themoviedb.org/3/tv/${window.currentMediaId}/season/${s}?api_key=${API_KEY}`); const d = await res.json(); document.getElementById('episodeGrid').innerHTML = (d.episodes||[]).map(e => `<div class="pill text-[10px]" onclick="playVid('https://vidrock.net/embed/tv/${window.currentMediaId}/${s}/${e.episode_number}', this)">${e.episode_number}</div>`).join(''); }
         
         function setupSwipe() { 
-            const overlay = document.getElementById('swipeOverlay'); overlay.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, {passive:true}); 
+            const overlay = document.getElementById('swipeOverlay'); 
+            overlay.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, {passive:true}); 
             overlay.addEventListener('touchend', e => { 
-                let diff = startX - e.changedTouches[0].clientX; const slides = document.querySelectorAll('.carousel-slide'); 
+                let diff = startX - e.changedTouches[0].clientX; 
+                const slides = document.querySelectorAll('.carousel-slide'); 
                 if(Math.abs(diff) > 50 && slides.length > 1) { 
-                    let oldIdx = currentIdx; if(diff > 0 && currentIdx < slides.length - 1) currentIdx++; else if(diff < 0 && currentIdx > 0) currentIdx--; 
+                    let oldIdx = currentIdx; 
+                    if(diff > 0 && currentIdx < slides.length - 1) currentIdx++; 
+                    else if(diff < 0 && currentIdx > 0) currentIdx--; 
                     document.getElementById('carouselTrack').style.transform = `translateX(-${currentIdx * 100}%)`; 
                     document.querySelectorAll('.dot').forEach((d, i) => { d.className = `dot w-1.5 h-1.5 rounded-full ${i===currentIdx?'bg-blue-500':'bg-zinc-700'}`; }); 
                     const oldVid = document.getElementById(`yt-${oldIdx}`), newVid = document.getElementById(`yt-${currentIdx}`);
-                    if(oldVid && oldVid.contentWindow) oldVid.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
-                    if(newVid && newVid.contentWindow) newVid.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+                    if(oldVid) oldVid.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+                    if(newVid) newVid.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
                 } 
             }); 
         }
