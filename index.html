@@ -388,7 +388,6 @@
                 if(currentType === 'short') { url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_runtime.lte=40&with_runtime.gte=1&page=${page}&sort_by=popularity.desc`; }
                 if(currentCountry) url += `&with_origin_country=${currentCountry}`;
                 if(currentGenre) url += `&with_genres=${currentGenre}`;
-                if(currentType === 'short') url += `&with_runtime.lte=40&with_runtime.gte=1`;
                 if(currentCompany) url += `&with_companies=${currentCompany}`;
                 if(currentYear) url += (endpoint === 'discover/tv' ? `&first_air_date_year=${currentYear}` : `&primary_release_year=${currentYear}`);
             }
@@ -399,12 +398,13 @@
         function renderGrid(items, grid) { 
             items.forEach(m => { 
                 if(!m.poster_path) return; 
-                // Fix: Menggunakan let agar ter-scoped dengan benar untuk setiap iterasi
-                let mId = m.id; 
-                let mType = m.media_type || (currentType === 'tv' ? 'tv' : 'movie'); 
+                const mType = m.media_type || (currentType === 'tv' ? 'tv' : 'movie'); 
                 const card = document.createElement('div'); 
                 card.className = 'post-card'; 
-                card.onclick = function() { openModal(mId, mType); }; 
+                // Fix: Gunakan dataset agar ID terkunci permanen di elemen saat dibuat
+                card.dataset.id = m.id;
+                card.dataset.type = mType;
+                card.onclick = function() { openModal(this.dataset.id, this.dataset.type); }; 
                 card.innerHTML = `<div class="badge-rating">★ ${(m.vote_average||0).toFixed(1)}</div><div class="badge-type">${currentType==='short'?'SHORT':(mType==='tv'?'SERIES':'FILM')}</div><img src="https://image.tmdb.org/t/p/w342${m.poster_path}">`; 
                 grid.appendChild(card); 
             }); 
@@ -412,8 +412,8 @@
 
         function openSearch() { 
             document.getElementById('searchOverlay').style.display = 'block'; 
-            document.getElementById('searchInp').value = ''; // Reset input text
-            document.getElementById('searchGrid').innerHTML = ''; // Reset hasil pencarian
+            document.getElementById('searchInp').value = ''; 
+            document.getElementById('searchGrid').innerHTML = ''; 
             document.getElementById('searchInp').focus(); 
             document.body.style.overflow='hidden'; 
         }
@@ -445,7 +445,7 @@
             track.innerHTML = ''; dots.innerHTML = ''; track.style.transform = 'translateX(0)';
             
             if(vids.length > 0) { 
-                // Fix: Mute dihapus (autoplay tetap ada tapi tergantung kebijakan browser untuk audio)
+                // Fix: Mode Mute dihapus agar suara langsung aktif
                 vids.forEach((v, i) => { 
                     track.innerHTML += `<div class="carousel-slide"><iframe id="yt-${i}" src="https://www.youtube.com/embed/${v.key}?enablejsapi=1&autoplay=${i===0?1:0}&rel=0" class="w-full h-full" allow="autoplay; fullscreen"></iframe></div>`; 
                     dots.innerHTML += `<div class="dot w-1.5 h-1.5 rounded-full ${i===currentIdx?'bg-blue-500':'bg-zinc-700'}"></div>`; 
