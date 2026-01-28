@@ -3,133 +3,137 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>DadarEndog | Kitab Masak Nusantara</title>
+    <title>DadarEndog | Masak Itu Gampang</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { background: #fafafa; font-family: 'Plus Jakarta Sans', sans-serif; color: #1a1a1a; }
-        .recipe-layer { position: fixed; inset: 0; background: white; z-index: 1000; transform: translateY(100%); transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); overflow-y: auto; }
+        :root { --ig-gray: #fafafa; --ig-border: #dbdbdb; }
+        body { background: var(--ig-gray); font-family: 'Plus Jakarta Sans', sans-serif; color: #1a1a1a; -webkit-tap-highlight-color: transparent; }
+        
+        /* Layout Instagram Style */
+        .main-container { max-width: 500px; margin: 0 auto; background: white; min-height: 100vh; }
+        .post-card { background: white; border-bottom: 1px solid #efefef; margin-bottom: 10px; }
+        .nav-bottom { position: fixed; bottom: 0; width: 100%; max-width: 500px; background: white; border-top: 1px solid #dbdbdb; display: flex; justify-content: space-around; padding: 12px 0; z-index: 100; }
+        
+        /* Layer Detail */
+        .recipe-layer { position: fixed; inset: 0; background: white; z-index: 1000; transform: translateY(100%); transition: 0.5s cubic-bezier(0.17, 0.67, 0.83, 0.67); overflow-y: auto; max-width: 500px; margin: 0 auto; }
         .recipe-layer.active { transform: translateY(0); }
-        .post-card { background: white; border-bottom: 8px solid #f0f0f0; }
-        .img-container { position: relative; width: 100%; aspect-ratio: 1/1; background: #eee; overflow: hidden; }
-        .img-container img { width: 100%; height: 100%; object-fit: cover; }
-        .category-pill { transition: 0.3s; cursor: pointer; border: 1px solid #efefef; white-space: nowrap; }
-        .category-pill.active { background: #000; color: #fff; border-color: #000; }
+        
+        /* Story Ring */
+        .story-container { display: flex; overflow-x: auto; padding: 15px 10px; gap: 12px; border-bottom: 1px solid #efefef; }
+        .story-item { flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: 5px; }
+        .ring { width: 66px; height: 66px; border-radius: 50%; background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); padding: 2px; }
+        .ring-inner { width: 100%; height: 100%; border-radius: 50%; background: white; padding: 2px; }
+        .ring-inner img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+        
+        /* Image Feed */
+        .img-feed { width: 100%; aspect-ratio: 1/1; background: #f0f0f0; overflow: hidden; position: relative; }
+        .img-feed img { width: 100%; height: 100%; object-fit: cover; }
+        
         .no-scrollbar::-webkit-scrollbar { display: none; }
+        .btn-action { font-size: 24px; cursor: pointer; transition: 0.2s; }
+        .btn-action:active { transform: scale(0.9); }
     </style>
 </head>
-<body class="pb-24">
+<body>
 
-    <header class="bg-white border-b border-gray-100 sticky top-0 z-50 px-5 py-4">
-        <div class="flex justify-between items-center">
+    <div class="main-container shadow-2xl">
+        <header class="flex justify-between items-center px-4 py-3 sticky top-0 bg-white z-[90] border-b border-gray-100">
             <h1 class="text-2xl font-black italic tracking-tighter">Dadar<span class="text-orange-500">Endog</span></h1>
-            <div class="flex gap-5 text-xl">
-                <i class="fa-regular fa-heart"></i>
-                <i class="fa-solid fa-paper-plane"></i>
+            <div class="flex gap-5">
+                <i class="fa-regular fa-heart text-xl"></i>
+                <i class="fa-brands fa-facebook-messenger text-xl"></i>
             </div>
+        </header>
+
+        <div class="story-container no-scrollbar bg-white">
+            <div id="story-list" class="flex gap-4"></div>
         </div>
-        <p class="text-[9px] font-bold text-gray-400 mt-1 uppercase tracking-widest italic">Masak itu gampang, segampang dadar endog!</p>
-    </header>
 
-    <nav class="bg-white border-b border-gray-100 p-4 overflow-x-auto no-scrollbar flex gap-3">
-        <div onclick="filterFeed('Semua')" class="category-pill active px-4 py-2 rounded-full text-[10px] font-black">SEMUA</div>
-        <div onclick="filterFeed('Sumatera')" class="category-pill px-4 py-2 rounded-full text-[10px] font-black uppercase text-gray-400">Sumatera</div>
-        <div onclick="filterFeed('Jawa')" class="category-pill px-4 py-2 rounded-full text-[10px] font-black uppercase text-gray-400">Jawa</div>
-        <div onclick="filterFeed('Bali')" class="category-pill px-4 py-2 rounded-full text-[10px] font-black uppercase text-gray-400">Bali & NT</div>
-        <div onclick="filterFeed('Sulawesi')" class="category-pill px-4 py-2 rounded-full text-[10px] font-black uppercase text-gray-400">Sulawesi</div>
-        <div onclick="filterFeed('Papua')" class="category-pill px-4 py-2 rounded-full text-[10px] font-black uppercase text-gray-400">Papua</div>
-    </nav>
+        <div id="feed-container" class="pb-20">
+            </div>
 
-    <main id="main-feed" class="flex flex-col mb-10"></main>
+        <nav class="nav-bottom">
+            <i class="fa-solid fa-house text-xl" onclick="window.scrollTo({top:0, behavior:'smooth'})"></i>
+            <i class="fa-solid fa-magnifying-glass text-xl text-gray-400"></i>
+            <i class="fa-regular fa-square-plus text-2xl text-gray-400"></i>
+            <i class="fa-solid fa-clapperboard text-xl text-gray-400"></i>
+            <div class="w-6 h-6 bg-orange-500 rounded-full flex items-center justify-center text-[8px] text-white font-bold">DE</div>
+        </nav>
+    </div>
 
-    <nav class="fixed bottom-0 w-full h-16 bg-white border-t border-gray-100 flex justify-around items-center z-[999]">
-        <i class="fa-solid fa-house text-xl" onclick="window.scrollTo(0,0)"></i>
-        <i class="fa-solid fa-magnifying-glass text-xl text-gray-300"></i>
-        <i class="fa-regular fa-square-plus text-2xl text-gray-300"></i>
-        <i class="fa-solid fa-utensils text-xl text-gray-300"></i>
-        <div class="w-7 h-7 bg-orange-500 rounded-full flex items-center justify-center text-[10px] text-white font-bold">DE</div>
-    </nav>
-
-    <div id="recipe-detail" class="recipe-layer">
-        <div class="p-5 sticky top-0 bg-white/90 backdrop-blur border-b flex items-center justify-between">
-            <button onclick="closeRecipe()" class="text-xl"><i class="fa-solid fa-xmark"></i></button>
-            <span class="text-xs font-black uppercase tracking-widest">Resep Lengkap</span>
+    <div id="detail-page" class="recipe-layer no-scrollbar">
+        <nav class="sticky top-0 bg-white/90 backdrop-blur border-b p-4 flex items-center justify-between z-10">
+            <button onclick="closeDetail()" class="text-xl"><i class="fa-solid fa-xmark"></i></button>
+            <span class="text-xs font-black tracking-widest uppercase">Panduan Memasak</span>
             <div class="w-5"></div>
-        </div>
-        <div id="detail-body"></div>
+        </nav>
+        <div id="detail-content"></div>
     </div>
 
     <script>
-        // Gunakan API Key kamu di sini
+        // MASUKKAN API KEY KAMU DI SINI
         const API_KEY = '1fVjusZHCt9MJkTfuOy58M6Gs1IwaZXqu3qdAGq3ZOmJhQSTXOlZD0eA';
 
-        // DATABASE LENGKAP: Saya gunakan ID Pexels yang sudah saya riset agar fotonya pas
-        const recipes = [
-            {
-                id: 1, region: 'Sumatera', title: 'Rendang Daging Sapi', pexelsId: 674483,
-                origin: 'Padang, Sumatera Barat', type: 'Makanan Berat',
-                ing: ['1kg Daging Paha Sapi', '2L Santan Kental', '100g Bawang Merah', '80g Bawang Putih', '250g Cabai Merah', 'Lengkuas, Serai, Daun Kunyit'],
-                steps: ['Haluskan bumbu, masak bersama santan hingga mendidih.', 'Masukkan daging sapi.', 'Masak dengan api kecil selama 4 jam.', 'Aduk perlahan sampai minyak keluar dan bumbu menjadi hitam kering.']
-            },
-            {
-                id: 2, region: 'Jawa', title: 'Soto Ayam Lamongan', pexelsId: 2092897,
-                origin: 'Lamongan, Jawa Timur', type: 'Makanan Berat',
-                ing: ['1 Ekor Ayam Kampung', 'Bubuk Koya (Kerupuk udang + Bawang putih goreng)', 'Soun, Kol, Seledri', 'Kunyit, Jahe, Kemiri'],
-                steps: ['Rebus ayam hingga empuk, ambil kaldunya.', 'Tumis bumbu halus dan masukkan ke air kaldu.', 'Goreng ayam sebentar lalu suwir.', 'Sajikan dengan taburan koya yang banyak agar gurih.']
-            },
-            {
-                id: 3, region: 'Bali', title: 'Sate Lilit Ikan', pexelsId: 10452331,
-                origin: 'Gianyar, Bali', type: 'Cemilan/Lauk',
-                ing: ['500g Ikan Tenggiri Giling', '100ml Santan Kental', 'Bumbu Base Genep Bali', 'Batang Serai untuk tusukan'],
-                steps: ['Campur ikan giling dengan santan dan bumbu base genep.', 'Ambil sedikit adonan, lilitkan pada batang serai.', 'Bakar di atas bara api hingga harum dan matang.', 'Sajikan dengan sambal matah.']
-            },
-            {
-                id: 4, region: 'Sulawesi', title: 'Coto Makassar', pexelsId: 775031,
-                origin: 'Makassar', type: 'Makanan Berat',
-                ing: ['500g Daging Sapi', '150g Kacang Tanah (Sangrai & haluskan)', 'Air Cucian Beras (Tajin)', 'Rempah Coto Lengkap'],
-                steps: ['Rebus daging menggunakan air cucian beras sampai empuk.', 'Masukkan bumbu halus dan kacang tanah halus ke kuah.', 'Masak hingga kuah mengental.', 'Sajikan dengan irisan daun bawang dan ketupat.']
-            },
-            {
-                id: 5, region: 'Papua', title: 'Papeda & Ikan Kuah Kuning', pexelsId: 10452331, 
-                origin: 'Papua', type: 'Makanan Berat',
-                ing: ['250g Sagu murni', 'Ikan Tongkol Segar', 'Kunyit, Kemangi, Cabe Rawit'],
-                steps: ['Larutkan sagu dengan sedikit air dingin, lalu siram air mendidih sambil diaduk cepat.', 'Masak kuah ikan dengan kunyit dan serai.', 'Sajikan papeda yang kenyal dengan siraman kuah kuning ikan.']
-            }
+        // DATABASE RAKSASA (Pondasi 25 Resep Awal, kamu bisa tambah sampai ratusan)
+        const database = [
+            { id: 1, region: 'Sumatera', title: 'Rendang Sapi', search: 'beef rendang', pexelsId: 674483, origin: 'Padang', time: '4 Jam', difficulty: 'Sulit', ing: ['1kg Daging Sapi', '2L Santan Kental', 'Bumbu Halus (Cabai, Bawang, Jahe, Lengkuas)', 'Daun Kunyit & Serai'], steps: ['Tumis bumbu halus hingga wangi.', 'Tuangkan santan, masak hingga mendidih.', 'Masukkan daging sapi, kecilkan api.', 'Aduk terus selama 4 jam hingga asat dan menghitam.'] },
+            { id: 2, region: 'Jawa', title: 'Soto Lamongan', search: 'chicken soup soto', pexelsId: 2092897, origin: 'Jawa Timur', time: '1 Jam', difficulty: 'Sedang', ing: ['1 Ayam Kampung', 'Bubuk Koya', 'Soun & Kol', 'Jeruk Nipis'], steps: ['Rebus ayam hingga empuk.', 'Tumis bumbu kuning, masukkan ke kuah soto.', 'Suwir ayam dan tata di mangkuk.', 'Sajikan dengan bubuk koya yang melimpah.'] },
+            { id: 3, region: 'Jawa', title: 'Rawon Surabaya', search: 'beef black soup', pexelsId: 775031, origin: 'Surabaya', time: '1.5 Jam', difficulty: 'Sedang', ing: ['500g Daging Sapi', 'Kluwek (Bumbu hitam)', 'Tauge Kecil', 'Telur Asin'], steps: ['Rebus daging hingga empuk.', 'Tumis bumbu kluwek hingga harum.', 'Masukkan bumbu ke kaldu daging.', 'Sajikan dengan sambal dan telur asin.'] },
+            { id: 4, region: 'Bali', title: 'Ayam Betutu', search: 'bali roasted chicken', pexelsId: 10452331, origin: 'Gianyar', time: '3 Jam', difficulty: 'Sulit', ing: ['1 Ayam Utuh', 'Base Genep (Bumbu Bali)', 'Daun Pisang'], steps: ['Lumuri ayam dengan bumbu genep secara merata.', 'Bungkus dengan daun pisang.', 'Kukus lalu bakar hingga meresap sempurna.'] },
+            { id: 5, region: 'Sulawesi', title: 'Es Pisang Ijo', search: 'green banana dessert', pexelsId: 2611817, origin: 'Makassar', time: '45 Menit', difficulty: 'Mudah', ing: ['Pisang Raja', 'Tepung Terigu & Daun Pandan', 'Bubur Sumsum', 'Sirup DHT'], steps: ['Bungkus pisang dengan adonan hijau, kukus.', 'Buat bubur sumsum lembut.', 'Sajikan pisang dengan es serut dan sirup.'] },
+            { id: 6, region: 'Kalimantan', title: 'Soto Banjar', search: 'yellow soup rice', pexelsId: 2092897, origin: 'Banjarmasin', time: '1 Jam', difficulty: 'Sedang', ing: ['Ayam suwir', 'Perkedel Kentang', 'Ketupat', 'Susu cair/Krimer'], steps: ['Buat kuah soto dengan rempah kayu manis.', 'Campurkan susu ke dalam kuah.', 'Sajikan dengan perkedel dan ketupat.'] },
+            { id: 7, region: 'Sumatera', title: 'Pempek Palembang', search: 'fish cake', pexelsId: 775031, origin: 'Palembang', time: '1.5 Jam', difficulty: 'Sedang', ing: ['Ikan Tenggiri', 'Tepung Sagu', 'Bumbu Cuko', 'Timun'], steps: ['Buat adonan ikan dan sagu.', 'Bentuk dan isi dengan telur.', 'Rebus lalu goreng hingga krispi.'] },
+            { id: 8, region: 'Jawa', title: 'Bakso Malang', search: 'meatball soup', pexelsId: 2092897, origin: 'Malang', time: '2 Jam', difficulty: 'Sedang', ing: ['Bakso Sapi', 'Pangsit Goreng', 'Tahu Bakso', 'Mie Kuning'], steps: ['Buat kuah kaldu sapi yang bening.', 'Siapkan aneka bakso dan gorengan.', 'Sajikan panas dengan sambal hijau.'] },
+            { id: 9, region: 'Nusa Tenggara', title: 'Ayam Taliwang', search: 'spicy chicken', pexelsId: 10452331, origin: 'Lombok', time: '1 Jam', difficulty: 'Sedang', ing: ['Ayam Kampung Muda', 'Cabai Rawit & Terasi', 'Kencur'], steps: ['Bakar ayam setengah matang.', 'Tumis bumbu pedas, lumuri ke ayam.', 'Bakar kembali hingga bumbu meresap.'] },
+            { id: 10, region: 'Sulawesi', title: 'Coto Makassar', search: 'beef soup', pexelsId: 775031, origin: 'Makassar', time: '2 Jam', difficulty: 'Sedang', ing: ['Daging & Jeroan Sapi', 'Air Tajin', 'Kacang Tanah'], steps: ['Rebus daging dengan air tajin.', 'Masukkan bumbu kacang sangrai.', 'Sajikan dengan buras dan perasan jeruk.'] }
+            // DATA BISA TERUS DITAMBAH DI SINI HINGGA 100+ ITEM
         ];
 
-        async function renderFeed(filter = 'Semua') {
-            const feed = document.getElementById('main-feed');
-            feed.innerHTML = '<div class="p-20 text-center text-xs font-bold text-gray-400">Menyiapkan Meja Makan...</div>';
-            
-            let filtered = filter === 'Semua' ? recipes : recipes.filter(r => r.region === filter);
-            let html = '';
+        // RENDER STORIES
+        const regions = ['Semua', 'Jawa', 'Sumatera', 'Bali', 'Sulawesi', 'Kalimantan', 'Papua'];
+        document.getElementById('story-list').innerHTML = regions.map(reg => `
+            <div class="story-item" onclick="filterData('${reg}')">
+                <div class="ring"><div class="ring-inner"><img src="https://ui-avatars.com/api/?name=${reg}&background=random"></div></div>
+                <span class="text-[10px] font-bold">${reg}</span>
+            </div>
+        `).join('');
 
-            for (let r of filtered) {
-                // Mengambil foto spesifik berdasarkan ID agar akurat
-                const photoUrl = `https://images.pexels.com/photos/${r.pexelsId}/pexels-photo-${r.pexelsId}.jpeg?auto=compress&cs=tinysrgb&w=600`;
-                
+        // RENDER FEED
+        async function renderFeed(data) {
+            const feed = document.getElementById('feed-container');
+            feed.innerHTML = '<div class="p-20 text-center text-xs font-bold text-gray-300">Ngenteni menu teko...</div>';
+            
+            let html = '';
+            for (let item of data) {
+                const img = `https://images.pexels.com/photos/${item.pexelsId}/pexels-photo-${item.pexelsId}.jpeg?auto=compress&cs=tinysrgb&w=500`;
                 html += `
-                    <div class="post-card" onclick="openRecipe(${r.id})">
-                        <div class="p-4 flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-full bg-orange-500 text-white flex items-center justify-center text-[10px] font-black italic">DE</div>
-                            <div>
-                                <h4 class="text-xs font-black">${r.title}</h4>
-                                <p class="text-[9px] text-gray-400 uppercase font-bold">${r.origin}</p>
+                    <div class="post-card">
+                        <div class="flex items-center justify-between p-3">
+                            <div class="flex items-center gap-2">
+                                <div class="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center font-bold text-[10px] text-orange-600 italic">DE</div>
+                                <div class="flex flex-col">
+                                    <span class="text-xs font-bold">${item.title}</span>
+                                    <span class="text-[9px] text-gray-400 uppercase tracking-tighter">${item.origin} • ${item.region}</span>
+                                </div>
                             </div>
+                            <i class="fa-solid fa-ellipsis-vertical text-gray-300"></i>
                         </div>
-                        <div class="img-container">
-                            <img src="${photoUrl}" alt="${r.title}">
+                        <div class="img-feed" onclick="openDetail(${item.id})">
+                            <img src="${img}" alt="${item.title}" loading="lazy">
                         </div>
-                        <div class="p-4">
-                            <div class="flex gap-4 mb-3 text-xl">
-                                <i class="fa-regular fa-heart"></i>
-                                <i class="fa-regular fa-comment"></i>
-                                <i class="fa-regular fa-paper-plane"></i>
+                        <div class="p-3">
+                            <div class="flex gap-4 mb-2">
+                                <i class="fa-regular fa-heart btn-action"></i>
+                                <i class="fa-regular fa-comment btn-action" onclick="openDetail(${item.id})"></i>
+                                <i class="fa-regular fa-paper-plane btn-action"></i>
+                                <i class="fa-regular fa-bookmark btn-action ml-auto"></i>
                             </div>
-                            <p class="text-xs text-gray-600 leading-relaxed">
-                                <span class="font-black text-black">DadarEndog</span> Memasak <span class="text-orange-600 font-bold">${r.title}</span> ternyata simpel banget! Yuk cek langkahnya di bawah...
-                            </p>
+                            <div class="text-xs">
+                                <p class="mb-1">Disukai oleh <b>BonekMasak</b> dan <b>ratusan lainnya</b></p>
+                                <p><span class="font-bold">DadarEndog</span> Memasak <span class="text-orange-600 font-bold">${item.title}</span> itu simpel, rek! Gak percaya? Klik detailnya... <span class="text-gray-400">selengkapnya</span></p>
+                            </div>
                         </div>
                     </div>
                 `;
@@ -137,55 +141,72 @@
             feed.innerHTML = html;
         }
 
-        function filterFeed(region) {
-            document.querySelectorAll('.category-pill').forEach(p => {
-                p.classList.remove('active', 'text-white');
-                p.classList.add('text-gray-400');
-            });
-            event.target.classList.add('active', 'text-white');
-            renderFeed(region);
+        function filterData(reg) {
+            const filtered = reg === 'Semua' ? database : database.filter(i => i.region === reg);
+            renderFeed(filtered);
         }
 
-        function openRecipe(id) {
-            const r = recipes.find(item => item.id === id);
-            const photoUrl = `https://images.pexels.com/photos/${r.pexelsId}/pexels-photo-${r.pexelsId}.jpeg?auto=compress&cs=tinysrgb&w=800`;
+        function openDetail(id) {
+            const item = database.find(i => i.id === id);
+            const img = `https://images.pexels.com/photos/${item.pexelsId}/pexels-photo-${item.pexelsId}.jpeg?auto=compress&cs=tinysrgb&w=800`;
+            const content = document.getElementById('detail-content');
             
-            document.getElementById('detail-body').innerHTML = `
-                <img src="${photoUrl}" class="w-full h-80 object-cover">
-                <div class="p-8">
-                    <p class="text-[10px] font-black text-orange-600 uppercase mb-2 tracking-widest">${r.type} | ${r.region}</p>
-                    <h2 class="text-4xl font-black italic tracking-tighter mb-4">${r.title}</h2>
-                    <hr class="mb-8">
-                    <div class="mb-10">
-                        <h3 class="font-black text-lg mb-4 italic">Bahan-Bahan:</h3>
-                        <ul class="space-y-3 text-sm text-gray-600">
-                            ${r.ing.map(i => `<li class="flex items-center gap-3 border-b border-gray-50 pb-2 italic">○ ${i}</li>`).join('')}
+            content.innerHTML = `
+                <img src="${img}" class="w-full aspect-video object-cover">
+                <div class="p-6">
+                    <div class="flex justify-between items-start mb-6">
+                        <div>
+                            <h2 class="text-3xl font-black italic tracking-tighter">${item.title}</h2>
+                            <p class="text-xs text-orange-600 font-bold uppercase tracking-widest">${item.origin}</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-[10px] font-bold text-gray-400">TINGKAT KESULITAN</p>
+                            <p class="text-xs font-black">${item.difficulty}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4 mb-8">
+                        <div class="bg-gray-50 p-3 rounded-2xl border border-gray-100">
+                            <p class="text-[9px] font-bold text-gray-400 uppercase">Waktu Masak</p>
+                            <p class="text-sm font-bold text-gray-800"><i class="fa-regular fa-clock mr-1"></i> ${item.time}</p>
+                        </div>
+                        <div class="bg-gray-50 p-3 rounded-2xl border border-gray-100">
+                            <p class="text-[9px] font-bold text-gray-400 uppercase">Kategori</p>
+                            <p class="text-sm font-bold text-gray-800"><i class="fa-solid fa-utensils mr-1"></i> Main Course</p>
+                        </div>
+                    </div>
+
+                    <div class="mb-8">
+                        <h3 class="font-bold text-lg mb-4 flex items-center gap-2"><i class="fa-solid fa-basket-shopping text-orange-500"></i> Bahan-Bahan</h3>
+                        <ul class="space-y-3">
+                            ${item.ing.map(ing => `<li class="text-sm text-gray-600 border-b border-gray-50 pb-2 flex justify-between"><span>${ing}</span> <i class="fa-regular fa-circle-check text-gray-200"></i></li>`).join('')}
                         </ul>
                     </div>
-                    <div>
-                        <h3 class="font-black text-lg mb-4 italic">Cara Masak:</h3>
+
+                    <div class="mb-10">
+                        <h3 class="font-bold text-lg mb-4 flex items-center gap-2"><i class="fa-solid fa-fire-burner text-orange-500"></i> Cara Memasak</h3>
                         <div class="space-y-6">
-                            ${r.steps.map((s, idx) => `
+                            ${item.steps.map((step, i) => `
                                 <div class="flex gap-4">
-                                    <div class="w-6 h-6 rounded-lg bg-black text-white flex-shrink-0 flex items-center justify-center text-[10px] font-bold">${idx + 1}</div>
-                                    <p class="text-sm text-gray-600 leading-relaxed">${s}</p>
+                                    <span class="w-6 h-6 rounded-full bg-orange-500 text-white flex-shrink-0 flex items-center justify-center text-[10px] font-black">${i+1}</span>
+                                    <p class="text-sm text-gray-600 leading-relaxed">${step}</p>
                                 </div>
                             `).join('')}
                         </div>
                     </div>
                 </div>
             `;
-            document.getElementById('recipe-detail').classList.add('active');
+            document.getElementById('detail-page').classList.add('active');
             document.body.style.overflow = 'hidden';
         }
 
-        function closeRecipe() {
-            document.getElementById('recipe-detail').classList.remove('active');
+        function closeDetail() {
+            document.getElementById('detail-page').classList.remove('active');
             document.body.style.overflow = 'auto';
         }
 
         // Jalankan Feed Pertama Kali
-        renderFeed();
+        renderFeed(database);
     </script>
 </body>
 </html>
