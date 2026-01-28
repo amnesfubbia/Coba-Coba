@@ -2,174 +2,171 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resep Nusantara | Lengkap</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Resep Nusantara | IG Style</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { background: #f8f9fa; font-family: 'Plus Jakarta Sans', sans-serif; color: #333; }
-        .recipe-page { position: fixed; inset: 0; background: white; z-index: 100; transform: translateX(100%); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); overflow-y: auto; }
-        .recipe-page.active { transform: translateX(0); }
-        .category-pill { cursor: pointer; transition: 0.3s; border: 1px solid #e2e8f0; }
-        .category-pill:hover, .category-pill.active { background: #059669; color: white; border-color: #059669; }
-        .recipe-card { cursor: pointer; transition: 0.3s; background: white; border-radius: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
-        .recipe-card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
-        .tag { font-size: 10px; font-weight: 800; padding: 4px 8px; border-radius: 6px; text-transform: uppercase; }
+        body { background: #fafafa; font-family: 'Plus Jakarta Sans', sans-serif; color: #1a1a1a; overflow-x: hidden; }
+        .bottom-nav { background: rgba(255,255,255,0.9); backdrop-filter: blur(10px); border-top: 1px solid #efefef; }
+        .story-ring { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); padding: 2px; border-radius: 50%; }
+        .recipe-layer { position: fixed; inset: 0; background: white; z-index: 1000; transform: translateX(100%); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); overflow-y: auto; }
+        .recipe-layer.active { transform: translateX(0); }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .active-tab { color: #000 !important; font-weight: 800; }
+        .btn-action { transition: 0.2s; }
+        .btn-action:active { transform: scale(0.9); opacity: 0.7; }
     </style>
 </head>
-<body class="pb-10">
+<body class="pb-24">
 
-    <header class="p-6 bg-white border-b sticky top-0 z-50">
-        <h1 class="text-2xl font-extrabold text-emerald-800">Dapur <span class="text-orange-500">Nusantara</span></h1>
-        <p class="text-xs text-gray-500 font-medium">Resep Lengkap Sabang sampai Merauke</p>
+    <header class="flex justify-between items-center px-5 py-4 bg-white border-b border-gray-100 sticky top-0 z-50">
+        <h1 class="text-2xl font-extrabold tracking-tighter italic">Dapur<span class="text-emerald-600">Gram</span></h1>
+        <div class="flex gap-5 text-xl">
+            <i class="fa-regular fa-heart"></i>
+            <i class="fa-brands fa-facebook-messenger"></i>
+        </div>
     </header>
 
-    <div class="flex gap-2 p-6 overflow-x-auto no-scrollbar bg-white shadow-sm">
-        <div onclick="filterCategory('semua')" class="category-pill active px-5 py-2 rounded-full text-xs font-bold whitespace-nowrap">Semua</div>
-        <div onclick="filterCategory('makanan')" class="category-pill px-5 py-2 rounded-full text-xs font-bold whitespace-nowrap">Makanan Berat</div>
-        <div onclick="filterCategory('cemilan')" class="category-pill px-5 py-2 rounded-full text-xs font-bold whitespace-nowrap">Cemilan</div>
-        <div onclick="filterCategory('minuman')" class="category-pill px-5 py-2 rounded-full text-xs font-bold whitespace-nowrap">Minuman</div>
-    </div>
+    <section class="py-4 border-b border-gray-100 bg-white overflow-x-auto no-scrollbar flex px-4 gap-4">
+        <div onclick="filterResep('semua')" class="flex flex-col items-center gap-1 min-w-[70px]">
+            <div class="story-ring"><div class="bg-white p-0.5 rounded-full"><div class="w-14 h-14 bg-gray-200 rounded-full flex items-center justify-center font-bold text-[10px]">ALL</div></div></div>
+            <span class="text-[10px] font-semibold">Semua</span>
+        </div>
+        <div onclick="filterResep('sumatera')" class="flex flex-col items-center gap-1 min-w-[70px]">
+            <div class="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center border-2 border-white ring-2 ring-emerald-500">
+                <i class="fa-solid fa-map-pin text-emerald-600"></i>
+            </div>
+            <span class="text-[10px] font-semibold">Sumatera</span>
+        </div>
+        <div onclick="filterResep('jawa')" class="flex flex-col items-center gap-1 min-w-[70px]">
+            <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center border-2 border-white ring-2 ring-blue-500">
+                <i class="fa-solid fa-map-pin text-blue-600"></i>
+            </div>
+            <span class="text-[10px] font-semibold">Jawa</span>
+        </div>
+        <div onclick="filterResep('timur')" class="flex flex-col items-center gap-1 min-w-[70px]">
+            <div class="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center border-2 border-white ring-2 ring-orange-500">
+                <i class="fa-solid fa-map-pin text-orange-600"></i>
+            </div>
+            <span class="text-[10px] font-semibold">Timur</span>
+        </div>
+    </section>
 
-    <main class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6" id="recipe-grid">
+    <main id="main-feed" class="p-4 grid grid-cols-1 gap-8">
         </main>
 
-    <div id="recipe-detail" class="recipe-page">
-        <div class="sticky top-0 bg-white/90 backdrop-blur p-6 flex items-center justify-between border-b">
-            <button onclick="closeDetail()" class="text-gray-800 font-bold text-sm"><i class="fa-solid fa-arrow-left mr-2"></i> Kembali</button>
-            <span id="detail-category" class="tag bg-emerald-100 text-emerald-700"></span>
-        </div>
-        <div class="p-8 max-w-2xl mx-auto">
-            <h2 id="detail-title" class="text-3xl font-black text-emerald-900 mb-2"></h2>
-            <p id="detail-origin" class="text-sm text-orange-600 font-bold mb-6 italic"></p>
-            
-            <div class="mb-8">
-                <h3 class="font-bold text-lg mb-4 border-b pb-2">Bahan-bahan:</h3>
-                <ul id="detail-ingredients" class="space-y-2 text-gray-600 text-sm list-disc pl-5 leading-relaxed"></ul>
-            </div>
+    <nav class="bottom-nav fixed bottom-0 w-full h-16 flex justify-around items-center px-4 z-[999]">
+        <i class="fa-solid fa-house text-xl active-tab" onclick="location.reload()"></i>
+        <i class="fa-solid fa-magnifying-glass text-xl text-gray-400"></i>
+        <i class="fa-regular fa-square-plus text-2xl text-gray-400"></i>
+        <i class="fa-solid fa-utensils text-xl text-gray-400"></i>
+        <div class="w-7 h-7 bg-emerald-600 rounded-full flex items-center justify-center text-[10px] text-white font-bold">ME</div>
+    </nav>
 
-            <div>
-                <h3 class="font-bold text-lg mb-4 border-b pb-2">Cara Memasak:</h3>
-                <ol id="detail-steps" class="space-y-4 text-gray-600 text-sm list-decimal pl-5 leading-relaxed"></ol>
+    <div id="recipe-detail" class="recipe-layer">
+        <header class="sticky top-0 bg-white/90 backdrop-blur border-b p-5 flex items-center gap-5">
+            <button onclick="closeRecipe()" class="text-xl"><i class="fa-solid fa-chevron-left"></i></button>
+            <h2 class="font-bold uppercase tracking-widest text-sm" id="det-title-nav">Resep Detail</h2>
+        </header>
+        <div class="p-6">
+            <div class="mb-6">
+                <span class="bg-gray-100 px-3 py-1 rounded-full text-[10px] font-bold uppercase" id="det-cat"></span>
+                <h2 class="text-3xl font-extrabold mt-3 tracking-tighter" id="det-title"></h2>
+                <p class="text-emerald-600 font-bold text-xs" id="det-origin"></p>
+            </div>
+            <hr class="mb-8">
+            <div class="space-y-8">
+                <div>
+                    <h3 class="font-bold text-lg mb-4 italic"><i class="fa-solid fa-list-check mr-2"></i>Bahan Utama</h3>
+                    <ul id="det-ing" class="space-y-3 text-sm text-gray-600 list-none"></ul>
+                </div>
+                <div>
+                    <h3 class="font-bold text-lg mb-4 italic"><i class="fa-solid fa-fire mr-2"></i>Instruksi Masak</h3>
+                    <div id="det-steps" class="space-y-6 text-sm text-gray-700"></div>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        const recipes = [
-            {
-                id: 1,
-                category: 'makanan',
-                title: 'Rendang Daging',
-                origin: 'Sumatera Barat (Padang)',
-                ingredients: ['500g Daging Sapi', '1 Liter Santan Kental', '2 Batang Serai', '4 Lembar Daun Jeruk', 'Bumbu Halus: Bawang Merah, Putih, Cabai, Lengkuas, Jahe'],
-                steps: ['Tumis bumbu halus hingga harum.', 'Masukkan daging, aduk hingga berubah warna.', 'Tuang santan, kecilkan api.', 'Masak sambil diaduk perlahan selama 4-5 jam hingga santan mengering dan menjadi rendang hitam.'],
-                desc: 'Masakan terlezat dunia versi CNN.'
-            },
-            {
-                id: 2,
-                category: 'makanan',
-                title: 'Papeda Ikan Kuah Kuning',
-                origin: 'Papua / Maluku',
-                ingredients: ['100g Sagu Peras', '500g Ikan Tongkol/Mubara', 'Bumbu: Kunyit, Serai, Daun Kemangi, Jeruk Nipis'],
-                steps: ['Masak air hingga mendidih, siram ke sagu hingga bening dan kental (Papeda).', 'Rebus ikan dengan bumbu kuning, kemangi, dan jeruk nipis.', 'Sajikan papeda dengan menyiramkan kuah kuning ikan.'],
-                desc: 'Makanan pokok khas Indonesia Timur.'
-            },
-            {
-                id: 3,
-                category: 'cemilan',
-                title: 'Pisang Goreng Pasir',
-                origin: 'Kalimantan / Umum',
-                ingredients: ['Pisang Kepok', 'Tepung Terigu & Tepung Beras', 'Tepung Panir/Roti', 'Gula & Garam'],
-                steps: ['Celupkan pisang ke adonan tepung basah.', 'Gulingkan ke tepung panir hingga rata.', 'Goreng dalam minyak panas hingga coklat keemasan.'],
-                desc: 'Cemilan paling populer untuk teman kopi.'
-            },
-            {
-                id: 4,
-                category: 'minuman',
-                title: 'Es Pleret',
-                origin: 'Jawa Tengah (Blitar)',
-                ingredients: ['Tepung Beras', 'Santan', 'Gula Merah Cair', 'Es Batu'],
-                steps: ['Buat bulatan pleret dari tepung beras yang dikukus.', 'Siapkan gelas, beri gula merah.', 'Masukkan pleret, tuang santan dan es batu.'],
-                desc: 'Minuman segar tradisional yang unik.'
-            },
-            {
-                id: 5,
-                category: 'cemilan',
-                title: 'Cireng Salju',
-                origin: 'Jawa Barat (Sunda)',
-                ingredients: ['Tepung Tapioka (Aci)', 'Bawang Putih Halus', 'Daun Bawang', 'Air Panas'],
-                steps: ['Campur sebagian tapioka dengan air panas hingga jadi biang.', 'Campur biang dengan sisa tapioka kering.', 'Bentuk pipih dan goreng hingga garing di luar tapi kenyal di dalam.'],
-                desc: 'Jajanan kenyal yang bikin ketagihan.'
-            },
-            {
-                id: 6,
-                category: 'minuman',
-                title: 'Susu Kuda Liar',
-                origin: 'Nusa Tenggara Barat (Sumbawa)',
-                ingredients: ['Susu Kuda Murni', 'Madu Hutan Sumbawa'],
-                steps: ['Saring susu kuda mentah.', 'Campurkan dengan madu sesuai selera.', 'Minum dalam keadaan segar untuk stamina.'],
-                desc: 'Minuman kesehatan legendaris dari NTB.'
-            }
+        const database = [
+            // MAKANAN BERAT
+            { id: 1, type: 'makanan', island: 'sumatera', title: 'Rendang Daging Sapi', origin: 'Padang, Sumatera Barat', desc: 'Rempah melimpah dengan proses masak lambat yang mendunia.', ing: ['1kg Daging Sapi Paha', '2L Santan Kental', '100g Bawang Merah', '80g Bawang Putih', '250g Cabai Merah'], steps: ['Haluskan semua bumbu rempah lalu tumis dengan santan.', 'Masukkan daging sapi yang sudah dipotong.', 'Masak dengan api kecil selama 4 jam hingga minyak keluar dan bumbu menghitam.', 'Aduk terus agar tidak gosong di bagian bawah.'] },
+            { id: 2, type: 'makanan', island: 'jawa', title: 'Soto Lamongan', origin: 'Lamongan, Jawa Timur', desc: 'Soto ayam dengan ciri khas bubuk koya yang gurih.', ing: ['1 Ekor Ayam Kampung', 'Bubuk Koya (Kerupuk udang & Bawang putih)', 'Soun & Kol', 'Daun Jeruk'], steps: ['Rebus ayam hingga kalu keluar.', 'Tumis bumbu halus (kunyit, jahe, bawang) lalu masukkan ke kuah.', 'Suwir ayam, tata di mangkuk bersama pelengkap.', 'Taburkan bubuk koya melimpah di atasnya.'] },
+            { id: 3, type: 'makanan', island: 'timur', title: 'Papeda Ikan Kuning', origin: 'Papua & Maluku', desc: 'Sajian ikonik Indonesia Timur yang segar dan sehat.', ing: ['Sagu Murni 250g', 'Ikan Tongkol Segar', 'Kunyit, Kemangi, Jeruk Nipis'], steps: ['Larutkan sagu, siram air mendidih mendadak sambil diaduk cepat.', 'Masak kuah kuning dengan rempah segar dan ikan.', 'Sajikan selagi panas dengan kemangi.'] },
+            
+            // CEMILAN
+            { id: 4, type: 'cemilan', island: 'sumatera', title: 'Pempek Lenjer', origin: 'Palembang', desc: 'Olahan ikan tenggiri yang kenyal dan gurih.', ing: ['500g Ikan Tenggiri Giling', '400g Tepung Sagu', 'Air Es', 'Cuko Pedas Manis'], steps: ['Uleni ikan giling dengan air es dan sagu.', 'Bentuk silinder panjang.', 'Rebus hingga mengapung lalu goreng garing.'] },
+            { id: 5, type: 'cemilan', island: 'jawa', title: 'Bakpia Pathok', origin: 'Yogyakarta', desc: 'Kue kacang hijau legendaris khas Jogja.', ing: ['Tepung Terigu', 'Kacang Hijau Kupas', 'Gula & Mentega'], steps: ['Buat adonan kulit berlapis.', 'Isi dengan pasta kacang hijau manis.', 'Panggang hingga kecoklatan.'] },
+            
+            // MINUMAN
+            { id: 6, type: 'minuman', island: 'timur', title: 'Es Pisang Ijo', origin: 'Makassar', desc: 'Pisang dibalut kulit hijau dengan bubuk sumsum.', ing: ['Pisang Raja', 'Tepung Terigu & Air Suji', 'Santan & Gula', 'Sirup DHT Merah'], steps: ['Kukus pisang yang sudah dibalut tepung hijau.', 'Buat bubur sumsum putih yang lembut.', 'Sajikan dengan es serut dan sirup merah.'] },
+            { id: 7, type: 'minuman', island: 'jawa', title: 'Dawet Ayu', origin: 'Banjarnegara', desc: 'Minuman santan dingin dengan aroma pandan asli.', ing: ['Tepung Beras & Tepung Tapioka', 'Santan Segar', 'Gula Merah Cair', 'Nangka iris'], steps: ['Masak adonan cendol hingga kental, cetak.', 'Siapkan santan matang dan gula merah.', 'Campurkan semua dengan es batu.'] }
         ];
 
-        function renderGrid(data) {
-            const grid = document.getElementById('recipe-grid');
-            grid.innerHTML = '';
-            data.forEach(r => {
-                grid.innerHTML += `
-                    <div class="recipe-card p-6 border border-gray-100" onclick="showDetail(${r.id})">
-                        <div class="flex justify-between items-start mb-4">
-                            <span class="tag ${r.category === 'makanan' ? 'bg-orange-100 text-orange-600' : r.category === 'cemilan' ? 'bg-blue-100 text-blue-600' : 'bg-purple-100 text-purple-600'}">${r.category}</span>
-                            <i class="fa-solid fa-utensils text-gray-200"></i>
+        function renderFeed(data) {
+            const feed = document.getElementById('main-feed');
+            feed.innerHTML = data.map(r => `
+                <div class="bg-white border border-gray-100 rounded-3xl overflow-hidden shadow-sm btn-action" onclick="openRecipe(${r.id})">
+                    <div class="p-4 flex items-center gap-3">
+                        <div class="w-8 h-8 bg-emerald-600 rounded-full flex items-center justify-center text-[10px] text-white font-bold">${r.island[0].toUpperCase()}</div>
+                        <div>
+                            <p class="text-[11px] font-bold">${r.origin}</p>
+                            <p class="text-[9px] text-gray-500 uppercase tracking-widest">${r.type}</p>
                         </div>
-                        <h3 class="text-xl font-black text-gray-800">${r.title}</h3>
-                        <p class="text-[10px] font-bold text-emerald-600 uppercase mb-2">${r.origin}</p>
-                        <p class="text-xs text-gray-500">${r.desc}</p>
                     </div>
-                `;
-            });
+                    <div class="h-64 bg-gray-100 flex items-center justify-center relative">
+                         <i class="fa-solid fa-utensils text-5xl text-gray-200"></i>
+                         <div class="absolute bottom-4 left-4 bg-black/50 backdrop-blur px-3 py-1 rounded-full text-white text-[10px] font-bold">
+                            <i class="fa-solid fa-clock mr-1"></i> Resep Lengkap
+                         </div>
+                    </div>
+                    <div class="p-5">
+                        <div class="flex gap-4 mb-4 text-xl">
+                            <i class="fa-regular fa-heart"></i>
+                            <i class="fa-regular fa-comment"></i>
+                            <i class="fa-regular fa-paper-plane"></i>
+                            <i class="fa-regular fa-bookmark ml-auto"></i>
+                        </div>
+                        <h3 class="font-extrabold text-lg leading-tight mb-2">${r.title}</h3>
+                        <p class="text-xs text-gray-600 leading-relaxed">${r.desc}</p>
+                    </div>
+                </div>
+            `).join('');
         }
 
-        function filterCategory(cat) {
-            // Update UI Button
-            document.querySelectorAll('.category-pill').forEach(el => el.classList.remove('active'));
-            event.target.classList.add('active');
-
-            if(cat === 'semua') {
-                renderGrid(recipes);
-            } else {
-                const filtered = recipes.filter(r => r.category === cat);
-                renderGrid(filtered);
-            }
+        function filterResep(category) {
+            if(category === 'semua') renderFeed(database);
+            else renderFeed(database.filter(r => r.island === category));
         }
 
-        function showDetail(id) {
-            const recipe = recipes.find(r => r.id === id);
-            document.getElementById('detail-title').innerText = recipe.title;
-            document.getElementById('detail-origin').innerText = recipe.origin;
-            document.getElementById('detail-category').innerText = recipe.category;
+        function openRecipe(id) {
+            const r = database.find(item => item.id === id);
+            document.getElementById('det-title-nav').innerText = r.title;
+            document.getElementById('det-title').innerText = r.title;
+            document.getElementById('det-origin').innerText = r.origin;
+            document.getElementById('det-cat').innerText = r.type;
             
-            const ingList = document.getElementById('detail-ingredients');
-            ingList.innerHTML = '';
-            recipe.ingredients.forEach(i => ingList.innerHTML += `<li>${i}</li>`);
-
-            const stepList = document.getElementById('detail-steps');
-            stepList.innerHTML = '';
-            recipe.steps.forEach(s => stepList.innerHTML += `<li>${s}</li>`);
+            document.getElementById('det-ing').innerHTML = r.ing.map(i => `<li class="pb-2 border-b border-gray-50 italic">👉 ${i}</li>`).join('');
+            document.getElementById('det-steps').innerHTML = r.steps.map((s, idx) => `
+                <div class="flex gap-4">
+                    <span class="font-black text-emerald-600">${idx+1}.</span>
+                    <p>${s}</p>
+                </div>
+            `).join('');
 
             document.getElementById('recipe-detail').classList.add('active');
             document.body.style.overflow = 'hidden';
         }
 
-        function closeDetail() {
+        function closeRecipe() {
             document.getElementById('recipe-detail').classList.remove('active');
             document.body.style.overflow = 'auto';
         }
 
-        // Jalankan saat pertama buka
-        renderGrid(recipes);
+        renderFeed(database);
     </script>
 </body>
 </html>
