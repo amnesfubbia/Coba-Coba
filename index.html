@@ -2,211 +2,151 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>DadarEndog | Masak Itu Gampang</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DadarEndog | Kitab Masak Nusantara</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <style>
-        :root { --ig-gray: #fafafa; --ig-border: #dbdbdb; }
-        body { background: var(--ig-gray); font-family: 'Plus Jakarta Sans', sans-serif; color: #1a1a1a; -webkit-tap-highlight-color: transparent; }
-        
-        /* Layout Instagram Style */
-        .main-container { max-width: 500px; margin: 0 auto; background: white; min-height: 100vh; }
-        .post-card { background: white; border-bottom: 1px solid #efefef; margin-bottom: 10px; }
-        .nav-bottom { position: fixed; bottom: 0; width: 100%; max-width: 500px; background: white; border-top: 1px solid #dbdbdb; display: flex; justify-content: space-around; padding: 12px 0; z-index: 100; }
-        
-        /* Layer Detail */
-        .recipe-layer { position: fixed; inset: 0; background: white; z-index: 1000; transform: translateY(100%); transition: 0.5s cubic-bezier(0.17, 0.67, 0.83, 0.67); overflow-y: auto; max-width: 500px; margin: 0 auto; }
-        .recipe-layer.active { transform: translateY(0); }
-        
-        /* Story Ring */
-        .story-container { display: flex; overflow-x: auto; padding: 15px 10px; gap: 12px; border-bottom: 1px solid #efefef; }
-        .story-item { flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: 5px; }
-        .ring { width: 66px; height: 66px; border-radius: 50%; background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); padding: 2px; }
-        .ring-inner { width: 100%; height: 100%; border-radius: 50%; background: white; padding: 2px; }
-        .ring-inner img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
-        
-        /* Image Feed */
-        .img-feed { width: 100%; aspect-ratio: 1/1; background: #f0f0f0; overflow: hidden; position: relative; }
-        .img-feed img { width: 100%; height: 100%; object-fit: cover; }
-        
+        body { background: #fdfdfd; font-family: 'Plus Jakarta Sans', sans-serif; }
+        .recipe-card { transition: 0.3s; border: 1px solid #eee; }
+        .recipe-card:hover { border-color: #f97316; transform: translateY(-3px); }
+        .detail-page { position: fixed; inset: 0; background: white; z-index: 1000; transform: translateX(100%); transition: 0.4s ease; overflow-y: auto; }
+        .detail-page.active { transform: translateX(0); }
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        .btn-action { font-size: 24px; cursor: pointer; transition: 0.2s; }
-        .btn-action:active { transform: scale(0.9); }
+        .tag-region { font-size: 9px; font-weight: 800; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; }
     </style>
 </head>
-<body>
+<body class="pb-20">
 
-    <div class="main-container shadow-2xl">
-        <header class="flex justify-between items-center px-4 py-3 sticky top-0 bg-white z-[90] border-b border-gray-100">
-            <h1 class="text-2xl font-black italic tracking-tighter">Dadar<span class="text-orange-500">Endog</span></h1>
-            <div class="flex gap-5">
-                <i class="fa-regular fa-heart text-xl"></i>
-                <i class="fa-brands fa-facebook-messenger text-xl"></i>
-            </div>
-        </header>
+    <header class="p-6 bg-white border-b sticky top-0 z-50 shadow-sm">
+        <h1 class="text-3xl font-black italic tracking-tighter">Dadar<span class="text-orange-500">Endog</span></h1>
+        <p class="text-[10px] font-bold text-gray-400 mt-1 uppercase tracking-widest leading-none">Masak itu gampang, segampang dadar endog!</p>
+    </header>
 
-        <div class="story-container no-scrollbar bg-white">
-            <div id="story-list" class="flex gap-4"></div>
+    <div class="p-6 bg-gray-50 border-b">
+        <div class="relative mb-4">
+            <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+            <input type="text" id="searchInput" onkeyup="searchRecipe()" placeholder="Cari resep (Soto, Rendang, Es...)" class="w-full pl-12 pr-4 py-3 rounded-2xl border-none shadow-sm focus:ring-2 focus:ring-orange-500 text-sm">
         </div>
-
-        <div id="feed-container" class="pb-20">
-            </div>
-
-        <nav class="nav-bottom">
-            <i class="fa-solid fa-house text-xl" onclick="window.scrollTo({top:0, behavior:'smooth'})"></i>
-            <i class="fa-solid fa-magnifying-glass text-xl text-gray-400"></i>
-            <i class="fa-regular fa-square-plus text-2xl text-gray-400"></i>
-            <i class="fa-solid fa-clapperboard text-xl text-gray-400"></i>
-            <div class="w-6 h-6 bg-orange-500 rounded-full flex items-center justify-center text-[8px] text-white font-bold">DE</div>
-        </nav>
+        <div class="flex gap-2 overflow-x-auto no-scrollbar py-2">
+            <button onclick="filterByCat('semua')" class="px-5 py-2 rounded-full bg-black text-white text-[10px] font-bold whitespace-nowrap">SEMUA</button>
+            <button onclick="filterByCat('makanan')" class="px-5 py-2 rounded-full bg-white border text-[10px] font-bold whitespace-nowrap">MAKANAN</button>
+            <button onclick="filterByCat('cemilan')" class="px-5 py-2 rounded-full bg-white border text-[10px] font-bold whitespace-nowrap">CEMILAN</button>
+            <button onclick="filterByCat('minuman')" class="px-5 py-2 rounded-full bg-white border text-[10px] font-bold whitespace-nowrap">MINUMAN</button>
+        </div>
     </div>
 
-    <div id="detail-page" class="recipe-layer no-scrollbar">
-        <nav class="sticky top-0 bg-white/90 backdrop-blur border-b p-4 flex items-center justify-between z-10">
-            <button onclick="closeDetail()" class="text-xl"><i class="fa-solid fa-xmark"></i></button>
-            <span class="text-xs font-black tracking-widest uppercase">Panduan Memasak</span>
+    <main class="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="recipeGrid">
+        </main>
+
+    <div id="detailOverlay" class="detail-page">
+        <nav class="p-6 border-b flex items-center justify-between sticky top-0 bg-white/90 backdrop-blur">
+            <button onclick="closeDetail()" class="text-xl"><i class="fa-solid fa-arrow-left"></i></button>
+            <span class="font-black italic text-sm">Dadar<span class="text-orange-500">Endog</span></span>
             <div class="w-5"></div>
         </nav>
-        <div id="detail-content"></div>
+        <div id="detailContent" class="p-8 max-w-2xl mx-auto"></div>
     </div>
 
     <script>
-        // MASUKKAN API KEY KAMU DI SINI
-        const API_KEY = '1fVjusZHCt9MJkTfuOy58M6Gs1IwaZXqu3qdAGq3ZOmJhQSTXOlZD0eA';
+        const cookbook = [
+            // --- SUMATERA ---
+            { cat: 'makanan', reg: 'Aceh', title: 'Mie Aceh', ing: ['500g Mie kuning', '750ml Kaldu sapi', '150g Udang/Daging', 'Bumbu: Cabai, Bawang, Jintan, Kapulaga'], steps: ['Tumis bumbu halus hingga wangi.', 'Masukkan daging/udang.', 'Tuangkan kaldu dan mie.', 'Masak hingga kuah mengental.'], desc: 'Mie pedas kaya rempah khas Serambi Mekkah.' },
+            { cat: 'makanan', reg: 'Sumatera Barat', title: 'Rendang Daging Sapi', ing: ['1kg Daging Sapi', '2L Santan', 'Daun Kunyit', 'Serai', 'Lengkuas', 'Bumbu halus rendang'], steps: ['Rebus santan dan bumbu hingga berminyak.', 'Masukkan daging.', 'Masak dengan api kecil selama 4-5 jam.', 'Aduk terus hingga kering dan menghitam.'], desc: 'Masakan terlezat dunia.' },
+            { cat: 'makanan', reg: 'Sumatera Selatan', title: 'Pempek Kapal Selam', ing: ['500g Ikan Tenggiri Giling', '400g Sagu', 'Telur (untuk isi)', 'Cuko (Gula merah, ebi, cabai)'], steps: ['Campur ikan dan sagu.', 'Bentuk adonan dan isi dengan telur.', 'Rebus hingga mengapung.', 'Goreng dan sajikan dengan cuko.'], desc: 'Ikon kuliner Palembang.' },
+            
+            // --- JAWA ---
+            { cat: 'makanan', reg: 'Jawa Timur', title: 'Rawon Surabaya', ing: ['500g Daging Sapi', 'Kluwek (Bumbu hitam)', 'Tauge pendek', 'Telur asin'], steps: ['Rebus daging sampai empuk.', 'Tumis bumbu halus dan kluwek.', 'Masukkan bumbu ke kaldu.', 'Sajikan dengan sambal dan telur asin.'], desc: 'Sup hitam legendaris Jawa Timur.' },
+            { cat: 'makanan', reg: 'Jawa Tengah', title: 'Gudeg Jogja', ing: ['1kg Nangka Muda', '1L Santan', 'Gula Merah melimpah', 'Daun jati'], steps: ['Masak nangka dengan santan dan gula merah.', 'Masak dengan api kecil selama 12 jam.', 'Pastikan air menyusut dan bumbu meresap.'], desc: 'Sayur nangka manis khas Keraton.' },
+            { cat: 'makanan', reg: 'Jawa Barat', title: 'Sate Maranggi', ing: ['500g Daging Sapi', 'Lemak sapi', 'Kecap manis', 'Ketumbar'], steps: ['Potong daging dadu kecil.', 'Rendam dengan bumbu ketumbar dan kecap.', 'Tusuk dan bakar hingga wangi.', 'Sajikan dengan sambal tomat segar.'], desc: 'Sate sapi empuk tanpa bumbu kacang.' },
+            
+            // --- BALI & NT ---
+            { cat: 'makanan', reg: 'Bali', title: 'Ayam Betutu', ing: ['1 Ekor Ayam', 'Bumbu Base Genep', 'Daun pisang'], steps: ['Lumuri ayam dengan bumbu genep.', 'Bungkus daun pisang.', 'Kukus lalu bakar hingga meresap.'], desc: 'Ayam rempah melimpah khas Bali.' },
+            { cat: 'makanan', reg: 'Lombok', title: 'Ayam Taliwang', ing: ['Ayam Kampung Muda', 'Cabai rawit & Terasi', 'Kencur'], steps: ['Bakar ayam setengah matang.', 'Lumuri bumbu pedas.', 'Bakar kembali sampai matang.'], desc: 'Sajian ayam pedas ikonik NTB.' },
 
-        // DATABASE RAKSASA (Pondasi 25 Resep Awal, kamu bisa tambah sampai ratusan)
-        const database = [
-            { id: 1, region: 'Sumatera', title: 'Rendang Sapi', search: 'beef rendang', pexelsId: 674483, origin: 'Padang', time: '4 Jam', difficulty: 'Sulit', ing: ['1kg Daging Sapi', '2L Santan Kental', 'Bumbu Halus (Cabai, Bawang, Jahe, Lengkuas)', 'Daun Kunyit & Serai'], steps: ['Tumis bumbu halus hingga wangi.', 'Tuangkan santan, masak hingga mendidih.', 'Masukkan daging sapi, kecilkan api.', 'Aduk terus selama 4 jam hingga asat dan menghitam.'] },
-            { id: 2, region: 'Jawa', title: 'Soto Lamongan', search: 'chicken soup soto', pexelsId: 2092897, origin: 'Jawa Timur', time: '1 Jam', difficulty: 'Sedang', ing: ['1 Ayam Kampung', 'Bubuk Koya', 'Soun & Kol', 'Jeruk Nipis'], steps: ['Rebus ayam hingga empuk.', 'Tumis bumbu kuning, masukkan ke kuah soto.', 'Suwir ayam dan tata di mangkuk.', 'Sajikan dengan bubuk koya yang melimpah.'] },
-            { id: 3, region: 'Jawa', title: 'Rawon Surabaya', search: 'beef black soup', pexelsId: 775031, origin: 'Surabaya', time: '1.5 Jam', difficulty: 'Sedang', ing: ['500g Daging Sapi', 'Kluwek (Bumbu hitam)', 'Tauge Kecil', 'Telur Asin'], steps: ['Rebus daging hingga empuk.', 'Tumis bumbu kluwek hingga harum.', 'Masukkan bumbu ke kaldu daging.', 'Sajikan dengan sambal dan telur asin.'] },
-            { id: 4, region: 'Bali', title: 'Ayam Betutu', search: 'bali roasted chicken', pexelsId: 10452331, origin: 'Gianyar', time: '3 Jam', difficulty: 'Sulit', ing: ['1 Ayam Utuh', 'Base Genep (Bumbu Bali)', 'Daun Pisang'], steps: ['Lumuri ayam dengan bumbu genep secara merata.', 'Bungkus dengan daun pisang.', 'Kukus lalu bakar hingga meresap sempurna.'] },
-            { id: 5, region: 'Sulawesi', title: 'Es Pisang Ijo', search: 'green banana dessert', pexelsId: 2611817, origin: 'Makassar', time: '45 Menit', difficulty: 'Mudah', ing: ['Pisang Raja', 'Tepung Terigu & Daun Pandan', 'Bubur Sumsum', 'Sirup DHT'], steps: ['Bungkus pisang dengan adonan hijau, kukus.', 'Buat bubur sumsum lembut.', 'Sajikan pisang dengan es serut dan sirup.'] },
-            { id: 6, region: 'Kalimantan', title: 'Soto Banjar', search: 'yellow soup rice', pexelsId: 2092897, origin: 'Banjarmasin', time: '1 Jam', difficulty: 'Sedang', ing: ['Ayam suwir', 'Perkedel Kentang', 'Ketupat', 'Susu cair/Krimer'], steps: ['Buat kuah soto dengan rempah kayu manis.', 'Campurkan susu ke dalam kuah.', 'Sajikan dengan perkedel dan ketupat.'] },
-            { id: 7, region: 'Sumatera', title: 'Pempek Palembang', search: 'fish cake', pexelsId: 775031, origin: 'Palembang', time: '1.5 Jam', difficulty: 'Sedang', ing: ['Ikan Tenggiri', 'Tepung Sagu', 'Bumbu Cuko', 'Timun'], steps: ['Buat adonan ikan dan sagu.', 'Bentuk dan isi dengan telur.', 'Rebus lalu goreng hingga krispi.'] },
-            { id: 8, region: 'Jawa', title: 'Bakso Malang', search: 'meatball soup', pexelsId: 2092897, origin: 'Malang', time: '2 Jam', difficulty: 'Sedang', ing: ['Bakso Sapi', 'Pangsit Goreng', 'Tahu Bakso', 'Mie Kuning'], steps: ['Buat kuah kaldu sapi yang bening.', 'Siapkan aneka bakso dan gorengan.', 'Sajikan panas dengan sambal hijau.'] },
-            { id: 9, region: 'Nusa Tenggara', title: 'Ayam Taliwang', search: 'spicy chicken', pexelsId: 10452331, origin: 'Lombok', time: '1 Jam', difficulty: 'Sedang', ing: ['Ayam Kampung Muda', 'Cabai Rawit & Terasi', 'Kencur'], steps: ['Bakar ayam setengah matang.', 'Tumis bumbu pedas, lumuri ke ayam.', 'Bakar kembali hingga bumbu meresap.'] },
-            { id: 10, region: 'Sulawesi', title: 'Coto Makassar', search: 'beef soup', pexelsId: 775031, origin: 'Makassar', time: '2 Jam', difficulty: 'Sedang', ing: ['Daging & Jeroan Sapi', 'Air Tajin', 'Kacang Tanah'], steps: ['Rebus daging dengan air tajin.', 'Masukkan bumbu kacang sangrai.', 'Sajikan dengan buras dan perasan jeruk.'] }
-            // DATA BISA TERUS DITAMBAH DI SINI HINGGA 100+ ITEM
+            // --- SULAWESI & TIMUR ---
+            { cat: 'makanan', reg: 'Sulawesi Selatan', title: 'Coto Makassar', ing: ['Daging & Jeroan Sapi', 'Kacang tanah sangrai (haluskan)', 'Air cucian beras'], steps: ['Rebus daging dengan air cucian beras.', 'Masukkan bumbu dan kacang halus.', 'Masak hingga kuah kental.'], desc: 'Sup daging kuah kacang gurih.' },
+            { cat: 'makanan', reg: 'Papua', title: 'Papeda Ikan Kuning', ing: ['Sagu murni', 'Ikan Tongkol', 'Kunyit', 'Jeruk Nipis'], steps: ['Buat papeda dengan menyiram air mendidih.', 'Masak ikan dengan bumbu kuning segar.', 'Sajikan bersama.'], desc: 'Makanan pokok Indonesia Timur.' },
+
+            // --- CEMILAN ---
+            { cat: 'cemilan', reg: 'Jawa Barat', title: 'Cireng Salju', ing: ['Tapioka', 'Bawang putih', 'Daun bawang'], steps: ['Buat adonan biang.', 'Campur dengan tepung kering.', 'Goreng sampai garing.'], desc: 'Cemilan kenyal favorit sejuta umat.' },
+            { cat: 'cemilan', reg: 'Semarang', title: 'Lumpia Semarang', ing: ['Kulit Lumpia', 'Rebung', 'Ebi', 'Telur'], steps: ['Tumis rebung dan ebi.', 'Isi kulit lumpia dan gulung.', 'Goreng garing.'], desc: 'Cemilan legendaris khas Semarang.' },
+
+            // --- MINUMAN ---
+            { cat: 'minuman', reg: 'Makassar', title: 'Es Pisang Ijo', ing: ['Pisang Raja', 'Tepung Terigu (kulit hijau)', 'Bubur Sumsum', 'Sirup DHT'], steps: ['Kukus pisang berbalut tepung.', 'Siapkan bubur sumsum.', 'Sajikan dengan sirup merah dan es.'], desc: 'Kesegaran manis dari Makassar.' },
+            { cat: 'minuman', reg: 'Betawi', title: 'Bir Pletok', ing: ['Jahe', 'Kayu Secang', 'Kayu Manis', 'Serai'], steps: ['Rebus semua rempah hingga merah.', 'Kocok sampai berbuih.', 'Sajikan hangat.'], desc: 'Minuman rempah tanpa alkohol.' }
         ];
 
-        // RENDER STORIES
-        const regions = ['Semua', 'Jawa', 'Sumatera', 'Bali', 'Sulawesi', 'Kalimantan', 'Papua'];
-        document.getElementById('story-list').innerHTML = regions.map(reg => `
-            <div class="story-item" onclick="filterData('${reg}')">
-                <div class="ring"><div class="ring-inner"><img src="https://ui-avatars.com/api/?name=${reg}&background=random"></div></div>
-                <span class="text-[10px] font-bold">${reg}</span>
-            </div>
-        `).join('');
-
-        // RENDER FEED
-        async function renderFeed(data) {
-            const feed = document.getElementById('feed-container');
-            feed.innerHTML = '<div class="p-20 text-center text-xs font-bold text-gray-300">Ngenteni menu teko...</div>';
-            
-            let html = '';
-            for (let item of data) {
-                const img = `https://images.pexels.com/photos/${item.pexelsId}/pexels-photo-${item.pexelsId}.jpeg?auto=compress&cs=tinysrgb&w=500`;
-                html += `
-                    <div class="post-card">
-                        <div class="flex items-center justify-between p-3">
-                            <div class="flex items-center gap-2">
-                                <div class="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center font-bold text-[10px] text-orange-600 italic">DE</div>
-                                <div class="flex flex-col">
-                                    <span class="text-xs font-bold">${item.title}</span>
-                                    <span class="text-[9px] text-gray-400 uppercase tracking-tighter">${item.origin} • ${item.region}</span>
-                                </div>
-                            </div>
-                            <i class="fa-solid fa-ellipsis-vertical text-gray-300"></i>
-                        </div>
-                        <div class="img-feed" onclick="openDetail(${item.id})">
-                            <img src="${img}" alt="${item.title}" loading="lazy">
-                        </div>
-                        <div class="p-3">
-                            <div class="flex gap-4 mb-2">
-                                <i class="fa-regular fa-heart btn-action"></i>
-                                <i class="fa-regular fa-comment btn-action" onclick="openDetail(${item.id})"></i>
-                                <i class="fa-regular fa-paper-plane btn-action"></i>
-                                <i class="fa-regular fa-bookmark btn-action ml-auto"></i>
-                            </div>
-                            <div class="text-xs">
-                                <p class="mb-1">Disukai oleh <b>BonekMasak</b> dan <b>ratusan lainnya</b></p>
-                                <p><span class="font-bold">DadarEndog</span> Memasak <span class="text-orange-600 font-bold">${item.title}</span> itu simpel, rek! Gak percaya? Klik detailnya... <span class="text-gray-400">selengkapnya</span></p>
-                            </div>
-                        </div>
+        function renderGrid(data) {
+            const grid = document.getElementById('recipeGrid');
+            grid.innerHTML = data.map((r, idx) => `
+                <div class="recipe-card bg-white p-5 rounded-3xl" onclick="openDetail(${idx})">
+                    <span class="tag-region bg-orange-100 text-orange-600">${r.reg}</span>
+                    <h3 class="text-xl font-black italic mt-2">${r.title}</h3>
+                    <p class="text-xs text-gray-500 mt-1">${r.desc}</p>
+                    <div class="mt-4 flex justify-between items-center">
+                        <span class="text-[9px] font-bold text-gray-400 uppercase tracking-widest">${r.cat}</span>
+                        <i class="fa-solid fa-chevron-right text-gray-200"></i>
                     </div>
-                `;
-            }
-            feed.innerHTML = html;
+                </div>
+            `).join('');
         }
 
-        function filterData(reg) {
-            const filtered = reg === 'Semua' ? database : database.filter(i => i.region === reg);
-            renderFeed(filtered);
-        }
-
-        function openDetail(id) {
-            const item = database.find(i => i.id === id);
-            const img = `https://images.pexels.com/photos/${item.pexelsId}/pexels-photo-${item.pexelsId}.jpeg?auto=compress&cs=tinysrgb&w=800`;
-            const content = document.getElementById('detail-content');
-            
+        function openDetail(idx) {
+            const r = cookbook[idx];
+            const content = document.getElementById('detailContent');
             content.innerHTML = `
-                <img src="${img}" class="w-full aspect-video object-cover">
-                <div class="p-6">
-                    <div class="flex justify-between items-start mb-6">
-                        <div>
-                            <h2 class="text-3xl font-black italic tracking-tighter">${item.title}</h2>
-                            <p class="text-xs text-orange-600 font-bold uppercase tracking-widest">${item.origin}</p>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-[10px] font-bold text-gray-400">TINGKAT KESULITAN</p>
-                            <p class="text-xs font-black">${item.difficulty}</p>
-                        </div>
-                    </div>
-                    
-                    <div class="grid grid-cols-2 gap-4 mb-8">
-                        <div class="bg-gray-50 p-3 rounded-2xl border border-gray-100">
-                            <p class="text-[9px] font-bold text-gray-400 uppercase">Waktu Masak</p>
-                            <p class="text-sm font-bold text-gray-800"><i class="fa-regular fa-clock mr-1"></i> ${item.time}</p>
-                        </div>
-                        <div class="bg-gray-50 p-3 rounded-2xl border border-gray-100">
-                            <p class="text-[9px] font-bold text-gray-400 uppercase">Kategori</p>
-                            <p class="text-sm font-bold text-gray-800"><i class="fa-solid fa-utensils mr-1"></i> Main Course</p>
-                        </div>
-                    </div>
+                <h2 class="text-4xl font-black italic tracking-tighter mb-1">${r.title}</h2>
+                <p class="text-orange-500 font-bold text-sm mb-8 uppercase tracking-widest">${r.reg} • ${r.cat}</p>
+                
+                <div class="mb-10">
+                    <h4 class="font-black text-lg mb-4 flex items-center gap-2"><i class="fa-solid fa-list text-orange-500 text-sm"></i> Bahan-Bahan</h4>
+                    <ul class="space-y-3">
+                        ${r.ing.map(i => `<li class="text-sm text-gray-600 border-b border-gray-50 pb-2 italic">○ ${i}</li>`).join('')}
+                    </ul>
+                </div>
 
-                    <div class="mb-8">
-                        <h3 class="font-bold text-lg mb-4 flex items-center gap-2"><i class="fa-solid fa-basket-shopping text-orange-500"></i> Bahan-Bahan</h3>
-                        <ul class="space-y-3">
-                            ${item.ing.map(ing => `<li class="text-sm text-gray-600 border-b border-gray-50 pb-2 flex justify-between"><span>${ing}</span> <i class="fa-regular fa-circle-check text-gray-200"></i></li>`).join('')}
-                        </ul>
-                    </div>
-
-                    <div class="mb-10">
-                        <h3 class="font-bold text-lg mb-4 flex items-center gap-2"><i class="fa-solid fa-fire-burner text-orange-500"></i> Cara Memasak</h3>
-                        <div class="space-y-6">
-                            ${item.steps.map((step, i) => `
-                                <div class="flex gap-4">
-                                    <span class="w-6 h-6 rounded-full bg-orange-500 text-white flex-shrink-0 flex items-center justify-center text-[10px] font-black">${i+1}</span>
-                                    <p class="text-sm text-gray-600 leading-relaxed">${step}</p>
-                                </div>
-                            `).join('')}
-                        </div>
+                <div>
+                    <h4 class="font-black text-lg mb-4 flex items-center gap-2"><i class="fa-solid fa-fire-burner text-orange-500 text-sm"></i> Langkah Memasak</h4>
+                    <div class="space-y-6">
+                        ${r.steps.map((s, i) => `
+                            <div class="flex gap-4">
+                                <span class="w-6 h-6 rounded-lg bg-black text-white flex-shrink-0 flex items-center justify-center text-[10px] font-bold">${i+1}</span>
+                                <p class="text-sm text-gray-700 leading-relaxed">${s}</p>
+                            </div>
+                        `).join('')}
                     </div>
                 </div>
             `;
-            document.getElementById('detail-page').classList.add('active');
+            document.getElementById('detailOverlay').classList.add('active');
             document.body.style.overflow = 'hidden';
         }
 
         function closeDetail() {
-            document.getElementById('detail-page').classList.remove('active');
+            document.getElementById('detailOverlay').classList.remove('active');
             document.body.style.overflow = 'auto';
         }
 
-        // Jalankan Feed Pertama Kali
-        renderFeed(database);
+        function searchRecipe() {
+            const val = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = cookbook.filter(r => r.title.toLowerCase().includes(val) || r.reg.toLowerCase().includes(val));
+            renderGrid(filtered);
+        }
+
+        function filterByCat(cat) {
+            const btns = document.querySelectorAll('button');
+            btns.forEach(b => {
+                b.classList.remove('bg-black', 'text-white');
+                b.classList.add('bg-white', 'border');
+            });
+            event.target.classList.add('bg-black', 'text-white');
+            
+            if(cat === 'semua') renderGrid(cookbook);
+            else renderGrid(cookbook.filter(r => r.cat === cat));
+        }
+
+        renderGrid(cookbook);
     </script>
 </body>
 </html>
