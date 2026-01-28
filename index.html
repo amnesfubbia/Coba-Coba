@@ -3,267 +3,692 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AL-JAMI' MEGA REPOSITORY | VERSI AMANAH 1.0</title>
+    <title>amnesfubbia</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #064e3b; --accent: #10b981; }
-        body { background: #fdfdfd; font-family: 'Plus Jakarta Sans', sans-serif; color: #0f172a; line-height: 1.8; }
-        .arabic { 
-            font-family: 'Amiri', serif; font-size: 2.5rem; line-height: 5.5rem; text-align: right; 
-            color: var(--primary); background: #f0fdf4; padding: 35px; border-radius: 25px; 
-            margin: 20px 0; border: 1px solid #d1fae5; direction: rtl; box-shadow: inset 0 2px 10px rgba(0,0,0,0.02);
+        body { background-color: #000; color: #fff; font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        
+        /* LOGO & SPLASH */
+        #splashScreen { position: fixed; inset: 0; background: #000; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .splash-content { display: flex; flex-direction: column; align-items: center; animation: splashScale 0.8s ease-out; }
+        .splash-logo { width: 80px; height: 80px; margin-bottom: 2px; }
+        .splash-name { font-size: 18px; font-weight: 700; color: #fff; letter-spacing: -0.5px; opacity: 0; animation: fadeIn 0.5s ease forwards; animation-delay: 0.4s; }
+        .splash-footer { position: absolute; bottom: 40px; text-align: center; opacity: 0; animation: fadeIn 0.5s ease forwards; animation-delay: 0.8s; }
+        .from-text { font-size: 12px; color: #8e8e8e; letter-spacing: 1px; margin-bottom: 5px; }
+        .brand-text { font-size: 14px; font-weight: 700; letter-spacing: 2px; background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        @keyframes splashScale { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        @keyframes fadeIn { to { opacity: 1; } }
+
+        .profile-header { padding: 15px 15px 0 15px; background: #000; }
+        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .ig-logo-wrapper { display: flex; align-items: center; gap: 4px; position: relative; cursor: pointer; }
+        .ig-logo { font-family: 'Inter', sans-serif; font-weight: 700; font-size: 19px; letter-spacing: -1px; }
+        .dot-notify { width: 7px; height: 7px; background-color: #ff3b30; border-radius: 50%; display: inline-block; margin-left: 2px; }
+        
+        .profile-info { display: flex; align-items: center; gap: 28px; margin-bottom: 15px; }
+        .profile-pic-container { position: relative; width: 78px; height: 78px; }
+        .profile-pic-logo { width: 74px; height: 74px; border-radius: 50%; border: 1px solid #262626; overflow: hidden; display: flex; align-items: center; justify-content: center; background: #000; padding: 12px; }
+        .profile-pic-logo img { width: 100%; height: 100%; object-fit: contain; border-radius: 50%; }
+        .add-story-btn { position: absolute; bottom: 2px; right: 2px; width: 22px; height: 22px; background: #0095f6; border: 2.5px solid #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: bold; color: #fff; z-index: 10; }
+
+        .stats { display: flex; flex-grow: 1; justify-content: space-between; text-align: center; padding-right: 10px; }
+        .stat-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; color: #8e8e8e; }
+        .stat-val { font-weight: 700; font-size: 16px; color: #fff; line-height: 1; margin-bottom: 2px; }
+        .stat-label { font-size: 13px; font-weight: 400; line-height: 1; }
+        .stat-item.active-stat { color: #fff; }
+        
+        .bio { font-size: 13px; line-height: 1.4; margin-bottom: 15px; margin-top: -8px; }
+        .bio-name-wrapper { display: flex; align-items: center; gap: 4px; margin-bottom: 2px; }
+        .bio-name { font-weight: 700; font-size: 13px; display: inline-block; }
+
+        .action-buttons { display: flex; gap: 6px; margin-bottom: 15px; }
+        .btn-ig { flex: 1; background: #262626; border-radius: 8px; padding: 7px; font-size: 13px; font-weight: 600; text-align: center; cursor: pointer; color: #fff; }
+        .btn-ig.active { background: #363636; }
+        .btn-icon-sq { width: 34px; background: #262626; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+
+        #filterBar { display: none; margin-bottom: 15px; }
+        .pill-grid { display: grid; gap: 6px; }
+        .pill { background: transparent; border: 1px solid #1c1c1c; color: #fff; padding: 7px 0; border-radius: 8px; font-size: 10px; font-weight: 800; text-transform: uppercase; text-align: center; cursor: pointer; }
+        .pill.active-pill { border: 1px solid #fff; }
+        
+        .filter-dropdown { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: #121212; border-radius: 20px 20px 0 0; z-index: 9500; max-height: 60vh; overflow-y: auto; border-top: 1px solid #333; padding-bottom: 20px; animation: slideUp 0.3s ease-out; overscroll-behavior: contain; }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        .sticky-reset { position: sticky; top: 0; background: #1c1c1c; z-index: 10; font-weight: 800 !important; color: #fff !important; border-bottom: 2px solid #333; }
+        #filterOverlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 9400; }
+        .filter-item { padding: 16px; font-size: 14px; text-align: center; border-bottom: 1px solid #262626; color: #eee; cursor: pointer; }
+
+        .highlights-wrapper { padding: 0 15px 15px 15px; border-bottom: 1px solid #1c1c1c; }
+        .highlights-container { display: flex; gap: 18px; overflow-x: auto; }
+        .highlight-item { flex: 0 0 62px; text-align: center; cursor: pointer; }
+        .highlight-circle { width: 62px; height: 62px; border-radius: 50%; border: 0.5px solid #333; margin-bottom: 5px; display: flex; align-items: center; justify-content: center; background: #000; transition: border 0.3s; }
+        .highlight-item.active-hl .highlight-circle { border: 2px solid #fff; }
+        .highlight-circle .hl-logo { font-size: 10px; font-weight: 900; letter-spacing: -0.5px; text-transform: uppercase; color: #fff; text-align: center; line-height: 1; }
+        .highlight-text { font-size: 11px; color: #fff; font-weight: 400; }
+
+        .tab-nav { display: flex; border-top: 1px solid #1c1c1c; }
+        .tab-item { flex: 1; text-align: center; padding: 12px 0; color: #a8a8a8; cursor: pointer; font-size: 18px; }
+        .tab-item.active { color: #fff; border-bottom: 1px solid #fff; }
+
+        .movie-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; padding-bottom: 80px; }
+        .post-card { position: relative; aspect-ratio: 2/3; background: #0a0a0a; overflow: hidden; cursor: pointer; }
+        .post-card img { width: 100%; height: 100%; object-fit: cover; }
+        .badge-rating { position: absolute; top: 6px; left: 6px; padding: 2px 5px; border-radius: 2px; font-size: 7px; font-weight: 900; z-index: 5; background: rgba(255,255,255,0.9); color: #000; }
+        .badge-type { position: absolute; top: 6px; right: 6px; padding: 2px 5px; border-radius: 2px; font-size: 7px; font-weight: 900; z-index: 5; background: rgba(0,0,0,0.7); color: #fff; text-transform: uppercase; border: 0.5px solid rgba(255,255,255,0.3); }
+
+        #searchOverlay { display: none; position: fixed; inset: 0; background: #000; z-index: 4500; overflow-y: auto; }
+        .search-header { position: sticky; top: 0; background: #000; display: flex; align-items: center; padding: 10px 15px; gap: 10px; border-bottom: 1px solid #1c1c1c; z-index: 100; }
+        .search-input-box { flex-grow: 1; background: #262626; border-radius: 10px; padding: 8px 12px; display: flex; align-items: center; position: relative; }
+        .search-input-box input { background: transparent !important; border: none; outline: none; color: #fff !important; font-size: 14px; width: 100%; margin-left: 8px; }
+        
+        #smartSearchDropdown { position: absolute; top: 100%; left: 0; right: 0; background: #1a1a1a; border-radius: 0 0 10px 10px; border: 1px solid #333; border-top: none; display: none; z-index: 500; max-height: 300px; overflow-y: auto; }
+        .smart-item { display: flex; align-items: center; padding: 10px; gap: 12px; border-bottom: 1px solid #262626; cursor: pointer; }
+        .smart-item img { width: 35px; height: 50px; object-fit: cover; border-radius: 4px; }
+        .smart-info { display: flex; flex-direction: column; }
+        .smart-name { font-size: 13px; font-weight: 600; color: #fff; }
+        .smart-meta { font-size: 11px; color: #8e8e8e; }
+
+        #backToTop { position: fixed; bottom: 85px; right: 20px; background: rgba(255,255,255,0.3); width: 42px; height: 42px; border-radius: 50%; display: none; align-items: center; justify-content: center; z-index: 100; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); }
+
+        .modal-player { display: none; position: fixed; inset: 0; z-index: 8000; background: #000; overflow-y: auto; }
+        .carousel-track { display: flex; transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1); width: 100%; }
+        .carousel-slide { min-width: 100%; aspect-ratio: 16/9; position: relative; background: #000; }
+        .swipe-overlay { position: absolute; inset: 0; z-index: 10; background: transparent; }
+        .interaction-icon { font-size: 24px; cursor: pointer; color: #fff; }
+        .server-btn { width: 100%; padding: 12px 5px; border-radius: 8px; font-size: 8px; font-weight: 800; text-transform: uppercase; border: 1px solid #1c1c1c; text-align: center; cursor: pointer; background: #0a0a0a; color: #fff; }
+        .server-btn.active-link { border: 2px solid #fff !important; }
+        .dl-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 15px; }
+        .dl-link-btn { width: 100%; padding: 14px; border-radius: 12px; background: #000; color: #a1a1aa; font-size: 10px; font-weight: 800; text-transform: uppercase; text-align: center; border: 1px solid #1c1c1c; }
+        
+        .cast-wrapper { display: flex; overflow-x: auto; gap: 15px; padding: 15px 0; scrollbar-width: none; }
+        .cast-item { flex: 0 0 65px; text-align: center; cursor: pointer; }
+        .cast-img-border { 
+            width: 64px; height: 64px; border-radius: 50%; padding: 2.5px; 
+            background: linear-gradient(45deg, #f9ce34, #ee2a7b, #6228d7); 
+            margin-bottom: 5px; 
         }
-        .latin { color: #0891b2; font-weight: 700; font-size: 15px; border-left: 4px solid #0891b2; padding-left: 15px; margin: 10px 0; }
-        .arti { color: #64748b; font-style: italic; font-size: 14px; background: #f8fafc; padding: 15px; border-radius: 12px; margin-bottom: 40px; display: block; border: 1px solid #f1f5f9; }
-        .layer { position: fixed; inset: 0; background: white; z-index: 2000; transform: translateY(100%); transition: 0.6s cubic-bezier(0.23, 1, 0.32, 1); overflow-y: auto; }
-        .layer.active { transform: translateY(0); }
-        .section-header { position: sticky; top: 0; background: white; padding: 25px; border-bottom: 3px solid var(--primary); display: flex; align-items: center; justify-content: space-between; z-index: 2100; }
-        .content-box { background: white; border-radius: 40px; padding: 45px; margin-bottom: 35px; border: 1px solid #f1f5f9; box-shadow: 0 20px 50px rgba(0,0,0,0.04); }
-        .story-title { font-weight: 900; font-size: 24px; color: var(--primary); margin-bottom: 15px; display: flex; align-items: center; gap: 15px; border-bottom: 2px solid #ecfdf5; padding-bottom: 10px; }
-        .detail-text { text-align: justify; font-size: 15px; color: #334155; margin-bottom: 30px; }
-        .tag-nabi { background: var(--primary); color: white; padding: 4px 12px; border-radius: 8px; font-size: 10px; font-weight: 800; }
-        .menu-grid { display: grid; grid-template-cols: 1fr; gap: 20px; padding: 25px; }
-        .card-main { background: white; border-radius: 30px; padding: 30px; border: 1px solid #e2e8f0; display: flex; align-items: center; gap: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); cursor: pointer; }
+        .cast-img-border .inner-border { width: 100%; height: 100%; border-radius: 50%; border: 2px solid #000; overflow: hidden; background: #000; }
+        .cast-img-border img { width: 100%; height: 100%; object-fit: cover; }
+        .cast-name { font-size: 9px; font-weight: 500; color: #fff; line-height: 1.2; display: block; margin-top: 4px; }
+        
+        .ig-post-content { padding: 0 15px; margin-top: 5px; }
+        .ig-likes-count { font-weight: 700; font-size: 13px; margin-bottom: 5px; display: block; }
+        .ig-username { font-weight: 700; font-size: 13px; margin-right: 8px; }
+        .ig-caption { font-size: 13px; line-height: 1.4; color: #efefef; }
+        
+        .toggle-btn { display: block; color: #a8a8a8; cursor: pointer; font-size: 13px; margin-top: 4px; font-weight: 500; }
+        #mTranslateBtn { font-size: 11px; color: #fff; font-weight: 700; cursor: pointer; display: inline-block; }
+        .ig-hashtags { color: #e0f1ff; display: block; margin-top: 10px; font-size: 13px; line-height: 1.5; }
+        .ig-date { color: #a8a8a8; font-size: 11px; text-transform: uppercase; }
+        
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #000; border-top: 1px solid #1c1c1c; display: flex; justify-content: space-around; padding: 12px 0; z-index: 300; }
+        .bottom-nav i { color: #a8a8a8; transition: color 0.3s; }
+        .bottom-nav i.active-nav { color: #fff; }
+
+        /* SIDEBAR / ABOUT MENU */
+        #sideMenu { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 9000; display: none; padding: 40px 25px; overflow-y: auto; }
+        .side-close { position: absolute; top: 20px; right: 20px; font-size: 24px; cursor: pointer; }
+        .about-title { font-size: 22px; font-weight: 900; margin-bottom: 20px; border-left: 4px solid #fff; padding-left: 12px; }
+        .about-content { font-size: 14px; line-height: 1.6; color: #ccc; }
+        .about-feature { margin-top: 20px; background: #111; padding: 15px; border-radius: 12px; border: 1px solid #222; }
+        .about-footer { margin-top: 40px; text-align: center; border-top: 1px solid #222; padding-top: 20px; font-size: 12px; color: #666; }
     </style>
 </head>
 <body>
 
-    <header class="p-12 bg-emerald-950 text-white rounded-b-[60px] shadow-2xl">
-        <h1 class="text-5xl font-black italic tracking-tighter">AL-JAMI' MEGA</h1>
-        <p class="text-xs font-bold opacity-60 tracking-[5px] uppercase mt-4">Repository Ilmu Syariat Tanpa Ringkasan</p>
-    </header>
-
-    <main class="menu-grid -mt-10">
-        <div onclick="openSection('nabi')" class="card-main">
-            <div class="w-16 h-16 bg-emerald-100 text-emerald-800 rounded-2xl flex items-center justify-center text-3xl"><i class="fa-solid fa-book-open"></i></div>
-            <div><h3 class="font-black text-lg">25 NABI LENGKAP</h3><p class="text-xs text-slate-400">Penjabaran Detail A - Z</p></div>
+    <div id="splashScreen">
+        <div class="splash-content">
+            <img src="amnesfubbia.png" class="splash-logo" alt="Logo">
+            <div class="splash-name">amnesfubbia</div>
         </div>
-        <div onclick="openSection('sholat')" class="card-main">
-            <div class="w-16 h-16 bg-blue-100 text-blue-800 rounded-2xl flex items-center justify-center text-3xl"><i class="fa-solid fa-person-praying"></i></div>
-            <div><h3 class="font-black text-lg">KITAB SHOLAT</h3><p class="text-xs text-slate-400">Niat & Bacaan Lengkap</p></div>
+        <div class="splash-footer">
+            <div class="from-text">from</div>
+            <div class="brand-text">ANASTEAS</div>
         </div>
-        <div onclick="openSection('akidah')" class="card-main">
-            <div class="w-16 h-16 bg-rose-100 text-rose-800 rounded-2xl flex items-center justify-center text-3xl"><i class="fa-solid fa-star-and-crescent"></i></div>
-            <div><h3 class="font-black text-lg">AKIDAH & TAUHID</h3><p class="text-xs text-slate-400">Sifat 20 & Malaikat Detail</p></div>
-        </div>
-    </main>
-
-    <div id="pageLayer" class="layer">
-        <div class="section-header">
-            <button onclick="closeSection()" class="w-12 h-12 bg-slate-100 rounded-xl flex items-center justify-center shadow-inner"><i class="fa-solid fa-xmark"></i></button>
-            <h2 id="pTitle" class="font-black text-xs uppercase tracking-widest text-emerald-900"></h2>
-            <div class="w-12"></div>
-        </div>
-        <div id="pBody" class="p-8 bg-slate-50 min-h-screen"></div>
     </div>
 
-    <script>
-        const bigData = {
-            nabi: {
-                title: "PENJABARAN LENGKAP 25 NABI & RASUL",
-                html: `
-                <div class="content-box">
-                    <div class="story-title"><span class="tag-nabi">01</span> NABI ADAM AS</div>
-                    <p class="detail-text">Nabi Adam AS adalah manusia pertama yang diciptakan Allah SWT. Allah menciptakan Adam dari berbagai macam unsur tanah di bumi. Setelah jasadnya sempurna, Allah meniupkan ruh ke dalamnya. Allah memerintahkan para malaikat dan Iblis untuk bersujud kepada Adam sebagai bentuk penghormatan. Malaikat bersujud, namun Iblis menolak karena merasa dirinya lebih mulia (terbuat dari api). Karena kesombongannya, Iblis diusir dari surga. Nabi Adam kemudian tinggal di surga dan Allah menciptakan Siti Hawa sebagai pendampingnya. Mereka diperbolehkan menikmati apa saja di surga kecuali memakan buah dari pohon Khuldi. Namun, karena godaan Iblis yang licik, Adam dan Hawa memakannya. Akibatnya, mereka diturunkan ke bumi sebagai khalifah pertama. Selama ratusan tahun Adam bertaubat memohon ampun dengan doa: "Rabbana dhalamma anfusana wa-in lam taghfir lana watarhamna lanakunanna minal khasirin." Allah menerima taubatnya dan dimulailah sejarah umat manusia di bumi.</p>
+    <div id="sideMenu">
+        <i class="fa-solid fa-xmark side-close" onclick="toggleSideMenu()"></i>
+        <div class="about-title">About Amnesfubbia</div>
+        <div class="about-content">
+            amnesfubbia adalah platform katalog sinema digital yang dirancang untuk memberikan pengalaman eksplorasi film dan series tanpa batas.
+        </div>
+        <div class="about-feature">
+            <div class="font-bold mb-3 text-white">Fitur Utama:</div>
+            <ul class="space-y-3 text-[13px]">
+                <li>🎬 <span class="font-semibold text-white">Database Luas:</span> Akses ke lebih dari 25.000+ film dan series global.</li>
+                <li>🔍 <span class="font-semibold text-white">Smart Search:</span> Cari berdasarkan judul, aktor, hingga studio produksi (Marvel, Disney, dll).</li>
+                <li>📥 <span class="font-semibold text-white">Personal Archive:</span> Simpan film favoritmu ke dalam koleksi pribadi (Bookmark).</li>
+                <li>🌍 <span class="font-semibold text-white">Multi-Server:</span> Pilihan server streaming dan download yang stabil.</li>
+            </ul>
+        </div>
+        <div class="mt-8 text-sm text-zinc-400 italic">
+            Dikembangkan dengan dedikasi untuk para pecinta sinema di seluruh dunia.
+        </div>
+        <div class="about-footer">
+            Created by <span class="text-white font-bold">Anasteas</span><br>
+            © 2026 Amnesfubbia Network
+        </div>
+    </div>
 
-                    <div class="story-title"><span class="tag-nabi">02</span> NABI IDRIS AS</div>
-                    <p class="detail-text">Nabi Idris AS adalah keturunan keenam Nabi Adam. Beliau dikenal sebagai manusia pertama yang sangat cerdas. Beliau adalah orang pertama yang mahir menulis dengan kalam (pena), orang pertama yang menjahit pakaian (sebelumnya manusia menggunakan kulit binatang), serta orang pertama yang mempelajari ilmu perbintangan (astronomi) dan matematika. Idris memiliki keberanian yang luar biasa dalam berdakwah melawan keturunan Qabil yang durhaka. Nama Idris berasal dari kata 'Darasa' yang berarti belajar, karena beliau sangat gemar mempelajari kitab-kitab Allah. Beliau diberikan mukjizat dapat melihat surga dan neraka sebelum wafatnya. Beliau diangkat oleh Allah ke tempat yang tinggi (langit keempat) sebagai bentuk kemuliaan atas ketaatannya.</p>
-
-                    <div class="story-title"><span class="tag-nabi">03</span> NABI NUH AS</div>
-                    <p class="detail-text">Nabi Nuh AS termasuk dalam golongan Rasul Ulul Azmi karena kesabaran yang luar biasa. Beliau berdakwah selama kurang lebih 950 tahun, namun jumlah orang yang beriman sangatlah sedikit (sekitar 80 orang). Kebanyakan kaumnya justru mengejek dan menutup telinga saat beliau berbicara. Karena pembangkangan yang sudah melampaui batas, Allah memerintahkan Nuh membangun sebuah bahtera (kapal) raksasa di atas sebuah bukit yang jauh dari perairan. Kaumnya tertawa dan menganggap Nuh gila. Ketika kapal selesai, Allah memerintahkan Nuh membawa orang-orang beriman serta sepasang dari setiap jenis hewan. Kemudian, Allah menurunkan hujan lebat dan memancarkan air dari bumi hingga terjadi banjir bandang yang menenggelamkan seluruh permukaan bumi, termasuk putra Nuh yang bernama Kan'an dan istrinya yang kafir. Kapal tersebut akhirnya berlabuh di Gunung Judi, dan dari keturunan Nuh inilah manusia kembali berkembang biak.</p>
-
-                    <div class="story-title"><span class="tag-nabi">04</span> NABI HUD AS</div>
-                    <p class="detail-text">Nabi Hud AS diutus untuk kaum 'Ad yang tinggal di perbukitan pasir (Al-Ahqaf) di Yaman. Kaum 'Ad adalah kaum yang sangat kuat, bertubuh besar, dan ahli dalam membangun gedung-gedung tinggi yang megah. Namun, mereka menyembah berhala dan sombong akan kekuatan fisiknya. Nabi Hud mengajak mereka untuk bertauhid, namun mereka mendustakannya. Allah kemudian memberikan ujian berupa kekeringan panjang selama tiga tahun. Karena tetap ingkar, Allah mengirimkan awan hitam yang mereka kira adalah hujan, padahal itu adalah azab berupa angin kencang yang sangat dingin (Rihun Shar-shar). Angin itu mengamuk selama tujuh malam delapan hari, menghancurkan segalanya dan menyisakan kaum 'Ad seperti batang pohon kurma yang tumbang. Nabi Hud dan orang beriman selamat.</p>
-
-                    <div class="story-title"><span class="tag-nabi">05</span> NABI SHOLEH AS</div>
-                    <p class="detail-text">Nabi Sholeh AS diutus kepada kaum Tsamud yang mewarisi kejayaan kaum 'Ad. Mereka mahir memahat gunung-gunung batu untuk dijadikan tempat tinggal yang mewah. Kaum Tsamud meminta bukti kenabian Sholeh berupa mukjizat yang mustahil: keluarnya seekor unta betina yang hamil dari sebuah batu besar. Atas izin Allah, mukjizat itu terjadi. Sholeh berpesan agar unta itu tidak diganggu dan berbagi air dengan penduduk. Namun, orang-orang kafir yang dengki menyembelih unta tersebut. Sholeh memperingatkan bahwa dalam tiga hari azab akan datang. Benar saja, pada hari keempat, suara guntur yang sangat keras menggelegar menghancurkan jantung mereka, dan mereka mati bergelimpangan di rumah-rumah mereka sendiri.</p>
-
-                    <div class="story-title"><span class="tag-nabi">06</span> NABI IBRAHIM AS</div>
-                    <p class="detail-text">Nabi Ibrahim AS adalah Bapak para Nabi (Abul Anbiya) dan Rasul Ulul Azmi. Beliau lahir di tengah masyarakat penyembah berhala pimpinan Raja Namrud. Sejak kecil, Ibrahim mencari Tuhan yang sebenarnya melalui pengamatan terhadap bintang, bulan, dan matahari hingga meyakini adanya Allah Sang Pencipta. Ibrahim melakukan aksi berani menghancurkan berhala-berhala Namrud dan menyisakan satu yang terbesar. Akibatnya, beliau dihukum bakar hidup-hidup. Namun Allah berfirman: "Wahai api, jadilah dingin dan selamatkan Ibrahim." Ibrahim tidak terbakar sedikitpun. Beliau kemudian berhijrah dan membangun Ka'bah bersama putranya, Ismail. Ibrahim diuji dengan perintah menyembelih Ismail, yang kemudian diganti dengan seekor domba besar oleh Allah (asal mula Idul Adha).</p>
-
-                    <div class="story-title"><span class="tag-nabi">07</span> NABI LUTH AS</div>
-                    <p class="detail-text">Nabi Luth AS adalah keponakan Nabi Ibrahim. Beliau diutus kepada penduduk kota Sodom yang memiliki perilaku maksiat yang sangat keji dan belum pernah dilakukan manusia sebelumnya, yaitu homoseksual. Luth berdakwah dengan gigih agar mereka bertaubat, namun mereka justru mengancam mengusir Luth. Allah kemudian mengirimkan malaikat yang menyamar sebagai pemuda tampan untuk bertamu ke rumah Luth. Kaum Sodom mengepung rumah Luth untuk merebut tamu tersebut. Malaikat kemudian membutakan mata mereka dan memerintahkan Luth untuk segera pergi meninggalkan kota sebelum fajar. Saat fajar menyingsing, Allah menjungkirbalikkan bumi mereka dan menghujani kota tersebut dengan batu belerang yang panas.</p>
-
-                    <div class="story-title"><span class="tag-nabi">08</span> NABI ISMAIL AS</div>
-                    <p class="detail-text">Nabi Ismail AS adalah putra pertama Nabi Ibrahim dari Siti Hajar. Saat masih bayi, Ismail dan ibunya ditinggalkan di lembah Makkah yang gersang atas perintah Allah. Ketika mereka kehausan, Hajar berlari antara bukit Shafa dan Marwah sebanyak tujuh kali (Sa'i). Tiba-tiba, dari bawah hentakan kaki bayi Ismail, terpancarlah air Zamzam yang tidak pernah kering hingga sekarang. Ismail tumbuh menjadi pemuda yang sangat patuh. Beliau dengan ikhlas menerima perintah Allah ketika ayahnya bermimpi menyembelihnya. Ketulusannya diganjar Allah dengan keselamatan, dan beliau membantu ayahnya meninggikan pondasi Ka'bah.</p>
-
-                    <div class="story-title"><span class="tag-nabi">09</span> NABI ISHAQ AS</div>
-                    <p class="detail-text">Nabi Ishaq AS adalah putra kedua Nabi Ibrahim dari istrinya, Siti Sarah. Kelahirannya merupakan kabar gembira yang disampaikan oleh para malaikat saat Sarah sudah berusia lanjut. Ishaq dikenal sebagai nabi yang sangat lembut hatinya dan sangat berilmu. Dari keturunan Ishaq inilah lahir banyak nabi-nabi Bani Israil, termasuk Nabi Ya'qub dan Nabi Yusuf. Beliau selalu mengikuti jejak ayahnya dalam menegakkan ajaran tauhid di tanah Palestina.</p>
-
-                    <div class="story-title"><span class="tag-nabi">10</span> NABI YA'QUB AS</div>
-                    <p class="detail-text">Nabi Ya'qub AS adalah putra Nabi Ishaq. Beliau memiliki dua belas orang putra yang kelak menjadi cikal bakal dua belas suku Bani Israil. Kehidupan Ya'qub dipenuhi dengan ujian kesabaran, terutama saat putra-putranya membuang Yusuf (putra kesayangannya) ke dalam sumur. Ya'qub menangis selama bertahun-tahun hingga matanya menjadi putih (buta) karena sedih. Namun, beliau tetap berprasangka baik kepada Allah. Kesabarannya berbuah manis saat beliau akhirnya dipertemukan kembali dengan Yusuf yang telah menjadi penguasa di Mesir, dan penglihatannya pun pulih kembali.</p>
-
-                    <div class="story-title"><span class="tag-nabi">11</span> NABI YUSUF AS</div>
-                    <p class="detail-text">Nabi Yusuf AS diberikan mukjizat berupa ketampanan yang luar biasa (separuh ketampanan dunia) dan kemampuan menafsirkan mimpi. Beliau dibuang ke sumur oleh saudara-saudaranya yang iri, lalu ditemukan musafir dan dijual sebagai budak di Mesir. Beliau difitnah oleh Zulaikha hingga dipenjara. Di dalam penjara, beliau menafsirkan mimpi Raja tentang tujuh sapi gemuk dan tujuh sapi kurus. Karena ketepatannya, Yusuf dibebaskan dan diangkat menjadi bendahara negara Mesir. Yusuf berhasil menyelamatkan Mesir dari bencana kelaparan dan akhirnya memaafkan saudara-saudaranya.</p>
-
-                    <div class="story-title"><span class="tag-nabi">12</span> NABI AYYUB AS</div>
-                    <p class="detail-text">Nabi Ayyub AS adalah simbol kesabaran tiada tara. Beliau awalnya sangat kaya raya, memiliki banyak anak, dan kesehatan yang sempurna. Namun, Allah mengujinya dengan mencabut semua hartanya, mewafatkan anak-anaknya, dan memberikan penyakit kulit yang sangat parah di seluruh tubuhnya selama 18 tahun. Istrinya tetap setia mendampingi, namun kaumnya menjauh. Ayyub tidak pernah mengeluh dan terus berdzikir. Akhirnya Allah memerintahkannya menghentakkan kaki ke bumi, lalu muncullah air yang menyembuhkan seluruh penyakitnya dan Allah mengembalikan kekayaan serta keturunannya berlipat ganda.</p>
-
-                    <div class="story-title"><span class="tag-nabi">13</span> NABI SYUAIB AS</div>
-                    <p class="detail-text">Nabi Syuaib AS diutus kepada penduduk Madyan. Mereka adalah pedagang yang sangat licik, sering mengurangi takaran dan timbangan. Syuaib mengajak mereka untuk adil dalam berbisnis dan hanya menyembah Allah. Karena mereka menentang dan mengejek Syuaib, Allah mengirimkan azab berupa hawa panas yang membakar kulit (Yaumuz Zhullah), diikuti oleh gempa bumi yang dahsyat yang membuat mereka mati bergelimpangan di rumah mereka.</p>
-
-                    <div class="story-title"><span class="tag-nabi">14</span> NABI MUSA AS</div>
-                    <p class="detail-text">Nabi Musa AS adalah Rasul Ulul Azmi yang lahir di zaman Firaun. Firaun memerintahkan membunuh setiap bayi laki-laki, namun Musa diselamatkan Allah dengan dihanyutkan ke sungai Nil hingga ditemukan oleh istri Firaun sendiri. Musa memiliki mukjizat tongkat yang bisa berubah menjadi ular besar dan mengalahkan penyihir Firaun. Puncaknya, Musa membelah Laut Merah dengan tongkatnya untuk menyelamatkan Bani Israil dari kejaran tentara Firaun. Musa menerima Kitab Taurat di Bukit Sinai dan dikenal sebagai Kalimullah (orang yang bicara langsung dengan Allah).</p>
-
-                    <div class="story-title"><span class="tag-nabi">15</span> NABI HARUN AS</div>
-                    <p class="detail-text">Nabi Harun AS adalah kakak kandung Nabi Musa. Beliau diangkat menjadi nabi atas permintaan Musa kepada Allah agar didampingi oleh seseorang yang fasih bicaranya. Harun dikenal memiliki tutur kata yang lembut dan sangat bijaksana. Beliau setia mendampingi Musa menghadap Firaun dan memimpin Bani Israil saat Musa pergi ke Bukit Sinai selama 40 hari.</p>
-
-                    <div class="story-title"><span class="tag-nabi">16</span> NABI DZULKIFLI AS</div>
-                    <p class="detail-text">Nabi Dzulkifli AS adalah nabi yang sangat sabar dan teguh memegang janji. Nama beliau berarti "yang memiliki kesanggupan". Beliau terpilih menjadi pemimpin kaumnya setelah berhasil memenuhi syarat dari nabi sebelumnya, yaitu berpuasa di siang hari, sholat di malam hari, dan tidak pernah marah. Meski digoda oleh Iblis berkali-kali, beliau tetap tenang dan adil dalam memutuskan perkara.</p>
-
-                    <div class="story-title"><span class="tag-nabi">17</span> NABI DAUD AS</div>
-                    <p class="detail-text">Nabi Daud AS adalah raja sekaligus nabi yang menerima Kitab Zabur. Beliau memiliki suara yang sangat merdu hingga gunung-gunung dan burung-burung ikut bertasbih bersamanya. Daud memiliki mukjizat bisa melunakkan besi dengan tangan kosong untuk dijadikan baju perang. Beliau dikenal sangat rajin beribadah, terutama puasa Daud (sehari puasa, sehari tidak). Beliau berhasil membunuh Jalut (Goliath) yang perkasa dalam pertempuran.</p>
-
-                    <div class="story-title"><span class="tag-nabi">18</span> NABI SULAIMAN AS</div>
-                    <p class="detail-text">Nabi Sulaiman AS adalah putra Nabi Daud yang mewarisi kerajaan dan kenabiannya. Beliau adalah manusia terkaya dan memiliki kekuasaan paling luas. Mukjizatnya meliputi kemampuan berbicara dengan hewan (semut, burung hud-hud), memerintah bangsa Jin, serta menundukkan angin sebagai kendaraannya. Beliau membangun Baitul Maqdis dan Istana Kaca yang megah untuk menyadarkan Ratu Balqis dari penyembahan matahari.</p>
-
-                    <div class="story-title"><span class="tag-nabi">19</span> NABI ILYAS AS</div>
-                    <p class="detail-text">Nabi Ilyas AS diutus kepada kaumnya di Baalbak (Lebanon) yang menyembah berhala bernama Ba'al. Ilyas memperingatkan mereka akan azab Allah, namun mereka tetap ingkar. Allah kemudian menahan hujan selama tiga tahun hingga hewan-hewan mati. Setelah Ilyas berdoa, hujan turun kembali, namun kaumnya kembali berbuat syirik. Akhirnya mereka ditimpa bencana gempa yang dahsyat.</p>
-
-                    <div class="story-title"><span class="tag-nabi">20</span> NABI ILYASA AS</div>
-                    <p class="detail-text">Nabi Ilyasa AS adalah murid dan penerus Nabi Ilyas. Beliau melanjutkan dakwah Ilyas untuk membimbing Bani Israil agar tetap di jalan tauhid. Beliau diberikan mukjizat dapat menyembuhkan berbagai macam penyakit dan membangkitkan orang mati atas izin Allah demi membuktikan kebenaran risalahnya.</p>
-
-                    <div class="story-title"><span class="tag-nabi">21</span> NABI YUNUS AS</div>
-                    <p class="detail-text">Nabi Yunus AS diutus ke penduduk Ninawa. Karena mereka menolak dakwahnya, Yunus pergi meninggalkan mereka dengan perasaan marah sebelum ada perintah Allah. Yunus naik ke kapal yang kemudian dihantam badai. Yunus dilempar ke laut dan ditelan oleh ikan paus raksasa. Di dalam perut ikan yang gelap, Yunus bertaubat dan berdzikir: "La ilaha illa anta subhanaka inni kuntu minaz dhalimin." Allah mengeluarkannya ke daratan dalam keadaan selamat. Sementara itu, kaumnya ternyata bertaubat dan menjadi satu-satunya kaum yang selamat dari azab karena keimanan mereka.</p>
-
-                    <div class="story-title"><span class="tag-nabi">22</span> NABI ZAKARIA AS</div>
-                    <p class="detail-text">Nabi Zakaria AS adalah nabi yang sangat sabar dalam berdoa memohon keturunan. Hingga usia rambutnya memutih dan tulang-tulangnya lemah, beliau tidak berhenti memohon kepada Allah. Akhirnya, Allah mengabulkan doanya dengan memberikan putra bernama Yahya. Zakaria juga merupakan pengasuh Siti Maryam (ibunda Nabi Isa) dan menyaksikan keajaiban makanan yang selalu ada di mihrab Maryam.</p>
-
-                    <div class="story-title"><span class="tag-nabi">23</span> NABI YAHYA AS</div>
-                    <p class="detail-text">Nabi Yahya AS adalah putra Nabi Zakaria. Beliau dikenal sebagai nabi yang sangat cerdas, zuhud, dan sangat sayang kepada orang tuanya serta sesama makhluk. Yahya sangat hafal syariat Taurat dan memiliki keberanian besar dalam menentang penguasa yang zalim (Raja Herodus) yang ingin menikahi mahramnya sendiri.</p>
-
-                    <div class="story-title"><span class="tag-nabi">24</span> NABI ISA AS</div>
-                    <p class="detail-text">Nabi Isa AS lahir dari rahim Siti Maryam tanpa seorang ayah, sebagai tanda kekuasaan Allah. Beliau bisa berbicara saat masih bayi untuk membela kesucian ibunya. Mukjizatnya meliputi: menyembuhkan orang buta sejak lahir, menyembuhkan penyakit kusta, menghidupkan orang mati, dan menurunkan hidangan dari langit atas izin Allah. Beliau menerima Kitab Injil. Isa diangkat ke langit oleh Allah saat orang-orang kafir hendak menyalibnya.</p>
-
-                    <div class="story-title"><span class="tag-nabi">25</span> NABI MUHAMMAD SAW</div>
-                    <p class="detail-text">Nabi Muhammad SAW adalah penutup para nabi (Khatamul Anbiya) yang diutus untuk seluruh alam semesta. Lahir di tahun Gajah, beliau dikenal sebagai Al-Amin (yang terpercaya). Menerima wahyu pertama di Gua Hira (Al-Alaq 1-5). Mukjizat terbesarnya adalah Al-Qur'anul Karim. Beliau melakukan Isra Mi'raj dalam satu malam ke langit ketujuh. Beliau berhasil mengubah peradaban jahiliyah menjadi peradaban yang berakhlak mulia. Beliau adalah teladan sempurna (Uswatun Hasanah) bagi seluruh umat manusia hingga akhir zaman.</p>
+    <div id="mainProfile" style="display: none;">
+        <div class="profile-header">
+            <div class="top-bar">
+                <div class="ig-logo-wrapper" onclick="backToHome()">
+                    <h1 class="ig-logo">amnesfubbia</h1>
+                    <i class="fa-solid fa-chevron-down text-[10px] ml-0.5"></i>
+                    <span class="dot-notify"></span>
                 </div>
-                `
-            },
-            sholat: {
-                title: "KITAB SHOLAT & DZIKIR PARIPURNA",
-                html: `
-                <div class="content-box">
-                    <h3 class="story-title">NIAT SHOLAT 5 WAKTU (LENGKAP)</h3>
-                    <p class="font-bold text-emerald-800">1. SHOLAT SUBUH (2 Rakaat)</p>
-                    <p class="arabic">أُصَلِّى فَرْضَ الصُّبْح رَكْعَتَيْنِ مُسْتَقْبِلَ الْقِبْلَةِ أَدَاءً لِلَّهِ تَعَالَى</p>
-                    <p class="latin">Usholli fardhos-shubhi rok'ataini mustaqbilal qiblati adaa-an lillaahi ta'ala.</p>
-                    <p class="arti">"Aku niat sholat fardu subuh dua rakaat menghadap kiblat karena Allah Ta'ala."</p>
-
-                    <p class="font-bold text-emerald-800">2. SHOLAT DZUHUR (4 Rakaat)</p>
-                    <p class="arabic">أُصَلِّى فَرْضَ الظُّهْرِ اَرْبَعَ رَكَعَاتٍ مُسْتَقْبِلَ الْقِبْلَةِ اَدَاءً لِلَّهِ تَعَالَى</p>
-                    <p class="latin">Usholli fardhod-dzhuhri arba'a raka'aatim mustaqbilal qiblati adaa-an lillaahi ta'ala.</p>
-                    <p class="arti">"Aku niat sholat fardu dzuhur empat rakaat menghadap kiblat karena Allah Ta'ala."</p>
-
-                    <p class="font-bold text-emerald-800">3. SHOLAT ASHAR (4 Rakaat)</p>
-                    <p class="arabic">أُصَلِّى فَرْضَ الْعَصْرِ اَرْبَعَ رَكَعَاتٍ مُسْتَقْبِلَ الْقِبْلَةِ اَدَاءً لِلَّهِ تَعَالَى</p>
-                    <p class="latin">Usholli fardhol-'ashri arba'a raka'aatim mustaqbilal qiblati adaa-an lillaahi ta'ala.</p>
-                    <p class="arti">"Aku niat sholat fardu ashar empat rakaat menghadap kiblat karena Allah Ta'ala."</p>
-
-                    <p class="font-bold text-emerald-800">4. SHOLAT MAGHRIB (3 Rakaat)</p>
-                    <p class="arabic">أُصَلِّى فَرْضَ الْمَغْرِبِ ثَلاَثَ رَكَعَاتٍ مُسْتَقْبِلَ الْقِبْلَةِ اَدَاءً لِلَّهِ تَعَالَى</p>
-                    <p class="latin">Usholli fardhol-maghribi thalaatha raka'aatim mustaqbilal qiblati adaa-an lillaahi ta'ala.</p>
-                    <p class="arti">"Aku niat sholat fardu maghrib tiga rakaat menghadap kiblat karena Allah Ta'ala."</p>
-
-                    <p class="font-bold text-emerald-800">5. SHOLAT ISYA (4 Rakaat)</p>
-                    <p class="arabic">أُصَلِّى فَرْضَ الْعِشَاءِ اَرْبَعَ رَكَعَاتٍ مُسْتَقْبِلَ الْقِبْلَةِ اَدَاءً لِلَّهِ تَعَالَى</p>
-                    <p class="latin">Usholli fardhol-'isyaa-i arba'a raka'aatim mustaqbilal qiblati adaa-an lillaahi ta'ala.</p>
-                    <p class="arti">"Aku niat sholat fardu isya empat rakaat menghadap kiblat karena Allah Ta'ala."</p>
+                <div class="flex gap-5">
+                    <i class="fa-regular fa-square-plus text-2xl"></i>
+                    <i class="fa-solid fa-bars text-2xl cursor-pointer" onclick="toggleSideMenu()"></i>
                 </div>
+            </div>
 
-                <div class="content-box">
-                    <h3 class="story-title">BACAAN DALAM SHOLAT (TEKSTUAL)</h3>
-                    <p class="font-bold text-xs uppercase text-slate-500">Doa Iftitah:</p>
-                    <p class="arabic text-[1.4rem]">اللهُ أَكْبَرُ كَبِيرًا، وَالْحَمْدُ لِلَّهِ كَثِيرًا، وَسُبْحَانَ اللهِ بُكْرَةً وَأَصِيلاً. إِنِّي وَجَّهْتُ وَجْهِيَ لِلَّذِي فَطَرَ السَّمَاوَاتِ وَالْأَرْضَ حَنِيفًا مُسْلِمًا وَمَا أَنَا مِنَ الْمُشْرِكِينَ. إِنَّ صَلَاتِي وَنُسُكِي وَمَحْيَايَ وَمَمَاتِي لِلَّهِ رَبِّ الْعَالَمِينَ. لَا شَرِيكَ لَهُ وَبِذَلِكَ أُمِرْتُ وَأَنَا مِنَ الْمُسْلِمِينَ</p>
-
-                    <p class="font-bold text-xs mt-10 uppercase text-slate-500">Bacaan Ruku':</p>
-                    <p class="arabic">سُبْحَانَ رَبِّيَ الْعَظِيمِ وَبِحَمْدِهِ</p>
-                    <p class="latin">Subhaana rabbiyal 'adhiimi wa bihamdih (3x).</p>
-
-                    <p class="font-bold text-xs mt-10 uppercase text-slate-500">Bacaan I'tidal:</p>
-                    <p class="arabic">سَمِعَ اللهُ لِمَنْ حَمِدَهُ. رَبَّنَا لَكَ الْحَمْدُ</p>
-                    <p class="latin">Sami'allaahu liman hamidah. Rabbanaa lakal hamdu.</p>
-
-                    <p class="font-bold text-xs mt-10 uppercase text-slate-500">Bacaan Sujud:</p>
-                    <p class="arabic">سُبْحَانَ رَبِّيَ الْأَعْلَى وَبِحَمْدِهِ</p>
-                    <p class="latin">Subhaana rabbiyal a'laa wa bihamdih (3x).</p>
-
-                    <p class="font-bold text-xs mt-10 uppercase text-slate-500">Bacaan Duduk Antara Dua Sujud:</p>
-                    <p class="arabic">رَبِّ اغْفِرْ لِي وَارْحَمْنِي وَاجْبُرْنِي وَارْفَعْنِي وَارْزُقْنِي وَاهْدِنِي وَعَافِنِي وَاعْفُ عَنِّي</p>
-                    <p class="latin">Rabbighfirlii warhamnii wajburnii warfa'nii warzuqnii wahdinii wa'aafinii wa'fu 'annii.</p>
-
-                    <p class="font-bold text-xs mt-10 uppercase text-slate-500">Tahiyat Akhir:</p>
-                    <p class="arabic text-[1.2rem]">التَّحِيَّاتُ الْمُبَارَكَاتُ الصَّلَوَاتُ الطَّيِّبَاتُ لِلَّهِ. السَّلاَمُ عَلَيْكَ أَيُّهَا النَّبِىُّ وَرَحْمَةُ اللَّهِ وَبَرَكَاتُهُ. السَّلاَمُ عَلَيْنَا وَعَلَى عِبَادِ اللَّهِ الصَّالِحِينَ. أَشْهَدُ أَنْ لاَ إِلَهَ إِلاَّ اللَّهُ وَأَشْهَدُ أَنْ نَّ مُحَمَّدًا رَسُولُ اللَّهِ. اللَّهُمَّ صَلِّ عَلَى سَيِّدِنَا مُحَمَّدٍ وَعَلَى آلِ سَيِّدِنَا مُحَمَّدٍ كَمَا صَلَّيْتَ عَلَى سَيِّدِنَا إِبْرَاهِيمَ وَعَلَى آلِ سَيِّدِنَا إِبْرَاهِيمَ وَبَارِكْ عَلَى سَيِّدِنَا مُحَمَّدٍ وَعَلَى آلِ سَيِّدِنَا مُحَمَّدٍ كَمَا بَارَكْتَ عَلَى سَيِّدِنَا إِبْرَاهِيمَ وَعَلَى آلِ سَيِّدِنَا إِبْرَاهِيمَ فِي الْعَالَمِينَ إِنَّكَ حَمِيدٌ مَجِيدٌ</p>
+            <div class="profile-info">
+                <div class="profile-pic-container">
+                    <div class="profile-pic-logo"><img src="amnesfubbia.png" alt="Logo"></div>
+                    <div class="add-story-btn"><i class="fa-solid fa-plus"></i></div>
                 </div>
-
-                <div class="content-box">
-                    <h3 class="story-title">DZIKIR SETELAH SHOLAT</h3>
-                    <p class="text-sm">1. Istighfar (3x): Astaghfirullah hal adzim</p>
-                    <p class="text-sm">2. Allahumma antas-salam wa minkas-salam tabarakta ya dzal jalali wal ikram.</p>
-                    <p class="text-sm">3. Subhanallah (33x)</p>
-                    <p class="text-sm">4. Alhamdulillah (33x)</p>
-                    <p class="text-sm">5. Allahu Akbar (33x)</p>
-                    <p class="text-sm">6. La ilaha illallahu wahdahu la syarika lah, lahul mulku wa lahul hamdu wa huwa 'ala kulli syai-in qadir.</p>
+                <div class="stats">
+                    <div class="stat-item active-stat" id="stat-movie" onclick="setFilter('type', 'movie', this)"><span class="stat-val">25.4rb</span><span class="stat-label">film</span></div>
+                    <div class="stat-item" id="stat-tv" onclick="setFilter('type', 'tv', this)"><span class="stat-val">8.2rb</span><span class="stat-label">series</span></div>
+                    <div class="stat-item" id="stat-short" onclick="setFilter('type', 'short', this)"><span class="stat-val">1.5rb</span><span class="stat-label">short</span></div>
                 </div>
-                `
-            },
-            akidah: {
-                title: "PENJABARAN AKIDAH & TAUHID",
-                html: `
-                <div class="content-box">
-                    <h3 class="story-title">SIFAT 20 WAJIB ALLAH (DETAIL)</h3>
-                    <div class="space-y-6 text-sm">
-                        <div class="p-4 border rounded-xl"><b>1. WUJUD (Ada):</b> Artinya Allah itu zat yang pasti ada. Mustahil Allah itu tidak ada (Adam). Buktinya adalah adanya alam semesta dan isinya.</div>
-                        <div class="p-4 border rounded-xl"><b>2. QIDAM (Dahulu):</b> Artinya Allah sudah ada sebelum segala sesuatu ada. Tidak ada permulaan bagi keberadaan Allah.</div>
-                        <div class="p-4 border rounded-xl"><b>3. BAQA (Kekal):</b> Artinya Allah tidak akan pernah mati, rusak, atau berakhir. Allah tetap ada saat dunia hancur.</div>
-                        <div class="p-4 border rounded-xl"><b>4. MUKHALAFATU LIL HAWADITSI (Berbeda dengan Baru):</b> Artinya Allah tidak serupa dengan makhluk-Nya. Allah tidak punya rupa, tidak punya arah, dan tidak menempati ruang.</div>
-                        <div class="p-4 border rounded-xl"><b>5. QIYAMUHU BINAFSIHI (Berdiri Sendiri):</b> Artinya Allah tidak membutuhkan bantuan siapapun dan tidak butuh tempat tinggal. Justru makhluklah yang butuh Allah.</div>
-                        <div class="p-4 border rounded-xl"><b>6. WAHDANIYAH (Esa):</b> Artinya Allah itu tunggal. Tidak ada Tuhan selain Dia, tidak ada sekutu bagi-Nya baik dalam zat, sifat, maupun perbuatan.</div>
-                        <div class="p-4 border rounded-xl"><b>7. QUDRAT (Kuasa):</b> Artinya Allah Maha Kuasa atas segala sesuatu. Tidak ada yang mustahil bagi Allah.</div>
-                        <div class="p-4 border rounded-xl"><b>8. IRADAT (Berkehendak):</b> Artinya segala yang terjadi di dunia ini adalah atas kemauan Allah. Tidak ada paksaan bagi Allah.</div>
-                        <div class="p-4 border rounded-xl"><b>9. ILMU (Mengetahui):</b> Artinya Allah tahu segala sesuatu, baik yang tampak maupun yang tersembunyi, yang sudah lewat maupun yang akan datang.</div>
-                        <div class="p-4 border rounded-xl"><b>10. HAYAT (Hidup):</b> Artinya Allah Maha Hidup. Hidupnya Allah tidak pakai nafas atau detak jantung, dan Allah tidak pernah tidur atau mati.</div>
-                        <div class="p-4 border rounded-xl"><b>11. SAMA' (Mendengar):</b> Artinya Allah mendengar segala suara meski sangat pelan atau hanya dalam hati tanpa bantuan telinga.</div>
-                        <div class="p-4 border rounded-xl"><b>12. BASHAR (Melihat):</b> Artinya Allah melihat segala sesuatu yang ada di alam raya tanpa bantuan mata atau cahaya.</div>
-                        <div class="p-4 border rounded-xl"><b>13. KALAM (Berfirman):</b> Artinya Allah berkata-kata tanpa suara, tanpa huruf, dan tanpa bahasa seperti manusia. Kitab-kitab suci adalah bukti kalam-Nya.</div>
-                        <div class="p-4 border rounded-xl"><b>14-20. KAUNUHU QADIRAN s/d MUTAKALLIMAN:</b> Ini adalah sifat keadaan Allah yang senantiasa Berkuasa, Berkehendak, Mengetahui, Hidup, Mendengar, Melihat, dan Berfirman selama-lamanya.</div>
+            </div>
+
+            <div class="bio">
+                <div class="bio-name-wrapper"><span class="bio-name">amnesfubbia</span><i class="fa-solid fa-circle-check text-[#0095f6] text-[13px]"></i></div>
+                <span>🎬 Discover. Watch. Archive.</span><br>
+                <span class="text-zinc-400">Cari film, tonton trailer, simpan & Download film favoritmu.</span>
+            </div>
+
+            <div class="action-buttons">
+                <div class="btn-ig" id="btnNowPlaying" onclick="setSchedule('now_playing', this)">Sedang Tayang</div>
+                <div class="btn-ig" id="btnUpcoming" onclick="setSchedule('upcoming', this)">Segera Tayang</div>
+                <div class="btn-icon-sq" onclick="toggleFilterBar()"><i class="fa-solid fa-user-plus text-sm"></i></div>
+            </div>
+
+            <div id="filterBar">
+                <div class="pill-grid grid-cols-3">
+                    <button class="pill" id="btnCountry" onclick="toggleFilter(event, 'countryDropdown')">Negara <i class="fa-solid fa-caret-down"></i></button>
+                    <button class="pill" id="btnGenre" onclick="toggleFilter(event, 'genreDropdown')">Genre <i class="fa-solid fa-caret-down"></i></button>
+                    <button class="pill" id="yearBtn" onclick="toggleFilter(event, 'yearDropdown')">Tahun <i class="fa-solid fa-caret-down"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <div class="highlights-wrapper no-scrollbar"><div class="highlights-container no-scrollbar" id="highlightList"></div></div>
+
+        <div class="tab-nav">
+            <div class="tab-item active" id="tabGrid" onclick="switchTab('grid', this)"><i class="fa-solid fa-table-cells"></i></div>
+            <div class="tab-item" id="tabLikes" onclick="switchTab('likes', this)"><i class="fa-regular fa-heart"></i></div>
+            <div class="tab-item" id="tabBookmark" onclick="switchTab('bookmarks', this)"><i class="fa-regular fa-bookmark"></i></div>
+        </div>
+
+        <main id="feedGrid" class="movie-grid"></main>
+    </div>
+
+    <div id="searchOverlay">
+        <div class="search-header">
+            <i class="fa-solid fa-arrow-left text-xl text-white" onclick="closeSearch()"></i>
+            <div class="search-input-box">
+                <i class="fa-solid fa-magnifying-glass text-zinc-500 text-xs"></i>
+                <input type="text" id="searchInp" autocomplete="off" placeholder="Cari film, series, atau aktor..." onkeydown="if(event.key==='Enter') searchAction()">
+                <div id="smartSearchDropdown" class="no-scrollbar"></div>
+            </div>
+        </div>
+        <div id="searchGrid" class="movie-grid"></div>
+    </div>
+
+    <div id="backToTop" onclick="window.scrollTo({top: 0, behavior: 'smooth'})"><i class="fa-solid fa-arrow-up"></i></div>
+    <div id="filterOverlay" onclick="closeD()"></div>
+    <div id="countryDropdown" class="filter-dropdown no-scrollbar"></div>
+    <div id="genreDropdown" class="filter-dropdown no-scrollbar"></div>
+    <div id="yearDropdown" class="filter-dropdown no-scrollbar"></div>
+
+    <div id="movieModal" class="modal-player">
+        <div id="modalScrollTop" class="max-w-xl mx-auto pb-40">
+            <div class="px-4 h-[54px] flex items-center border-b border-zinc-900 sticky top-0 bg-black z-50">
+                <i class="fa-solid fa-chevron-left text-xl cursor-pointer" onclick="closeModal()"></i>
+                <div class="flex-grow text-center text-[14px] font-bold truncate px-8" id="mTitle"></div>
+            </div>
+            <div id="castContainer" class="cast-wrapper px-4 no-scrollbar"></div>
+            <div class="relative overflow-hidden">
+                <div class="swipe-overlay" id="swipeOverlay"></div>
+                <div class="carousel-track" id="carouselTrack"></div>
+                <div id="carouselDots" class="flex justify-center gap-2 py-3"></div>
+            </div>
+            <div class="px-4 py-3 flex justify-between items-center">
+                <div class="flex gap-4">
+                    <i id="btnLikeModal" class="interaction-icon"></i>
+                    <i class="fa-regular fa-comment interaction-icon"></i>
+                    <i class="fa-regular fa-paper-plane interaction-icon"></i>
+                </div>
+                <i id="btnBookModal" class="interaction-icon"></i>
+            </div>
+            <div class="ig-post-content">
+                <span id="mLikeDisplay" class="ig-likes-count"></span>
+                <div class="mb-1">
+                    <span class="ig-username">amnesfubbia</span>
+                    <span id="mDesc" class="ig-caption"></span>
+                    <div class="mt-1">
+                        <span id="mToggleBtn" class="toggle-btn hidden" onclick="handleToggleDesc()">selengkapnya</span>
                     </div>
                 </div>
+                
+                <div id="mHashtags" class="ig-hashtags"></div>
 
-                <div class="content-box">
-                    <h3 class="story-title">10 MALAIKAT & TUGAS RINCI</h3>
-                    <ul class="space-y-4 text-sm">
-                        <li class="border-b pb-2"><b>Jibril:</b> Menyampaikan wahyu dari Allah kepada para Nabi dan Rasul.</li>
-                        <li class="border-b pb-2"><b>Mikail:</b> Mengatur pembagian rezeki, menurunkan hujan, dan mengatur cuaca.</li>
-                        <li class="border-b pb-2"><b>Israfil:</b> Meniup terompet Sangkakala saat hari kiamat dan hari kebangkitan.</li>
-                        <li class="border-b pb-2"><b>Izrail:</b> Mencabut nyawa seluruh makhluk yang hidup di alam semesta.</li>
-                        <li class="border-b pb-2"><b>Raqib:</b> Mencatat setiap amal kebaikan manusia sejak akil baligh.</li>
-                        <li class="border-b pb-2"><b>Atid:</b> Mencatat setiap amal keburukan atau maksiat yang dilakukan manusia.</li>
-                        <li class="border-b pb-2"><b>Munkar:</b> Menanyai manusia di alam kubur tentang ketauhidan dan ibadah.</li>
-                        <li class="border-b pb-2"><b>Nakir:</b> Menanyai manusia di alam kubur (berpasangan dengan Munkar).</li>
-                        <li class="border-b pb-2"><b>Malik:</b> Penjaga pintu neraka yang sangat tegas dan perkasa.</li>
-                        <li class="border-b pb-2"><b>Ridwan:</b> Penjaga pintu surga yang ramah menyambut hamba yang beriman.</li>
-                    </ul>
+                <div class="flex items-center gap-2 mt-2">
+                    <div id="mDateDisplay" class="ig-date"></div>
+                    <p id="mTranslateBtn" class="hidden" onclick="handleTranslate()">Lihat terjemahan</p>
                 </div>
-                `
-            }
+                
+                <div id="seriesControl" class="hidden mt-6 p-4 bg-zinc-950 rounded-2xl border border-zinc-900">
+                    <div class="flex justify-between items-center mb-4"><h4 class="text-[9px] font-black text-zinc-400 uppercase">Episode</h4><select id="seasonSel" class="bg-zinc-900 text-white text-[10px] px-2 py-1 rounded" onchange="loadEpisodes()"></select></div>
+                    <div id="episodeGrid" class="grid grid-cols-5 gap-2"></div>
+                </div>
+                <div id="serverList" class="grid grid-cols-3 gap-2 mt-6"></div>
+                <div class="dl-grid">
+                    <button id="btnDownload1" class="dl-link-btn" onclick="highlightBtn(this); window.open(`https://dl.vidsrc.vip/${window.currentMediaType}/${window.currentMediaId}`)">Download 1</button>
+                    <button id="btnDownload2" class="dl-link-btn" onclick="highlightBtn(this); window.open(`https://multiembed.mov/directstream.php?video_id=${window.currentMediaId}&tmdb=1`)">Download 2</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <nav class="bottom-nav">
+        <i class="fa-solid fa-house cursor-pointer text-xl active-nav" onclick="updateActiveNav(this); backToHome()"></i>
+        <i class="fa-solid fa-magnifying-glass cursor-pointer text-xl" onclick="updateActiveNav(this); openSearch()"></i>
+        <i class="fa-regular fa-bookmark cursor-pointer text-xl" onclick="updateActiveNav(this); switchTab('bookmarks', document.getElementById('tabBookmark'))"></i>
+    </nav>
+
+    <script>
+        const API_KEY = 'bfa7df5310c9974f62f26c6789a8c00d';
+        let page = 1, loading = false, currentType = 'movie', currentGenre = '', currentYear = '', currentCountry = '', currentSchedule = 'trending', searchQuery = '', currentCompany = '', currentLibMode = false, currentCastId = '';
+        let isExpanded = false, globalFullDesc = "", globalEnDesc = "", currentIdx = 0, startX = 0, isTranslated = false, originalIndoDesc = "";
+        let abortController = null;
+
+        window.onload = () => {
+            setTimeout(() => {
+                document.getElementById('splashScreen').style.display = 'none';
+                document.getElementById('mainProfile').style.display = 'block';
+            }, 2500);
+
+            initFilters(); initHighlights(); loadFeed(); setupSwipe(); initSmartSearch(); 
+            window.addEventListener('scroll', () => { 
+                document.getElementById('backToTop').style.display = window.scrollY > 500 ? 'flex' : 'none'; 
+            }); 
         };
 
-        function openSection(key) {
-            const data = bigData[key];
-            document.getElementById('pTitle').innerText = data.title;
-            document.getElementById('pBody').innerHTML = data.html;
-            document.getElementById('pageLayer').classList.add('active');
-            document.body.style.overflow = 'hidden';
-            window.scrollTo(0,0);
+        function updateActiveNav(el) { document.querySelectorAll('.bottom-nav i').forEach(i => i.classList.remove('active-nav')); el.classList.add('active-nav'); }
+
+        function toggleSideMenu() {
+            const menu = document.getElementById('sideMenu');
+            const isVisible = menu.style.display === 'block';
+            menu.style.display = isVisible ? 'none' : 'block';
+            document.body.style.overflow = isVisible ? 'auto' : 'hidden';
         }
 
-        function closeSection() {
-            document.getElementById('pageLayer').classList.remove('active');
-            document.body.style.overflow = 'auto';
+        function backToHome() {
+            closeModal(); closeSearch(); closeD();
+            currentGenre = ''; currentYear = ''; currentCountry = ''; currentSchedule = 'trending'; currentType = 'movie'; searchQuery = ''; currentCastId = ''; currentCompany = '';
+            document.getElementById('btnGenre').innerText = 'Genre';
+            document.getElementById('yearBtn').innerText = 'Tahun';
+            document.getElementById('btnCountry').innerText = 'Negara';
+            document.querySelectorAll('.pill').forEach(p => p.classList.remove('active-pill'));
+            document.querySelectorAll('.btn-ig').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.stat-item').forEach(s => s.classList.remove('active-stat'));
+            document.getElementById('stat-movie').classList.add('active-stat');
+            document.getElementById('filterBar').style.display = 'none';
+            switchTab('grid', document.getElementById('tabGrid'));
+            window.scrollTo({top: 0, behavior: 'smooth'});
         }
+
+        function initSmartSearch() { 
+            const inp = document.getElementById('searchInp'); 
+            const drop = document.getElementById('smartSearchDropdown'); 
+            let timeout = null; 
+            inp.addEventListener('input', () => { 
+                clearTimeout(timeout); 
+                const q = inp.value.trim(); 
+                if(q.length < 2) { drop.style.display = 'none'; return; } 
+                timeout = setTimeout(async () => { 
+                    try { 
+                        const res = await fetch(`https://api.themoviedb.org/3/search/multi?query=${encodeURIComponent(q)}&api_key=${API_KEY}&language=id-ID`); 
+                        const data = await res.json(); 
+                        const results = (data.results || []).slice(0, 5); 
+                        if(results.length) { 
+                            drop.innerHTML = results.map(m => {
+                                const mType = m.media_type || 'movie';
+                                const mId = m.id;
+                                const isPerson = mType === 'person';
+                                const clickAction = isPerson ? `searchByCast(${mId})` : `openModal(${mId}, '${mType}')`;
+                                const meta = isPerson ? 'Pemeran / Aktor' : (mType === 'tv' ? 'Series' : 'Film');
+                                const imgPath = m.poster_path || m.profile_path || '';
+                                
+                                return `<div class="smart-item" onclick="${clickAction}">
+                                    <img src="https://image.tmdb.org/t/p/w92${imgPath}">
+                                    <div class="smart-info">
+                                        <span class="smart-name">${m.title || m.name}</span>
+                                        <span class="smart-meta">${meta}</span>
+                                    </div>
+                                </div>`;
+                            }).join(''); 
+                            drop.style.display = 'block'; 
+                        } else { drop.style.display = 'none'; } 
+                    } catch(e){} 
+                }, 300); 
+            }); 
+            document.addEventListener('click', (e) => { if(!e.target.closest('.search-input-box')) drop.style.display = 'none'; }); 
+        }
+
+        function searchByCast(castId) { 
+            closeModal(); 
+            currentCastId = castId; 
+            searchQuery = ''; 
+            document.getElementById('searchInp').value = ''; 
+            document.getElementById('searchOverlay').style.display = 'block'; 
+            document.getElementById('smartSearchDropdown').style.display = 'none';
+            document.body.style.overflow='hidden'; 
+            loadFeed(true); 
+        }
+
+        function initHighlights() { 
+            const hls = [{n: 'Disney', com: '2|6125|3166|34213', l: 'DSNY', t: 'movie'},{n: 'Pixar', com: '3', l: 'PIXR', t: 'movie'},{n: 'Dreamworks', com: '521|7|1778', l: 'DRMW', t: 'movie'},{n: 'Ghibli', com: '10342', l: 'GHBL', t: 'movie'},{n: 'Anime', g: 16, l: 'ANIM', t: 'movie', c: 'JP'},{n: 'Indonesia', c: 'ID', l: 'INDO', t: 'movie'},{n: 'Korea', c: 'KR', l: 'KOR', t: 'movie'},{n: 'India', c: 'IN', l: 'INDI', t: 'movie'},{n: 'Thailand', c: 'TH', l: 'THAI', t: 'movie'}]; 
+            const cont = document.getElementById('highlightList'); 
+            hls.forEach(h => { 
+                const div = document.createElement('div'); 
+                div.className = 'highlight-item'; 
+                div.onclick = () => { 
+                    document.querySelectorAll('.highlight-item').forEach(i => i.classList.remove('active-hl'));
+                    div.classList.add('active-hl');
+                    currentLibMode = false; currentCastId = ''; searchQuery = ''; currentCountry = h.c || ''; currentGenre = h.g || ''; currentCompany = h.com || ''; currentSchedule = 'trending'; currentType = h.t; currentYear = ''; loadFeed(true); 
+                }; 
+                div.innerHTML = `<div class="highlight-circle"><span class="hl-logo">${h.l}</span></div><div class="highlight-text">${h.n}</div>`; 
+                cont.appendChild(div); 
+            }); 
+        }
+
+        function initFilters() { 
+            const yD = document.getElementById('yearDropdown'); 
+            let yearHTML = '<div class="filter-item sticky-reset" onclick="setYear(\'\')">Semua Tahun</div>'; 
+            for(let y=2026; y>=1900; y--) yearHTML += `<div class="filter-item" onclick="setYear(${y})">${y}</div>`; 
+            yD.innerHTML = yearHTML; 
+            const countries = [['ID','Indonesia'],['US','USA'],['KR','Korea Selatan'],['JP','Jepang'],['IN','India'],['TH','Thailand'],['CN','China'],['PH','Filipina'],['GB','Inggris'],['FR','Prancis'],['ES','Spanyol'],['IT','Italia'],['TR','Turki'],['DE','Jerman']]; 
+            const cD = document.getElementById('countryDropdown'); 
+            let countryHTML = '<div class="filter-item sticky-reset" onclick="setCountry(\'\',\'Negara\')">Semua Negara</div>'; 
+            countries.forEach(c => countryHTML += `<div class="filter-item" onclick="setCountry('${c[0]}','${c[1]}')">${c[1]}</div>`); 
+            cD.innerHTML = countryHTML; 
+            const genres = [[28,'Action'],[12,'Adventure'],[16,'Animasi'],[35,'Komedi'],[80,'Crime'],[99,'Dokumenter'],[18,'Drama'],[10751,'Family'],[14,'Fantasy'],[36,'History'],[27,'Horror'],[10402,'Music'],[9648,'Misteri'],[10749,'Romance'],[878,'Sci-Fi'],[53,'Thriller']]; 
+            const gD = document.getElementById('genreDropdown'); 
+            let genreHTML = '<div class="filter-item sticky-reset" onclick="setGenre(\'\',\'Genre\')">Semua Genre</div>'; 
+            genres.forEach(g => genreHTML += `<div class="filter-item" onclick="setGenre('${g[0]}','${g[1]}')">${g[1]}</div>`); 
+            gD.innerHTML = genreHTML; 
+        }
+
+        function toggleFilter(e, id) { e.stopPropagation(); const d = document.getElementById(id); const overlay = document.getElementById('filterOverlay'); document.querySelectorAll('.filter-dropdown').forEach(el => el.style.display = 'none'); d.style.display = 'block'; d.scrollTop = 0; overlay.style.display = 'block'; document.body.style.overflow = 'hidden'; }
+        function closeD() { document.querySelectorAll('.filter-dropdown').forEach(d => d.style.display = 'none'); document.getElementById('filterOverlay').style.display = 'none'; document.body.style.overflow = 'auto'; }
+
+        async function loadFeed(isNew = true) {
+            if(loading && isNew) { if(abortController) abortController.abort(); }
+            if(loading && !isNew) return;
+            loading = true; abortController = new AbortController();
+            const grid = document.getElementById('searchOverlay').style.display === 'block' ? document.getElementById('searchGrid') : document.getElementById('feedGrid');
+            if(isNew) { page = 1; grid.innerHTML = ''; }
+            
+            let url;
+            if(currentCastId) { url = `https://api.themoviedb.org/3/person/${currentCastId}/combined_credits?api_key=${API_KEY}&language=id-ID`; }
+            else if(searchQuery) { url = `https://api.themoviedb.org/3/search/multi?query=${encodeURIComponent(searchQuery)}&api_key=${API_KEY}&language=id-ID&page=${page}&include_adult=false`; }
+            else {
+                let endpoint = (currentType === 'tv') ? 'discover/tv' : 'discover/movie';
+                url = `https://api.themoviedb.org/3/${endpoint}?api_key=${API_KEY}&language=id-ID&page=${page}&include_adult=false&sort_by=popularity.desc`;
+                if(currentCountry) url += `&with_origin_country=${currentCountry}`;
+                if(currentGenre) url += `&with_genres=${currentGenre}`;
+                if(currentCompany) url += `&with_companies=${currentCompany}`;
+                if(currentType === 'short') url += `&with_runtime.lte=40&with_runtime.gte=1`;
+                
+                if(currentSchedule === 'now_playing' || currentSchedule === 'upcoming') { 
+                    const today = new Date().toISOString().split('T')[0]; 
+                    if(currentSchedule === 'now_playing') { 
+                        const prev = new Date(Date.now() - 60*24*60*60*1000).toISOString().split('T')[0]; 
+                        url += `&primary_release_date.gte=${prev}&primary_release_date.lte=${today}`; 
+                    } else { url += `&primary_release_date.gte=${today}`; } 
+                }
+
+                if(currentYear) {
+                    if(endpoint === 'discover/tv') url += `&first_air_date_year=${currentYear}`;
+                    else url += `&primary_release_year=${currentYear}`;
+                }
+            }
+
+            try { 
+                const res = await fetch(url, { signal: abortController.signal }); 
+                const data = await res.json(); 
+                let items = data.results || data.cast || []; 
+                if(currentCastId) items.sort((a,b) => b.popularity - a.popularity);
+                if(items.length === 0 && isNew) {
+                    grid.innerHTML = `<div class="col-span-3 text-center py-20 text-zinc-600 text-xs">Konten tidak ditemukan.</div>`;
+                } else {
+                    renderGrid(items, grid); 
+                }
+            } catch(e) { if(e.name !== 'AbortError') console.error(e); }
+            loading = false;
+        }
+
+        function renderGrid(items, grid) { 
+            items.forEach(m => { 
+                if(!m.poster_path || m.media_type === 'person') return; 
+                
+                // CEK APAKAH ID SUDAH ADA DI GRID (Pencegahan Dobel)
+                if (grid.querySelector(`[data-id="${m.id}"]`)) return;
+
+                const mType = m.media_type || (currentType === 'tv' ? 'tv' : 'movie'); 
+                const card = document.createElement('div'); 
+                card.className = 'post-card'; 
+                card.setAttribute('data-id', m.id); // Set ID untuk tracking
+                card.onclick = function() { openModal(m.id, mType); }; 
+                card.innerHTML = `<div class="badge-rating">★ ${(m.vote_average||0).toFixed(1)}</div><div class="badge-type">${currentType==='short'?'SHORT':(mType==='tv'?'SERIES':'FILM')}</div><img src="https://image.tmdb.org/t/p/w342${m.poster_path}" loading="lazy">`; 
+                grid.appendChild(card); 
+            }); 
+        }
+
+        function openSearch() { document.getElementById('searchOverlay').style.display = 'block'; document.getElementById('searchInp').value = ''; document.getElementById('searchGrid').innerHTML = ''; document.getElementById('searchInp').focus(); document.body.style.overflow='hidden'; }
+        function closeSearch() { document.getElementById('searchOverlay').style.display = 'none'; document.body.style.overflow='auto'; searchQuery=''; currentCastId=''; }
+        function searchAction() { currentLibMode = false; currentCastId = ''; searchQuery = document.getElementById('searchInp').value; loadFeed(true); document.getElementById('smartSearchDropdown').style.display = 'none'; }
+        function toggleFilterBar() { const b = document.getElementById('filterBar'); b.style.display = b.style.display === 'block' ? 'none' : 'block'; }
+        
+        function setSchedule(v, el) { 
+            currentLibMode = false; currentCastId = ''; searchQuery = ''; 
+            const isActive = el.classList.contains('active');
+            document.querySelectorAll('.btn-ig').forEach(b=>b.classList.remove('active')); 
+            if(isActive) { currentSchedule = 'trending'; } 
+            else { el.classList.add('active'); currentSchedule = v; }
+            loadFeed(true); 
+        }
+
+        function setFilter(k, v, el) { 
+            currentLibMode = false; currentCastId = ''; searchQuery = ''; 
+            currentType = v; 
+            document.querySelectorAll('.stat-item').forEach(s => s.classList.remove('active-stat'));
+            el.classList.add('active-stat');
+            loadFeed(true); 
+        }
+
+        function setYear(y) { 
+            currentYear = y; 
+            const btn = document.getElementById('yearBtn');
+            btn.innerText = y || 'Tahun'; 
+            y ? btn.classList.add('active-pill') : btn.classList.remove('active-pill');
+            closeD(); loadFeed(true); 
+        }
+
+        function setCountry(c, n) { 
+            currentCountry = c; 
+            const btn = document.getElementById('btnCountry');
+            btn.innerText = n; 
+            c ? btn.classList.add('active-pill') : btn.classList.remove('active-pill');
+            closeD(); loadFeed(true); 
+        }
+
+        function setGenre(g, n) { 
+            currentGenre = g; 
+            const btn = document.getElementById('btnGenre');
+            btn.innerText = n; 
+            g ? btn.classList.add('active-pill') : btn.classList.remove('active-pill');
+            closeD(); loadFeed(true); 
+        }
+
+        async function openModal(id, type) {
+            window.currentMediaId = id; window.currentMediaType = type;
+            document.getElementById('movieModal').style.display = 'block'; 
+            document.getElementById('movieModal').scrollTop = 0;
+            document.getElementById('smartSearchDropdown').style.display = 'none'; document.body.style.overflow = 'hidden'; currentIdx = 0; isTranslated = false;
+            
+            const [rId, rEn, rCast] = await Promise.all([
+                fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&language=id-ID&append_to_response=videos,production_companies`),
+                fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&language=en-US&append_to_response=videos`),
+                fetch(`https://api.themoviedb.org/3/${type}/${id}/credits?api_key=${API_KEY}`)
+            ]);
+            
+            const dId = await rId.json(), dEn = await rEn.json(), dCast = await rCast.json();
+            const vids = [...(dId.videos?.results || []), ...(dEn.videos?.results || [])].filter(v => v.site === 'YouTube' && (v.type === 'Trailer' || v.type === 'Teaser')).slice(0, 4);
+            const track = document.getElementById('carouselTrack'), dots = document.getElementById('carouselDots');
+            
+            // CLEANUP BEFORE LOAD
+            track.querySelectorAll('iframe').forEach(f => f.src = "");
+            track.innerHTML = ''; dots.innerHTML = ''; track.style.transform = 'translateX(0)';
+            
+            if(vids.length > 0) { 
+                vids.forEach((v, i) => { 
+                    track.innerHTML += `<div class="carousel-slide"><iframe id="yt-${i}" src="https://www.youtube.com/embed/${v.key}?enablejsapi=1&autoplay=${i===0?1:0}&rel=0" class="w-full h-full" allow="autoplay; fullscreen"></iframe></div>`; 
+                    if(vids.length > 1) {
+                        dots.innerHTML += `<div class="dot w-1.5 h-1.5 rounded-full ${i===currentIdx?'bg-blue-500':'bg-zinc-700'}"></div>`; 
+                    }
+                }); 
+                document.getElementById('swipeOverlay').style.display = vids.length > 1 ? 'block' : 'none'; 
+            } else { 
+                track.innerHTML = `<div class="carousel-slide"><iframe src="https://vidrock.net/embed/${type}/${id}${type==='tv'?'/1/1':''}" class="w-full h-full" allowfullscreen></iframe></div>`; 
+                document.getElementById('swipeOverlay').style.display = 'none'; 
+            }
+
+            document.getElementById('castContainer').innerHTML = (dCast.cast || []).slice(0, 10).map(c => {
+                const profileImg = c.profile_path 
+                    ? `<img src="https://image.tmdb.org/t/p/w185${c.profile_path}" loading="lazy">` 
+                    : `<div style="width:100%; height:100%; background:#000;"></div>`;
+                
+                return `
+                    <div class="cast-item" onclick="searchByCast(${c.id})">
+                        <div class="cast-img-border">
+                            <div class="inner-border">
+                                ${profileImg}
+                            </div>
+                        </div>
+                        <span class="cast-name">${c.name}</span>
+                    </div>`;
+            }).join('');
+
+            document.getElementById('mLikeDisplay').innerText = `${Math.floor((dId.vote_average || 0) * 1234).toLocaleString('id-ID')} suka`; document.getElementById('mTitle').innerText = dId.title || dId.name || dEn.title;
+            
+            originalIndoDesc = dId.overview;
+            globalFullDesc = originalIndoDesc || dEn.overview || "Sinopsis belum tersedia untuk konten ini.";
+            globalEnDesc = dEn.overview;
+            
+            if(globalEnDesc && globalEnDesc !== originalIndoDesc) { 
+                document.getElementById('mTranslateBtn').classList.remove('hidden'); 
+                document.getElementById('mTranslateBtn').innerText = "Lihat terjemahan"; 
+            } else { document.getElementById('mTranslateBtn').classList.add('hidden'); }
+            
+            isExpanded = false; 
+            renderSynopsis();
+
+            const relYear = (dId.release_date || dId.first_air_date || "2026").split('-')[0];
+            const contentKind = (type === 'tv') ? 'Series' : 'Film';
+            const genresArr = (dId.genres || []).map(g => `#${g.name.replace(/[^a-zA-Z0-9]/g, '')}`).slice(0, 3).join(' ');
+            const studiosArr = (dId.production_companies || []).map(c => `#${c.name.replace(/[^a-zA-Z0-9]/g, '')}`).slice(0, 2).join(' ');
+            document.getElementById('mHashtags').innerHTML = `#${(dId.title||dId.name||"").replace(/[^a-zA-Z0-9]/g, '')} #${relYear} #${contentKind} <br> ${genresArr} ${studiosArr}`;
+            const rel = dId.release_date || dId.first_air_date || ""; 
+            document.getElementById('mDateDisplay').innerText = rel ? new Date(rel).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
+            document.getElementById('serverList').innerHTML = `<button class="server-btn" onclick="playVid('https://vidrock.net/embed/${type}/${id}${type==='tv'?'/1/1':''}', this)">Server 1</button><button class="server-btn" onclick="playVid('https://vidsrc.me/embed/${type}?tmdb=${id}', this)">Server 2</button><button class="server-btn" onclick="playVid('https://embed.smashystream.com/playere.php?tmdb=${id}', this)">Server 3</button>`;
+            if(type === 'tv') { document.getElementById('seriesControl').classList.remove('hidden'); document.getElementById('seasonSel').innerHTML = (dId.seasons||[]).filter(s=>s.season_number>0).map(s=>`<option value="${s.season_number}">Season ${s.season_number}</option>`).join(''); loadEpisodes(); } else { document.getElementById('seriesControl').classList.add('hidden'); }
+            updateLibButtons(id);
+        }
+
+        async function handleTranslate() {
+            const btn = document.getElementById('mTranslateBtn');
+            if(!isTranslated) {
+                const oldText = btn.innerText;
+                btn.innerText = "Menerjemahkan...";
+                try {
+                    const res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=id&dt=t&q=${encodeURIComponent(globalEnDesc)}`);
+                    const data = await res.json();
+                    globalFullDesc = data[0].map(x => x[0]).join('');
+                    isTranslated = true;
+                    btn.innerText = "Lihat versi asli";
+                    renderSynopsis();
+                } catch(e) { btn.innerText = "Gagal menerjemahkan"; setTimeout(()=>btn.innerText=oldText, 2000); }
+            } else {
+                globalFullDesc = originalIndoDesc || globalEnDesc || "Sinopsis tidak tersedia.";
+                isTranslated = false;
+                btn.innerText = "Lihat terjemahan";
+                renderSynopsis();
+            }
+        }
+        
+        function closeModal() { 
+            const track = document.getElementById('carouselTrack'); 
+            track.querySelectorAll('iframe').forEach(f => f.src = "");
+            track.innerHTML = ''; 
+            document.getElementById('movieModal').style.display = 'none'; 
+            document.body.style.overflow = 'auto'; // FIX SCROLL LOCK
+        }
+
+        function renderSynopsis() { const descEl = document.getElementById('mDesc'), toggleBtn = document.getElementById('mToggleBtn'); if (globalFullDesc.length > 90) { toggleBtn.classList.remove('hidden'); descEl.innerText = isExpanded ? globalFullDesc : globalFullDesc.substring(0, 90) + "..."; toggleBtn.innerText = isExpanded ? "ringkas" : "selengkapnya"; } else { descEl.innerText = globalFullDesc; toggleBtn.classList.add('hidden'); } }
+        function handleToggleDesc() { isExpanded = !isExpanded; renderSynopsis(); }
+        
+        function playVid(url, el) { 
+            const track = document.getElementById('carouselTrack'); 
+            const dots = document.getElementById('carouselDots'); 
+            // CLEANUP OLD IFRAME FIRST
+            track.querySelectorAll('iframe').forEach(f => f.src = "");
+            track.innerHTML = `<div class="carousel-slide"><iframe src="${url}" class="w-full h-full" allowfullscreen></iframe></div>`; 
+            track.style.transform = 'translateX(0)'; 
+            currentIdx = 0; 
+            dots.innerHTML = ''; 
+            document.getElementById('swipeOverlay').style.display = 'none'; 
+            highlightBtn(el); 
+        }
+        
+        function highlightBtn(el) { document.querySelectorAll('.server-btn').forEach(b => b.classList.remove('active-link')); el.classList.add('active-link'); }
+        async function loadEpisodes() { const s = document.getElementById('seasonSel').value; const res = await fetch(`https://api.themoviedb.org/3/tv/${window.currentMediaId}/season/${s}?api_key=${API_KEY}`); const d = await res.json(); document.getElementById('episodeGrid').innerHTML = (d.episodes||[]).map(e => `<div class="pill text-[10px]" onclick="playVid('https://vidrock.net/embed/tv/${window.currentMediaId}/${s}/${e.episode_number}', this)">${e.episode_number}</div>`).join(''); }
+        
+        function setupSwipe() { 
+            const overlay = document.getElementById('swipeOverlay'); 
+            overlay.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, {passive:true}); 
+            overlay.addEventListener('touchend', e => { 
+                let diff = startX - e.changedTouches[0].clientX; 
+                const slides = document.querySelectorAll('.carousel-slide'); 
+                if(Math.abs(diff) > 50 && slides.length > 1) { 
+                    let oldIdx = currentIdx; 
+                    if(diff > 0 && currentIdx < slides.length - 1) currentIdx++; 
+                    else if(diff < 0 && currentIdx > 0) currentIdx--; 
+                    document.getElementById('carouselTrack').style.transform = `translateX(-${currentIdx * 100}%)`; 
+                    document.querySelectorAll('.dot').forEach((d, i) => { d.className = `dot w-1.5 h-1.5 rounded-full ${i===currentIdx?'bg-blue-500':'bg-zinc-700'}`; }); 
+                    const oldVid = document.getElementById(`yt-${oldIdx}`), newVid = document.getElementById(`yt-${currentIdx}`);
+                    if(oldVid) try{oldVid.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');}catch(e){}
+                    if(newVid) try{newVid.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');}catch(e){}
+                } 
+            }); 
+        }
+
+        function updateLibButtons(id) { const isL = JSON.parse(localStorage.getItem('likes') || '[]').some(x=>x.id==id); const isB = JSON.parse(localStorage.getItem('bookmarks') || '[]').some(x=>x.id==id); document.getElementById('btnLikeModal').className = isL ? 'fa-solid fa-heart text-red-500 interaction-icon' : 'fa-regular fa-heart interaction-icon'; document.getElementById('btnBookModal').className = isB ? 'fa-solid fa-bookmark text-white interaction-icon' : 'fa-regular fa-bookmark interaction-icon'; document.getElementById('btnLikeModal').onclick = () => toggleLib('likes'); document.getElementById('btnBookModal').onclick = () => toggleLib('bookmarks'); }
+        function toggleLib(k) { let items = JSON.parse(localStorage.getItem(k) || '[]'); const idx = items.findIndex(x => x.id == window.currentMediaId); idx > -1 ? items.splice(idx,1) : items.push({id: window.currentMediaId, type: window.currentMediaType}); localStorage.setItem(k, JSON.stringify(items)); updateLibButtons(window.currentMediaId); }
+        async function switchTab(mode, el) { document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active')); el.classList.add('active'); const grid = document.getElementById('feedGrid'); grid.innerHTML = ''; if(mode === 'likes' || mode === 'bookmarks') { currentLibMode = true; showLibrary(mode); } else { currentLibMode = false; currentCastId = ''; searchQuery = ''; currentType='movie'; currentSchedule='trending'; currentCompany=''; loadFeed(true); } }
+        async function showLibrary(k) { const items = JSON.parse(localStorage.getItem(k) || '[]'); const grid = document.getElementById('feedGrid'); grid.innerHTML = ''; if (!items.length) { grid.innerHTML = '<div class="col-span-3 text-center py-20 text-zinc-500 text-xs">Belum ada konten disimpan</div>'; return; } const promises = items.map(i => fetch(`https://api.themoviedb.org/3/${i.type}/${i.id}?api_key=${API_KEY}&language=id-ID`).then(r => r.json())); const results = await Promise.all(promises); renderGrid(results.filter(m => m.id), grid); }
+        window.onscroll = () => { if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 1000 && !loading && !searchQuery && !currentLibMode) { page++; loadFeed(false); } };
     </script>
 </body>
 </html>
