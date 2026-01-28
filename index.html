@@ -11,13 +11,14 @@
         body { background-color: #000; color: #fff; font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         
+        /* LOGO & SPLASH (TETAP SESUAI PERMINTAAN SEBELUMNYA) */
         #splashScreen { position: fixed; inset: 0; background: #000; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .splash-content { display: flex; flex-direction: column; align-items: center; animation: splashScale 0.8s ease-out; }
-        .splash-logo { width: 80px; height: 80px; margin-bottom: 10px; }
+        .splash-logo { width: 80px; height: 80px; margin-bottom: 2px; }
         .splash-name { font-size: 18px; font-weight: 700; color: #fff; letter-spacing: -0.5px; opacity: 0; animation: fadeIn 0.5s ease forwards; animation-delay: 0.4s; }
         .splash-footer { position: absolute; bottom: 40px; text-align: center; opacity: 0; animation: fadeIn 0.5s ease forwards; animation-delay: 0.8s; }
         .from-text { font-size: 12px; color: #8e8e8e; letter-spacing: 1px; margin-bottom: 5px; }
-        .brand-text { font-size: 16px; font-weight: 700; letter-spacing: 2px; background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .brand-text { font-size: 14px; font-weight: 700; letter-spacing: 2px; background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
         @keyframes splashScale { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         @keyframes fadeIn { to { opacity: 1; } }
@@ -30,8 +31,8 @@
         
         .profile-info { display: flex; align-items: center; gap: 28px; margin-bottom: 15px; }
         .profile-pic-container { position: relative; width: 78px; height: 78px; }
-        .profile-pic-logo { width: 74px; height: 74px; border-radius: 50%; border: 1px solid #262626; overflow: hidden; display: flex; align-items: center; justify-content: center; background: #000; padding: 4px; }
-        .profile-pic-logo img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+        .profile-pic-logo { width: 74px; height: 74px; border-radius: 50%; border: 1px solid #262626; overflow: hidden; display: flex; align-items: center; justify-content: center; background: #000; padding: 12px; }
+        .profile-pic-logo img { width: 100%; height: 100%; object-fit: contain; border-radius: 50%; }
         .add-story-btn { position: absolute; bottom: 2px; right: 2px; width: 22px; height: 22px; background: #0095f6; border: 2.5px solid #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: bold; color: #fff; z-index: 10; }
 
         .stats { display: flex; flex-grow: 1; justify-content: space-between; text-align: center; padding-right: 10px; }
@@ -39,7 +40,6 @@
         .stat-val { font-weight: 700; font-size: 16px; color: #fff; line-height: 1; margin-bottom: 2px; }
         .stat-label { font-size: 13px; font-weight: 400; line-height: 1; }
         .stat-item.active-stat { color: #fff; }
-        .stat-item.active-stat .stat-label { font-weight: 600; }
         
         .bio { font-size: 13px; line-height: 1.25; margin-bottom: 15px; margin-top: -8px; }
         .bio-name-wrapper { display: flex; align-items: center; gap: 4px; margin-bottom: 1px; }
@@ -105,7 +105,11 @@
         
         .cast-wrapper { display: flex; overflow-x: auto; gap: 15px; padding: 15px 0; scrollbar-width: none; }
         .cast-item { flex: 0 0 65px; text-align: center; cursor: pointer; }
-        .cast-img-border { width: 64px; height: 64px; border-radius: 50%; padding: 2.5px; background: linear-gradient(45deg, #f9ce34, #ee2a7b, #6228d7); margin-bottom: 5px; }
+        .cast-img-border { 
+            width: 64px; height: 64px; border-radius: 50%; padding: 2.5px; 
+            background: linear-gradient(45deg, #f9ce34, #ee2a7b, #6228d7); 
+            margin-bottom: 5px; 
+        }
         .cast-img-border .inner-border { width: 100%; height: 100%; border-radius: 50%; border: 2px solid #000; overflow: hidden; background: #000; }
         .cast-img-border img { width: 100%; height: 100%; object-fit: cover; }
         .cast-name { font-size: 9px; font-weight: 500; color: #fff; line-height: 1.2; display: block; margin-top: 4px; }
@@ -200,7 +204,7 @@
             <i class="fa-solid fa-arrow-left text-xl text-white" onclick="closeSearch()"></i>
             <div class="search-input-box">
                 <i class="fa-solid fa-magnifying-glass text-zinc-500 text-xs"></i>
-                <input type="text" id="searchInp" autocomplete="off" placeholder="Cari film, series, anime..." onkeydown="if(event.key==='Enter') searchAction()">
+                <input type="text" id="searchInp" autocomplete="off" placeholder="Cari film, series, atau aktor..." onkeydown="if(event.key==='Enter') searchAction()">
                 <div id="smartSearchDropdown" class="no-scrollbar"></div>
             </div>
         </div>
@@ -304,6 +308,7 @@
             window.scrollTo({top: 0, behavior: 'smooth'});
         }
 
+        /* FITUR PENCARIAN AKTOR & JUDUL */
         function initSmartSearch() { 
             const inp = document.getElementById('searchInp'); 
             const drop = document.getElementById('smartSearchDropdown'); 
@@ -321,11 +326,16 @@
                             drop.innerHTML = results.map(m => {
                                 const mType = m.media_type || 'movie';
                                 const mId = m.id;
-                                return `<div class="smart-item" onclick="openModal(${mId}, '${mType}')">
-                                    <img src="https://image.tmdb.org/t/p/w92${m.poster_path || m.profile_path || ''}" onerror="this.src='https://via.placeholder.com/92'">
+                                const isPerson = mType === 'person';
+                                const clickAction = isPerson ? `searchByCast(${mId})` : `openModal(${mId}, '${mType}')`;
+                                const meta = isPerson ? 'Pemeran / Aktor' : (mType === 'tv' ? 'Series' : 'Film');
+                                const imgPath = m.poster_path || m.profile_path || '';
+                                
+                                return `<div class="smart-item" onclick="${clickAction}">
+                                    <img src="https://image.tmdb.org/t/p/w92${imgPath}">
                                     <div class="smart-info">
                                         <span class="smart-name">${m.title || m.name}</span>
-                                        <span class="smart-meta">${mType === 'tv' ? 'Series' : 'Film'} • ${m.release_date || m.first_air_date || ''}</span>
+                                        <span class="smart-meta">${meta}</span>
                                     </div>
                                 </div>`;
                             }).join(''); 
@@ -336,7 +346,18 @@
             }); 
             document.addEventListener('click', (e) => { if(!e.target.closest('.search-input-box')) drop.style.display = 'none'; }); 
         }
-        
+
+        function searchByCast(castId) { 
+            closeModal(); 
+            currentCastId = castId; 
+            searchQuery = ''; 
+            document.getElementById('searchInp').value = ''; 
+            document.getElementById('searchOverlay').style.display = 'block'; 
+            document.getElementById('smartSearchDropdown').style.display = 'none';
+            document.body.style.overflow='hidden'; 
+            loadFeed(true); 
+        }
+
         function initHighlights() { 
             const hls = [{n: 'Disney', com: '2|6125|3166|34213', l: 'DSNY', t: 'movie'},{n: 'Pixar', com: '3', l: 'PIXR', t: 'movie'},{n: 'Dreamworks', com: '521|7|1778', l: 'DRMW', t: 'movie'},{n: 'Ghibli', com: '10342', l: 'GHBL', t: 'movie'},{n: 'Anime', g: 16, l: 'ANIM', t: 'movie', c: 'JP'},{n: 'Indonesia', c: 'ID', l: 'INDO', t: 'movie'},{n: 'Korea', c: 'KR', l: 'KOR', t: 'movie'},{n: 'India', c: 'IN', l: 'INDI', t: 'movie'},{n: 'Thailand', c: 'TH', l: 'THAI', t: 'movie'}]; 
             const cont = document.getElementById('highlightList'); 
@@ -426,7 +447,7 @@
                 const card = document.createElement('div'); 
                 card.className = 'post-card'; 
                 card.onclick = function() { openModal(m.id, mType); }; 
-                card.innerHTML = `<div class="badge-rating">★ ${(m.vote_average||0).toFixed(1)}</div><div class="badge-type">${currentType==='short'?'SHORT':(mType==='tv'?'SERIES':'FILM')}</div><img src="https://image.tmdb.org/t/p/w342${m.poster_path}" loading="lazy" onerror="this.src='https://via.placeholder.com/342x513/111/111?text=No+Image'">`; 
+                card.innerHTML = `<div class="badge-rating">★ ${(m.vote_average||0).toFixed(1)}</div><div class="badge-type">${currentType==='short'?'SHORT':(mType==='tv'?'SERIES':'FILM')}</div><img src="https://image.tmdb.org/t/p/w342${m.poster_path}" loading="lazy">`; 
                 grid.appendChild(card); 
             }); 
         }
@@ -434,7 +455,6 @@
         function openSearch() { document.getElementById('searchOverlay').style.display = 'block'; document.getElementById('searchInp').value = ''; document.getElementById('searchGrid').innerHTML = ''; document.getElementById('searchInp').focus(); document.body.style.overflow='hidden'; }
         function closeSearch() { document.getElementById('searchOverlay').style.display = 'none'; document.body.style.overflow='auto'; searchQuery=''; currentCastId=''; }
         function searchAction() { currentLibMode = false; currentCastId = ''; searchQuery = document.getElementById('searchInp').value; loadFeed(true); document.getElementById('smartSearchDropdown').style.display = 'none'; }
-        function searchByCast(castId) { closeModal(); currentCastId = castId; searchQuery = ''; document.getElementById('searchInp').value = ''; document.getElementById('searchOverlay').style.display = 'block'; document.body.style.overflow='hidden'; loadFeed(true); }
         function toggleFilterBar() { const b = document.getElementById('filterBar'); b.style.display = b.style.display === 'block' ? 'none' : 'block'; }
         
         function setSchedule(v, el) { 
@@ -501,23 +521,32 @@
                     dots.innerHTML += `<div class="dot w-1.5 h-1.5 rounded-full ${i===currentIdx?'bg-blue-500':'bg-zinc-700'}"></div>`; 
                 }); 
                 document.getElementById('swipeOverlay').style.display = 'block'; 
-                // PERBAIKAN: Sembunyikan dots jika video hanya 1
-                dots.style.display = (vids.length > 1) ? 'flex' : 'none';
             } else { 
                 track.innerHTML = `<div class="carousel-slide"><iframe src="https://vidrock.net/embed/${type}/${id}${type==='tv'?'/1/1':''}" class="w-full h-full" allowfullscreen></iframe></div>`; 
-                dots.style.display = 'none'; // PERBAIKAN: Sembunyikan dots jika server tunggal
+                dots.innerHTML = `<div class="dot bg-blue-500 w-1.5 h-1.5 rounded-full"></div>`; 
                 document.getElementById('swipeOverlay').style.display = 'none'; 
             }
 
             document.getElementById('castContainer').innerHTML = (dCast.cast || []).slice(0, 10).map(c => {
-                const profileImg = c.profile_path ? `<img src="https://image.tmdb.org/t/p/w185${c.profile_path}" loading="lazy">` : `<div style="width:100%; height:100%; background:#000;"></div>`;
-                return `<div class="cast-item" onclick="searchByCast(${c.id})"><div class="cast-img-border"><div class="inner-border">${profileImg}</div></div><span class="cast-name">${c.name}</span></div>`;
+                const profileImg = c.profile_path 
+                    ? `<img src="https://image.tmdb.org/t/p/w185${c.profile_path}" loading="lazy">` 
+                    : `<div style="width:100%; height:100%; background:#000;"></div>`;
+                
+                return `
+                    <div class="cast-item" onclick="searchByCast(${c.id})">
+                        <div class="cast-img-border">
+                            <div class="inner-border">
+                                ${profileImg}
+                            </div>
+                        </div>
+                        <span class="cast-name">${c.name}</span>
+                    </div>`;
             }).join('');
 
             document.getElementById('mLikeDisplay').innerText = `${Math.floor((dId.vote_average || 0) * 1234).toLocaleString('id-ID')} suka`; document.getElementById('mTitle').innerText = dId.title || dId.name || dEn.title;
             
             originalIndoDesc = dId.overview;
-            globalFullDesc = originalIndoDesc || dEn.overview || "Sinopsis belum tersedia.";
+            globalFullDesc = originalIndoDesc || dEn.overview || "Sinopsis belum tersedia untuk konten ini.";
             globalEnDesc = dEn.overview;
             
             if(globalEnDesc && globalEnDesc !== originalIndoDesc) { 
@@ -525,11 +554,14 @@
                 document.getElementById('mTranslateBtn').innerText = "Lihat terjemahan"; 
             } else { document.getElementById('mTranslateBtn').classList.add('hidden'); }
             
-            isExpanded = false; renderSynopsis();
+            isExpanded = false; 
+            renderSynopsis();
 
             const relYear = (dId.release_date || dId.first_air_date || "2026").split('-')[0];
+            const contentKind = (type === 'tv') ? 'Series' : 'Film';
             const genresArr = (dId.genres || []).map(g => `#${g.name.replace(/[^a-zA-Z0-9]/g, '')}`).slice(0, 3).join(' ');
-            document.getElementById('mHashtags').innerHTML = `#${(dId.title||dId.name||"").replace(/[^a-zA-Z0-9]/g, '')} #${relYear} <br> ${genresArr}`;
+            const studiosArr = (dId.production_companies || []).map(c => `#${c.name.replace(/[^a-zA-Z0-9]/g, '')}`).slice(0, 2).join(' ');
+            document.getElementById('mHashtags').innerHTML = `#${(dId.title||dId.name||"").replace(/[^a-zA-Z0-9]/g, '')} #${relYear} #${contentKind} <br> ${genresArr} ${studiosArr}`;
             const rel = dId.release_date || dId.first_air_date || ""; 
             document.getElementById('mDateDisplay').innerText = rel ? new Date(rel).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
             document.getElementById('serverList').innerHTML = `<button class="server-btn" onclick="playVid('https://vidrock.net/embed/${type}/${id}${type==='tv'?'/1/1':''}', this)">Server 1</button><button class="server-btn" onclick="playVid('https://vidsrc.me/embed/${type}?tmdb=${id}', this)">Server 2</button><button class="server-btn" onclick="playVid('https://embed.smashystream.com/playere.php?tmdb=${id}', this)">Server 3</button>`;
@@ -540,6 +572,7 @@
         async function handleTranslate() {
             const btn = document.getElementById('mTranslateBtn');
             if(!isTranslated) {
+                const oldText = btn.innerText;
                 btn.innerText = "Menerjemahkan...";
                 try {
                     const res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=id&dt=t&q=${encodeURIComponent(globalEnDesc)}`);
@@ -548,7 +581,7 @@
                     isTranslated = true;
                     btn.innerText = "Lihat versi asli";
                     renderSynopsis();
-                } catch(e) { btn.innerText = "Gagal menerjemahkan"; }
+                } catch(e) { btn.innerText = "Gagal menerjemahkan"; setTimeout(()=>btn.innerText=oldText, 2000); }
             } else {
                 globalFullDesc = originalIndoDesc || globalEnDesc || "Sinopsis tidak tersedia.";
                 isTranslated = false;
@@ -557,7 +590,6 @@
             }
         }
         
-        // PERBAIKAN: Fungsi penutup modal dengan pembersihan memori iframe
         function closeModal() { 
             const track = document.getElementById('carouselTrack'); 
             track.querySelectorAll('iframe').forEach(f => f.src = "");
@@ -568,7 +600,7 @@
 
         function renderSynopsis() { const descEl = document.getElementById('mDesc'), toggleBtn = document.getElementById('mToggleBtn'); if (globalFullDesc.length > 90) { toggleBtn.classList.remove('hidden'); descEl.innerText = isExpanded ? globalFullDesc : globalFullDesc.substring(0, 90) + "..."; toggleBtn.innerText = isExpanded ? "ringkas" : "selengkapnya"; } else { descEl.innerText = globalFullDesc; toggleBtn.classList.add('hidden'); } }
         function handleToggleDesc() { isExpanded = !isExpanded; renderSynopsis(); }
-        function playVid(url, el) { const track = document.getElementById('carouselTrack'); const dots = document.getElementById('carouselDots'); track.innerHTML = `<div class="carousel-slide"><iframe src="${url}" class="w-full h-full" allowfullscreen></iframe></div>`; track.style.transform = 'translateX(0)'; currentIdx = 0; dots.style.display = 'none'; document.getElementById('swipeOverlay').style.display = 'none'; highlightBtn(el); }
+        function playVid(url, el) { const track = document.getElementById('carouselTrack'); const dots = document.getElementById('carouselDots'); track.innerHTML = `<div class="carousel-slide"><iframe src="${url}" class="w-full h-full" allowfullscreen></iframe></div>`; track.style.transform = 'translateX(0)'; currentIdx = 0; dots.innerHTML = `<div class="dot bg-blue-500 w-1.5 h-1.5 rounded-full"></div>`; document.getElementById('swipeOverlay').style.display = 'none'; highlightBtn(el); }
         function highlightBtn(el) { document.querySelectorAll('.server-btn').forEach(b => b.classList.remove('active-link')); el.classList.add('active-link'); }
         async function loadEpisodes() { const s = document.getElementById('seasonSel').value; const res = await fetch(`https://api.themoviedb.org/3/tv/${window.currentMediaId}/season/${s}?api_key=${API_KEY}`); const d = await res.json(); document.getElementById('episodeGrid').innerHTML = (d.episodes||[]).map(e => `<div class="pill text-[10px]" onclick="playVid('https://vidrock.net/embed/tv/${window.currentMediaId}/${s}/${e.episode_number}', this)">${e.episode_number}</div>`).join(''); }
         
