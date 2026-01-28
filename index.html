@@ -2,133 +2,267 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Arkanul | Iman & Islam</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ArkanulDin Encyclopedia</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&family=Amiri&display=swap" rel="stylesheet">
     <style>
-        body { background: #f8fafc; font-family: 'Plus Jakarta Sans', sans-serif; color: #1e293b; }
-        .nav-card { transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; }
-        .nav-card:active { transform: scale(0.95); opacity: 0.8; }
-        .detail-layer { position: fixed; inset: 0; background: white; z-index: 1000; transform: translateY(100%); transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); overflow-y: auto; }
-        .detail-layer.active { transform: translateY(0); }
-        .gradient-islam { background: linear-gradient(135deg, #059669 0%, #10b981 100%); }
-        .gradient-iman { background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%); }
+        body { background: #fdfdfd; font-family: 'Plus Jakarta Sans', sans-serif; color: #1e293b; }
+        .arabic { font-family: 'Amiri', serif; font-size: 1.8rem; line-height: 2.5rem; text-align: right; }
+        .detail-layer { position: fixed; inset: 0; background: white; z-index: 1000; transform: translateX(100%); transition: 0.4s ease-out; overflow-y: auto; }
+        .detail-layer.active { transform: translateX(0); }
+        .section-card { border: 1px solid #f1f5f9; border-radius: 24px; transition: 0.3s; }
+        .section-card:active { background: #f8fafc; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
     </style>
 </head>
-<body class="pb-20">
+<body class="pb-10">
 
-    <header class="p-8 bg-white border-b border-slate-100 sticky top-0 z-[50]">
+    <header class="p-8 sticky top-0 bg-white/80 backdrop-blur z-50 border-b border-slate-50">
         <h1 class="text-3xl font-black tracking-tighter italic">Arkanul<span class="text-emerald-600">Din</span></h1>
-        <p class="text-[10px] font-bold text-slate-400 mt-1 uppercase tracking-[3px]">Panduan Lengkap Iman & Islam</p>
+        <p class="text-[10px] font-bold text-slate-400 mt-1 uppercase tracking-[3px]">Ensiklopedia Lengkap Syariat & Akidah</p>
     </header>
 
     <main class="p-6 space-y-8">
-        <section>
-            <div class="flex items-center justify-between mb-4">
-                <h2 class="text-xl font-extrabold italic tracking-tight">Rukun Islam</h2>
-                <span class="text-[10px] font-black bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full uppercase">5 Dasar</span>
+        <div>
+            <h2 class="text-2xl font-black italic mb-4 flex items-center gap-2">
+                <span class="w-2 h-8 bg-emerald-500 rounded-full"></span> Rukun Islam
+            </h2>
+            <div class="space-y-3">
+                <div onclick="show('syahadat')" class="section-card p-5 bg-white shadow-sm flex items-center justify-between">
+                    <div class="flex items-center gap-4">
+                        <span class="text-xl font-black text-emerald-500">01</span>
+                        <div><h3 class="font-bold text-sm">SYAHADAT</h3><p class="text-[10px] text-slate-400">Ikrar Tauhid & Kenabian</p></div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-slate-200"></i>
+                </div>
+                <div onclick="show('shalat')" class="section-card p-5 bg-white shadow-sm flex items-center justify-between">
+                    <div class="flex items-center gap-4">
+                        <span class="text-xl font-black text-emerald-500">02</span>
+                        <div><h3 class="font-bold text-sm">SHALAT</h3><p class="text-[10px] text-slate-400">Fardu, Sunnah & Niat</p></div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-slate-200"></i>
+                </div>
+                <div onclick="show('zakat')" class="section-card p-5 bg-white shadow-sm flex items-center justify-between">
+                    <div class="flex items-center gap-4">
+                        <span class="text-xl font-black text-emerald-500">03</span>
+                        <div><h3 class="font-bold text-sm">ZAKAT</h3><p class="text-[10px] text-slate-400">Fitrah, Mal & Perhitungan</p></div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-slate-200"></i>
+                </div>
+                <div onclick="show('puasa')" class="section-card p-5 bg-white shadow-sm flex items-center justify-between">
+                    <div class="flex items-center gap-4">
+                        <span class="text-xl font-black text-emerald-500">04</span>
+                        <div><h3 class="font-bold text-sm">PUASA</h3><p class="text-[10px] text-slate-400">Ramadhan, Syarat & Batal</p></div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-slate-200"></i>
+                </div>
+                <div onclick="show('haji')" class="section-card p-5 bg-white shadow-sm flex items-center justify-between">
+                    <div class="flex items-center gap-4">
+                        <span class="text-xl font-black text-emerald-500">05</span>
+                        <div><h3 class="font-bold text-sm">HAJI</h3><p class="text-[10px] text-slate-400">Rukun & Syarat Mampu</p></div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-slate-200"></i>
+                </div>
             </div>
-            <div class="grid grid-cols-1 gap-3">
-                <div onclick="openDetail('islam', 1)" class="nav-card bg-white p-5 rounded-3xl border border-slate-100 flex items-center gap-5 shadow-sm">
-                    <div class="w-12 h-12 gradient-islam rounded-2xl flex items-center justify-center text-white font-bold text-xl">1</div>
-                    <div><h3 class="font-bold text-sm uppercase tracking-wide">Syahadat</h3><p class="text-xs text-slate-400">Persaksian Tauhid & Rasul</p></div>
-                </div>
-                <div onclick="openDetail('islam', 2)" class="nav-card bg-white p-5 rounded-3xl border border-slate-100 flex items-center gap-5 shadow-sm">
-                    <div class="w-12 h-12 gradient-islam rounded-2xl flex items-center justify-center text-white font-bold text-xl">2</div>
-                    <div><h3 class="font-bold text-sm uppercase tracking-wide">Shalat</h3><p class="text-xs text-slate-400">Tiang Agama 5 Waktu</p></div>
-                </div>
-                <div onclick="openDetail('islam', 3)" class="nav-card bg-white p-5 rounded-3xl border border-slate-100 flex items-center gap-5 shadow-sm">
-                    <div class="w-12 h-12 gradient-islam rounded-2xl flex items-center justify-center text-white font-bold text-xl">3</div>
-                    <div><h3 class="font-bold text-sm uppercase tracking-wide">Zakat</h3><p class="text-xs text-slate-400">Mensucikan Harta & Jiwa</p></div>
-                </div>
-                <div onclick="openDetail('islam', 4)" class="nav-card bg-white p-5 rounded-3xl border border-slate-100 flex items-center gap-5 shadow-sm">
-                    <div class="w-12 h-12 gradient-islam rounded-2xl flex items-center justify-center text-white font-bold text-xl">4</div>
-                    <div><h3 class="font-bold text-sm uppercase tracking-wide">Puasa</h3><p class="text-xs text-slate-400">Menahan Diri di Bulan Ramadhan</p></div>
-                </div>
-                <div onclick="openDetail('islam', 5)" class="nav-card bg-white p-5 rounded-3xl border border-slate-100 flex items-center gap-5 shadow-sm">
-                    <div class="w-12 h-12 gradient-islam rounded-2xl flex items-center justify-center text-white font-bold text-xl">5</div>
-                    <div><h3 class="font-bold text-sm uppercase tracking-wide">Haji</h3><p class="text-xs text-slate-400">Bagi yang Mampu ke Baitullah</p></div>
-                </div>
-            </div>
-        </section>
+        </div>
 
-        <section>
-            <div class="flex items-center justify-between mb-4">
-                <h2 class="text-xl font-extrabold italic tracking-tight text-blue-900">Rukun Iman</h2>
-                <span class="text-[10px] font-black bg-blue-100 text-blue-700 px-3 py-1 rounded-full uppercase">6 Pondasi</span>
-            </div>
+        <div>
+            <h2 class="text-2xl font-black italic mb-4 flex items-center gap-2">
+                <span class="w-2 h-8 bg-blue-500 rounded-full"></span> Rukun Iman
+            </h2>
             <div class="grid grid-cols-2 gap-3">
-                <div onclick="openDetail('iman', 1)" class="nav-card bg-white p-6 rounded-3xl border border-slate-100 text-center shadow-sm">
-                    <p class="text-2xl mb-2">☝️</p><h3 class="font-bold text-[10px] uppercase tracking-widest text-blue-600">Allah</h3>
-                </div>
-                <div onclick="openDetail('iman', 2)" class="nav-card bg-white p-6 rounded-3xl border border-slate-100 text-center shadow-sm">
-                    <p class="text-2xl mb-2">✨</p><h3 class="font-bold text-[10px] uppercase tracking-widest text-blue-600">Malaikat</h3>
-                </div>
-                <div onclick="openDetail('iman', 3)" class="nav-card bg-white p-6 rounded-3xl border border-slate-100 text-center shadow-sm">
-                    <p class="text-2xl mb-2">📖</p><h3 class="font-bold text-[10px] uppercase tracking-widest text-blue-600">Kitab</h3>
-                </div>
-                <div onclick="openDetail('iman', 4)" class="nav-card bg-white p-6 rounded-3xl border border-slate-100 text-center shadow-sm">
-                    <p class="text-2xl mb-2">🤝</p><h3 class="font-bold text-[10px] uppercase tracking-widest text-blue-600">Rasul</h3>
-                </div>
-                <div onclick="openDetail('iman', 5)" class="nav-card bg-white p-6 rounded-3xl border border-slate-100 text-center shadow-sm">
-                    <p class="text-2xl mb-2">⌛</p><h3 class="font-bold text-[10px] uppercase tracking-widest text-blue-600">Kiamat</h3>
-                </div>
-                <div onclick="openDetail('iman', 6)" class="nav-card bg-white p-6 rounded-3xl border border-slate-100 text-center shadow-sm">
-                    <p class="text-2xl mb-2">⚖️</p><h3 class="font-bold text-[10px] uppercase tracking-widest text-blue-600">Qadha Qadar</h3>
+                <div onclick="show('iman')" class="p-6 bg-white border border-slate-100 rounded-3xl shadow-sm text-center">
+                    <i class="fa-solid fa-book-quran text-blue-500 text-2xl mb-2"></i>
+                    <h3 class="font-bold text-[10px] tracking-widest uppercase">Detail 6 Iman</h3>
                 </div>
             </div>
-        </section>
+        </div>
     </main>
 
-    <div id="detailView" class="detail-layer no-scrollbar">
-        <nav class="p-6 sticky top-0 bg-white/90 backdrop-blur border-b flex justify-between items-center">
-            <button onclick="closeDetail()" class="text-xl"><i class="fa-solid fa-xmark"></i></button>
-            <span id="overlayTag" class="text-[10px] font-black uppercase tracking-widest"></span>
+    <div id="layer" class="detail-layer no-scrollbar">
+        <nav class="p-6 sticky top-0 bg-white/90 backdrop-blur border-b flex items-center justify-between z-[100]">
+            <button onclick="hide()" class="text-xl"><i class="fa-solid fa-arrow-left-long"></i></button>
+            <span id="layerTitle" class="font-black italic text-sm uppercase tracking-widest"></span>
             <div class="w-5"></div>
         </nav>
-        <div id="overlayContent" class="p-8 pb-20"></div>
+        <div id="layerContent" class="p-8 pb-20 space-y-8"></div>
     </div>
 
     <script>
-        const dataIslam = {
-            1: { title: "Syahadat", desc: "Mengucapkan 'Asyhadu an laa ilaaha illallaah, wa asyhadu anna muhammadar rasuulullaah'.", detail: "Persaksian bahwa tidak ada Tuhan yang berhak disembah selain Allah dan Nabi Muhammad adalah utusan-Nya. Ini adalah pintu gerbang masuk ke dalam Islam." },
-            2: { title: "Shalat", desc: "Melaksanakan shalat fardu 5 waktu dalam sehari semalam.", detail: "Shalat adalah tiang agama. Terdiri dari Subuh (2 rakaat), Dzuhur (4), Ashar (4), Maghrib (3), dan Isya (4). Shalat mencegah perbuatan keji dan munkar." },
-            3: { title: "Zakat", desc: "Mengeluarkan sebagian harta untuk mereka yang berhak (Asnaf).", detail: "Kewajiban bagi muslim yang mampu untuk membantu fakir miskin. Zakat fitrah dilakukan saat Ramadhan, zakat mal dilakukan saat harta mencapai nisab dan haul." },
-            4: { title: "Puasa", desc: "Menahan lapar, haus, dan hawa nafsu dari terbit fajar hingga terbenam matahari.", detail: "Dilaksanakan sebulan penuh pada bulan suci Ramadhan. Tujuannya adalah untuk meningkatkan ketaqwaan kepada Allah SWT." },
-            5: { title: "Haji", desc: "Menunaikan ibadah ke Baitullah di Mekkah.", detail: "Kewajiban sekali seumur hidup bagi muslim yang mampu secara fisik, finansial, dan keamanan perjalanan. Meliputi tawaf, sa'i, wukuf di Arafah, dll." }
-        };
-
-        const dataIman = {
-            1: { title: "Iman kepada Allah", detail: "Meyakini dengan sepenuh hati bahwa Allah itu Ada, Maha Esa, dan memiliki sifat-sifat kesempurnaan. Tidak ada sekutu bagi-Nya." },
-            2: { title: "Iman kepada Malaikat", detail: "Meyakini adanya makhluk gaib ciptaan Allah dari cahaya yang selalu taat. Contoh: Jibril (menyampaikan wahyu), Mikail (pembagi rezeki), dll." },
-            3: { title: "Iman kepada Kitab-Kitab", detail: "Meyakini Allah menurunkan kitab sebagai pedoman: Taurat (Musa), Zabur (Daud), Injil (Isa), dan Al-Qur'an (Muhammad) sebagai penyempurna." },
-            4: { title: "Iman kepada Rasul", detail: "Meyakini utusan Allah untuk membimbing manusia. Dari Adam AS hingga Nabi terakhir Muhammad SAW sebagai penutup para nabi." },
-            5: { title: "Iman kepada Hari Kiamat", detail: "Meyakini bahwa dunia akan hancur dan manusia akan dibangkitkan untuk mempertanggungjawabkan perbuatannya di hadapan Allah." },
-            6: { title: "Iman kepada Qadha & Qadar", detail: "Meyakini bahwa segala sesuatu yang terjadi di alam semesta ini, baik buruk maupun baik, adalah atas ketetapan dan kehendak Allah SWT." }
-        };
-
-        function openDetail(type, id) {
-            const item = type === 'islam' ? dataIslam[id] : dataIman[id];
-            const tag = type === 'islam' ? 'Rukun Islam' : 'Rukun Iman';
-            
-            document.getElementById('overlayTag').innerText = tag;
-            document.getElementById('overlayContent').innerHTML = `
-                <h2 class="text-4xl font-black tracking-tighter italic mb-6">${item.title}</h2>
-                <div class="space-y-6">
-                    <div class="bg-slate-50 p-6 rounded-3xl border border-slate-100">
-                        <h4 class="font-bold text-xs uppercase text-slate-400 mb-2 italic">Penjelasan Lengkap</h4>
-                        <p class="text-sm leading-relaxed text-slate-700 font-medium">${item.detail}</p>
+        const content = {
+            syahadat: {
+                title: "Syahadat",
+                html: `
+                    <div class="space-y-6">
+                        <div class="bg-emerald-50 p-6 rounded-3xl border border-emerald-100">
+                            <p class="arabic mb-4">أَشْهَدُ أَنْ لَا إِلَهَ إِلَّا اللهُ وَأَشْهَدُ أَنَّ مُحَمَّدًا رَسُولُ اللهِ</p>
+                            <p class="text-xs font-bold text-emerald-700 italic">"Aku bersaksi bahwa tidak ada Tuhan selain Allah, dan aku bersaksi bahwa Muhammad adalah utusan Allah."</p>
+                        </div>
+                        <div>
+                            <h4 class="font-black text-sm mb-3 underline">MAKNA PER KATA:</h4>
+                            <ul class="text-xs space-y-2 text-slate-600">
+                                <li><b>Asyhadu:</b> Aku bersaksi (dengan hati, lisan, perbuatan).</li>
+                                <li><b>An Laa ilaaha:</b> Bahwa tidak ada Ilah (sembahan).</li>
+                                <li><b>Illallaah:</b> Kecuali Allah.</li>
+                                <li><b>Wa Asyhadu:</b> Dan aku bersaksi.</li>
+                                <li><b>Anna Muhammadan:</b> Sesungguhnya Muhammad.</li>
+                                <li><b>Rasuulullaah:</b> Utusan Allah.</li>
+                            </ul>
+                        </div>
                     </div>
-                </div>
-            `;
-            document.getElementById('detailView').classList.add('active');
+                `
+            },
+            shalat: {
+                title: "Shalat",
+                html: `
+                    <div class="space-y-8">
+                        <div>
+                            <h4 class="font-black text-emerald-600 mb-4">1. SHALAT FARDU (WAJIB)</h4>
+                            <div class="space-y-3">
+                                <div class="p-4 bg-slate-50 rounded-2xl text-xs">
+                                    <b>Subuh:</b> 2 Rakaat. Niat: <i>Ushalli fardhash-shubhi rak'ataini mustaqbilal qiblati ada'an lillahi ta'ala.</i>
+                                </div>
+                                <div class="p-4 bg-slate-50 rounded-2xl text-xs">
+                                    <b>Dzuhur:</b> 4 Rakaat. Niat: <i>Ushalli fardhadh-zhuhri arba'a raka'atin...</i>
+                                </div>
+                                <div class="p-4 bg-slate-50 rounded-2xl text-xs">
+                                    <b>Ashar:</b> 4 Rakaat. Niat: <i>Ushalli fardhal-'ashri arba'a raka'atin...</i>
+                                </div>
+                                <div class="p-4 bg-slate-50 rounded-2xl text-xs">
+                                    <b>Maghrib:</b> 3 Rakaat. Niat: <i>Ushalli fardhal-maghribi tsalatsa raka'atin...</i>
+                                </div>
+                                <div class="p-4 bg-slate-50 rounded-2xl text-xs">
+                                    <b>Isya:</b> 4 Rakaat. Niat: <i>Ushalli fardhal-'isyai arba'a raka'atin...</i>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="font-black text-emerald-600 mb-4">2. SHALAT SUNNAH</h4>
+                            <ul class="text-xs space-y-2 text-slate-600 list-disc pl-4">
+                                <li><b>Rawatib:</b> Pengiring shalat fardu (Qabliyah & Ba'diyah).</li>
+                                <li><b>Tahajjud:</b> Sepertiga malam.</li>
+                                <li><b>Dhuha:</b> Pagi hari (rezeki).</li>
+                                <li><b>Witir:</b> Penutup shalat malam (ganjil).</li>
+                            </ul>
+                        </div>
+                    </div>
+                `
+            },
+            zakat: {
+                title: "Zakat",
+                html: `
+                    <div class="space-y-8">
+                        <div class="bg-orange-50 p-6 rounded-3xl border border-orange-100">
+                            <h4 class="font-black text-orange-700 mb-2">ZAKAT FITRAH</h4>
+                            <p class="text-xs text-orange-600 italic leading-relaxed">Wajib bagi setiap jiwa muslim di akhir Ramadhan. Besaran: 1 Sha' (sekitar 2.5kg atau 3.5 Liter) makanan pokok daerah masing-masing.</p>
+                        </div>
+                        <div>
+                            <h4 class="font-black text-emerald-600 mb-4">ZAKAT MAL (HARTA)</h4>
+                            <div class="space-y-4 text-xs">
+                                <p>Wajib dikeluarkan jika mencapai <b>Nisab</b> (batas minimum) dan <b>Haul</b> (1 tahun kepemilikan).</p>
+                                <div class="p-4 border rounded-2xl">
+                                    <b>Emas & Perak:</b> Nisab emas 85gr. Kadar zakat: <b>2.5%</b>.
+                                </div>
+                                <div class="p-4 border rounded-2xl">
+                                    <b>Perdagangan:</b> Modal + Keuntungan + Piutang - Hutang. Jika > 85gr emas, zakat <b>2.5%</b>.
+                                </div>
+                                <div class="p-4 border rounded-2xl">
+                                    <b>Pertanian:</b> Nisab 5 Wasq (653kg). Pengairan alami 10%, pengairan buatan 5%.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            puasa: {
+                title: "Puasa",
+                html: `
+                    <div class="space-y-8">
+                        <div class="p-5 border-l-4 border-emerald-500 bg-slate-50">
+                            <p class="text-xs font-bold mb-2">NIAT PUASA RAMADHAN:</p>
+                            <p class="arabic text-sm">نَوَيْتُ صَوْمَ غَدٍ عَنْ أَدَاءِ فَرْضِ شَهْرِ رَمَضَانَ هَذِهِ السَّنَةِ لِلَّهِ تَعَالَى</p>
+                            <p class="text-[10px] mt-2 italic text-slate-500">"Nawaitu shauma ghadin 'an ada'i fardhi syahri ramadhana hadzihis sanati lillahi ta'ala."</p>
+                        </div>
+                        <div>
+                            <h4 class="font-black text-red-600 mb-4">YANG MEMBATALKAN:</h4>
+                            <ul class="text-xs space-y-3 text-slate-600">
+                                <li class="flex gap-3"><span>1.</span><span>Makan & minum dengan sengaja.</span></li>
+                                <li class="flex gap-3"><span>2.</span><span>Muntah dengan sengaja.</span></li>
+                                <li class="flex gap-3"><span>3.</span><span>Haid & Nifas bagi wanita.</span></li>
+                                <li class="flex gap-3"><span>4.</span><span>Berhubungan suami istri di siang hari.</span></li>
+                                <li class="flex gap-3"><span>5.</span><span>Murtad atau hilang akal (gila).</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                `
+            },
+            haji: {
+                title: "Haji",
+                html: `
+                    <div class="space-y-6">
+                        <div class="bg-slate-900 text-white p-6 rounded-3xl">
+                            <h4 class="text-orange-400 font-bold mb-2">SYARAT WAJIB:</h4>
+                            <p class="text-xs leading-relaxed">Islam, Baligh, Berakal, Merdeka, dan <b>ISTITHO'AH</b> (Mampu secara fisik, biaya, dan aman perjalanan).</p>
+                        </div>
+                        <div>
+                            <h4 class="font-black mb-4 underline">RUKUN HAJI (TIDAK BOLEH DITINGGAL):</h4>
+                            <ol class="text-xs space-y-4 text-slate-600">
+                                <li><b>Ihram:</b> Niat memulai ibadah haji.</li>
+                                <li><b>Wukuf di Arafah:</b> Puncak ibadah haji pada 9 Dzulhijjah.</li>
+                                <li><b>Tawaf Ifadhah:</b> Mengelilingi Ka'bah 7 kali.</li>
+                                <li><b>Sa'i:</b> Lari-lari kecil Shafa ke Marwah 7 kali.</li>
+                                <li><b>Tahallul:</b> Mencukur/memotong rambut.</li>
+                                <li><b>Tertib:</b> Sesuai urutan.</li>
+                            </ol>
+                        </div>
+                    </div>
+                `
+            },
+            iman: {
+                title: "Rukun Iman",
+                html: `
+                    <div class="space-y-6">
+                        <div class="p-5 bg-blue-50 border-r-4 border-blue-500 rounded-xl">
+                            <h4 class="font-black text-blue-800 text-sm mb-2">1. IMAN KEPADA ALLAH</h4>
+                            <p class="text-xs text-slate-600">Meyakini Tauhid Rububiyah, Uluhiyah, serta Nama dan Sifat-Nya.</p>
+                        </div>
+                        <div class="p-5 bg-blue-50 border-r-4 border-blue-500 rounded-xl">
+                            <h4 class="font-black text-blue-800 text-sm mb-2">2. IMAN KEPADA MALAIKAT</h4>
+                            <p class="text-xs text-slate-600 italic">Meyakini 10 Malaikat wajib: Jibril, Mikail, Israfil, Izrail, Munkar, Nakir, Raqib, Atid, Malik, Ridwan.</p>
+                        </div>
+                        <div class="p-5 bg-blue-50 border-r-4 border-blue-500 rounded-xl">
+                            <h4 class="font-black text-blue-800 text-sm mb-2">3. IMAN KEPADA KITAB</h4>
+                            <p class="text-xs text-slate-600">Taurat (Musa), Zabur (Daud), Injil (Isa), Al-Qur'an (Muhammad).</p>
+                        </div>
+                        <div class="p-5 bg-blue-50 border-r-4 border-blue-500 rounded-xl">
+                            <h4 class="font-black text-blue-800 text-sm mb-2">4. IMAN KEPADA RASUL</h4>
+                            <p class="text-xs text-slate-600">Meyakini 25 Nabi dan Rasul yang wajib diketahui.</p>
+                        </div>
+                        <div class="p-5 bg-blue-50 border-r-4 border-blue-500 rounded-xl">
+                            <h4 class="font-black text-blue-800 text-sm mb-2">5. IMAN KEPADA HARI KIAMAT</h4>
+                            <p class="text-xs text-slate-600 text-red-500">Meyakini adanya alam kubur, hari kebangkitan, hisab, surga & neraka.</p>
+                        </div>
+                        <div class="p-5 bg-blue-50 border-r-4 border-blue-500 rounded-xl">
+                            <h4 class="font-black text-blue-800 text-sm mb-2">6. IMAN KEPADA QADHA & QADAR</h4>
+                            <p class="text-xs text-slate-600">Meyakini takdir baik dan buruk berasal dari Allah SWT.</p>
+                        </div>
+                    </div>
+                `
+            }
+        };
+
+        function show(key) {
+            const data = content[key];
+            document.getElementById('layerTitle').innerText = data.title;
+            document.getElementById('layerContent').innerHTML = data.html;
+            document.getElementById('layer').classList.add('active');
             document.body.style.overflow = 'hidden';
         }
 
-        function closeDetail() {
-            document.getElementById('detailView').classList.remove('active');
+        function hide() {
+            document.getElementById('layer').classList.remove('active');
             document.body.style.overflow = 'auto';
         }
     </script>
