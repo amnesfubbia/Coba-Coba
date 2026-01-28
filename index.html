@@ -3,156 +3,155 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Persebaya | Sejarah & Legenda</title>
+    <title>Persebaya | One Stop Hub</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;700;800&display=swap" rel="stylesheet">
     <style>
-        :root { --green: #004d21; --light-green: #008037; --gold: #c5a059; }
-        body { background: #050505; color: #e4e4e7; font-family: 'Inter', sans-serif; }
-        .font-header { font-family: 'Cinzel', serif; }
-        .glass-dark { background: rgba(20, 20, 20, 0.7); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.05); }
-        .gold-border { border-left: 3px solid var(--gold); }
-        .green-border { border-left: 3px solid var(--light-green); }
-        .text-gold { color: var(--gold); }
+        :root { --p-green: #00662d; --p-gold: #c5a059; --p-black: #050505; }
+        body { background: var(--p-black); color: #ececec; font-family: 'Plus Jakarta Sans', sans-serif; overflow-x: hidden; }
         
-        /* Scroller */
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .timeline-box { position: relative; padding-left: 20px; border-left: 1px dashed #333; }
-        .timeline-box::before { content: ''; position: absolute; left: -5px; top: 0; width: 10px; height: 10px; background: var(--light-green); border-radius: 50%; }
+        .glass { background: rgba(255,255,255,0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.08); }
+        .menu-page { position: fixed; inset: 0; background: var(--p-black); z-index: 100; transform: translateX(100%); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); padding: 25px; overflow-y: auto; }
+        .menu-page.active { transform: translateX(0); }
+        
+        .main-card { background: linear-gradient(135deg, rgba(0,102,45,0.2) 0%, rgba(5,5,5,1) 100%); border-radius: 25px; padding: 20px; border: 1px solid rgba(0,102,45,0.3); cursor: pointer; }
+        .category-icon { width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.05); color: var(--p-gold); }
     </style>
 </head>
-<body class="pb-20">
+<body class="p-6">
 
-    <nav class="fixed top-0 w-full z-50 glass-dark px-6 py-4 flex justify-between items-center border-b border-white/5">
-        <div class="flex items-center gap-2">
-            <img src="Persebaya.png" class="w-8 h-8 object-contain" onerror="this.src='https://upload.wikimedia.org/wikipedia/id/0/09/Persebaya_logo.png'">
-            <span class="font-header text-sm tracking-widest text-gold">RECORDS</span>
+    <header class="mb-10 flex justify-between items-center">
+        <div>
+            <p class="text-[10px] font-bold text-green-500 uppercase tracking-widest">Official Fan Hub</p>
+            <h1 class="text-2xl font-black italic">PERSEBAYA <span class="text-zinc-600 italic">27</span></h1>
         </div>
-        <div class="text-[10px] font-black tracking-widest bg-green-900/30 px-3 py-1 rounded-full border border-green-500/30 text-green-400">1927 - 2026</div>
-    </nav>
+        <img src="Persebaya.png" class="w-10 h-10 object-contain" onerror="this.src='https://upload.wikimedia.org/wikipedia/id/0/09/Persebaya_logo.png'">
+    </header>
 
-    <section class="pt-24 px-6">
-        <h2 class="font-header text-2xl mb-6 text-gold">THE CHRONICLES</h2>
+    <div class="grid grid-cols-1 gap-4">
         
-        <div class="space-y-8">
-            <div class="timeline-box">
-                <p class="text-xs font-black text-green-500 mb-1">1927 - KELAHIRAN</p>
-                <h3 class="text-lg font-bold mb-2 uppercase">SIVB (Soerabajasche Indonesische Voetbal Bond)</h3>
-                <p class="text-xs text-zinc-400 leading-relaxed">Didirikan oleh M. Pamoedji dan Paijo. Persebaya lahir sebagai alat perjuangan kemerdekaan melalui sepak bola, menandingi klub-klub Belanda saat itu. Menjadi salah satu dari 7 klub pendiri PSSI pada tahun 1930.</p>
+        <div class="main-card flex items-center gap-5" onclick="openMenu('sejarah')">
+            <div class="category-icon text-xl"><i class="fa-solid fa-book-open"></i></div>
+            <div class="flex-1">
+                <h3 class="font-bold text-sm">SEJARAH KLUB</h3>
+                <p class="text-[10px] text-zinc-500">Masa perjuangan 1927 - Sekarang</p>
             </div>
+            <i class="fa-solid fa-chevron-right text-zinc-700"></i>
+        </div>
 
-            <div class="timeline-box">
-                <p class="text-xs font-black text-green-500 mb-1">1950 - 1980 - ERA PERSERIKATAN</p>
-                <h3 class="text-lg font-bold mb-2 uppercase">The Dream Team Indonesia</h3>
-                <p class="text-xs text-zinc-400 leading-relaxed">Persebaya mendominasi sepak bola nasional dengan gaya main "Pendek-Pendek Panjang". GBT dan Tambaksari menjadi saksi bisu kejayaan melawan musuh bebuyutan seperti Persija dan PSMS.</p>
+        <div class="main-card flex items-center gap-5" onclick="openMenu('legenda')">
+            <div class="category-icon text-xl"><i class="fa-solid fa-crown"></i></div>
+            <div class="flex-1">
+                <h3 class="font-bold text-sm">HALL OF LEGENDS</h3>
+                <p class="text-[10px] text-zinc-500">Profil & Statistik Legenda</p>
             </div>
+            <i class="fa-solid fa-chevron-right text-zinc-700"></i>
+        </div>
 
-            <div class="timeline-box">
-                <p class="text-xs font-black text-green-500 mb-1">2010 - 2017 - PERJUANGAN & REKONSILIASI</p>
-                <h3 class="text-lg font-bold mb-2 uppercase">Dualisme & Kebangkitan</h3>
-                <p class="text-xs text-zinc-400 leading-relaxed">Era tergelap di mana Bonek berjuang di jalanan untuk mengembalikan hak kompetisi klub. Puncaknya 2017, Persebaya kembali ke Liga 1 setelah menjuarai Liga 2 di Bandung.</p>
+        <div class="main-card flex items-center gap-5" onclick="openMenu('identitas')">
+            <div class="category-icon text-xl"><i class="fa-solid fa-shield-halved"></i></div>
+            <div class="flex-1">
+                <h3 class="font-bold text-sm">STADION & BONEK</h3>
+                <p class="text-[10px] text-zinc-500">GBT & Filosofi Satu Nyali</p>
+            </div>
+            <i class="fa-solid fa-chevron-right text-zinc-700"></i>
+        </div>
+
+        <div class="main-card flex items-center gap-5" onclick="openMenu('prestasi')">
+            <div class="category-icon text-xl"><i class="fa-solid fa-trophy"></i></div>
+            <div class="flex-1">
+                <h3 class="font-bold text-sm">LEMARI PRESTASI</h3>
+                <p class="text-[10px] text-zinc-500">Gelar Juara & Rekor Klub</p>
+            </div>
+            <i class="fa-solid fa-chevron-right text-zinc-700"></i>
+        </div>
+
+    </div>
+
+    <div id="sejarah" class="menu-page">
+        <button onclick="closeMenu('sejarah')" class="mb-8 text-zinc-500"><i class="fa-solid fa-arrow-left mr-2"></i> Kembali</button>
+        <h2 class="text-3xl font-black mb-6">SEJARAH <br><span class="text-green-600 uppercase">1927</span></h2>
+        <div class="space-y-6 text-sm text-zinc-400 leading-relaxed">
+            <div class="p-5 border-l-2 border-green-600 bg-white/5 rounded-r-xl">
+                <p class="text-white font-bold mb-2">Era Perlawanan (1927)</p>
+                M. Pamoedji mendirikan SIVB sebagai bentuk keberanian pemuda Surabaya melawan dominasi Belanda (SVB). Persebaya bukan sekadar klub, tapi harga diri bangsa.
+            </div>
+            <div class="p-5 border-l-2 border-green-600 bg-white/5 rounded-r-xl">
+                <p class="text-white font-bold mb-2">Era PSSI (1930)</p>
+                Persebaya menjadi motor penggerak berdirinya PSSI bersama klub pendiri lainnya untuk mempersatukan bangsa lewat sepak bola.
+            </div>
+            <p>Sejak saat itu, Persebaya dikenal sebagai "Dream Team" Indonesia yang melahirkan bakat-bakat luar biasa bagi tim nasional.</p>
+        </div>
+    </div>
+
+    <div id="legenda" class="menu-page">
+        <button onclick="closeMenu('legenda')" class="mb-8 text-zinc-500"><i class="fa-solid fa-arrow-left mr-2"></i> Kembali</button>
+        <h2 class="text-3xl font-black mb-6">DATA <span class="text-gold uppercase italic">Legenda</span></h2>
+        <div class="space-y-4" id="list-legenda">
+            <div class="p-6 bg-zinc-900 rounded-[25px]">
+                <p class="text-gold font-bold text-xs">NO. 19 - LEGEND</p>
+                <h4 class="text-xl font-black mb-1">ERI IRIANTO</h4>
+                <p class="text-[11px] text-zinc-500 border-b border-zinc-800 pb-2 mb-3 font-bold uppercase">Gelandang (1998-2000)</p>
+                <p class="text-[11px] text-zinc-400 leading-relaxed">Pemain dengan tendangan geledek. Berkorban segalanya untuk klub hingga akhir hayat. Pahlawan abadi Bonek.</p>
+            </div>
+            <div class="p-6 bg-zinc-900 rounded-[25px]">
+                <p class="text-green-500 font-bold text-xs">THE MAESTRO</p>
+                <h4 class="text-xl font-black mb-1">RUSDY BAHALWAN</h4>
+                <p class="text-[11px] text-zinc-500 border-b border-zinc-800 pb-2 mb-3 font-bold uppercase">Pemain & Pelatih (Era 70-90)</p>
+                <p class="text-[11px] text-zinc-400 leading-relaxed">Sosok religius yang membawa Persebaya Juara 1978 (Pemain) dan 1997 (Pelatih). Guru besar sepak bola Surabaya.</p>
+            </div>
+            <div class="p-6 bg-zinc-900 rounded-[25px]">
+                <p class="text-zinc-500 font-bold text-xs">LOYALTY</p>
+                <h4 class="text-xl font-black mb-1">MAT HALIL</h4>
+                <p class="text-[11px] text-zinc-500 border-b border-zinc-800 pb-2 mb-3 font-bold uppercase">Bek Kiri (1999-2013)</p>
+                <p class="text-[11px] text-zinc-400 leading-relaxed">Penjaga setia lini kiri Bajul Ijo selama 14 tahun. Mengawal tim dari kasta bawah hingga kasta tertinggi.</p>
             </div>
         </div>
-    </section>
+    </div>
 
-    <section class="mt-16 px-6">
-        <h2 class="font-header text-2xl mb-6 text-gold">IDENTITAS & RUMAH</h2>
-        <div class="grid grid-cols-1 gap-4">
-            <div class="glass-dark p-6 rounded-3xl green-border">
-                <h4 class="font-black text-sm mb-2 uppercase italic text-green-400">Gelora Bung Tomo</h4>
-                <p class="text-[11px] text-zinc-400 leading-relaxed">Dibangun di Benowo, diresmikan tahun 2010. Menggantikan Stadion Gelora 10 November (Tambaksari) yang legendaris. Menjadi stadion standar FIFA yang menjadi venue Piala Dunia U-20/U-17.</p>
+    <div id="identitas" class="menu-page">
+        <button onclick="closeMenu('identitas')" class="mb-8 text-zinc-500"><i class="fa-solid fa-arrow-left mr-2"></i> Kembali</button>
+        <h2 class="text-3xl font-black mb-6">IDENTITAS <br><span class="text-green-600">BONEK & GBT</span></h2>
+        <div class="p-6 bg-zinc-900 rounded-3xl mb-4">
+            <h4 class="font-black text-sm mb-3 text-white uppercase italic">Stadion GBT</h4>
+            <p class="text-[11px] text-zinc-400 leading-relaxed">Terletak di Benowo, diresmikan 2010. Venue berkelas dunia yang menjadi markas paling angker di Liga Indonesia bagi lawan Persebaya.</p>
+        </div>
+        <div class="p-6 bg-green-900/20 border border-green-500/20 rounded-3xl">
+            <h4 class="font-black text-sm mb-3 text-green-500 uppercase italic">Filosofi WANI</h4>
+            <p class="text-[11px] text-zinc-400 leading-relaxed">WANI bukan hanya berani di tribun, tapi berani dalam kebenaran. Bonek hari ini adalah Bonek yang cerdas, tertib, dan peduli sesama.</p>
+        </div>
+    </div>
+
+    <div id="prestasi" class="menu-page">
+        <button onclick="closeMenu('prestasi')" class="mb-8 text-zinc-500"><i class="fa-solid fa-arrow-left mr-2"></i> Kembali</button>
+        <h2 class="text-3xl font-black mb-6 text-gold">REKOR <br>JUARA</h2>
+        <div class="space-y-3">
+            <div class="flex justify-between p-4 glass rounded-2xl items-center">
+                <span class="text-xs font-bold uppercase">Perserikatan PSSI</span>
+                <span class="text-lg font-black italic">6 Kali</span>
             </div>
-            <div class="glass-dark p-6 rounded-3xl green-border">
-                <h4 class="font-black text-sm mb-2 uppercase italic text-green-400">Filosofi Bonek</h4>
-                <p class="text-[11px] text-zinc-400 leading-relaxed">Lahir dari semangat militansi mendukung tim di luar kota (awaydays). Kini Bonek telah bertransformasi menjadi komunitas sosial terbesar yang aktif dalam aksi kemanusiaan dan pelestarian budaya Suroboyo.</p>
+            <div class="flex justify-between p-4 glass rounded-2xl items-center">
+                <span class="text-xs font-bold uppercase">Liga Indonesia</span>
+                <span class="text-lg font-black italic">2 Kali</span>
+            </div>
+            <div class="flex justify-between p-4 glass rounded-2xl items-center">
+                <span class="text-xs font-bold uppercase">Liga 2 (Kebangkitan)</span>
+                <span class="text-lg font-black italic">1 Kali</span>
             </div>
         </div>
-    </section>
+    </div>
 
-    <section class="mt-16 px-6">
-        <h2 class="font-header text-2xl mb-6 text-gold">THE LEGENDS</h2>
-        <p class="text-[10px] text-zinc-500 mb-6 uppercase tracking-widest italic">Data Karier & Kontribusi di Persebaya</p>
-        
-        <div class="space-y-4">
-            <div class="glass-dark p-5 rounded-2xl gold-border">
-                <div class="flex justify-between items-start mb-3">
-                    <h4 class="font-black text-lg italic uppercase">Eri Irianto</h4>
-                    <span class="text-[10px] bg-gold/20 text-gold px-2 py-1 rounded font-bold italic">No. 19</span>
-                </div>
-                <div class="grid grid-cols-2 gap-4 text-[10px]">
-                    <div><p class="text-zinc-500 uppercase font-bold">Posisi</p><p class="font-bold text-white">Gelandang Tengah</p></div>
-                    <div><p class="text-zinc-500 uppercase font-bold">Masa Bakti</p><p class="font-bold text-white">1998 - 2000</p></div>
-                </div>
-                <p class="mt-3 text-[11px] text-zinc-400 leading-relaxed">Dikenal dengan "Tendangan Geledek". Menghembuskan nafas terakhir setelah bertanding membela Persebaya melawan PSIM di Tambaksari. Nomor 19 dipensiunkan selamanya.</p>
-            </div>
-
-            <div class="glass-dark p-5 rounded-2xl gold-border">
-                <div class="flex justify-between items-start mb-3">
-                    <h4 class="font-black text-lg italic uppercase">Rusdy Bahalwan</h4>
-                </div>
-                <div class="grid grid-cols-2 gap-4 text-[10px]">
-                    <div><p class="text-zinc-500 uppercase font-bold">Peran</p><p class="font-bold text-white">Pemain & Pelatih</p></div>
-                    <div><p class="text-zinc-500 uppercase font-bold">Era</p><p class="font-bold text-white">70-an & 90-an</p></div>
-                </div>
-                <p class="mt-3 text-[11px] text-zinc-400 leading-relaxed">Membawa Persebaya juara sebagai pemain (1978) dan sebagai pelatih (1996/97). Peletak dasar filosofi main bola pendek-rapat Persebaya.</p>
-            </div>
-
-            <div class="glass-dark p-5 rounded-2xl gold-border">
-                <div class="flex justify-between items-start mb-3">
-                    <h4 class="font-black text-lg italic uppercase">Mat Halil</h4>
-                    <span class="text-[10px] bg-green-500/20 text-green-400 px-2 py-1 rounded font-bold italic">Loyalist</span>
-                </div>
-                <div class="grid grid-cols-2 gap-4 text-[10px]">
-                    <div><p class="text-zinc-500 uppercase font-bold">Posisi</p><p class="font-bold text-white">Bek Sayap</p></div>
-                    <div><p class="text-zinc-500 uppercase font-bold">Masa Bakti</p><p class="font-bold text-white">1999 - 2013</p></div>
-                </div>
-                <p class="mt-3 text-[11px] text-zinc-400 leading-relaxed">Simbol loyalitas. Membela Persebaya dari kasta tertinggi hingga masa dualisme. Salah satu pemain dengan jumlah penampilan terbanyak sepanjang sejarah klub.</p>
-            </div>
-
-            <div class="glass-dark p-5 rounded-2xl gold-border">
-                <div class="flex justify-between items-start mb-3">
-                    <h4 class="font-black text-lg italic uppercase">Andik Vermansah</h4>
-                </div>
-                <div class="grid grid-cols-2 gap-4 text-[10px]">
-                    <div><p class="text-zinc-500 uppercase font-bold">Posisi</p><p class="font-bold text-white">Winger</p></div>
-                    <div><p class="text-zinc-500 uppercase font-bold">Era</p><p class="font-bold text-white">2008 - 2013</p></div>
-                </div>
-                <p class="mt-3 text-[11px] text-zinc-400 leading-relaxed">"Messi-nya Indonesia". Didikan asli kompetisi internal Persebaya yang meledak di usia muda dan menjadi ikon klub di era modern.</p>
-            </div>
-        </div>
-    </section>
-
-    <section class="mt-16 px-6">
-        <h2 class="font-header text-2xl mb-6 text-gold uppercase">Achievements</h2>
-        <div class="glass-dark rounded-3xl p-6">
-            <div class="space-y-4">
-                <div class="flex justify-between border-b border-white/5 pb-2">
-                    <span class="text-xs font-bold uppercase">Perserikatan PSSI</span>
-                    <span class="text-xs text-gold font-black italic">6 Trofi</span>
-                </div>
-                <div class="flex justify-between border-b border-white/5 pb-2">
-                    <span class="text-xs font-bold uppercase">Liga Indonesia</span>
-                    <span class="text-xs text-gold font-black italic">2 Trofi</span>
-                </div>
-                <div class="flex justify-between border-b border-white/5 pb-2">
-                    <span class="text-xs font-bold uppercase">Liga 2 (Kebangkitan)</span>
-                    <span class="text-xs text-gold font-black italic">1 Trofi</span>
-                </div>
-                <div class="flex justify-between border-b border-white/5 pb-2">
-                    <span class="text-xs font-bold uppercase">Piala Dirgantara</span>
-                    <span class="text-xs text-gold font-black italic">1 Trofi</span>
-                </div>
-            </div>
-            <p class="text-[9px] mt-6 text-zinc-500 italic">*Data mencakup kompetisi resmi di bawah naungan PSSI.</p>
-        </div>
-    </section>
-
-    <footer class="mt-20 p-10 bg-zinc-950 text-center">
-        <img src="Persebaya.png" class="w-10 h-10 mx-auto mb-6 opacity-20" onerror="this.src='https://upload.wikimedia.org/wikipedia/id/0/09/Persebaya_logo.png'">
-        <p class="text-[10px] font-black tracking-[0.8em] text-zinc-700 uppercase">Persebaya Surabaya Heritage</p>
-        <p class="mt-4 text-xs font-bold text-zinc-500 italic">"Belajarlah dari sejarah untuk masa depan yang lebih perkasa."</p>
-    </footer>
+    <script>
+        function openMenu(id) {
+            document.getElementById(id).classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeMenu(id) {
+            document.getElementById(id).classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+    </script>
 
 </body>
 </html>
