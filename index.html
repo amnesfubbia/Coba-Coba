@@ -3,168 +3,126 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Persebaya Surabaya | Official Fan Hub</title>
+    <title>Persebaya Surabaya | Digital Hub</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --green-persebaya: #008037; --gold-persebaya: #FFD700; }
-        body { background-color: #050505; color: #fff; font-family: 'Montserrat', sans-serif; overflow-x: hidden; }
+        :root { --green: #008037; --dark: #050505; }
+        body { background-color: var(--dark); color: #fff; font-family: 'Montserrat', sans-serif; -webkit-tap-highlight-color: transparent; }
         .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.08); }
-        
-        /* Squad Card */
-        .player-card { transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer; border-radius: 20px; overflow: hidden; background: #111; }
-        .player-card:hover { transform: scale(1.02); border: 1px solid var(--green-persebaya); }
-        
-        /* Bonek Gallery Grid */
-        .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; }
-        .gallery-item { aspect-ratio: 1/1; position: relative; overflow: hidden; background: #1a1a1a; }
-        .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
-        .gallery-item:hover img { transform: scale(1.1); filter: brightness(0.7); }
-
-        /* Modal Legend */
-        .modal-legend { display: none; position: fixed; inset: 0; z-index: 9999; background: rgba(0,0,0,0.95); padding: 20px; overflow-y: auto; }
-
-        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .player-card { border-radius: 24px; overflow: hidden; background: #111; transition: 0.3s; }
+        .player-card:active { transform: scale(0.95); }
+        .modal-legend { display: none; position: fixed; inset: 0; z-index: 9999; background: rgba(0,0,0,0.95); align-items: center; justify-content: center; padding: 20px; }
     </style>
 </head>
-<body>
+<body class="pb-20">
 
     <nav class="fixed top-0 w-full z-50 glass px-6 py-4 flex justify-between items-center">
         <div class="flex items-center gap-3">
-            <img src="https://upload.wikimedia.org/wikipedia/id/0/09/Persebaya_logo.png" class="w-8 h-8" alt="Logo">
+            <img src="Persebaya.png" class="w-8 h-8 object-contain" onerror="this.src='https://upload.wikimedia.org/wikipedia/id/0/09/Persebaya_logo.png'">
             <span class="font-black tracking-tighter text-lg uppercase">Persebaya Hub</span>
         </div>
-        <div class="flex gap-4">
-            <i class="fa-solid fa-search text-xl"></i>
-            <i class="fa-solid fa-bars-staggered text-xl text-green-500"></i>
-        </div>
+        <i class="fa-solid fa-bars-staggered text-green-500 text-xl"></i>
     </nav>
 
-    <section class="pt-24 px-6 pb-10 text-center bg-gradient-to-b from-[#003d1a] to-[#050505]">
-        <h2 class="text-[10px] font-black tracking-[0.4em] text-green-400 mb-6 uppercase">Next Matchday</h2>
-        <div class="glass p-8 rounded-[30px] border-t-2 border-green-500 shadow-2xl shadow-green-900/20">
+    <section class="pt-24 px-6 pb-8 bg-gradient-to-b from-[#003d1a] to-transparent">
+        <div class="glass p-6 rounded-[30px] border-t-2 border-green-500 shadow-xl shadow-green-900/20">
+            <p class="text-[9px] font-black tracking-[0.4em] text-center text-green-400 mb-6 uppercase">Next Matchday</p>
             <div class="flex justify-between items-center">
-                <div class="w-1/3">
-                    <img src="https://upload.wikimedia.org/wikipedia/id/0/09/Persebaya_logo.png" class="w-16 h-16 mx-auto drop-shadow-[0_0_10px_rgba(0,128,55,0.5)]">
-                    <p class="text-[10px] font-bold mt-2">PERSEBAYA</p>
+                <div class="w-1/3 text-center">
+                    <img src="Persebaya.png" class="w-14 h-14 mx-auto drop-shadow-lg" onerror="this.src='https://upload.wikimedia.org/wikipedia/id/0/09/Persebaya_logo.png'">
+                    <p class="text-[9px] font-bold mt-2">PERSEBAYA</p>
                 </div>
-                <div class="w-1/3">
-                    <span class="text-3xl font-black italic text-zinc-700">VS</span>
-                </div>
-                <div class="w-1/3">
-                    <div class="w-16 h-16 bg-zinc-800 rounded-full flex items-center justify-center mx-auto border border-zinc-700">
-                        <i class="fa-solid fa-shield-halved text-2xl text-zinc-500"></i>
+                <div class="w-1/3 text-center text-xl font-black italic opacity-30">VS</div>
+                <div class="w-1/3 text-center">
+                    <div class="w-14 h-14 bg-zinc-800 rounded-full mx-auto flex items-center justify-center border border-zinc-700">
+                        <i class="fa-solid fa-shield-halved text-xl text-zinc-600"></i>
                     </div>
-                    <p class="text-[10px] font-bold mt-2 text-zinc-500">OPPONENT</p>
+                    <p class="text-[9px] font-bold mt-2 text-zinc-500 uppercase">Opponent</p>
                 </div>
-            </div>
-            <div class="flex justify-center gap-6 mt-8 pt-6 border-t border-white/5">
-                <div class="text-center"><p class="text-2xl font-black">02</p><p class="text-[8px] tracking-widest text-zinc-500 uppercase">Hari</p></div>
-                <div class="text-center"><p class="text-2xl font-black">14</p><p class="text-[8px] tracking-widest text-zinc-500 uppercase">Jam</p></div>
-                <div class="text-center"><p class="text-2xl font-black">35</p><p class="text-[8px] tracking-widest text-zinc-500 uppercase">Menit</p></div>
             </div>
         </div>
     </section>
 
-    <section class="px-6 py-6">
+    <section class="px-6 py-4">
         <div class="flex justify-between items-center mb-6">
-            <h3 class="text-xl font-black tracking-tighter">TEAM <span class="text-green-500 italic">SQUAD</span></h3>
-            <span class="text-[10px] font-bold text-zinc-500 border-b border-zinc-800 pb-1">LIHAT SEMUA</span>
+            <h3 class="text-xl font-black tracking-tighter">SQUAD <span class="text-green-500 italic">2026</span></h3>
+            <span class="text-[10px] text-zinc-500 font-bold uppercase border-b border-zinc-800">Bonek View</span>
         </div>
-        <div class="grid grid-cols-2 gap-4">
-            <div class="player-card relative aspect-[4/5]">
-                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Bruno" class="w-full h-full object-cover opacity-80">
-                <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black to-transparent">
-                    <p class="text-[8px] font-bold text-green-500">MIDFIELDER</p>
-                    <p class="text-xs font-black uppercase">Bruno Moreira</p>
-                </div>
-                <span class="absolute top-3 left-3 w-7 h-7 glass rounded flex items-center justify-center text-[10px] font-black text-green-500">10</span>
+        <div class="grid grid-cols-2 gap-4" id="squad-container">
             </div>
-            <div class="player-card relative aspect-[4/5]">
-                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Flavio" class="w-full h-full object-cover opacity-80">
-                <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black to-transparent">
-                    <p class="text-[8px] font-bold text-green-500">FORWARD</p>
-                    <p class="text-xs font-black uppercase">Flavio Silva</p>
-                </div>
-                <span class="absolute top-3 left-3 w-7 h-7 glass rounded flex items-center justify-center text-[10px] font-black text-green-500">17</span>
-            </div>
-        </div>
     </section>
 
-    <section class="px-6 py-10 bg-zinc-950">
-        <h3 class="text-xl font-black mb-6 italic">HALL OF <span class="text-yellow-500">LEGENDS</span></h3>
-        <div class="space-y-4">
-            <div class="glass p-4 rounded-2xl flex items-center gap-4 border-l-4 border-yellow-500 cursor-pointer" onclick="openLegend('Eri Irianto', 'The Eternal Number 19. Gelandang legendaris yang mengabdi hingga akhir hayatnya untuk Persebaya. Tendangan geledeknya selalu diingat Bonek.')">
-                <div class="w-14 h-14 rounded-full bg-zinc-800 flex-shrink-0 border-2 border-zinc-700 overflow-hidden">
-                    <img src="https://api.dicebear.com/7.x/initials/svg?seed=EI&backgroundColor=008037" alt="Eri">
-                </div>
+    <section class="px-6 py-8">
+        <h3 class="text-xl font-black mb-6 italic text-yellow-500 uppercase">Hall of Fame</h3>
+        <div class="space-y-3">
+            <div onclick="openLegend('Eri Irianto', 'Legenda abadi dengan nomor punggung 19. Meninggal saat membela Persebaya di lapangan. Sosok petarung sejati.')" class="glass p-4 rounded-2xl flex items-center gap-4 border-l-4 border-yellow-600 active:bg-white/5">
+                <div class="w-12 h-12 rounded-full bg-green-800 flex items-center justify-center font-black text-sm">EI19</div>
                 <div>
-                    <p class="font-black text-sm italic">ERI IRIANTO</p>
-                    <p class="text-[10px] text-zinc-500">The Eternal Hero</p>
-                </div>
-                <i class="fa-solid fa-chevron-right ml-auto text-zinc-700 text-xs"></i>
-            </div>
-            <div class="glass p-4 rounded-2xl flex items-center gap-4 border-l-4 border-zinc-400 cursor-pointer" onclick="openLegend('Jacksen F. Tiago', 'Striker maut asal Brasil yang membawa Persebaya juara Liga Indonesia 1996/1997 dan menjadi Top Skor.')">
-                <div class="w-14 h-14 rounded-full bg-zinc-800 flex-shrink-0 border-2 border-zinc-700 overflow-hidden">
-                    <img src="https://api.dicebear.com/7.x/initials/svg?seed=JT&backgroundColor=008037" alt="Jacksen">
-                </div>
-                <div>
-                    <p class="font-black text-sm italic">JACKSEN F. TIAGO</p>
-                    <p class="text-[10px] text-zinc-500">The Brazilian Goal Machine</p>
+                    <p class="font-black text-xs italic uppercase">Eri Irianto</p>
+                    <p class="text-[9px] text-zinc-500">The Eternal Legend</p>
                 </div>
                 <i class="fa-solid fa-chevron-right ml-auto text-zinc-700 text-xs"></i>
             </div>
         </div>
     </section>
 
-    <section class="py-10">
-        <div class="px-6 flex items-center gap-2 mb-6">
-            <i class="fa-solid fa-camera-retro text-xl text-green-500"></i>
-            <h3 class="text-xl font-black">BONEK <span class="text-zinc-600">GALLERY</span></h3>
-        </div>
-        <div class="gallery-grid">
-            <div class="gallery-item"><img src="https://picsum.photos/400/400?random=1"></div>
-            <div class="gallery-item"><img src="https://picsum.photos/400/400?random=2"></div>
-            <div class="gallery-item"><img src="https://picsum.photos/400/400?random=3"></div>
-            <div class="gallery-item"><img src="https://picsum.photos/400/400?random=4"></div>
-            <div class="gallery-item"><img src="https://picsum.photos/400/400?random=5"></div>
-            <div class="gallery-item"><img src="https://picsum.photos/400/400?random=6"></div>
-        </div>
-        <div class="p-6">
-            <button class="w-full py-4 rounded-2xl bg-zinc-900 border border-zinc-800 font-bold text-xs tracking-widest uppercase hover:bg-green-700 transition">Upload Your Photo</button>
+    <section class="pb-10">
+        <h3 class="px-6 text-xl font-black mb-6 uppercase tracking-tighter">Bonek <span class="text-zinc-600 italic">Gallery</span></h3>
+        <div class="grid grid-cols-3 gap-1 px-1">
+            <div class="aspect-square bg-zinc-900 overflow-hidden"><img src="https://picsum.photos/400/400?random=21" class="w-full h-full object-cover"></div>
+            <div class="aspect-square bg-zinc-900 overflow-hidden"><img src="https://picsum.photos/400/400?random=22" class="w-full h-full object-cover"></div>
+            <div class="aspect-square bg-zinc-900 overflow-hidden"><img src="https://picsum.photos/400/400?random=23" class="w-full h-full object-cover"></div>
         </div>
     </section>
 
-    <div id="legendModal" class="modal-legend flex items-center justify-center">
-        <div class="glass p-8 rounded-3xl w-full max-w-sm relative">
-            <i class="fa-solid fa-times absolute top-6 right-6 text-xl" onclick="closeLegend()"></i>
-            <div id="legendImg" class="w-24 h-24 bg-green-700 rounded-full mx-auto mb-6 flex items-center justify-center border-4 border-white/10">
-                 <i class="fa-solid fa-star text-3xl text-yellow-500"></i>
-            </div>
-            <h4 id="legendTitle" class="text-2xl font-black text-center mb-4 italic"></h4>
-            <p id="legendContent" class="text-sm text-zinc-400 leading-relaxed text-center"></p>
-            <button class="w-full mt-8 py-3 bg-green-600 rounded-xl font-black text-sm" onclick="closeLegend()">TUTUP</button>
+    <div id="legendModal" class="modal-legend" onclick="closeLegend()">
+        <div class="glass p-8 rounded-[35px] w-full max-w-xs text-center border-t-4 border-green-500 animate-in fade-in zoom-in duration-300">
+            <h4 id="legendTitle" class="text-2xl font-black italic mb-4 uppercase"></h4>
+            <p id="legendContent" class="text-xs text-zinc-400 leading-relaxed"></p>
+            <div class="mt-8 py-2 px-4 bg-green-700 inline-block rounded-lg font-black text-[10px] uppercase">Tutup</div>
         </div>
     </div>
 
-    <footer class="py-20 text-center bg-black border-t border-white/5">
-        <p class="text-[9px] font-bold tracking-[0.5em] text-zinc-600 mb-2 uppercase">Official Fan Hub</p>
-        <p class="text-2xl font-black italic mb-6">SALAM SATU NYALI!</p>
-        <div class="text-4xl font-black text-green-900/30">WANI!</div>
-    </footer>
-
     <script>
-        function openLegend(title, content) {
-            document.getElementById('legendTitle').innerText = title;
-            document.getElementById('legendContent').innerText = content;
-            document.getElementById('legendModal').style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        }
+        // Data Pemain dengan Link Fallback
+        const players = [
+            { name: 'Bruno Moreira', pos: 'Forward', no: '10', img: 'https://tmssl.akamaized.net//images/foto/galerie/bruno-moreira-1689239455-111353.jpg' },
+            { name: 'F. Rivera', pos: 'Midfield', no: '7', img: 'https://tmssl.akamaized.net//images/foto/galerie/francisco-rivera-1715832793-137255.jpg' },
+            { name: 'Flavio Silva', pos: 'Forward', no: '17', img: 'https://tmssl.akamaized.net//images/foto/galerie/flavio-silva-1681284985-104975.jpg' },
+            { name: 'Ernando Ari', pos: 'Gk', no: '21', img: 'https://tmssl.akamaized.net//images/foto/galerie/ernando-ari-1684494396-107693.jpg' }
+        ];
 
+        const container = document.getElementById('squad-container');
+        
+        players.forEach(p => {
+            // Fungsi untuk menangani gambar rusak
+            const initial = p.name.split(' ').map(n => n[0]).join('');
+            
+            container.innerHTML += `
+                <div class="player-card relative aspect-[3/4] glass shadow-lg">
+                    <img src="${p.img}" 
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'" 
+                         class="w-full h-full object-cover opacity-80">
+                    <div class="absolute inset-0 hidden flex items-center justify-center bg-gradient-to-br from-green-900 to-black text-4xl font-black text-white/20">${initial}</div>
+                    
+                    <div class="absolute bottom-0 w-full p-4 bg-gradient-to-t from-black via-black/80 to-transparent">
+                        <p class="text-[7px] font-black text-green-500 uppercase tracking-widest">${p.pos}</p>
+                        <p class="text-[11px] font-black uppercase italic tracking-tight">${p.name}</p>
+                    </div>
+                    <div class="absolute top-3 left-3 w-7 h-7 glass rounded-lg flex items-center justify-center text-[10px] font-black text-green-500">${p.no}</div>
+                </div>
+            `;
+        });
+
+        function openLegend(t, c) {
+            document.getElementById('legendTitle').innerText = t;
+            document.getElementById('legendContent').innerText = c;
+            document.getElementById('legendModal').style.display = 'flex';
+        }
         function closeLegend() {
             document.getElementById('legendModal').style.display = 'none';
-            document.body.style.overflow = 'auto';
         }
     </script>
 </body>
