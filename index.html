@@ -3,189 +3,263 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Al-Jami' Digital Library</title>
+    <title>Al-Jami' | Perpustakaan Digital Anak Sholeh</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root { --emerald: #059669; --dark: #064e3b; }
-        body { background: #fdfdfd; font-family: 'Plus Jakarta Sans', sans-serif; color: #1e293b; }
-        .arabic { font-family: 'Amiri', serif; font-size: 1.8rem; line-height: 3.5rem; text-align: right; color: var(--dark); background: #f0fdf4; padding: 20px; border-radius: 18px; margin: 15px 0; border: 1px solid #d1fae5; }
-        .menu-card { background: white; border-radius: 24px; border: 1px solid #e2e8f0; transition: 0.3s; }
-        .menu-card:hover { border-color: var(--emerald); transform: translateY(-3px); }
-        .layer { position: fixed; inset: 0; background: white; z-index: 1000; transform: translateX(100%); transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); overflow-y: auto; }
+        :root { --emerald: #059669; --dark: #064e3b; --sand: #fefce8; }
+        body { background: #f8fafc; font-family: 'Plus Jakarta Sans', sans-serif; color: #1e293b; }
+        
+        /* Typography */
+        .arabic { font-family: 'Amiri', serif; font-size: 1.8rem; line-height: 4rem; text-align: right; color: var(--dark); background: white; padding: 25px; border-radius: 20px; margin: 15px 0; border: 1px solid #d1fae5; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02); }
+        .latin { color: #0891b2; font-weight: 700; font-size: 14px; margin-top: -10px; margin-bottom: 5px; padding-left: 10px; border-left: 3px solid #0891b2; }
+        .arti { color: #64748b; font-style: italic; font-size: 13px; margin-bottom: 20px; }
+
+        /* UI Components */
+        .header-bg { background: linear-gradient(135deg, var(--dark) 0%, var(--emerald) 100%); }
+        .category-card { background: white; border-radius: 28px; padding: 25px; border: 1px solid #e2e8f0; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
+        .category-card:active { transform: scale(0.92); background: #ecfdf5; }
+        
+        /* Layer System */
+        .layer { position: fixed; inset: 0; background: #f8fafc; z-index: 1000; transform: translateX(100%); transition: 0.5s ease-in-out; overflow-y: auto; }
         .layer.active { transform: translateX(0); }
-        .section-box { background: #f8fafc; border-radius: 24px; padding: 25px; border: 1px solid #e2e8f0; margin-bottom: 25px; }
-        .section-box h4 { font-weight: 800; color: var(--emerald); text-transform: uppercase; margin-bottom: 15px; font-size: 14px; border-bottom: 2px solid #ddd; display: inline-block; }
-        .step-num { width: 28px; height: 28px; background: var(--emerald); color: white; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; margin-right: 10px; }
+        
+        .content-section { background: white; border-radius: 30px; padding: 30px; margin-bottom: 25px; border: 1px solid #f1f5f9; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.04); }
+        .title-badge { background: var(--emerald); color: white; padding: 6px 16px; border-radius: 12px; font-size: 12px; font-weight: 800; text-transform: uppercase; margin-bottom: 15px; display: inline-block; }
+        
+        .nabi-box { border-left: 5px solid var(--emerald); padding-left: 20px; margin-bottom: 30px; }
+        .nabi-box h5 { font-weight: 800; font-size: 18px; color: var(--dark); }
+        
+        ::-webkit-scrollbar { width: 0; }
     </style>
 </head>
 <body class="pb-10">
 
-    <header class="p-8 sticky top-0 bg-white/95 backdrop-blur z-50 border-b-4 border-emerald-600">
-        <h1 class="text-3xl font-black italic tracking-tighter text-slate-800">AL-JAMI'<span class="text-emerald-600">.</span></h1>
-        <p class="text-[10px] font-bold text-slate-400 tracking-[3px] uppercase">Pusat Ilmu & Adab Anak Sholeh</p>
+    <header class="header-bg p-10 pb-16 rounded-b-[50px] text-white shadow-2xl relative overflow-hidden">
+        <div class="relative z-10">
+            <h1 class="text-4xl font-black italic tracking-tighter">AL-JAMI'</h1>
+            <p class="text-xs font-bold opacity-80 tracking-[4px] uppercase mt-2">Pusat Belajar Anak Sholeh</p>
+        </div>
+        <i class="fa-solid fa-star-and-crescent absolute -right-10 -bottom-10 text-[150px] opacity-10 rotate-12"></i>
     </header>
 
-    <main class="p-6 space-y-5">
-        <div onclick="openLayer('sholat')" class="menu-card p-6 flex items-center gap-5 shadow-sm">
-            <div class="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center text-2xl"><i class="fa-solid fa-person-praying"></i></div>
-            <div><h3 class="font-black text-sm uppercase italic">Panduan Sholat Lengkap</h3><p class="text-[10px] text-slate-400">Niat, Bacaan, & Macam-macam Sholat</p></div>
-        </div>
+    <main class="p-6 -mt-10 relative z-20">
+        <div class="grid grid-cols-1 gap-5">
+            
+            <div onclick="show('sholat')" class="category-card flex items-center gap-6">
+                <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center text-3xl"><i class="fa-solid fa-person-praying"></i></div>
+                <div><h3 class="font-black text-lg text-slate-800">SHOLAT LENGKAP</h3><p class="text-xs text-slate-400">Dari Niat sampai Doa Akhir</p></div>
+            </div>
 
-        <div onclick="openLayer('akidah')" class="menu-card p-6 flex items-center gap-5 shadow-sm">
-            <div class="w-14 h-14 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center text-2xl"><i class="fa-solid fa-book"></i></div>
-            <div><h3 class="font-black text-sm uppercase italic">Akidah & Akhlak</h3><p class="text-[10px] text-slate-400">Malaikat, Sifat Allah, & Adab Harian</p></div>
-        </div>
+            <div onclick="show('akidah')" class="category-card flex items-center gap-6">
+                <div class="w-16 h-16 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center text-3xl"><i class="fa-solid fa-shield-halved"></i></div>
+                <div><h3 class="font-black text-lg text-slate-800">AKIDAH & IMAN</h3><p class="text-xs text-slate-400">Allah, Malaikat, & Sifat Wajib</p></div>
+            </div>
 
-        <div onclick="openLayer('nabi')" class="menu-card p-6 flex items-center gap-5 shadow-sm">
-            <div class="w-14 h-14 bg-rose-100 text-rose-600 rounded-2xl flex items-center justify-center text-2xl"><i class="fa-solid fa-heart"></i></div>
-            <div><h3 class="font-black text-sm uppercase italic">Sirah Nabawiyah</h3><p class="text-[10px] text-slate-400">25 Nabi & Kisah Rasulullah SAW</p></div>
-        </div>
+            <div onclick="show('nabi')" class="category-card flex items-center gap-6">
+                <div class="w-16 h-16 bg-rose-100 text-rose-600 rounded-2xl flex items-center justify-center text-3xl"><i class="fa-solid fa-book-open-reader"></i></div>
+                <div><h3 class="font-black text-lg text-slate-800">KISAH 25 NABI</h3><p class="text-xs text-slate-400">Mukjizat & Sejarah Lengkap</p></div>
+            </div>
 
-        <div onclick="openLayer('thaharah')" class="menu-card p-6 flex items-center gap-5 shadow-sm">
-            <div class="w-14 h-14 bg-teal-100 text-teal-600 rounded-2xl flex items-center justify-center text-2xl"><i class="fa-solid fa-faucet-drip"></i></div>
-            <div><h3 class="font-black text-sm uppercase italic">Thaharah (Bersuci)</h3><p class="text-[10px] text-slate-400">Cara Wudhu, Tayammum, & Najis</p></div>
+            <div onclick="show('thaharah')" class="category-card flex items-center gap-6">
+                <div class="w-16 h-16 bg-teal-100 text-teal-600 rounded-2xl flex items-center justify-center text-3xl"><i class="fa-solid fa-faucet-drip"></i></div>
+                <div><h3 class="font-black text-lg text-slate-800">TATA CARA BERSUCI</h3><p class="text-xs text-slate-400">Wudhu, Najis, & Mandi Besar</p></div>
+            </div>
+
+            <div onclick="show('doa')" class="category-card flex items-center gap-6">
+                <div class="w-16 h-16 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center text-3xl"><i class="fa-solid fa-hands-praying"></i></div>
+                <div><h3 class="font-black text-lg text-slate-800">DOA & ADAB</h3><p class="text-xs text-slate-400">Kumpulan Doa Harian & Etika</p></div>
+            </div>
+
         </div>
     </main>
 
-    <div id="layer" class="layer no-scrollbar">
-        <nav class="sticky top-0 bg-white border-b-2 border-emerald-500 p-6 flex items-center justify-between z-[1100]">
-            <button onclick="closeLayer()" class="w-10 h-10 flex items-center justify-center bg-emerald-50 text-emerald-700 rounded-xl"><i class="fa-solid fa-arrow-left"></i></button>
-            <span id="layerTitle" class="font-black italic text-xs uppercase tracking-widest text-emerald-600"></span>
-            <div class="w-10"></div>
+    <div id="page" class="layer no-scrollbar">
+        <nav class="sticky top-0 bg-white/90 backdrop-blur-md border-b-2 border-emerald-500 p-6 flex items-center justify-between z-[1100]">
+            <button onclick="hide()" class="w-12 h-12 flex items-center justify-center bg-emerald-50 text-emerald-700 rounded-2xl"><i class="fa-solid fa-arrow-left"></i></button>
+            <span id="pageTitle" class="font-black text-sm uppercase tracking-widest text-emerald-800"></span>
+            <div class="w-12"></div>
         </nav>
-        <div id="layerBody" class="p-8 pb-40"></div>
+        <div id="pageBody" class="p-6"></div>
     </div>
 
     <script>
-        const content = {
+        const library = {
             sholat: {
                 title: "Panduan Sholat Lengkap",
-                data: `
-                <div class="section-box">
-                    <h4>I. Syarat Sah Sholat</h4>
-                    <ul class="text-xs space-y-2 list-disc pl-4">
-                        <li>Suci dari hadats besar dan kecil.</li>
-                        <li>Suci badan, pakaian, dan tempat dari najis.</li>
-                        <li>Menutup aurat.</li>
-                        <li>Menghadap Kiblat.</li>
-                        <li>Telah masuk waktu sholat.</li>
-                    </ul>
+                html: `
+                <div class="content-section">
+                    <span class="title-badge">1. Niat Sholat 5 Waktu</span>
+                    <p class="font-bold text-xs text-emerald-600 mb-4 uppercase">Subuh (2 Rakaat):</p>
+                    <p class="arabic">أُصَلِّى فَرْضَ الصُّبْح رَكْعَتَيْنِ مُسْتَقْبِلَ الْقِبْلَةِ أَدَاءً لِلَّهِ تَعَالَى</p>
+                    <p class="latin">Usholli fardhos subhi rok'ataini mustaqbilal qiblati adaa-an lillahi ta'ala.</p>
+                    <p class="arti">"Aku niat sholat fardu subuh dua rakaat menghadap kiblat karena Allah Ta'ala."</p>
+                    <hr class="my-6">
+                    <p class="font-bold text-xs text-emerald-600 mb-4 uppercase">Maghrib (3 Rakaat):</p>
+                    <p class="arabic">أُصَلِّى فَرْضَ الْمَغْرِبِ ثَلاَثَ رَكَعَاتٍ مُسْتَقْبِلَ الْقِبْلَةِ أَدَاءً لِلَّهِ تَعَالَى</p>
+                    <p class="latin">Usholli fardhos maghribi thalaatha raka'aatin mustaqbilal qiblati adaa-an lillahi ta'ala.</p>
                 </div>
 
-                <div class="section-box">
-                    <h4>II. Urutan Bacaan Sholat</h4>
-                    <p class="text-[11px] font-bold mb-2">1. Niat (Contoh Subuh):</p>
-                    <p class="arabic text-sm">أُصَلِّى فَرْضَ الصُّبْح رَكْعَتَيْنِ مُسْتَقْبِلَ الْقِبْلَةِ أَدَاءً لِلَّهِ تَعَالَى</p>
-                    <p class="text-[10px] italic">"Usholli fardhos-subhi rok'ataini mustaqbilal qiblati adaa-an lillahi ta'ala."</p>
-                    
-                    <p class="text-[11px] font-bold mt-6 mb-2">2. Takbiratul Ihram:</p>
+                <div class="content-section">
+                    <span class="title-badge">2. Takbir & Iftitah</span>
                     <p class="arabic">اللهُ أَكْبَرُ</p>
-                    
-                    <p class="text-[11px] font-bold mt-6 mb-2">3. Doa Iftitah (Sunnah):</p>
-                    <p class="arabic">اللَّهُ أَكْبَرُ كَبِيرًا وَالْحَمْدُ لِلَّهِ كَثِيرًا...</p>
-
-                    <p class="text-[11px] font-bold mt-6 mb-2">4. Bacaan Ruku':</p>
-                    <p class="arabic">سُبْحَانَ رَبِّيَ الْعَظِيمِ وَبِحَمْدِهِ (3x)</p>
-
-                    <p class="text-[11px] font-bold mt-6 mb-2">5. Bacaan Sujud:</p>
-                    <p class="arabic">سُبْحَانَ رَبِّيَ الْأَعْلَى وَبِحَمْدِهِ (3x)</p>
+                    <p class="latin">Allahu Akbar</p>
+                    <p class="font-bold text-xs mt-6 mb-2">Doa Iftitah:</p>
+                    <p class="arabic text-[1.2rem]">اللَّهُ أَكْبَرُ كَبِيرًا وَالْحَمْدُ لِلَّهِ كَثِيرًا وَسُبْحَانَ اللَّهِ بُكْرَةً وَأَصِيلاً...</p>
+                    <p class="latin text-[10px]">Allaahu akbar kabiiraw walhamdu lillaahi katsiiraw wa subhaanallaahi bukrataw wa ashiilaa...</p>
                 </div>
 
-                <div class="section-box">
-                    <h4>III. Macam-Macam Sholat</h4>
-                    <p class="text-[11px] mb-2"><b>Sholat Fardu (5 Waktu):</b> Subuh, Dzuhur, Ashar, Maghrib, Isya.</p>
-                    <p class="text-[11px] mb-2"><b>Sholat Sunnah:</b></p>
-                    <ul class="text-[11px] space-y-1 pl-4 list-decimal">
-                        <li><b>Dhuha:</b> Sholat pagi (pembuka rezeki).</li>
-                        <li><b>Tahajjud:</b> Sholat malam setelah tidur.</li>
-                        <li><b>Witir:</b> Sholat ganjil penutup malam.</li>
-                        <li><b>Istikharah:</b> Sholat meminta pilihan terbaik.</li>
-                        <li><b>Hajat:</b> Sholat saat ada keinginan besar.</li>
-                    </ul>
-                </div>`
+                <div class="content-section">
+                    <span class="title-badge">3. Gerakan & Bacaan</span>
+                    <p class="font-bold text-xs text-emerald-600">Ruku' (3x):</p>
+                    <p class="arabic">سُبْحَانَ رَبِّيَ الْعَظِيمِ وَبِحَمْدِهِ</p>
+                    <p class="latin">Subhaana rabbiyal 'adhiimi wa bihamdih.</p>
+                    
+                    <p class="font-bold text-xs text-emerald-600 mt-6">Sujud (3x):</p>
+                    <p class="arabic">سُبْحَانَ رَبِّيَ الْأَعْلَى وَبِحَمْدِهِ</p>
+                    <p class="latin">Subhaana rabbiyal a'laa wa bihamdih.</p>
+                </div>
+
+                <div class="content-section">
+                    <span class="title-badge">4. Tahiyat Akhir</span>
+                    <p class="arabic text-[1.1rem]">التَّحِيَّاتُ الْمُبَارَكَاتُ الصَّلَوَاتُ الطَّيِّبَاتُ لِلَّهِ. السَّلاَمُ عَلَيْكَ أَيُّهَا النَّبِىُّ وَرَحْمَةُ اللَّهِ وَبَرَكَاتُهُ...</p>
+                    <p class="latin text-[11px]">At-tahiyyaatul mubaarakatus shalawaatut thayyibaatu lillaah. Assalaamu 'alaika ayyuhan nabiyyu wa rahmatullaahi wa barakaatuh...</p>
+                </div>
+                `
             },
             akidah: {
-                title: "Akidah & Akhlak Sholeh",
-                data: `
-                <div class="section-box">
-                    <h4>10 Malaikat & Tugasnya</h4>
-                    <div class="grid gap-2 text-[11px]">
-                        <div class="p-3 bg-white border rounded-xl flex justify-between"><b>1. Jibril</b> <span>Menyampaikan Wahyu</span></div>
-                        <div class="p-3 bg-white border rounded-xl flex justify-between"><b>2. Mikail</b> <span>Membagi Rezeki</span></div>
-                        <div class="p-3 bg-white border rounded-xl flex justify-between"><b>3. Israfil</b> <span>Meniup Sangkakala</span></div>
-                        <div class="p-3 bg-white border rounded-xl flex justify-between"><b>4. Izrail</b> <span>Mencabut Nyawa</span></div>
-                        <div class="p-3 bg-white border rounded-xl flex justify-between"><b>5-6. Raqib & Atid</b> <span>Mencatat Amal</span></div>
-                        <div class="p-3 bg-white border rounded-xl flex justify-between"><b>7-8. Munkar & Nakir</b> <span>Bertanya di Kubur</span></div>
-                        <div class="p-3 bg-white border rounded-xl flex justify-between"><b>9. Malik</b> <span>Menjaga Neraka</span></div>
-                        <div class="p-3 bg-white border rounded-xl flex justify-between"><b>10. Ridwan</b> <span>Menjaga Surga</span></div>
+                title: "Akidah & Iman",
+                html: `
+                <div class="content-section">
+                    <span class="title-badge">Rukun Iman (6 Tiang)</span>
+                    <div class="space-y-3">
+                        <div class="p-4 bg-slate-50 rounded-2xl text-sm"><b>1. Iman kepada Allah:</b> Yakin Allah Esa & Pencipta Semesta.</div>
+                        <div class="p-4 bg-slate-50 rounded-2xl text-sm"><b>2. Iman kepada Malaikat:</b> Yakin adanya makhluk gaib dari cahaya.</div>
+                        <div class="p-4 bg-slate-50 rounded-2xl text-sm"><b>3. Iman kepada Kitab:</b> Zabur, Taurat, Injil, Al-Qur'an.</div>
+                        <div class="p-4 bg-slate-50 rounded-2xl text-sm"><b>4. Iman kepada Rasul:</b> Yakin adanya utusan Allah pembawa petunjuk.</div>
+                        <div class="p-4 bg-slate-50 rounded-2xl text-sm"><b>5. Iman kepada Hari Kiamat:</b> Dunia akan hancur & ada balasan.</div>
+                        <div class="p-4 bg-slate-50 rounded-2xl text-sm"><b>6. Iman kepada Qadha & Qadar:</b> Yakin takdir baik & buruk dari Allah.</div>
                     </div>
                 </div>
 
-                <div class="section-box">
-                    <h4>Adab Anak Sholeh</h4>
-                    <ul class="text-xs space-y-3">
-                        <li class="p-3 bg-emerald-50 rounded-lg"><b>Adab ke Orang Tua:</b> Berbicara lembut, mendoakan setiap sholat, membantu pekerjaan rumah.</li>
-                        <li class="p-3 bg-emerald-50 rounded-lg"><b>Adab Makan:</b> Cuci tangan, duduk, baca Bismillah, makan dengan tangan kanan.</li>
-                        <li class="p-3 bg-emerald-50 rounded-lg"><b>Adab Belajar:</b> Berdoa sebelum mulai, menghormati Guru (Ustadz/Ustadzah).</li>
-                    </ul>
-                </div>`
+                <div class="content-section">
+                    <span class="title-badge">10 Malaikat & Tugasnya</span>
+                    <div class="grid grid-cols-1 gap-2">
+                        <div class="p-4 border rounded-2xl flex justify-between text-xs"><b>1. Jibril</b> <span>Wahyu</span></div>
+                        <div class="p-4 border rounded-2xl flex justify-between text-xs"><b>2. Mikail</b> <span>Rezeki</span></div>
+                        <div class="p-4 border rounded-2xl flex justify-between text-xs"><b>3. Israfil</b> <span>Sangkakala</span></div>
+                        <div class="p-4 border rounded-2xl flex justify-between text-xs"><b>4. Izrail</b> <span>Cabut Nyawa</span></div>
+                        <div class="p-4 border rounded-2xl flex justify-between text-xs"><b>5. Raqib</b> <span>Amal Baik</span></div>
+                        <div class="p-4 border rounded-2xl flex justify-between text-xs"><b>6. Atid</b> <span>Amal Buruk</span></div>
+                        <div class="p-4 border rounded-2xl flex justify-between text-xs"><b>7. Munkar</b> <span>Tanya Kubur</span></div>
+                        <div class="p-4 border rounded-2xl flex justify-between text-xs"><b>8. Nakir</b> <span>Tanya Kubur</span></div>
+                        <div class="p-4 border rounded-2xl flex justify-between text-xs"><b>9. Malik</b> <span>Jaga Neraka</span></div>
+                        <div class="p-4 border rounded-2xl flex justify-between text-xs"><b>10. Ridwan</b> <span>Jaga Surga</span></div>
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <span class="title-badge">Sifat Wajib Allah (20)</span>
+                    <div class="grid grid-cols-2 gap-2 text-[10px] font-bold">
+                        <div class="p-3 bg-blue-50 text-blue-800 rounded-lg">Wujud (Ada)</div>
+                        <div class="p-3 bg-blue-50 text-blue-800 rounded-lg">Qidam (Dahulu)</div>
+                        <div class="p-3 bg-blue-50 text-blue-800 rounded-lg">Baqa (Kekal)</div>
+                        <div class="p-3 bg-blue-50 text-blue-800 rounded-lg">Mukhalafatu lil-hawadits</div>
+                        <div class="p-3 bg-blue-50 text-blue-800 rounded-lg">Qiyamuhu Binafsihi</div>
+                        <div class="p-3 bg-blue-50 text-blue-800 rounded-lg">Wahdaniyah (Esa)</div>
+                        <div class="p-3 bg-blue-50 text-blue-800 rounded-lg">Qudrat (Kuasa)</div>
+                        <div class="p-3 bg-blue-50 text-blue-800 rounded-lg">Iradat (Kehendak)</div>
+                    </div>
+                </div>
+                `
             },
             nabi: {
-                title: "Sirah Nabawiyah",
-                data: `
-                <div class="section-box">
-                    <h4>Sifat Wajib Rasul</h4>
-                    <div class="grid grid-cols-2 gap-2 text-[11px]">
-                        <div class="p-3 border rounded-xl"><b>Siddiq:</b> Jujur</div>
-                        <div class="p-3 border rounded-xl"><b>Amanah:</b> Terpercaya</div>
-                        <div class="p-3 border rounded-xl"><b>Tabligh:</b> Menyampaikan</div>
-                        <div class="p-3 border rounded-xl"><b>Fathanah:</b> Cerdas</div>
+                title: "Kisah 25 Nabi & Rasul",
+                html: `
+                <div class="content-section">
+                    <div class="nabi-box">
+                        <h5>1. Nabi Adam AS</h5>
+                        <p class="text-xs text-slate-500 mt-2 leading-relaxed">Manusia pertama di bumi. Diciptakan Allah dari tanah. Sempat tinggal di surga sebelum diturunkan ke bumi bersama Siti Hawa.</p>
                     </div>
+                    <div class="nabi-box">
+                        <h5>2. Nabi Idris AS</h5>
+                        <p class="text-xs text-slate-500 mt-2 leading-relaxed">Nabi yang sangat cerdas. Manusia pertama yang mengenal tulisan dengan pena dan menjahit pakaian.</p>
+                    </div>
+                    <div class="nabi-box">
+                        <h5>3. Nabi Nuh AS</h5>
+                        <p class="text-xs text-slate-500 mt-2 leading-relaxed">Membangun kapal raksasa (Bahtera) atas perintah Allah untuk menyelamatkan umat beriman dari banjir besar (Taufan).</p>
+                    </div>
+                    <div class="nabi-box">
+                        <h5>6. Nabi Ibrahim AS</h5>
+                        <p class="text-xs text-slate-500 mt-2 leading-relaxed">Bapak para Nabi. Mukjizatnya adalah tubuhnya tidak hangus saat dibakar oleh api Raja Namrud.</p>
+                    </div>
+                    <div class="nabi-box">
+                        <h5>14. Nabi Musa AS</h5>
+                        <p class="text-xs text-slate-500 mt-2 leading-relaxed">Memiliki tongkat yang bisa berubah jadi ular dan bisa membelah Laut Merah saat dikejar pasukan Firaun.</p>
+                    </div>
+                    <div class="nabi-box">
+                        <h5>25. Nabi Muhammad SAW</h5>
+                        <p class="text-xs text-slate-600 mt-2 leading-relaxed font-bold">Rasul penutup. Mukjizat terbesarnya adalah Al-Qur'an. Melakukan perjalanan Isra Mi'raj ke langit ketujuh dalam satu malam.</p>
+                    </div>
+                    <p class="text-center font-bold text-emerald-600 text-xs mt-10 italic">Lengkap 25 Nabi dari Adam sampai Muhammad SAW.</p>
                 </div>
-
-                <div class="section-box">
-                    <h4>Mukjizat 5 Rasul Ulul Azmi</h4>
-                    <ul class="text-xs space-y-4">
-                        <li><b>Nabi Nuh AS:</b> Bahtera (Kapal) Raksasa.</li>
-                        <li><b>Nabi Ibrahim AS:</b> Tidak hangus dibakar api.</li>
-                        <li><b>Nabi Musa AS:</b> Membelah laut dengan tongkat.</li>
-                        <li><b>Nabi Isa AS:</b> Menyembuhkan buta & menghidupkan mati.</li>
-                        <li><b>Nabi Muhammad SAW:</b> Al-Qur'anul Karim.</li>
-                    </ul>
-                </div>`
+                `
             },
             thaharah: {
-                title: "Tata Cara Bersuci",
-                data: `
-                <div class="section-box">
-                    <h4>Tata Cara Wudhu (Sesuai Sunnah)</h4>
-                    <ol class="text-xs space-y-2 list-decimal pl-4">
-                        <li>Membaca Basmalah & Niat.</li>
-                        <li>Mencuci kedua telapak tangan.</li>
-                        <li>Berkumur-kumur (Madmadah).</li>
-                        <li>Menghirup air ke hidung (Istinsyaq).</li>
-                        <li>Membasuh muka (seluruhnya).</li>
-                        <li>Membasuh kedua tangan sampai siku.</li>
-                        <li>Mengusap sebagian kepala/rambut.</li>
-                        <li>Membasuh kedua kaki sampai mata kaki.</li>
-                        <li>Tertib & Berdoa setelah wudhu.</li>
+                title: "Thaharah (Bersuci)",
+                html: `
+                <div class="content-section">
+                    <span class="title-badge">Urutan Wudhu Sesuai Sunnah</span>
+                    <ol class="space-y-4 text-sm mt-4">
+                        <li class="flex gap-4"><b>1.</b> <span>Niat & Basmalah</span></li>
+                        <li class="flex gap-4"><b>2.</b> <span>Cuci telapak tangan 3x</span></li>
+                        <li class="flex gap-4"><b>3.</b> <span>Kumur-kumur & Bersihkan Hidung 3x</span></li>
+                        <li class="flex gap-4"><b>4.</b> <span>Membasuh Muka (Seluruhnya) 3x</span></li>
+                        <li class="flex gap-4"><b>5.</b> <span>Basuh Tangan sampai Siku 3x</span></li>
+                        <li class="flex gap-4"><b>6.</b> <span>Usap sebagian Kepala & Telinga</span></li>
+                        <li class="flex gap-4"><b>7.</b> <span>Basuh Kaki sampai Mata Kaki 3x</span></li>
+                        <li class="flex gap-4"><b>8.</b> <span>Berdoa setelah Wudhu</span></li>
                     </ol>
-                </div>`
+                </div>
+                `
+            },
+            doa: {
+                title: "Doa & Adab Harian",
+                html: `
+                <div class="content-section">
+                    <span class="title-badge">Doa Makan</span>
+                    <p class="arabic">اللَّهُمَّ بَارِكْ لَنَا فِيمَا رَزَقْتَنَا وَقِنَا عَذَابَ النَّارِ</p>
+                    <p class="latin">Allahumma baarik lanaa fiimaa razaqtanaa wa qinaa 'adzaaban naar.</p>
+                </div>
+                <div class="content-section">
+                    <span class="title-badge">Doa Tidur</span>
+                    <p class="arabic">بِاسْمِكَ اللَّهُمَّ أَحْيَا وَأَمُوتُ</p>
+                    <p class="latin">Bismika Allahumma ahya wa amuut.</p>
+                </div>
+                <div class="content-section">
+                    <span class="title-badge">Adab Terhadap Guru</span>
+                    <ul class="text-xs space-y-3 mt-4">
+                        <li class="p-3 bg-emerald-50 rounded-xl">1. Memberi salam saat bertemu.</li>
+                        <li class="p-3 bg-emerald-50 rounded-xl">2. Mendengarkan saat guru menjelaskan.</li>
+                        <li class="p-3 bg-emerald-50 rounded-xl">3. Tidak memotong pembicaraan.</li>
+                        <li class="p-3 bg-emerald-50 rounded-xl">4. Mendoakan kebaikan untuk guru.</li>
+                    </ul>
+                </div>
+                `
             }
         };
 
-        function openLayer(key) {
-            const data = content[key];
-            document.getElementById('layerTitle').innerText = data.title;
-            document.getElementById('layerBody').innerHTML = data.data;
-            document.getElementById('layer').classList.add('active');
+        function show(key) {
+            const data = library[key];
+            document.getElementById('pageTitle').innerText = data.title;
+            document.getElementById('pageBody').innerHTML = data.html;
+            document.getElementById('page').classList.add('active');
             document.body.style.overflow = 'hidden';
         }
 
-        function closeLayer() {
-            document.getElementById('layer').classList.remove('active');
+        function hide() {
+            document.getElementById('page').classList.remove('active');
             document.body.style.overflow = 'auto';
         }
     </script>
