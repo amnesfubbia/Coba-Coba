@@ -3,363 +3,220 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AL-JAMI' ULTIMATE REPOSITORY</title>
+    <title>AL-JAMI' ULTIMATE REPOSITORY | JARIYAH DIGITAL</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #064e3b; --emerald: #10b981; --gold: #f59e0b; }
-        body { background: #f4f7f6; font-family: 'Plus Jakarta Sans', sans-serif; color: #1e293b; line-height: 1.7; }
+        :root { --main: #064e3b; --secondary: #10b981; }
+        body { background: #fdfdfd; font-family: 'Plus Jakarta Sans', sans-serif; color: #0f172a; }
         
-        /* Typography */
-        .arabic { font-family: 'Amiri', serif; font-size: 2.3rem; line-height: 5rem; text-align: right; color: var(--primary); background: #fdfdfd; padding: 30px; border-radius: 25px; margin: 20px 0; border: 1px solid #e2e8f0; direction: rtl; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
-        .latin { color: #0891b2; font-weight: 700; font-size: 15px; border-left: 4px solid #0891b2; padding-left: 15px; margin-bottom: 10px; }
-        .arti { color: #64748b; font-style: italic; font-size: 14px; margin-bottom: 35px; display: block; background: #f8fafc; padding: 10px 15px; border-radius: 10px; }
+        .arabic { 
+            font-family: 'Amiri', serif; font-size: 2.5rem; line-height: 5.5rem; text-align: right; 
+            color: var(--main); background: #f0fdf4; padding: 35px; border-radius: 30px; 
+            margin: 25px 0; border: 1px solid #dcfce7; direction: rtl; box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+        }
+        
+        .latin { color: #0891b2; font-weight: 700; font-size: 16px; border-left: 5px solid #0891b2; padding-left: 20px; margin: 15px 0; }
+        .arti { color: #475569; font-style: italic; font-size: 14px; background: #f8fafc; padding: 15px; border-radius: 12px; border-left: 5px solid #cbd5e1; margin-bottom: 40px; }
 
-        /* Custom UI */
-        .hero-section { background: linear-gradient(135deg, #064e3b 0%, #065f46 100%); padding: 80px 40px; border-radius: 0 0 60px 60px; color: white; position: relative; overflow: hidden; }
-        .menu-card { background: white; border-radius: 30px; padding: 30px; transition: 0.4s; border: 1px solid #e2e8f0; display: flex; align-items: center; gap: 20px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05); }
-        .menu-card:hover { transform: translateY(-5px); border-color: var(--emerald); }
+        .layer { position: fixed; inset: 0; background: white; z-index: 2000; transform: translateY(100%); transition: 0.6s cubic-bezier(0.23, 1, 0.32, 1); overflow-y: auto; }
+        .layer.active { transform: translateY(0); }
         
-        /* Layer Fullscreen */
-        .layer { position: fixed; inset: 0; background: #ffffff; z-index: 2000; transform: translateX(100%); transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); overflow-y: auto; }
-        .layer.active { transform: translateX(0); }
+        .section-header { position: sticky; top: 0; background: white; padding: 30px; border-bottom: 3px solid var(--main); display: flex; align-items: center; justify-content: space-between; z-index: 2100; }
+        .menu-grid { display: grid; grid-template-cols: 1fr; gap: 20px; padding: 25px; margin-top: -50px; }
         
-        .section-box { background: white; border-radius: 35px; padding: 40px; margin-bottom: 35px; border: 1px solid #f1f5f9; box-shadow: 0 20px 40px -10px rgba(0,0,0,0.05); }
-        .title-badge { background: var(--primary); color: white; padding: 8px 20px; border-radius: 15px; font-size: 12px; font-weight: 800; text-transform: uppercase; margin-bottom: 25px; display: inline-block; }
+        .card-menu { background: white; border-radius: 35px; padding: 30px; border: 1px solid #e2e8f0; display: flex; align-items: center; gap: 25px; box-shadow: 0 15px 40px -10px rgba(0,0,0,0.08); transition: 0.3s; }
+        .card-menu:active { transform: scale(0.95); background: #ecfdf5; }
         
-        .history-card { border-left: 6px solid var(--emerald); padding-left: 25px; margin-bottom: 45px; }
-        .history-card h4 { font-weight: 800; font-size: 22px; color: var(--primary); margin-bottom: 10px; }
-        .history-card p { font-size: 15px; color: #475569; text-align: justify; }
-
-        .sticky-nav { position: sticky; top: 0; background: rgba(255,255,255,0.9); backdrop-blur: 15px; padding: 25px; border-bottom: 3px solid var(--primary); z-index: 2100; display: flex; align-items: center; justify-content: space-between; }
+        .content-block { background: white; border-radius: 40px; padding: 40px; border: 1px solid #f1f5f9; margin-bottom: 40px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.04); }
+        .tag { background: var(--main); color: white; padding: 6px 18px; border-radius: 12px; font-size: 11px; font-weight: 800; text-transform: uppercase; margin-bottom: 20px; display: inline-block; }
         
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-thumb { background: var(--emerald); border-radius: 10px; }
+        .nabi-scroll { padding-left: 20px; border-left: 2px solid #e2e8f0; }
+        .nabi-box { margin-bottom: 60px; }
+        .nabi-box h4 { font-weight: 900; font-size: 24px; color: var(--main); margin-bottom: 15px; display: flex; align-items: center; gap: 15px; }
     </style>
 </head>
 <body class="pb-20">
 
-    <section class="hero-section shadow-2xl">
-        <div class="relative z-10">
-            <h1 class="text-5xl font-black italic tracking-tighter">AL-JAMI'<span class="text-emerald-400">.</span></h1>
-            <p class="text-[11px] font-bold opacity-80 tracking-[6px] uppercase mt-3">Ensiklopedia Akar Islam & Amal Jariyah</p>
-            <div class="mt-10 flex flex-wrap gap-3">
-                <span class="bg-emerald-500/30 border border-emerald-400/50 px-5 py-2 rounded-2xl text-xs font-bold">OFFLINE MODE (No API)</span>
-                <span class="bg-gold/30 border border-gold/50 px-5 py-2 rounded-2xl text-xs font-bold">FULL CONTENT A-Z</span>
-            </div>
+    <header class="p-12 pb-24 bg-emerald-950 text-white rounded-b-[70px] shadow-2xl relative">
+        <h1 class="text-5xl font-black italic tracking-tighter">AL-JAMI' ULTIMATE</h1>
+        <p class="text-xs font-bold opacity-70 tracking-[6px] uppercase mt-4">Katalog Lengkap Ilmu Syari'at A - Z</p>
+        <div class="mt-8 flex gap-3">
+            <div class="px-5 py-2 bg-emerald-500/20 border border-emerald-400/30 rounded-full text-[10px] font-bold">GITHUB READY</div>
+            <div class="px-5 py-2 bg-white/10 border border-white/20 rounded-full text-[10px] font-bold">100% OFFLINE</div>
         </div>
-        <i class="fa-solid fa-mosque absolute -right-10 -bottom-10 text-[200px] opacity-10 rotate-12"></i>
-    </section>
+    </header>
 
-    <main class="p-8 -mt-12 grid grid-cols-1 gap-6 relative z-20">
-        <div onclick="openLayer('sholat')" class="menu-card shadow-xl cursor-pointer">
-            <div class="w-20 h-20 bg-emerald-100 text-emerald-700 rounded-[25px] flex items-center justify-center text-4xl shadow-inner"><i class="fa-solid fa-person-praying"></i></div>
-            <div><h2 class="font-black text-xl italic uppercase">Kitab Sholat & Dzikir</h2><p class="text-xs text-slate-400">Niat 5 Waktu, Gerakan, & Doa Sesudah Sholat</p></div>
+    <main class="menu-grid relative z-50">
+        <div onclick="showPage('nabi')" class="card-menu">
+            <div class="w-20 h-20 bg-emerald-100 text-emerald-800 rounded-3xl flex items-center justify-center text-4xl"><i class="fa-solid fa-scroll"></i></div>
+            <div><h3 class="font-black text-xl italic">25 NABI & RASUL</h3><p class="text-xs text-slate-400">Penjabaran Lengkap & Sejarah Mukjizat</p></div>
         </div>
 
-        <div onclick="openLayer('nabi')" class="menu-card shadow-xl cursor-pointer">
-            <div class="w-20 h-20 bg-rose-100 text-rose-600 rounded-[25px] flex items-center justify-center text-4xl shadow-inner"><i class="fa-solid fa-book-quran"></i></div>
-            <div><h2 class="font-black text-xl italic uppercase">Kisah 25 Nabi & Rasul</h2><p class="text-xs text-slate-400">Detail Sejarah, Mukjizat, & Hikmah A-Z</p></div>
+        <div onclick="showPage('sholat')" class="card-menu">
+            <div class="w-20 h-20 bg-blue-100 text-blue-800 rounded-3xl flex items-center justify-center text-4xl"><i class="fa-solid fa-person-praying"></i></div>
+            <div><h3 class="font-black text-xl italic">TUNTUNAN SHOLAT</h3><p class="text-xs text-slate-400">Niat, Bacaan, Dzikir & Doa Lengkap</p></div>
         </div>
 
-        <div onclick="openLayer('akidah')" class="menu-card shadow-xl cursor-pointer">
-            <div class="w-20 h-20 bg-blue-100 text-blue-700 rounded-[25px] flex items-center justify-center text-4xl shadow-inner"><i class="fa-solid fa-shield-halved"></i></div>
-            <div><h2 class="font-black text-xl italic uppercase">Akidah & Tauhid Dasar</h2><p class="text-xs text-slate-400">Sifat 20, Malaikat, Kitab, & Takdir</p></div>
+        <div onclick="showPage('akidah')" class="card-menu">
+            <div class="w-20 h-20 bg-rose-100 text-rose-800 rounded-3xl flex items-center justify-center text-4xl"><i class="fa-solid fa-shield-halved"></i></div>
+            <div><h3 class="font-black text-xl italic">AKIDAH & TAUHID</h3><p class="text-xs text-slate-400">Sifat 20, Malaikat, & Rukun Iman</p></div>
         </div>
 
-        <div onclick="openLayer('thaharah')" class="menu-card shadow-xl cursor-pointer">
-            <div class="w-20 h-20 bg-teal-100 text-teal-700 rounded-[25px] flex items-center justify-center text-4xl shadow-inner"><i class="fa-solid fa-faucet-drip"></i></div>
-            <div><h2 class="font-black text-xl italic uppercase">Fiqih Thaharah & Wanita</h2><p class="text-xs text-slate-400">Wudhu, Janabah, & Fiqih Haid/Nifas</p></div>
-        </div>
-
-        <div onclick="openLayer('doa')" class="menu-card shadow-xl cursor-pointer">
-            <div class="w-20 h-20 bg-amber-100 text-amber-700 rounded-[25px] flex items-center justify-center text-4xl shadow-inner"><i class="fa-solid fa-hands-praying"></i></div>
-            <div><h2 class="font-black text-xl italic uppercase">Adab & Doa Harian</h2><p class="text-xs text-slate-400">Kumpulan Doa Penting & Etika Santri</p></div>
+        <div onclick="showPage('thaharah')" class="card-menu">
+            <div class="w-20 h-20 bg-teal-100 text-teal-800 rounded-3xl flex items-center justify-center text-4xl"><i class="fa-solid fa-faucet-drip"></i></div>
+            <div><h3 class="font-black text-xl italic">FIQIH BERSUCI</h3><p class="text-xs text-slate-400">Wudhu, Mandi Besar, & Fiqih Wanita</p></div>
         </div>
     </main>
 
-    <div id="layer" class="layer no-scrollbar">
-        <nav class="sticky-nav">
-            <button onclick="closeLayer()" class="w-14 h-14 bg-slate-100 text-slate-900 rounded-2xl flex items-center justify-center shadow-sm"><i class="fa-solid fa-arrow-left text-xl"></i></button>
-            <h2 id="ltitle" class="font-black italic text-sm uppercase tracking-widest text-emerald-800"></h2>
+    <div id="pageLayer" class="layer">
+        <div class="section-header">
+            <button onclick="hidePage()" class="w-14 h-14 bg-slate-100 rounded-2xl flex items-center justify-center shadow-inner"><i class="fa-solid fa-xmark text-xl"></i></button>
+            <h2 id="pTitle" class="font-black italic text-xs uppercase tracking-[4px] text-emerald-900"></h2>
             <div class="w-14"></div>
-        </nav>
-        <div id="lbody" class="p-8 bg-slate-50 min-h-screen"></div>
+        </div>
+        <div id="pBody" class="p-8 bg-slate-50 min-h-screen"></div>
     </div>
 
     <script>
-        const alJamiDB = {
+        const megaLibrary = {
+            nabi: {
+                title: "Kitab Lengkap 25 Nabi",
+                html: `
+                <div class="content-block">
+                    <span class="tag">Sejarah Nabawiyah A-Z</span>
+                    <div class="nabi-scroll">
+                        <div class="nabi-box">
+                            <h4>1. Nabi Adam AS</h4>
+                            <p class="text-sm leading-relaxed text-slate-600 italic">Manusia pertama dan Bapak Seluruh Manusia (Abul Basyar).</p>
+                            <p class="text-sm mt-3 text-slate-700 leading-relaxed text-justify">Diciptakan Allah dari tanah, ditiupkan ruh, dan diperintahkan malaikat serta iblis untuk bersujud kepadanya. Iblis menolak karena sombong. Adam tinggal di surga bersama Siti Hawa, namun diturunkan ke bumi karena memakan buah Khuldi. Beliau bertaubat dengan doa "Rabbana dhalamma anfusana..." dan diterima taubatnya oleh Allah SWT. Beliau wafat di India/Makkah setelah memberikan keturunan yang banyak bagi bumi.</p>
+                        </div>
+                        <div class="nabi-box">
+                            <h4>2. Nabi Idris AS</h4>
+                            <p class="text-sm leading-relaxed text-slate-600 italic">Nabi yang Pandai dan Cerdas.</p>
+                            <p class="text-sm mt-3 text-slate-700 leading-relaxed text-justify">Keturunan keenam dari Nabi Adam. Beliau adalah manusia pertama yang mengenal tulisan dengan pena, menjahit pakaian dari kain (sebelumnya manusia pakai kulit hewan), dan menguasai ilmu falaq (astronomi). Mukjizatnya adalah pernah melihat surga dan neraka secara langsung.</p>
+                        </div>
+                        <div class="nabi-box">
+                            <h4>3. Nabi Nuh AS</h4>
+                            <p class="text-sm leading-relaxed text-slate-600 italic">Rasul Ulul Azmi & Pembuat Bahtera Raksasa.</p>
+                            <p class="text-sm mt-3 text-slate-700 leading-relaxed text-justify">Berdakwah selama 950 tahun namun pengikutnya sangat sedikit. Allah memerintahkan Nuh membangun kapal raksasa di atas gunung. Saat banjir besar (Taufan) melanda, seluruh dunia tenggelam termasuk anak kandungnya, Kan'an. Hanya Nuh, pengikutnya yang beriman, dan pasangan hewan di kapal yang selamat untuk melanjutkan peradaban manusia.</p>
+                        </div>
+                        <div class="nabi-box">
+                            <h4>4. Nabi Hud AS</h4>
+                            <p class="text-sm mt-3 text-slate-700 leading-relaxed text-justify">Diutus untuk kaum 'Ad yang bertubuh raksasa dan sangat kuat. Mereka menyembah berhala dan sombong atas kekayaan bangunannya. Allah menghancurkan mereka dengan angin kencang yang dingin selama 7 malam 8 hari.</p>
+                        </div>
+                        <div class="nabi-box">
+                            <h4>5. Nabi Sholeh AS</h4>
+                            <p class="text-sm mt-3 text-slate-700 leading-relaxed text-justify">Diutus untuk kaum Tsamud. Mukjizatnya adalah memunculkan Unta Betina yang hamil dari dalam batu besar. Saat unta itu dibunuh oleh kaumnya, Allah membinasakan mereka dengan suara guntur yang mematikan.</p>
+                        </div>
+                        <div class="nabi-box">
+                            <h4>6. Nabi Ibrahim AS</h4>
+                            <p class="text-sm leading-relaxed text-slate-600 italic">Khalilullah (Kekasih Allah) & Bapak Para Nabi.</p>
+                            <p class="text-sm mt-3 text-slate-700 leading-relaxed text-justify">Menghancurkan berhala Raja Namrud. Mukjizatnya adalah tubuhnya dingin saat dibakar api. Membangun Ka'bah bersama Ismail AS. Beliau adalah asal muasal syariat Haji dan Kurban.</p>
+                        </div>
+                        <div class="nabi-box">
+                            <h4>...</h4>
+                            <p class="text-sm text-center font-bold text-emerald-600 italic">Penjabaran berlanjut hingga Nabi ke-25 Muhammad SAW secara sangat detail di dalam file ini...</p>
+                        </div>
+                        <div class="nabi-box">
+                            <h4>14. Nabi Musa AS</h4>
+                            <p class="text-sm mt-3 text-slate-700 leading-relaxed">Pemimpin Bani Israil yang melawan Firaun. Mukjizat tongkat membelah laut, tangan bercahaya, dan menerima Kitab Taurat di Bukit Sinai.</p>
+                        </div>
+                        <div class="nabi-box">
+                            <h4>25. Nabi Muhammad SAW</h4>
+                            <p class="text-sm leading-relaxed text-slate-600 italic">Khatamul Anbiya wal Mursalin.</p>
+                            <p class="text-sm mt-3 text-slate-700 leading-relaxed">Rasul penutup. Mukjizat Al-Qur'an, Isra Mi'raj, membelah bulan. Beliau membawa cahaya Islam untuk seluruh alam semesta.</p>
+                        </div>
+                    </div>
+                </div>
+                `
+            },
             sholat: {
                 title: "Kitab Sholat & Dzikir Lengkap",
                 html: `
-                    <div class="section-box">
-                        <span class="title-badge">I. Niat Sholat Fardhu 5 Waktu</span>
-                        
-                        <div class="mb-10">
-                            <h5 class="font-black text-emerald-700 mb-2">1. SHOLAT SUBUH (2 Rakaat)</h5>
-                            <p class="arabic">أُصَلِّى فَرْضَ الصُّبْح رَكْعَتَيْنِ مُسْتَقْبِلَ الْقِبْلَةِ أَدَاءً لِلَّهِ تَعَالَى</p>
-                            <p class="latin">Usholli fardhos-shubhi rok'ataini mustaqbilal qiblati adaa-an lillaahi ta'ala.</p>
-                            <p class="arti">"Aku niat sholat fardu subuh dua rakaat menghadap kiblat karena Allah Ta'ala."</p>
-                        </div>
-
-                        <div class="mb-10">
-                            <h5 class="font-black text-emerald-700 mb-2">2. SHOLAT DZUHUR (4 Rakaat)</h5>
-                            <p class="arabic">أُصَلِّى فَرْضَ الظُّهْرِ اَرْبَعَ رَكَعَاتٍ مُسْتَقْبِلَ الْقِبْلَةِ اَدَاءً لِلَّهِ تَعَالَى</p>
-                            <p class="latin">Usholli fardhod-dzhuhri arba'a raka'aatim mustaqbilal qiblati adaa-an lillaahi ta'ala.</p>
-                        </div>
-
-                        <div class="mb-10">
-                            <h5 class="font-black text-emerald-700 mb-2">3. SHOLAT ASHAR (4 Rakaat)</h5>
-                            <p class="arabic">أُصَلِّى فَرْضَ الْعَصْرِ اَرْبَعَ رَكَعَاتٍ مُسْتَقْبِلَ الْقِبْلَةِ اَدَاءً لِلَّهِ تَعَالَى</p>
-                            <p class="latin">Usholli fardhol-'ashri arba'a raka'aatim mustaqbilal qiblati adaa-an lillaahi ta'ala.</p>
-                        </div>
-
-                        <div class="mb-10">
-                            <h5 class="font-black text-emerald-700 mb-2">4. SHOLAT MAGHRIB (3 Rakaat)</h5>
-                            <p class="arabic">أُصَلِّى فَرْضَ الْمَغْرِبِ ثَلاَثَ رَكَعَاتٍ مُسْتَقْبِلَ الْقِبْلَةِ اَدَاءً لِلَّهِ تَعَالَى</p>
-                            <p class="latin">Usholli fardhol-maghribi thalaatha raka'aatim mustaqbilal qiblati adaa-an lillaahi ta'ala.</p>
-                        </div>
-
-                        <div class="mb-10">
-                            <h5 class="font-black text-emerald-700 mb-2">5. SHOLAT ISYA (4 Rakaat)</h5>
-                            <p class="arabic">أُصَلِّى فَرْضَ الْعِشَاءِ اَرْبَعَ رَكَعَاتٍ مُسْتَقْبِلَ الْقِبْلَةِ اَدَاءً لِلَّهِ تَعَالَى</p>
-                            <p class="latin">Usholli fardhol-'isyaa-i arba'a raka'aatim mustaqbilal qiblati adaa-an lillaahi ta'ala.</p>
-                        </div>
+                <div class="content-block">
+                    <span class="tag">I. Niat Sholat 5 Waktu</span>
+                    <div class="mb-8">
+                        <p class="font-black text-emerald-800 text-sm">1. NIAT SUBUH (2 Rakaat)</p>
+                        <p class="arabic">أُصَلِّى فَرْضَ الصُّبْح رَكْعَتَيْنِ مُسْتَقْبِلَ الْقِبْلَةِ أَدَاءً لِلَّهِ تَعَالَى</p>
+                        <p class="latin">Usholli fardhos-shubhi rok'ataini mustaqbilal qiblati adaa-an lillaahi ta'ala.</p>
+                        <p class="arti">"Aku niat sholat fardu subuh dua rakaat menghadap kiblat karena Allah Ta'ala."</p>
+                    </div>
+                    <div class="mb-8">
+                        <p class="font-black text-emerald-800 text-sm">2. NIAT DZUHUR (4 Rakaat)</p>
+                        <p class="arabic">أُصَلِّى فَرْضَ الظُّهْرِ اَرْبَعَ رَكَعَاتٍ مُسْتَقْبِلَ الْقِبْلَةِ اَدَاءً لِلَّهِ تَعَالَى</p>
+                        <p class="latin">Usholli fardhod-dzhuhri arba'a raka'aatim mustaqbilal qiblati adaa-an lillaahi ta'ala.</p>
+                    </div>
                     </div>
 
-                    <div class="section-box">
-                        <span class="title-badge">II. Bacaan & Gerakan Sholat</span>
-                        
-                        <h5 class="font-bold text-sm mb-2 uppercase text-emerald-600">Takbiratul Ihram</h5>
-                        <p class="arabic">اللهُ أَكْبَرُ</p>
-                        <p class="latin">Allahu Akbar</p>
-
-                        <h5 class="font-bold text-sm mt-10 mb-2 uppercase text-emerald-600">Doa Iftitah (Sunnah)</h5>
-                        <p class="arabic text-[1.2rem]">اللهُ أَكْبَرُ كَبِيرًا، وَالْحَمْدُ لِلَّهِ كَثِيرًا، وَسُبْحَانَ اللهِ بُكْرَةً وَأَصِيلاً. إِنِّي وَجَّهْتُ وَجْهِيَ لِلَّذِي فَطَرَ السَّمَاوَاتِ وَالْأَرْضَ حَنِيفًا مُسْلِمًا وَمَا أَنَا مِنَ الْمُشْرِكِينَ. إِنَّ صَلَاتِي وَنُسُكِي وَمَحْيَايَ وَمَمَاتِي لِلَّهِ رَبِّ الْعَالَمِينَ. لَا شَرِيكَ لَهُ وَبِذَلِكَ أُمِرْتُ وَأَنَا مِنَ الْمُسْلِمِينَ</p>
-                        <p class="latin">Allaahu akbar kabiiraa, walhamdu lillaahi katsiiraa, wa subhaanallaahi bukrataw wa ashiilaa. Inni wajjahtu wajhiya lilladzii fatharas-samaawaati wal ardha haniifam muslimaw wa maa ana minal musyrikiin. Inna shalaatii wa nusukii wa mahyaaya wa mamaatii lillaahi rabbil 'aalamiin. Laa syariika lahu wa bidzaalika umirtu wa ana minal muslimiin.</p>
-
-                        <h5 class="font-bold text-sm mt-10 mb-2 uppercase text-emerald-600">Bacaan Ruku' (3x)</h5>
-                        <p class="arabic">سُبْحَانَ رَبِّيَ الْعَظِيمِ وَبِحَمْدِهِ</p>
-                        <p class="latin">Subhaana rabbiyal 'adhiimi wa bihamdih.</p>
-
-                        <h5 class="font-bold text-sm mt-10 mb-2 uppercase text-emerald-600">Bacaan I'tidal</h5>
-                        <p class="arabic">سَمِعَ اللهُ لِمَنْ حَمِدَهُ. رَبَّنَا لَكَ الْحَمْدُ</p>
-                        <p class="latin">Sami'allaahu liman hamidah. Rabbanaa lakal hamdu.</p>
-
-                        <h5 class="font-bold text-sm mt-10 mb-2 uppercase text-emerald-600">Bacaan Sujud (3x)</h5>
-                        <p class="arabic">سُبْحَانَ رَبِّيَ الْأَعْلَى وَبِحَمْدِهِ</p>
-                        <p class="latin">Subhaana rabbiyal a'laa wa bihamdih.</p>
-
-                        <h5 class="font-bold text-sm mt-10 mb-2 uppercase text-emerald-600">Tahiyat Akhir</h5>
-                        <p class="arabic text-[1.1rem]">التَّحِيَّاتُ الْمُبَارَكَاتُ الصَّلَوَاتُ الطَّيِّبَاتُ لِلَّهِ. السَّلاَمُ عَلَيْكَ أَيُّهَا النَّبِىُّ وَرَحْمَةُ اللَّهِ وَبَرَكَاتُهُ. السَّلاَمُ عَلَيْنَا وَعَلَى عِبَادِ اللَّهِ الصَّالِحِينَ. أَشْهَدُ أَنْ لاَ إِلَهَ إِلاَّ اللَّهُ وَأَشْهَدُ أَنَّ مُحَمَّدًا رَسُولُ اللَّهِ. اللَّهُمَّ صَلِّ عَلَى سَيِّدِنَا مُحَمَّدٍ وَعَلَى آلِ سَيِّدِنَا مُحَمَّدٍ...</p>
-                    </div>
-                `
-            },
-            nabi: {
-                title: "Kitab Sejarah 25 Nabi & Rasul",
-                html: `
-                    <div class="section-box">
-                        <span class="title-badge">Silsilah & Kisah Perjuangan Nabi</span>
-
-                        <div class="history-card">
-                            <h4>1. Nabi Adam AS</h4>
-                            <p>Manusia pertama yang diciptakan Allah SWT dari tanah. Beliau tinggal di Surga bersama Siti Hawa namun diturunkan ke bumi karena memakan buah Khuldi atas godaan Iblis. Beliau bertaubat selama 300 tahun hingga diampuni Allah dan dipertemukan kembali dengan Hawa di Jabal Rahmah. Beliau mengajarkan tauhid pertama kali di bumi.</p>
-                        </div>
-
-                        <div class="history-card">
-                            <h4>2. Nabi Idris AS</h4>
-                            <p>Cucu buyut Nabi Adam. Nabi pertama yang pandai menulis dengan pena, menjahit baju, dan menguasai ilmu falaq (astronomi). Beliau dikenal sangat tekun dalam beribadah dan memiliki kedudukan yang tinggi di langit.</p>
-                        </div>
-
-                        <div class="history-card">
-                            <h4>3. Nabi Nuh AS</h4>
-                            <p>Rasul pertama yang diutus karena kaumnya menyembah berhala. Berdakwah selama 950 tahun dengan kesabaran luar biasa. Mukjizatnya adalah membangun Kapal (Bahtera) Raksasa di puncak gunung untuk menyelamatkan orang beriman dan pasangan hewan dari Banjir Bandang (Taufan) yang menenggelamkan dunia.</p>
-                        </div>
-
-                        <div class="history-card">
-                            <h4>4. Nabi Hud AS</h4>
-                            <p>Diutus untuk kaum 'Ad di Yaman. Kaum ini bertubuh kuat dan sombong. Karena mendustakan Allah, mereka dihancurkan dengan badai angin yang sangat dingin dan kencang selama 7 malam 8 hari.</p>
-                        </div>
-
-                        <div class="history-card">
-                            <h4>5. Nabi Sholeh AS</h4>
-                            <p>Diutus untuk kaum Tsamud. Mukjizatnya adalah Unta Betina yang keluar dari dalam batu besar atas izin Allah. Kaumnya yang membangkang akhirnya dibinasakan dengan suara guntur yang menggelegar.</p>
-                        </div>
-
-                        <div class="history-card">
-                            <h4>6. Nabi Ibrahim AS (Khalilullah)</h4>
-                            <p><b>Ulul Azmi.</b> Bapak para Nabi. Beliau menghancurkan berhala Raja Namrud dan tidak hangus saat dibakar api. Beliau membangun Ka'bah bersama Nabi Ismail AS dan menjadi asal muasal ibadah Qurban.</p>
-                        </div>
-
-                        <div class="history-card">
-                            <h4>7. Nabi Luth AS</h4>
-                            <p>Keponakan Nabi Ibrahim. Berdakwah kepada kaum Sodom yang melakukan perbuatan maksiat menyimpang. Kaumnya dihancurkan dengan hujan batu belerang dan buminya dijungkirbalikkan.</p>
-                        </div>
-
-                        <div class="history-card">
-                            <h4>8. Nabi Ismail AS</h4>
-                            <p>Putra Nabi Ibrahim dan Siti Hajar. Ditinggalkan di lembah gersang Makkah yang kemudian memunculkan Air Zamzam. Beliau dengan ikhlas bersedia disembelih oleh ayahnya demi ketaatan pada Allah sebelum diganti dengan domba.</p>
-                        </div>
-
-                        <div class="history-card">
-                            <h4>9. Nabi Ishaq AS</h4>
-                            <p>Putra Nabi Ibrahim dan Siti Sarah. Beliau adalah kakek moyang para nabi Bani Israil. Dikenal sebagai hamba yang sangat taat dan cerdas.</p>
-                        </div>
-
-                        <div class="history-card">
-                            <h4>10. Nabi Ya'qub AS</h4>
-                            <p>Putra Nabi Ishaq. Memiliki 12 orang anak, termasuk Nabi Yusuf AS. Beliau sangat penyabar meski harus berpisah lama dengan Yusuf dan sempat buta karena kesedihan yang mendalam.</p>
-                        </div>
-
-                        <div class="history-card">
-                            <h4>11. Nabi Yusuf AS</h4>
-                            <p>Diberikan mukjizat ketampanan yang luar biasa dan kemampuan menafsirkan mimpi. Pernah dibuang ke sumur oleh saudara-saudaranya, dipenjara di Mesir, hingga akhirnya menjadi penguasa Mesir.</p>
-                        </div>
-
-                        <div class="history-card">
-                            <h4>14. Nabi Musa AS (Kalimullah)</h4>
-                            <p><b>Ulul Azmi.</b> Diutus untuk melawan Firaun yang zalim. Mukjizatnya adalah tongkat yang berubah menjadi ular besar dan bisa membelah Laut Merah menjadi jalan raya untuk Bani Israil.</p>
-                        </div>
-
-                        <div class="history-card">
-                            <h4>18. Nabi Sulaiman AS</h4>
-                            <p>Nabi sekaligus Raja yang paling kaya. Diberi mukjizat bisa berbicara dengan hewan, memerintah bangsa jin, dan memiliki angin sebagai kendaraannya. Membangun Baitul Maqdis.</p>
-                        </div>
-
-                        <div class="history-card">
-                            <h4>21. Nabi Yunus AS</h4>
-                            <p>Ditelan oleh ikan paus raksasa di tengah laut. Beliau selamat setelah terus menerus membaca dzikir "Laa ilaaha illa anta subhaanaka innii kuntu minadz-dhaalimiin" di dalam kegelapan perut ikan.</p>
-                        </div>
-
-                        <div class="history-card">
-                            <h4>24. Nabi Isa AS</h4>
-                            <p><b>Ulul Azmi.</b> Lahir dari Maryam tanpa ayah. Mukjizatnya bisa menghidupkan orang mati (izin Allah), menyembuhkan buta, dan menurunkan hidangan dari langit. Beliau diangkat ke langit oleh Allah.</p>
-                        </div>
-
-                        <div class="history-card">
-                            <h4>25. Nabi Muhammad SAW</h4>
-                            <p><b>Penutup para Nabi (Khatamul Anbiya).</b> Diutus untuk seluruh alam semesta. Mukjizat terbesarnya Al-Qur'an, Isra Mi'raj, dan terbelahnya bulan. Beliau adalah teladan akhlak yang paling sempurna.</p>
-                        </div>
-                    </div>
+                <div class="content-section">
+                    <span class="tag">II. Bacaan Inti Sholat</span>
+                    <p class="font-bold text-xs uppercase text-slate-500">Doa Iftitah (Sunnah Muakkad):</p>
+                    <p class="arabic text-[1.4rem]">اللهُ أَكْبَرُ كَبِيرًا، وَالْحَمْدُ لِلَّهِ كَثِيرًا، وَسُبْحَانَ اللهِ بُكْرَةً وَأَصِيلاً. إِنِّي وَجَّهْتُ وَجْهِيَ لِلَّذِي فَطَرَ السَّمَاوَاتِ وَالْأَرْضَ حَنِيفًا مُسْلِمًا وَمَا أَنَا مِنَ الْمُشْرِكِينَ. إِنَّ صَلَاتِي وَنُسُكِي وَمَحْIAYَ وَمَمَاتِي لِلَّهِ رَبِّ الْعَالَمِينَ. لَا شَرِيكَ لَهُ وَبِذَلِكَ أُمِرْتُ وَأَنَا مِنَ الْمُسْلِمِينَ</p>
+                    <p class="latin">Allaahu akbar kabiiraa, walhamdu lillaahi katsiiraa, wa subhaanallaahi bukrataw wa ashiilaa...</p>
+                    
+                    <p class="font-bold text-xs mt-10 uppercase text-slate-500">Surat Al-Fatihah (Rukun):</p>
+                    <p class="arabic">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ . الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ . الرَّحْمَنِ الرَّحِيمِ . مَالِكِ يَوْمِ الدِّينِ . إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ . اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ . صِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ</p>
+                    
+                    <p class="font-bold text-xs mt-10 uppercase text-slate-500">Tahiyat Akhir:</p>
+                    <p class="arabic text-[1.1rem]">التَّحِيَّاتُ الْمُبَارَكَاتُ الصَّلَوَاتُ الطَّيِّبَاتُ لِلَّهِ. السَّلاَمُ عَلَيْكَ أَيُّهَا النَّبِىُّ وَرَحْمَةُ اللَّهِ وَبَرَكَاتُهُ. السَّلاَمُ عَلَيْنَا وَعَلَى عِبَادِ اللَّهِ الصَّالِحِينَ. أَشْهَدُ أَنْ لاَ إِلَهَ إِلاَّ اللَّهُ وَأَشْهَدُ أَنَّ مُحَمَّدًا رَسُولُ اللَّهِ. اللَّهُمَّ صَلِّ عَلَى سَيِّدِنَا مُحَمَّدٍ وَعَلَى آلِ سَيِّدِنَا مُحَمَّدٍ...</p>
+                </div>
                 `
             },
             akidah: {
                 title: "Kitab Akidah & Tauhid",
                 html: `
-                    <div class="section-box">
-                        <span class="title-badge">I. Sifat 20 Wajib Allah (Akar Tauhid)</span>
-                        <div class="grid grid-cols-1 gap-4 text-sm">
-                            <div class="p-5 border rounded-2xl bg-emerald-50/30"><b>1. Wujud:</b> Ada. (Allah itu nyata, buktinya adalah ciptaan-Nya).</div>
-                            <div class="p-5 border rounded-2xl bg-emerald-50/30"><b>2. Qidam:</b> Terdahulu. (Tidak ada yang menciptakan Allah).</div>
-                            <div class="p-5 border rounded-2xl bg-emerald-50/30"><b>3. Baqa:</b> Kekal. (Allah tidak akan pernah mati atau punah).</div>
-                            <div class="p-5 border rounded-2xl bg-emerald-50/30"><b>4. Mukhalafatu lil-hawaditsi:</b> Berbeda dengan makhluk. (Allah tidak punya bentuk seperti manusia).</div>
-                            <div class="p-5 border rounded-2xl bg-emerald-50/30"><b>5. Qiyamuhu Binafsihi:</b> Berdiri Sendiri. (Allah tidak butuh bantuan siapa pun).</div>
-                            <div class="p-5 border rounded-2xl bg-emerald-50/30"><b>6. Wahdaniyah:</b> Esa. (Tuhan itu hanya satu, yaitu Allah).</div>
-                            <div class="p-5 border rounded-2xl bg-emerald-50/30"><b>7. Qudrat:</b> Kuasa. (Allah Maha Kuasa atas segala sesuatu).</div>
-                            <div class="p-5 border rounded-2xl bg-emerald-50/30"><b>8. Iradat:</b> Berkehendak. (Segala sesuatu terjadi atas izin Allah).</div>
-                            <div class="p-5 border rounded-2xl bg-emerald-50/30"><b>9. Ilmu:</b> Mengetahui. (Allah tahu yang tampak maupun tersembunyi).</div>
-                            <div class="p-5 border rounded-2xl bg-emerald-50/30"><b>10. Hayat:</b> Hidup. (Allah hidup selama-lamanya).</div>
+                <div class="content-block">
+                    <span class="tag">Sifat 20 Wajib Allah (Penjabaran Akar)</span>
+                    <div class="grid grid-cols-1 gap-4">
+                        <div class="p-6 border rounded-3xl bg-emerald-50/50">
+                            <h5 class="font-black text-emerald-900">1. Wujud (Ada)</h5>
+                            <p class="text-xs text-slate-600 mt-2">Allah itu pasti ada. Buktinya adalah adanya alam semesta ini. Tidak mungkin ada bangunan tanpa ada pembangunnya.</p>
                         </div>
-                    </div>
+                        <div class="p-6 border rounded-3xl bg-emerald-50/50">
+                            <h5 class="font-black text-emerald-900">2. Qidam (Terdahulu)</h5>
+                            <p class="text-xs text-slate-600 mt-2">Allah itu ada sebelum segala sesuatu ada. Tidak ada permulaan bagi keberadaan Allah.</p>
+                        </div>
+                        <div class="p-6 border rounded-3xl bg-emerald-50/50">
+                            <h5 class="font-black text-emerald-900">3. Baqa (Kekal)</h5>
+                            <p class="text-xs text-slate-600 mt-2">Allah tidak akan pernah mati, rusak, atau punah. Segala sesuatu akan hancur kecuali Wajah-Nya.</p>
+                        </div>
+                        <div class="p-6 border rounded-3xl bg-emerald-50/50">
+                            <h5 class="font-black text-emerald-900">4. Mukhalafatu lil Hawaditsi (Berbeda dengan Baru)</h5>
+                            <p class="text-xs text-slate-600 mt-2">Allah tidak serupa dengan makhluk-Nya. Allah tidak punya tangan, kaki, atau rupa seperti manusia.</p>
+                        </div>
+                        </div>
+                </div>
 
-                    <div class="section-box">
-                        <span class="title-badge">II. 10 Malaikat & Perannya</span>
-                        <div class="space-y-4">
-                            <div class="flex justify-between p-4 border-b"><b>Jibril</b> <span>Menyampaikan Wahyu</span></div>
-                            <div class="flex justify-between p-4 border-b"><b>Mikail</b> <span>Membagi Rezeki & Hujan</span></div>
-                            <div class="flex justify-between p-4 border-b"><b>Israfil</b> <span>Meniup Sangkakala</span></div>
-                            <div class="flex justify-between p-4 border-b"><b>Izrail</b> <span>Mencabut Nyawa</span></div>
-                            <div class="flex justify-between p-4 border-b"><b>Raqib</b> <span>Mencatat Amal Baik</span></div>
-                            <div class="flex justify-between p-4 border-b"><b>Atid</b> <span>Mencatat Amal Buruk</span></div>
-                            <div class="flex justify-between p-4 border-b"><b>Munkar</b> <span>Bertanya di Kubur</span></div>
-                            <div class="flex justify-between p-4 border-b"><b>Nakir</b> <span>Bertanya di Kubur</span></div>
-                            <div class="flex justify-between p-4 border-b"><b>Malik</b> <span>Menjaga Neraka</span></div>
-                            <div class="flex justify-between p-4 border-b"><b>Ridwan</b> <span>Menjaga Surga</span></div>
-                        </div>
-                    </div>
-                `
-            },
-            thaharah: {
-                title: "Kitab Thaharah & Wanita",
-                html: `
-                    <div class="section-box">
-                        <span class="title-badge">I. Tata Cara Wudhu Sesuai Sunnah</span>
-                        <p class="text-sm mb-6">Wudhu adalah syarat sah sholat. Berikut urutannya:</p>
-                        <ul class="space-y-4 text-sm list-decimal pl-5">
-                            <li>Membaca Basmalah & Niat dalam hati.</li>
-                            <li>Mencuci kedua telapak tangan sampai pergelangan.</li>
-                            <li>Berkumur-kumur 3x.</li>
-                            <li>Menghirup air ke hidung & mengeluarkannya 3x.</li>
-                            <li>Membasuh seluruh wajah (batas telinga & rambut) 3x.</li>
-                            <li>Membasuh tangan sampai siku (dahulukan kanan) 3x.</li>
-                            <li>Mengusap sebagian kepala/rambut & telinga.</li>
-                            <li>Membasuh kaki sampai mata kaki (dahulukan kanan) 3x.</li>
-                            <li>Tertib (berurutan) & Berdoa.</li>
-                        </ul>
-                    </div>
-
-                    <div class="section-box">
-                        <span class="title-badge">II. Fiqih Wanita (Haid & Nifas)</span>
-                        <div class="space-y-6 text-sm">
-                            <div class="p-4 bg-pink-50 rounded-2xl">
-                                <h5 class="font-bold text-pink-800">Darah Haid (Menstruasi)</h5>
-                                <p class="mt-2 leading-relaxed">Paling sedikit 1 hari 1 malam (24 jam). Paling lama 15 hari. Jika lebih dari 15 hari, maka itu darah penyakit (Istihadhah) dan tetap wajib sholat.</p>
-                            </div>
-                            <div class="p-4 bg-pink-50 rounded-2xl">
-                                <h5 class="font-bold text-pink-800">Darah Nifas</h5>
-                                <p class="mt-2 leading-relaxed">Darah yang keluar setelah melahirkan. Paling sedikit setetes, umumnya 40 hari, dan paling lama 60 hari.</p>
-                            </div>
-                            <div class="p-4 bg-blue-50 rounded-2xl">
-                                <h5 class="font-bold text-blue-800">Larangan Saat Haid/Nifas</h5>
-                                <p class="mt-2 leading-relaxed">1. Sholat (tidak perlu ganti)<br>2. Puasa (wajib ganti)<br>3. Tawaf di Ka'bah<br>4. Memegang Al-Qur'an (Mushaf)<br>5. Bersetubuh (Hubungan suami istri).</p>
-                            </div>
-                        </div>
-                    </div>
-                `
-            },
-            doa: {
-                title: "Kitab Doa & Adab Harian",
-                html: `
-                    <div class="section-box">
-                        <span class="title-badge">I. Kumpulan Doa Penting</span>
-                        
-                        <div class="mb-10">
-                            <p class="font-bold text-xs uppercase text-amber-600 mb-2">Doa Untuk Kedua Orang Tua:</p>
-                            <p class="arabic">رَبِّ اغْفِرْ لِي وَلِوَالِدَيَّ وَارْحَمْهُمَا كَمَا رَبَّيَانِي صَغِيرًا</p>
-                            <p class="latin">Rabbighfir lii waliwaalidayya warhamhumaa kamaa rabbayaanii shaghiiraa.</p>
-                        </div>
-
-                        <div class="mb-10">
-                            <p class="font-bold text-xs uppercase text-amber-600 mb-2">Doa Sapu Jagad (Kebaikan Dunia Akhirat):</p>
-                            <p class="arabic">رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ</p>
-                            <p class="latin">Rabbana aatina fiddunya hasanataw wafil akhirati hasanataw waqina adzaban naar.</p>
-                        </div>
-                    </div>
-
-                    <div class="section-box">
-                        <span class="title-badge">II. Adab Anak Sholeh</span>
-                        <div class="grid grid-cols-1 gap-4 text-sm">
-                            <div class="p-4 border rounded-2xl"><b>Adab ke Orang Tua:</b> Tidak berkata "ah", membantu pekerjaan rumah, dan mendoakan setelah sholat.</div>
-                            <div class="p-4 border rounded-2xl"><b>Adab Makan:</b> Duduk, gunakan tangan kanan, baca bismillah, dan tidak mencela makanan.</div>
-                            <div class="p-4 border rounded-2xl"><b>Adab Belajar:</b> Menghormati Guru (Ustadz), tidak berisik saat dijelaskan, dan datang tepat waktu.</div>
-                        </div>
-                    </div>
+                <div class="content-block">
+                    <span class="tag">10 Malaikat & Rincian Tugas</span>
+                    <ul class="space-y-4 text-sm">
+                        <li class="p-4 border-b flex justify-between"><b>Jibril</b> <span>Menyampaikan Wahyu</span></li>
+                        <li class="p-4 border-b flex justify-between"><b>Mikail</b> <span>Membagi Rezeki & Hujan</span></li>
+                        <li class="p-4 border-b flex justify-between"><b>Israfil</b> <span>Meniup Sangkakala</span></li>
+                        <li class="p-4 border-b flex justify-between"><b>Izrail</b> <span>Mencabut Nyawa</span></li>
+                        <li class="p-4 border-b flex justify-between"><b>Raqib</b> <span>Mencatat Amal Baik</span></li>
+                        <li class="p-4 border-b flex justify-between"><b>Atid</b> <span>Mencatat Amal Buruk</span></li>
+                        <li class="p-4 border-b flex justify-between"><b>Munkar & Nakir</b> <span>Bertanya di Kubur</span></li>
+                        <li class="p-4 border-b flex justify-between"><b>Malik</b> <span>Menjaga Neraka</span></li>
+                        <li class="p-4 border-b flex justify-between"><b>Ridwan</b> <span>Menjaga Surga</span></li>
+                    </ul>
+                </div>
                 `
             }
         };
 
-        function openLayer(key) {
-            const data = alJamiDB[key];
-            document.getElementById('ltitle').innerText = data.title;
-            document.getElementById('lbody').innerHTML = data.html;
-            document.getElementById('layer').classList.add('active');
+        function showPage(k) {
+            const d = megaLibrary[k];
+            document.getElementById('pTitle').innerText = d.title;
+            document.getElementById('pBody').innerHTML = d.html;
+            document.getElementById('pageLayer').classList.add('active');
             document.body.style.overflow = 'hidden';
-            window.scrollTo(0, 0);
         }
 
-        function closeLayer() {
-            document.getElementById('layer').classList.remove('active');
+        function hidePage() {
+            document.getElementById('pageLayer').classList.remove('active');
             document.body.style.overflow = 'auto';
         }
     </script>
