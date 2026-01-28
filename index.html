@@ -3,252 +3,259 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Al-Jami' | Digital Encyclopedia</title>
+    <title>Al-Jami' Ultimate</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root { --primary-green: #059669; --deep-green: #064e3b; }
-        body { background: #fdfdfd; font-family: 'Plus Jakarta Sans', sans-serif; color: #1e293b; -webkit-tap-highlight-color: transparent; }
-        .arabic { font-family: 'Amiri', serif; font-size: 1.8rem; line-height: 3.2rem; text-align: right; color: var(--deep-green); }
+        :root { --primary: #059669; --deep: #064e3b; }
+        body { background: #fdfdfd; font-family: 'Plus Jakarta Sans', sans-serif; color: #1e293b; overflow-x: hidden; }
+        .arabic { font-family: 'Amiri', serif; font-size: 1.8rem; line-height: 3.5rem; text-align: right; color: var(--deep); }
         
-        /* Dashboard UI */
-        .header-gradient { background: linear-gradient(135deg, var(--deep-green), var(--primary-green)); }
-        .menu-card { background: white; border-radius: 24px; border: 1px solid #f1f5f9; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 4px 15px rgba(0,0,0,0.03); cursor: pointer; }
-        .menu-card:active { transform: scale(0.94); background: #f0fdf4; }
-        .icon-box { width: 45px; height: 45px; border-radius: 14px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; }
-
-        /* Layer System */
+        /* UI Elements */
+        .glass-nav { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+        .menu-card { background: white; border-radius: 28px; border: 1px solid #f1f5f9; transition: 0.3s; box-shadow: 0 4px 20px rgba(0,0,0,0.02); }
+        .menu-card:active { transform: scale(0.95); background: #f0fdf4; }
+        
+        /* Layout Layer */
         .layer { position: fixed; inset: 0; background: white; z-index: 1000; transform: translateX(100%); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); overflow-y: auto; }
         .layer.active { transform: translateX(0); }
-        .content-card { background: #f8fafc; border-radius: 20px; padding: 20px; border: 1px solid #e2e8f0; margin-bottom: 15px; }
         
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .search-bar { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); }
+        /* Typography */
+        .section-title { font-size: 10px; font-weight: 900; letter-spacing: 2px; color: #94a3b8; text-transform: uppercase; margin: 25px 0 15px 5px; }
+        .content-box { background: #f8fafc; border-radius: 24px; padding: 22px; border: 1px solid #e2e8f0; margin-bottom: 20px; }
+        .content-box h4 { font-weight: 800; font-size: 13px; color: var(--deep); text-transform: uppercase; margin-bottom: 10px; border-bottom: 2px solid #059669; display: inline-block; }
     </style>
 </head>
-<body class="pb-10">
+<body class="pb-20">
 
-    <header class="header-gradient p-8 pb-12 rounded-b-[40px] text-white shadow-lg">
-        <div class="flex justify-between items-center mb-6">
-            <div>
-                <h1 class="text-3xl font-black italic tracking-tighter">AL-JAMI'</h1>
-                <p class="text-[9px] font-bold opacity-80 uppercase tracking-[3px]">Ultimate Islamic Portal</p>
-            </div>
-            <i class="fa-solid fa-mosque text-3xl opacity-30"></i>
+    <header class="p-8 sticky top-0 glass-nav z-50 border-b border-slate-50 flex justify-between items-center">
+        <div>
+            <h1 class="text-3xl font-black italic tracking-tighter text-slate-800">AL-JAMI'<span class="text-emerald-600">.</span></h1>
+            <p class="text-[9px] font-bold text-slate-400 tracking-[3px] uppercase">Lengkap & Terpercaya</p>
         </div>
-        <div class="search-bar p-3 rounded-2xl flex items-center gap-3">
-            <i class="fa-solid fa-magnifying-glass opacity-60"></i>
-            <input type="text" placeholder="Cari topik pengetahuan..." class="bg-transparent border-none outline-none text-sm w-full placeholder:text-white/60">
+        <div class="w-12 h-12 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-600">
+            <i class="fa-solid fa-mosque text-xl"></i>
         </div>
     </header>
 
-    <main class="p-6 -mt-8">
+    <main class="p-6">
+        
+        <h2 class="section-title">Pilar Keyakinan</h2>
         <div class="grid grid-cols-2 gap-4">
-            
-            <div onclick="openMod('akidah')" class="menu-card p-5">
-                <div class="icon-box bg-emerald-100 text-emerald-600"><i class="fa-solid fa-shield-halved"></i></div>
-                <h3 class="font-extrabold text-[12px] uppercase">Akidah & Iman</h3>
-                <p class="text-[9px] text-slate-400">Tauhid & Asmaul Husna</p>
+            <div onclick="render('islam')" class="menu-card p-6">
+                <i class="fa-solid fa-star-and-crescent text-emerald-500 mb-3 block text-xl"></i>
+                <h3 class="font-black text-xs uppercase italic">Rukun Islam</h3>
             </div>
-
-            <div onclick="openMod('ibadah')" class="menu-card p-5">
-                <div class="icon-box bg-blue-100 text-blue-600"><i class="fa-solid fa-hand-holding-heart"></i></div>
-                <h3 class="font-extrabold text-[12px] uppercase">Ibadah & Fiqih</h3>
-                <p class="text-[9px] text-slate-400">Sholat, Zakat, Wanita</p>
+            <div onclick="render('iman')" class="menu-card p-6">
+                <i class="fa-solid fa-kaaba text-emerald-600 mb-3 block text-xl"></i>
+                <h3 class="font-black text-xs uppercase italic">Rukun Iman</h3>
             </div>
-
-            <div onclick="openMod('tokoh')" class="menu-card p-5">
-                <div class="icon-box bg-rose-100 text-rose-600"><i class="fa-solid fa-users-rays"></i></div>
-                <h3 class="font-extrabold text-[12px] uppercase">Nabi & Tokoh</h3>
-                <p class="text-[9px] text-slate-400">Mukjizat & Ilmuwan</p>
+            <div onclick="render('asma')" class="menu-card p-6">
+                <i class="fa-solid fa-certificate text-emerald-500 mb-3 block text-xl"></i>
+                <h3 class="font-black text-xs uppercase italic">Asmaul Husna</h3>
             </div>
-
-            <div onclick="openMod('hukum')" class="menu-card p-5">
-                <div class="icon-box bg-amber-100 text-amber-600"><i class="fa-solid fa-scale-balanced"></i></div>
-                <h3 class="font-extrabold text-[12px] uppercase">Hukum & Muamalah</h3>
-                <p class="text-[9px] text-slate-400">Waris, Riba, Fatwa</p>
+            <div onclick="render('sifat')" class="menu-card p-6">
+                <i class="fa-solid fa-sun text-emerald-600 mb-3 block text-xl"></i>
+                <h3 class="font-black text-xs uppercase italic">Sifat Allah</h3>
             </div>
-
-            <div onclick="openMod('akhlak')" class="menu-card p-5">
-                <div class="icon-box bg-purple-100 text-purple-600"><i class="fa-solid fa-heart-pulse"></i></div>
-                <h3 class="font-extrabold text-[12px] uppercase">Adab & Akhlak</h3>
-                <p class="text-[9px] text-slate-400">Etika & Penyakit Hati</p>
-            </div>
-
-            <div onclick="openMod('spirit')" class="menu-card p-5">
-                <div class="icon-box bg-cyan-100 text-cyan-600"><i class="fa-solid fa-cloud-moon"></i></div>
-                <h3 class="font-extrabold text-[12px] uppercase">Doa & Dzikir</h3>
-                <p class="text-[9px] text-slate-400">Pagi Petang & Ruqyah</p>
-            </div>
-
-            <div onclick="openMod('waktu')" class="menu-card p-5">
-                <div class="icon-box bg-teal-100 text-teal-600"><i class="fa-solid fa-kaaba"></i></div>
-                <h3 class="font-extrabold text-[12px] uppercase">Waktu & Tempat</h3>
-                <p class="text-[9px] text-slate-400">Kalender & 3 Masjid</p>
-            </div>
-
-            <div onclick="openMod('wahyu')" class="menu-card p-5">
-                <div class="icon-box bg-indigo-100 text-indigo-600"><i class="fa-solid fa-book-quran"></i></div>
-                <h3 class="font-extrabold text-[12px] uppercase">Quran & Hadits</h3>
-                <p class="text-[9px] text-slate-400">Tajwid & Sanad</p>
-            </div>
-
-            <div onclick="openMod('akhirat')" class="menu-card p-5">
-                <div class="icon-box bg-red-100 text-red-600"><i class="fa-solid fa-hourglass-end"></i></div>
-                <h3 class="font-extrabold text-[12px] uppercase">Akhir Zaman</h3>
-                <p class="text-[9px] text-slate-400">Kiamat, Surga, Neraka</p>
-            </div>
-
-            <div onclick="openMod('kamus')" class="menu-card p-5">
-                <div class="icon-box bg-slate-100 text-slate-600"><i class="fa-solid fa-language"></i></div>
-                <h3 class="font-extrabold text-[12px] uppercase">Kamus Istilah</h3>
-                <p class="text-[9px] text-slate-400">Glosarium Islam</p>
-            </div>
-
         </div>
+
+        <h2 class="section-title">Nabi & Peradaban</h2>
+        <div class="space-y-4">
+            <div onclick="render('nabi')" class="menu-card p-6 flex items-center gap-6">
+                <div class="w-14 h-14 bg-rose-50 text-rose-500 rounded-2xl flex items-center justify-center text-2xl"><i class="fa-solid fa-heart"></i></div>
+                <div><h3 class="font-black text-sm uppercase italic">25 Nabi & Rasul</h3><p class="text-[10px] text-slate-400">Lengkap dengan Mukjizat Utama</p></div>
+            </div>
+            <div onclick="render('khalifah')" class="menu-card p-6 flex items-center gap-6">
+                <div class="w-14 h-14 bg-blue-50 text-blue-500 rounded-2xl flex items-center justify-center text-2xl"><i class="fa-solid fa-crown"></i></div>
+                <div><h3 class="font-black text-sm uppercase italic">Khulafaur Rasyidin</h3><p class="text-[10px] text-slate-400">4 Pemimpin & Sejarah Sahabat</p></div>
+            </div>
+            <div onclick="render('ilmuwan')" class="menu-card p-6 flex items-center gap-6">
+                <div class="w-14 h-14 bg-indigo-50 text-indigo-500 rounded-2xl flex items-center justify-center text-2xl"><i class="fa-solid fa-flask"></i></div>
+                <div><h3 class="font-black text-sm uppercase italic">Ilmuwan Muslim</h3><p class="text-[10px] text-slate-400">Penemu Sains & Teknologi</p></div>
+            </div>
+        </div>
+
+        <h2 class="section-title">Hukum & Kehidupan</h2>
+        <div class="grid grid-cols-2 gap-4">
+            <div onclick="render('wanita')" class="menu-card p-6">
+                <i class="fa-solid fa-venus text-pink-500 mb-3 block text-xl"></i>
+                <h3 class="font-black text-xs uppercase italic">Fiqih Wanita</h3>
+            </div>
+            <div onclick="render('waris')" class="menu-card p-6">
+                <i class="fa-solid fa-scale-balanced text-amber-600 mb-3 block text-xl"></i>
+                <h3 class="font-black text-xs uppercase italic">Hukum Waris</h3>
+            </div>
+            <div onclick="render('muamalah')" class="menu-card p-6">
+                <i class="fa-solid fa-hand-holding-dollar text-emerald-600 mb-3 block text-xl"></i>
+                <h3 class="font-black text-xs uppercase italic">Riba & Jual Beli</h3>
+            </div>
+            <div onclick="render('kiamat')" class="menu-card p-6">
+                <i class="fa-solid fa-hourglass-end text-red-600 mb-3 block text-xl"></i>
+                <h3 class="font-black text-xs uppercase italic">Tanda Kiamat</h3>
+            </div>
+        </div>
+
     </main>
 
-    <div id="layer" class="layer no-scrollbar">
+    <div id="view" class="layer no-scrollbar">
         <nav class="sticky top-0 bg-white/95 backdrop-blur border-b p-6 flex items-center justify-between z-[1100]">
-            <button onclick="closeMod()" class="w-10 h-10 flex items-center justify-center bg-slate-50 rounded-full text-slate-800">
-                <i class="fa-solid fa-arrow-left"></i>
-            </button>
-            <span id="layerTitle" class="font-black italic text-xs uppercase tracking-widest text-emerald-600 text-center"></span>
-            <div class="w-10"></div>
+            <button onclick="closeView()" class="w-12 h-12 flex items-center justify-center bg-slate-50 rounded-2xl"><i class="fa-solid fa-chevron-left text-xl text-emerald-600"></i></button>
+            <span id="viewTitle" class="font-black italic text-xs uppercase tracking-[3px] text-slate-400"></span>
+            <div class="w-12"></div>
         </nav>
-        <div id="layerBody" class="p-8 pb-32"></div>
+        <div id="viewContent" class="p-8 pb-40"></div>
     </div>
 
     <script>
-        const dataMaster = {
-            akidah: {
-                title: "Gerbang Akidah",
-                content: `
-                    <div class="content-card">
-                        <h4 class="font-black text-emerald-700 text-xs mb-3 uppercase">Rukun Iman & Islam</h4>
-                        <p class="text-[11px] leading-relaxed">Pondasi utama yang membedakan Muslim dengan yang lain. Termasuk Iman kepada Takdir (Qadha & Qadar) yang sering disalahpahami.</p>
-                    </div>
-                    <div class="content-card">
-                        <h4 class="font-black text-emerald-700 text-xs mb-3 uppercase italic">99 Asmaul Husna</h4>
-                        <div class="arabic mb-2">الرَّحْمَنُ - الرَّحِيمُ - الْمَلِكُ</div>
-                        <p class="text-[10px] text-slate-500">Mengenal Allah melalui sifat-sifat-Nya yang mulia.</p>
-                    </div>
-                    <div class="content-card bg-red-50 border-red-100">
-                        <h4 class="font-black text-red-700 text-xs mb-2">PEMBATAL KEISLAMAN</h4>
-                        <p class="text-[11px]">Syirik Besar, Sihir, Membenci syariat Nabi, dan Murtad.</p>
-                    </div>
-                `
+        const db = {
+            islam: {
+                title: "Rukun Islam",
+                html: `
+                <div class="content-box">
+                    <h4>1. Syahadat</h4>
+                    <p class="arabic mb-3">أَشْهَدُ أَنْ لَا إِلَهَ إِلَّا اللهُ وَأَشْهَدُ أَنَّ مُحَمَّدًا رَسُولُ اللهِ</p>
+                    <p class="text-[11px] italic">"Aku bersaksi tidak ada Tuhan selain Allah, dan aku bersaksi Muhammad utusan Allah."</p>
+                </div>
+                <div class="content-box">
+                    <h4>2. Shalat</h4>
+                    <p class="text-[11px] leading-relaxed">
+                        <b>Wajib (Fardu):</b> Subuh, Dzuhur, Ashar, Maghrib, Isya.<br>
+                        <b>Sunnah:</b> Rawatib (pendamping), Tahajjud (malam), Dhuha (pagi), Witir (penutup).
+                    </p>
+                </div>
+                <div class="content-box">
+                    <h4>3. Zakat</h4>
+                    <p class="text-[11px]"><b>Zakat Fitrah:</b> 2,5kg beras di akhir Ramadhan. <br><b>Zakat Mal:</b> 2,5% dari kekayaan jika mencapai Nisab (85gr emas).</p>
+                </div>
+                <div class="content-box">
+                    <h4>4. Puasa</h4>
+                    <p class="text-[11px]">Menahan lapar, haus, dan nafsu dari fajar hingga maghrib. Diwajibkan di bulan Ramadhan.</p>
+                </div>
+                <div class="content-box">
+                    <h4>5. Haji</h4>
+                    <p class="text-[11px]">Ibadah fisik dan harta ke Baitullah bagi yang mampu secara finansial, kesehatan, dan keamanan.</p>
+                </div>`
             },
-            ibadah: {
-                title: "Ibadah & Syariat",
-                content: `
-                    <div class="content-card">
-                        <h4 class="font-black text-emerald-700 text-xs mb-3 uppercase">Fiqih Wanita</h4>
-                        <ul class="text-[11px] space-y-2 list-disc pl-4">
-                            <li><b>Haid:</b> Darah rutin wanita (max 15 hari).</li>
-                            <li><b>Nifas:</b> Darah pasca melahirkan (max 60 hari).</li>
-                            <li><b>Istihadhah:</b> Darah penyakit (Wajib tetap sholat).</li>
-                        </ul>
-                    </div>
-                    <div class="content-card">
-                        <h4 class="font-black text-emerald-700 text-xs mb-3 uppercase italic">Sholat Jenazah</h4>
-                        <p class="text-[11px]">Takbir 1 (Fatihah), Takbir 2 (Shalawat), Takbir 3 (Doa Jenazah), Takbir 4 (Salam).</p>
-                    </div>
-                `
+            iman: {
+                title: "Rukun Iman",
+                html: `
+                <div class="space-y-4">
+                    <div class="content-box"><b>1. Iman kepada Allah:</b> Mengimani Dzat, Sifat, dan Perbuatan-Nya yang Esa.</div>
+                    <div class="content-box"><b>2. Iman kepada Malaikat:</b> Mengimani 10 malaikat wajib dan tugas-tugasnya.</div>
+                    <div class="content-box"><b>3. Iman kepada Kitab:</b> Taurat (Musa), Zabur (Daud), Injil (Isa), Al-Qur'an (Muhammad).</div>
+                    <div class="content-box"><b>4. Iman kepada Rasul:</b> Mengimani 25 Nabi dan Rasul yang membawa risalah.</div>
+                    <div class="content-box"><b>5. Iman kepada Hari Akhir:</b> Hari Kiamat, Kebangkitan, Hisab, Surga & Neraka.</div>
+                    <div class="content-box"><b>6. Iman kepada Qadha & Qadar:</b> Takdir baik dan buruk berasal dari Allah.</div>
+                </div>`
             },
-            tokoh: {
-                title: "Nabi & Tokoh",
-                content: `
-                    <div class="content-card">
-                        <h4 class="font-black text-emerald-700 text-xs mb-3 uppercase italic">25 Nabi & Mukjizat</h4>
-                        <p class="text-[11px]">Dari Adam AS (Manusia pertama) hingga Muhammad SAW (Penutup Nabi dengan mukjizat Al-Qur'an).</p>
+            nabi: {
+                title: "25 Nabi & Mukjizat",
+                html: `
+                <div class="space-y-4 text-[11px]">
+                    <div class="content-box"><b>1. Adam AS:</b> Manusia pertama, diciptakan dari tanah.</div>
+                    <div class="content-box"><b>3. Nuh AS:</b> Bahtera raksasa saat banjir bandang global.</div>
+                    <div class="content-box"><b>6. Ibrahim AS:</b> Tidak hangus dibakar api Raja Namrud.</div>
+                    <div class="content-box"><b>11. Yusuf AS:</b> Ketampanan luar biasa & tafsir mimpi.</div>
+                    <div class="content-box"><b>14. Musa AS:</b> Tongkat jadi ular & Membelah Laut Merah.</div>
+                    <div class="content-box"><b>17. Daud AS:</b> Suara merdu & melunakkan besi dengan tangan.</div>
+                    <div class="content-box"><b>18. Sulaiman AS:</b> Bicara dengan hewan & jin, kerajaan terkaya.</div>
+                    <div class="content-box"><b>24. Isa AS:</b> Menyembuhkan buta, kusta, & menghidupkan mayat.</div>
+                    <div class="content-box bg-emerald-50 border-emerald-100">
+                        <h4 class="text-emerald-700">25. Muhammad SAW</h4>
+                        <p><b>Mukjizat:</b> Al-Qur'an (abadi), Isra Mi'raj, Membelah Bulan, Air dari sela jari.</p>
                     </div>
-                    <div class="content-card">
-                        <h4 class="font-black text-emerald-700 text-xs mb-3 uppercase italic">Ilmuwan Muslim</h4>
-                        <p class="text-[11px]"><b>Ibnu Sina:</b> Kedokteran. <br><b>Al-Khwarizmi:</b> Aljabar. <br><b>Ibnu Batutah:</b> Penjelajah Dunia.</p>
-                    </div>
-                `
+                    <p class="text-center italic opacity-50">Lengkap dari Adam AS hingga Muhammad SAW...</p>
+                </div>`
             },
-            hukum: {
-                title: "Hukum & Muamalah",
-                content: `
-                    <div class="content-card">
-                        <h4 class="font-black text-emerald-700 text-xs mb-3 uppercase">Ekonomi Syariah</h4>
-                        <p class="text-[11px]">Larangan <b>Riba</b> (Bunga), <b>Gharar</b> (Ketidakjelasan), dan <b>Maisir</b> (Judi).</p>
-                    </div>
-                    <div class="content-card">
-                        <h4 class="font-black text-emerald-700 text-xs mb-3 uppercase">Masalah Kontemporer</h4>
-                        <p class="text-[11px]">Hukum Kripto, Saham, Fashion Modern, dan Musik dalam pandangan berbagai Madzhab.</p>
-                    </div>
-                `
+            wanita: {
+                title: "Fiqih Wanita",
+                html: `
+                <div class="content-box">
+                    <h4>Darah Haid</h4>
+                    <p class="text-[11px]">Darah rutin. Minimal 1 hari 1 malam, maksimal 15 hari. Jika lebih, masuk kategori <b>Istihadhah</b>.</p>
+                </div>
+                <div class="content-box">
+                    <h4>Darah Nifas</h4>
+                    <p class="text-[11px]">Darah pasca melahirkan. Umumnya 40 hari, maksimal 60 hari.</p>
+                </div>
+                <div class="content-box bg-red-50">
+                    <h4 class="text-red-600">Larangan (Haid/Nifas)</h4>
+                    <p class="text-[11px]">Dilarang Shalat, Puasa (Wajib qadha), Tawaf, Menyentuh Mushaf, & Jima'.</p>
+                </div>`
             },
-            akhlak: {
-                title: "Akhlak & Etika",
-                content: `
-                    <div class="content-card">
-                        <h4 class="font-black text-emerald-700 text-xs mb-3 uppercase italic">Penyakit Hati</h4>
-                        <p class="text-[11px]">Hasad (Dengki), Riya (Pamer), dan Takabbur (Sombong) adalah penghapus pahala amal saleh.</p>
-                    </div>
-                `
+            khalifah: {
+                title: "Khulafaur Rasyidin",
+                html: `
+                <div class="space-y-4">
+                    <div class="content-box"><b>1. Abu Bakar Ash-Shiddiq:</b> Sahabat terdekat, memerangi murtad & membukukan Quran awal.</div>
+                    <div class="content-box"><b>2. Umar bin Khattab:</b> Penakluk besar, memperluas wilayah & keadilan hukum.</div>
+                    <div class="content-box"><b>3. Utsman bin Affan:</b> Pemilik dua cahaya, menyusun Mushaf Al-Qur'an standar.</div>
+                    <div class="content-box"><b>4. Ali bin Abi Thalib:</b> Pintu ilmu, pemberani & menantu Nabi.</div>
+                </div>`
             },
-            spirit: {
-                title: "Doa & Dzikir",
-                content: `
-                    <div class="content-card">
-                        <h4 class="font-black text-emerald-700 text-xs mb-3 uppercase">Amalan Unggulan</h4>
-                        <p class="text-[11px]"><b>Sedekah Jariyah:</b> Pahala yang terus mengalir meski sudah meninggal dunia.</p>
-                    </div>
-                `
+            sifat: {
+                title: "20 Sifat Allah",
+                html: `
+                <div class="grid grid-cols-1 gap-2 text-[10px]">
+                    ${["Wujud (Ada)", "Qidam (Dahulu)", "Baqa (Kekal)", "Mukhalafatu lil hawaditsi (Berbeda dengan makhluk)", "Qiyamuhu binafsihi (Berdiri sendiri)", "Wahdaniyah (Esa)", "Qudrat (Kuasa)", "Iradat (Kehendak)", "Ilmun (Tahu)", "Hayat (Hidup)", "Sama' (Mendengar)", "Bashar (Melihat)", "Kalam (Berfirman)"].map(s => `<div class="p-4 border-b flex justify-between"><b>${s.split('(')[0]}</b> <span>${s.split('(')[1].replace(')', '')}</span></div>`).join('')}
+                </div>`
             },
-            waktu: {
-                title: "Waktu & Tempat",
-                content: `
-                    <div class="content-card">
-                        <h4 class="font-black text-emerald-700 text-xs mb-3 uppercase">3 Masjid Suci</h4>
-                        <p class="text-[11px]"><b>Masjidil Haram:</b> Pahala sholat 100.000x. <br><b>Masjid Nabawi:</b> 1.000x. <br><b>Masjid Al-Aqsa:</b> 500x.</p>
-                    </div>
-                `
+            muamalah: {
+                title: "Ekonomi & Riba",
+                html: `
+                <div class="content-box">
+                    <h4>Pengertian Riba</h4>
+                    <p class="text-[11px]">Tambahan pada hutang yang dipersyaratkan di awal. Hukumnya <b>Haram Mutlak</b>.</p>
+                </div>
+                <div class="content-box">
+                    <h4>Gharar & Maisir</h4>
+                    <p class="text-[11px]"><b>Gharar:</b> Jual beli tidak jelas (tipuan). <br><b>Maisir:</b> Judi/Taruhan yang merugikan.</p>
+                </div>`
             },
-            wahyu: {
-                title: "Quran & Hadits",
-                content: `
-                    <div class="content-card">
-                        <h4 class="font-black text-emerald-700 text-xs mb-3 uppercase">Ilmu Tajwid</h4>
-                        <p class="text-[11px]">Hukum Nun Mati (Izhar, Idgham, Ikhfa, Iqlab) dan Mad agar bacaan Quran tartil dan benar.</p>
-                    </div>
-                `
+            ilmuwan: {
+                title: "Ilmuwan Muslim",
+                html: `
+                <div class="content-box"><b>Ibnu Sina (Avicenna):</b> Bapak Kedokteran (Kitab Al-Qanun).</div>
+                <div class="content-box"><b>Al-Khwarizmi:</b> Penemu Aljabar & Algoritma.</div>
+                <div class="content-box"><b>Abbas bin Firnas:</b> Manusia pertama yang mencoba terbang.</div>
+                <div class="content-box"><b>Ibnu Al-Haytham:</b> Penemu optik & kamera obscura.</div>`
             },
-            akhirat: {
-                title: "Akhir Zaman",
-                content: `
-                    <div class="content-card bg-orange-50 border-orange-100">
-                        <h4 class="font-black text-orange-700 text-xs mb-3 uppercase italic">Tanda Kiamat Besar</h4>
-                        <p class="text-[11px]">Dajjal, Turunnya Nabi Isa, Ya'juj Ma'juj, Matahari terbit dari Barat.</p>
-                    </div>
-                `
+            kiamat: {
+                title: "Tanda-Tanda Kiamat",
+                html: `
+                <div class="content-box bg-red-50 border-red-100">
+                    <h4 class="text-red-700">Tanda Besar</h4>
+                    <ul class="text-[11px] list-decimal pl-4 space-y-2">
+                        <li>Dajjal Pembawa Fitnah.</li>
+                        <li>Turunnya Nabi Isa AS.</li>
+                        <li>Ya'juj dan Ma'juj (Perusak Bumi).</li>
+                        <li>Matahari terbit dari Barat.</li>
+                        <li>Dukhan (Asap Gelap).</li>
+                    </ul>
+                </div>`
             },
-            kamus: {
-                title: "Kamus Istilah",
-                content: `
-                    <div class="grid gap-2">
-                        <div class="p-3 border-b text-[11px] flex justify-between"><b>Ikhtilaf</b> <span>Perbedaan Pendapat</span></div>
-                        <div class="p-3 border-b text-[11px] flex justify-between"><b>Muwahid</b> <span>Orang Bertauhid</span></div>
-                    </div>
-                `
+            asma: {
+                title: "99 Asmaul Husna",
+                html: `<div class="grid grid-cols-1 gap-2">${["Ar-Rahman (Maha Pengasih)", "Ar-Rahim (Maha Penyayang)", "Al-Malik (Maha Merajai)", "Al-Quddus (Maha Suci)", "As-Salam (Maha Sejahtera)"].map(a => `<div class="p-4 border rounded-2xl flex justify-between items-center text-[11px] font-bold"><span>${a}</span></div>`).join('')} <p class="text-center opacity-30 mt-5 text-xs">... hingga 99 Nama</p></div>`
+            },
+            waris: {
+                title: "Hukum Waris",
+                html: `<div class="content-box"><p class="text-[11px]">Harta ditinggal mayat dibagikan setelah hutang & wasiat. Laki-laki mendapat 2 bagian, perempuan 1 bagian. Ahli waris utama: Orang tua, Anak, Suami/Istri.</p></div>`
             }
         };
 
-        function openMod(key) {
-            const mod = dataMaster[key];
-            document.getElementById('layerTitle').innerText = mod.title;
-            document.getElementById('layerBody').innerHTML = mod.content;
-            document.getElementById('layer').classList.add('active');
+        function render(key) {
+            const data = db[key];
+            document.getElementById('viewTitle').innerText = data.title;
+            document.getElementById('viewContent').innerHTML = data.html;
+            document.getElementById('view').classList.add('active');
             document.body.style.overflow = 'hidden';
         }
 
-        function closeMod() {
-            document.getElementById('layer').classList.remove('active');
+        function closeView() {
+            document.getElementById('view').classList.remove('active');
             document.body.style.overflow = 'auto';
         }
     </script>
