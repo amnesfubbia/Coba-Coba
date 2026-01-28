@@ -2,151 +2,135 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DadarEndog | Kitab Masak Nusantara</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Arkanul | Iman & Islam</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { background: #fdfdfd; font-family: 'Plus Jakarta Sans', sans-serif; }
-        .recipe-card { transition: 0.3s; border: 1px solid #eee; }
-        .recipe-card:hover { border-color: #f97316; transform: translateY(-3px); }
-        .detail-page { position: fixed; inset: 0; background: white; z-index: 1000; transform: translateX(100%); transition: 0.4s ease; overflow-y: auto; }
-        .detail-page.active { transform: translateX(0); }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .tag-region { font-size: 9px; font-weight: 800; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; }
+        body { background: #f8fafc; font-family: 'Plus Jakarta Sans', sans-serif; color: #1e293b; }
+        .nav-card { transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; }
+        .nav-card:active { transform: scale(0.95); opacity: 0.8; }
+        .detail-layer { position: fixed; inset: 0; background: white; z-index: 1000; transform: translateY(100%); transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); overflow-y: auto; }
+        .detail-layer.active { transform: translateY(0); }
+        .gradient-islam { background: linear-gradient(135deg, #059669 0%, #10b981 100%); }
+        .gradient-iman { background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%); }
     </style>
 </head>
 <body class="pb-20">
 
-    <header class="p-6 bg-white border-b sticky top-0 z-50 shadow-sm">
-        <h1 class="text-3xl font-black italic tracking-tighter">Dadar<span class="text-orange-500">Endog</span></h1>
-        <p class="text-[10px] font-bold text-gray-400 mt-1 uppercase tracking-widest leading-none">Masak itu gampang, segampang dadar endog!</p>
+    <header class="p-8 bg-white border-b border-slate-100 sticky top-0 z-[50]">
+        <h1 class="text-3xl font-black tracking-tighter italic">Arkanul<span class="text-emerald-600">Din</span></h1>
+        <p class="text-[10px] font-bold text-slate-400 mt-1 uppercase tracking-[3px]">Panduan Lengkap Iman & Islam</p>
     </header>
 
-    <div class="p-6 bg-gray-50 border-b">
-        <div class="relative mb-4">
-            <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
-            <input type="text" id="searchInput" onkeyup="searchRecipe()" placeholder="Cari resep (Soto, Rendang, Es...)" class="w-full pl-12 pr-4 py-3 rounded-2xl border-none shadow-sm focus:ring-2 focus:ring-orange-500 text-sm">
-        </div>
-        <div class="flex gap-2 overflow-x-auto no-scrollbar py-2">
-            <button onclick="filterByCat('semua')" class="px-5 py-2 rounded-full bg-black text-white text-[10px] font-bold whitespace-nowrap">SEMUA</button>
-            <button onclick="filterByCat('makanan')" class="px-5 py-2 rounded-full bg-white border text-[10px] font-bold whitespace-nowrap">MAKANAN</button>
-            <button onclick="filterByCat('cemilan')" class="px-5 py-2 rounded-full bg-white border text-[10px] font-bold whitespace-nowrap">CEMILAN</button>
-            <button onclick="filterByCat('minuman')" class="px-5 py-2 rounded-full bg-white border text-[10px] font-bold whitespace-nowrap">MINUMAN</button>
-        </div>
-    </div>
+    <main class="p-6 space-y-8">
+        <section>
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-xl font-extrabold italic tracking-tight">Rukun Islam</h2>
+                <span class="text-[10px] font-black bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full uppercase">5 Dasar</span>
+            </div>
+            <div class="grid grid-cols-1 gap-3">
+                <div onclick="openDetail('islam', 1)" class="nav-card bg-white p-5 rounded-3xl border border-slate-100 flex items-center gap-5 shadow-sm">
+                    <div class="w-12 h-12 gradient-islam rounded-2xl flex items-center justify-center text-white font-bold text-xl">1</div>
+                    <div><h3 class="font-bold text-sm uppercase tracking-wide">Syahadat</h3><p class="text-xs text-slate-400">Persaksian Tauhid & Rasul</p></div>
+                </div>
+                <div onclick="openDetail('islam', 2)" class="nav-card bg-white p-5 rounded-3xl border border-slate-100 flex items-center gap-5 shadow-sm">
+                    <div class="w-12 h-12 gradient-islam rounded-2xl flex items-center justify-center text-white font-bold text-xl">2</div>
+                    <div><h3 class="font-bold text-sm uppercase tracking-wide">Shalat</h3><p class="text-xs text-slate-400">Tiang Agama 5 Waktu</p></div>
+                </div>
+                <div onclick="openDetail('islam', 3)" class="nav-card bg-white p-5 rounded-3xl border border-slate-100 flex items-center gap-5 shadow-sm">
+                    <div class="w-12 h-12 gradient-islam rounded-2xl flex items-center justify-center text-white font-bold text-xl">3</div>
+                    <div><h3 class="font-bold text-sm uppercase tracking-wide">Zakat</h3><p class="text-xs text-slate-400">Mensucikan Harta & Jiwa</p></div>
+                </div>
+                <div onclick="openDetail('islam', 4)" class="nav-card bg-white p-5 rounded-3xl border border-slate-100 flex items-center gap-5 shadow-sm">
+                    <div class="w-12 h-12 gradient-islam rounded-2xl flex items-center justify-center text-white font-bold text-xl">4</div>
+                    <div><h3 class="font-bold text-sm uppercase tracking-wide">Puasa</h3><p class="text-xs text-slate-400">Menahan Diri di Bulan Ramadhan</p></div>
+                </div>
+                <div onclick="openDetail('islam', 5)" class="nav-card bg-white p-5 rounded-3xl border border-slate-100 flex items-center gap-5 shadow-sm">
+                    <div class="w-12 h-12 gradient-islam rounded-2xl flex items-center justify-center text-white font-bold text-xl">5</div>
+                    <div><h3 class="font-bold text-sm uppercase tracking-wide">Haji</h3><p class="text-xs text-slate-400">Bagi yang Mampu ke Baitullah</p></div>
+                </div>
+            </div>
+        </section>
 
-    <main class="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="recipeGrid">
-        </main>
+        <section>
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-xl font-extrabold italic tracking-tight text-blue-900">Rukun Iman</h2>
+                <span class="text-[10px] font-black bg-blue-100 text-blue-700 px-3 py-1 rounded-full uppercase">6 Pondasi</span>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+                <div onclick="openDetail('iman', 1)" class="nav-card bg-white p-6 rounded-3xl border border-slate-100 text-center shadow-sm">
+                    <p class="text-2xl mb-2">☝️</p><h3 class="font-bold text-[10px] uppercase tracking-widest text-blue-600">Allah</h3>
+                </div>
+                <div onclick="openDetail('iman', 2)" class="nav-card bg-white p-6 rounded-3xl border border-slate-100 text-center shadow-sm">
+                    <p class="text-2xl mb-2">✨</p><h3 class="font-bold text-[10px] uppercase tracking-widest text-blue-600">Malaikat</h3>
+                </div>
+                <div onclick="openDetail('iman', 3)" class="nav-card bg-white p-6 rounded-3xl border border-slate-100 text-center shadow-sm">
+                    <p class="text-2xl mb-2">📖</p><h3 class="font-bold text-[10px] uppercase tracking-widest text-blue-600">Kitab</h3>
+                </div>
+                <div onclick="openDetail('iman', 4)" class="nav-card bg-white p-6 rounded-3xl border border-slate-100 text-center shadow-sm">
+                    <p class="text-2xl mb-2">🤝</p><h3 class="font-bold text-[10px] uppercase tracking-widest text-blue-600">Rasul</h3>
+                </div>
+                <div onclick="openDetail('iman', 5)" class="nav-card bg-white p-6 rounded-3xl border border-slate-100 text-center shadow-sm">
+                    <p class="text-2xl mb-2">⌛</p><h3 class="font-bold text-[10px] uppercase tracking-widest text-blue-600">Kiamat</h3>
+                </div>
+                <div onclick="openDetail('iman', 6)" class="nav-card bg-white p-6 rounded-3xl border border-slate-100 text-center shadow-sm">
+                    <p class="text-2xl mb-2">⚖️</p><h3 class="font-bold text-[10px] uppercase tracking-widest text-blue-600">Qadha Qadar</h3>
+                </div>
+            </div>
+        </section>
+    </main>
 
-    <div id="detailOverlay" class="detail-page">
-        <nav class="p-6 border-b flex items-center justify-between sticky top-0 bg-white/90 backdrop-blur">
-            <button onclick="closeDetail()" class="text-xl"><i class="fa-solid fa-arrow-left"></i></button>
-            <span class="font-black italic text-sm">Dadar<span class="text-orange-500">Endog</span></span>
+    <div id="detailView" class="detail-layer no-scrollbar">
+        <nav class="p-6 sticky top-0 bg-white/90 backdrop-blur border-b flex justify-between items-center">
+            <button onclick="closeDetail()" class="text-xl"><i class="fa-solid fa-xmark"></i></button>
+            <span id="overlayTag" class="text-[10px] font-black uppercase tracking-widest"></span>
             <div class="w-5"></div>
         </nav>
-        <div id="detailContent" class="p-8 max-w-2xl mx-auto"></div>
+        <div id="overlayContent" class="p-8 pb-20"></div>
     </div>
 
     <script>
-        const cookbook = [
-            // --- SUMATERA ---
-            { cat: 'makanan', reg: 'Aceh', title: 'Mie Aceh', ing: ['500g Mie kuning', '750ml Kaldu sapi', '150g Udang/Daging', 'Bumbu: Cabai, Bawang, Jintan, Kapulaga'], steps: ['Tumis bumbu halus hingga wangi.', 'Masukkan daging/udang.', 'Tuangkan kaldu dan mie.', 'Masak hingga kuah mengental.'], desc: 'Mie pedas kaya rempah khas Serambi Mekkah.' },
-            { cat: 'makanan', reg: 'Sumatera Barat', title: 'Rendang Daging Sapi', ing: ['1kg Daging Sapi', '2L Santan', 'Daun Kunyit', 'Serai', 'Lengkuas', 'Bumbu halus rendang'], steps: ['Rebus santan dan bumbu hingga berminyak.', 'Masukkan daging.', 'Masak dengan api kecil selama 4-5 jam.', 'Aduk terus hingga kering dan menghitam.'], desc: 'Masakan terlezat dunia.' },
-            { cat: 'makanan', reg: 'Sumatera Selatan', title: 'Pempek Kapal Selam', ing: ['500g Ikan Tenggiri Giling', '400g Sagu', 'Telur (untuk isi)', 'Cuko (Gula merah, ebi, cabai)'], steps: ['Campur ikan dan sagu.', 'Bentuk adonan dan isi dengan telur.', 'Rebus hingga mengapung.', 'Goreng dan sajikan dengan cuko.'], desc: 'Ikon kuliner Palembang.' },
+        const dataIslam = {
+            1: { title: "Syahadat", desc: "Mengucapkan 'Asyhadu an laa ilaaha illallaah, wa asyhadu anna muhammadar rasuulullaah'.", detail: "Persaksian bahwa tidak ada Tuhan yang berhak disembah selain Allah dan Nabi Muhammad adalah utusan-Nya. Ini adalah pintu gerbang masuk ke dalam Islam." },
+            2: { title: "Shalat", desc: "Melaksanakan shalat fardu 5 waktu dalam sehari semalam.", detail: "Shalat adalah tiang agama. Terdiri dari Subuh (2 rakaat), Dzuhur (4), Ashar (4), Maghrib (3), dan Isya (4). Shalat mencegah perbuatan keji dan munkar." },
+            3: { title: "Zakat", desc: "Mengeluarkan sebagian harta untuk mereka yang berhak (Asnaf).", detail: "Kewajiban bagi muslim yang mampu untuk membantu fakir miskin. Zakat fitrah dilakukan saat Ramadhan, zakat mal dilakukan saat harta mencapai nisab dan haul." },
+            4: { title: "Puasa", desc: "Menahan lapar, haus, dan hawa nafsu dari terbit fajar hingga terbenam matahari.", detail: "Dilaksanakan sebulan penuh pada bulan suci Ramadhan. Tujuannya adalah untuk meningkatkan ketaqwaan kepada Allah SWT." },
+            5: { title: "Haji", desc: "Menunaikan ibadah ke Baitullah di Mekkah.", detail: "Kewajiban sekali seumur hidup bagi muslim yang mampu secara fisik, finansial, dan keamanan perjalanan. Meliputi tawaf, sa'i, wukuf di Arafah, dll." }
+        };
+
+        const dataIman = {
+            1: { title: "Iman kepada Allah", detail: "Meyakini dengan sepenuh hati bahwa Allah itu Ada, Maha Esa, dan memiliki sifat-sifat kesempurnaan. Tidak ada sekutu bagi-Nya." },
+            2: { title: "Iman kepada Malaikat", detail: "Meyakini adanya makhluk gaib ciptaan Allah dari cahaya yang selalu taat. Contoh: Jibril (menyampaikan wahyu), Mikail (pembagi rezeki), dll." },
+            3: { title: "Iman kepada Kitab-Kitab", detail: "Meyakini Allah menurunkan kitab sebagai pedoman: Taurat (Musa), Zabur (Daud), Injil (Isa), dan Al-Qur'an (Muhammad) sebagai penyempurna." },
+            4: { title: "Iman kepada Rasul", detail: "Meyakini utusan Allah untuk membimbing manusia. Dari Adam AS hingga Nabi terakhir Muhammad SAW sebagai penutup para nabi." },
+            5: { title: "Iman kepada Hari Kiamat", detail: "Meyakini bahwa dunia akan hancur dan manusia akan dibangkitkan untuk mempertanggungjawabkan perbuatannya di hadapan Allah." },
+            6: { title: "Iman kepada Qadha & Qadar", detail: "Meyakini bahwa segala sesuatu yang terjadi di alam semesta ini, baik buruk maupun baik, adalah atas ketetapan dan kehendak Allah SWT." }
+        };
+
+        function openDetail(type, id) {
+            const item = type === 'islam' ? dataIslam[id] : dataIman[id];
+            const tag = type === 'islam' ? 'Rukun Islam' : 'Rukun Iman';
             
-            // --- JAWA ---
-            { cat: 'makanan', reg: 'Jawa Timur', title: 'Rawon Surabaya', ing: ['500g Daging Sapi', 'Kluwek (Bumbu hitam)', 'Tauge pendek', 'Telur asin'], steps: ['Rebus daging sampai empuk.', 'Tumis bumbu halus dan kluwek.', 'Masukkan bumbu ke kaldu.', 'Sajikan dengan sambal dan telur asin.'], desc: 'Sup hitam legendaris Jawa Timur.' },
-            { cat: 'makanan', reg: 'Jawa Tengah', title: 'Gudeg Jogja', ing: ['1kg Nangka Muda', '1L Santan', 'Gula Merah melimpah', 'Daun jati'], steps: ['Masak nangka dengan santan dan gula merah.', 'Masak dengan api kecil selama 12 jam.', 'Pastikan air menyusut dan bumbu meresap.'], desc: 'Sayur nangka manis khas Keraton.' },
-            { cat: 'makanan', reg: 'Jawa Barat', title: 'Sate Maranggi', ing: ['500g Daging Sapi', 'Lemak sapi', 'Kecap manis', 'Ketumbar'], steps: ['Potong daging dadu kecil.', 'Rendam dengan bumbu ketumbar dan kecap.', 'Tusuk dan bakar hingga wangi.', 'Sajikan dengan sambal tomat segar.'], desc: 'Sate sapi empuk tanpa bumbu kacang.' },
-            
-            // --- BALI & NT ---
-            { cat: 'makanan', reg: 'Bali', title: 'Ayam Betutu', ing: ['1 Ekor Ayam', 'Bumbu Base Genep', 'Daun pisang'], steps: ['Lumuri ayam dengan bumbu genep.', 'Bungkus daun pisang.', 'Kukus lalu bakar hingga meresap.'], desc: 'Ayam rempah melimpah khas Bali.' },
-            { cat: 'makanan', reg: 'Lombok', title: 'Ayam Taliwang', ing: ['Ayam Kampung Muda', 'Cabai rawit & Terasi', 'Kencur'], steps: ['Bakar ayam setengah matang.', 'Lumuri bumbu pedas.', 'Bakar kembali sampai matang.'], desc: 'Sajian ayam pedas ikonik NTB.' },
-
-            // --- SULAWESI & TIMUR ---
-            { cat: 'makanan', reg: 'Sulawesi Selatan', title: 'Coto Makassar', ing: ['Daging & Jeroan Sapi', 'Kacang tanah sangrai (haluskan)', 'Air cucian beras'], steps: ['Rebus daging dengan air cucian beras.', 'Masukkan bumbu dan kacang halus.', 'Masak hingga kuah kental.'], desc: 'Sup daging kuah kacang gurih.' },
-            { cat: 'makanan', reg: 'Papua', title: 'Papeda Ikan Kuning', ing: ['Sagu murni', 'Ikan Tongkol', 'Kunyit', 'Jeruk Nipis'], steps: ['Buat papeda dengan menyiram air mendidih.', 'Masak ikan dengan bumbu kuning segar.', 'Sajikan bersama.'], desc: 'Makanan pokok Indonesia Timur.' },
-
-            // --- CEMILAN ---
-            { cat: 'cemilan', reg: 'Jawa Barat', title: 'Cireng Salju', ing: ['Tapioka', 'Bawang putih', 'Daun bawang'], steps: ['Buat adonan biang.', 'Campur dengan tepung kering.', 'Goreng sampai garing.'], desc: 'Cemilan kenyal favorit sejuta umat.' },
-            { cat: 'cemilan', reg: 'Semarang', title: 'Lumpia Semarang', ing: ['Kulit Lumpia', 'Rebung', 'Ebi', 'Telur'], steps: ['Tumis rebung dan ebi.', 'Isi kulit lumpia dan gulung.', 'Goreng garing.'], desc: 'Cemilan legendaris khas Semarang.' },
-
-            // --- MINUMAN ---
-            { cat: 'minuman', reg: 'Makassar', title: 'Es Pisang Ijo', ing: ['Pisang Raja', 'Tepung Terigu (kulit hijau)', 'Bubur Sumsum', 'Sirup DHT'], steps: ['Kukus pisang berbalut tepung.', 'Siapkan bubur sumsum.', 'Sajikan dengan sirup merah dan es.'], desc: 'Kesegaran manis dari Makassar.' },
-            { cat: 'minuman', reg: 'Betawi', title: 'Bir Pletok', ing: ['Jahe', 'Kayu Secang', 'Kayu Manis', 'Serai'], steps: ['Rebus semua rempah hingga merah.', 'Kocok sampai berbuih.', 'Sajikan hangat.'], desc: 'Minuman rempah tanpa alkohol.' }
-        ];
-
-        function renderGrid(data) {
-            const grid = document.getElementById('recipeGrid');
-            grid.innerHTML = data.map((r, idx) => `
-                <div class="recipe-card bg-white p-5 rounded-3xl" onclick="openDetail(${idx})">
-                    <span class="tag-region bg-orange-100 text-orange-600">${r.reg}</span>
-                    <h3 class="text-xl font-black italic mt-2">${r.title}</h3>
-                    <p class="text-xs text-gray-500 mt-1">${r.desc}</p>
-                    <div class="mt-4 flex justify-between items-center">
-                        <span class="text-[9px] font-bold text-gray-400 uppercase tracking-widest">${r.cat}</span>
-                        <i class="fa-solid fa-chevron-right text-gray-200"></i>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function openDetail(idx) {
-            const r = cookbook[idx];
-            const content = document.getElementById('detailContent');
-            content.innerHTML = `
-                <h2 class="text-4xl font-black italic tracking-tighter mb-1">${r.title}</h2>
-                <p class="text-orange-500 font-bold text-sm mb-8 uppercase tracking-widest">${r.reg} • ${r.cat}</p>
-                
-                <div class="mb-10">
-                    <h4 class="font-black text-lg mb-4 flex items-center gap-2"><i class="fa-solid fa-list text-orange-500 text-sm"></i> Bahan-Bahan</h4>
-                    <ul class="space-y-3">
-                        ${r.ing.map(i => `<li class="text-sm text-gray-600 border-b border-gray-50 pb-2 italic">○ ${i}</li>`).join('')}
-                    </ul>
-                </div>
-
-                <div>
-                    <h4 class="font-black text-lg mb-4 flex items-center gap-2"><i class="fa-solid fa-fire-burner text-orange-500 text-sm"></i> Langkah Memasak</h4>
-                    <div class="space-y-6">
-                        ${r.steps.map((s, i) => `
-                            <div class="flex gap-4">
-                                <span class="w-6 h-6 rounded-lg bg-black text-white flex-shrink-0 flex items-center justify-center text-[10px] font-bold">${i+1}</span>
-                                <p class="text-sm text-gray-700 leading-relaxed">${s}</p>
-                            </div>
-                        `).join('')}
+            document.getElementById('overlayTag').innerText = tag;
+            document.getElementById('overlayContent').innerHTML = `
+                <h2 class="text-4xl font-black tracking-tighter italic mb-6">${item.title}</h2>
+                <div class="space-y-6">
+                    <div class="bg-slate-50 p-6 rounded-3xl border border-slate-100">
+                        <h4 class="font-bold text-xs uppercase text-slate-400 mb-2 italic">Penjelasan Lengkap</h4>
+                        <p class="text-sm leading-relaxed text-slate-700 font-medium">${item.detail}</p>
                     </div>
                 </div>
             `;
-            document.getElementById('detailOverlay').classList.add('active');
+            document.getElementById('detailView').classList.add('active');
             document.body.style.overflow = 'hidden';
         }
 
         function closeDetail() {
-            document.getElementById('detailOverlay').classList.remove('active');
+            document.getElementById('detailView').classList.remove('active');
             document.body.style.overflow = 'auto';
         }
-
-        function searchRecipe() {
-            const val = document.getElementById('searchInput').value.toLowerCase();
-            const filtered = cookbook.filter(r => r.title.toLowerCase().includes(val) || r.reg.toLowerCase().includes(val));
-            renderGrid(filtered);
-        }
-
-        function filterByCat(cat) {
-            const btns = document.querySelectorAll('button');
-            btns.forEach(b => {
-                b.classList.remove('bg-black', 'text-white');
-                b.classList.add('bg-white', 'border');
-            });
-            event.target.classList.add('bg-black', 'text-white');
-            
-            if(cat === 'semua') renderGrid(cookbook);
-            else renderGrid(cookbook.filter(r => r.cat === cat));
-        }
-
-        renderGrid(cookbook);
     </script>
 </body>
 </html>
