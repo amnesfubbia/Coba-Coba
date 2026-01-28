@@ -3,127 +3,117 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Persebaya Surabaya | Digital Hub</title>
+    <title>Persebaya | WANI</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;700;800&display=swap" rel="stylesheet">
     <style>
-        :root { --green: #008037; --dark: #050505; }
-        body { background-color: var(--dark); color: #fff; font-family: 'Montserrat', sans-serif; -webkit-tap-highlight-color: transparent; }
-        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.08); }
-        .player-card { border-radius: 24px; overflow: hidden; background: #111; transition: 0.3s; }
-        .player-card:active { transform: scale(0.95); }
-        .modal-legend { display: none; position: fixed; inset: 0; z-index: 9999; background: rgba(0,0,0,0.95); align-items: center; justify-content: center; padding: 20px; }
+        :root { --p-green: #00662d; --p-gold: #c5a059; }
+        body { background: #080808; color: #ececec; font-family: 'Plus Jakarta Sans', sans-serif; }
+        .nav-glass { background: rgba(8, 8, 8, 0.8); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .hero-gradient { background: radial-gradient(circle at top right, #004d21, #080808); }
+        .card-elegant { background: #111; border: 1px solid rgba(255,255,255,0.05); border-radius: 20px; transition: 0.3s; }
+        .gold-text { background: linear-gradient(to right, #c5a059, #f9e1b2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .section-title { font-size: 1.5rem; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 10px; }
+        .btn-green { background: var(--p-green); color: white; padding: 12px 24px; border-radius: 12px; font-weight: 700; font-size: 0.8rem; }
     </style>
 </head>
-<body class="pb-20">
+<body class="pb-10">
 
-    <nav class="fixed top-0 w-full z-50 glass px-6 py-4 flex justify-between items-center">
+    <nav class="fixed top-0 w-full z-[100] nav-glass px-6 py-4 flex justify-between items-center">
         <div class="flex items-center gap-3">
-            <img src="Persebaya.png" class="w-8 h-8 object-contain" onerror="this.src='https://upload.wikimedia.org/wikipedia/id/0/09/Persebaya_logo.png'">
-            <span class="font-black tracking-tighter text-lg uppercase">Persebaya Hub</span>
+            <img src="Persebaya.png" class="w-8 h-8" alt="Logo" onerror="this.src='https://upload.wikimedia.org/wikipedia/id/0/09/Persebaya_logo.png'">
+            <span class="font-extrabold tracking-tighter text-lg">PERSEBAYA</span>
         </div>
-        <i class="fa-solid fa-bars-staggered text-green-500 text-xl"></i>
+        <div class="w-10 h-10 flex items-center justify-center rounded-full bg-white/5"><i class="fa-solid fa-bars-staggered"></i></div>
     </nav>
 
-    <section class="pt-24 px-6 pb-8 bg-gradient-to-b from-[#003d1a] to-transparent">
-        <div class="glass p-6 rounded-[30px] border-t-2 border-green-500 shadow-xl shadow-green-900/20">
-            <p class="text-[9px] font-black tracking-[0.4em] text-center text-green-400 mb-6 uppercase">Next Matchday</p>
-            <div class="flex justify-between items-center">
-                <div class="w-1/3 text-center">
-                    <img src="Persebaya.png" class="w-14 h-14 mx-auto drop-shadow-lg" onerror="this.src='https://upload.wikimedia.org/wikipedia/id/0/09/Persebaya_logo.png'">
-                    <p class="text-[9px] font-bold mt-2">PERSEBAYA</p>
+    <section class="pt-28 px-6 hero-gradient">
+        <h1 class="text-4xl font-extrabold leading-tight mb-4">Wong Suroboyo <br><span class="gold-text italic">WANI.</span></h1>
+        <p class="text-zinc-400 text-sm leading-relaxed mb-6">Didirikan pada 18 Juni 1927, Persebaya bukan sekadar klub sepak bola, melainkan simbol perlawanan dan identitas Arek-arek Suroboyo.</p>
+        <div class="flex gap-3">
+            <button class="btn-green">TICKET</button>
+            <button class="px-6 py-3 border border-white/10 rounded-xl font-bold text-[0.7rem]">HISTORY</button>
+        </div>
+    </section>
+
+    <section class="mt-12 px-6">
+        <h2 class="section-title"><i class="fa-solid fa-trophy text-yellow-600"></i> PRESTASI</h2>
+        <div class="grid grid-cols-2 gap-3">
+            <div class="card-elegant p-5">
+                <p class="text-[10px] font-bold text-zinc-500 uppercase">Perserikatan</p>
+                <p class="text-2xl font-black italic">6 <span class="text-xs font-normal opacity-50">Gelar</span></p>
+                <p class="text-[8px] mt-1 text-zinc-400">1950, 1951, 1952, 1978, 1988</p>
+            </div>
+            <div class="card-elegant p-5">
+                <p class="text-[10px] font-bold text-zinc-500 uppercase">Liga Indonesia</p>
+                <p class="text-2xl font-black italic">2 <span class="text-xs font-normal opacity-50">Gelar</span></p>
+                <p class="text-[8px] mt-1 text-zinc-400">1996/97, 2004</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="mt-12 px-6">
+        <h2 class="section-title"><i class="fa-solid fa-landmark text-green-700"></i> IDENTITY</h2>
+        <div class="space-y-4">
+            <div class="card-elegant p-6 border-l-4 border-green-700">
+                <h4 class="font-black text-sm mb-2">GELORA BUNG TOMO (GBT)</h4>
+                <p class="text-xs text-zinc-400 leading-relaxed">Kandang megah berkapasitas 45.000 penonton. Atmosfernya dikenal sebagai salah satu yang paling mengintimidasi lawan di Asia Tenggara.</p>
+            </div>
+            <div class="card-elegant p-6 border-l-4 border-green-700">
+                <h4 class="font-black text-sm mb-2">BONEK MANIA</h4>
+                <p class="text-xs text-zinc-400 leading-relaxed">"Bondo Nekat". Bukan sekadar suporter, tapi gerakan sosial yang kini berevolusi menjadi Bonek yang positif, kreatif, dan militan.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="mt-12 px-6">
+        <h2 class="section-title"><i class="fa-solid fa-star text-yellow-500"></i> HALL OF LEGENDS</h2>
+        <div class="flex gap-4 overflow-x-auto no-scrollbar pb-4">
+            <div class="flex-shrink-0 w-48 card-elegant overflow-hidden">
+                <div class="h-40 bg-zinc-800 flex items-center justify-center">
+                    <i class="fa-solid fa-user text-4xl text-white/10"></i>
                 </div>
-                <div class="w-1/3 text-center text-xl font-black italic opacity-30">VS</div>
-                <div class="w-1/3 text-center">
-                    <div class="w-14 h-14 bg-zinc-800 rounded-full mx-auto flex items-center justify-center border border-zinc-700">
-                        <i class="fa-solid fa-shield-halved text-xl text-zinc-600"></i>
-                    </div>
-                    <p class="text-[9px] font-bold mt-2 text-zinc-500 uppercase">Opponent</p>
+                <div class="p-4">
+                    <p class="font-black text-xs uppercase italic">ERI IRIANTO</p>
+                    <p class="text-[8px] text-zinc-500">Number 19 Eternal</p>
+                </div>
+            </div>
+            <div class="flex-shrink-0 w-48 card-elegant overflow-hidden">
+                <div class="h-40 bg-zinc-800 flex items-center justify-center">
+                    <i class="fa-solid fa-user text-4xl text-white/10"></i>
+                </div>
+                <div class="p-4">
+                    <p class="font-black text-xs uppercase italic">USTON NAWAWI</p>
+                    <p class="text-[8px] text-zinc-500">The Maestro</p>
+                </div>
+            </div>
+            <div class="flex-shrink-0 w-48 card-elegant overflow-hidden">
+                <div class="h-40 bg-zinc-800 flex items-center justify-center">
+                    <i class="fa-solid fa-user text-4xl text-white/10"></i>
+                </div>
+                <div class="p-4">
+                    <p class="font-black text-xs uppercase italic">MAT HALIL</p>
+                    <p class="text-[8px] text-zinc-500">The Loyal Legend</p>
+                </div>
+            </div>
+            <div class="flex-shrink-0 w-48 card-elegant overflow-hidden">
+                <div class="h-40 bg-zinc-800 flex items-center justify-center">
+                    <i class="fa-solid fa-user text-4xl text-white/10"></i>
+                </div>
+                <div class="p-4">
+                    <p class="font-black text-xs uppercase italic">JACKSEN F. TIAGO</p>
+                    <p class="text-[8px] text-zinc-500">The Black Pearl</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <section class="px-6 py-4">
-        <div class="flex justify-between items-center mb-6">
-            <h3 class="text-xl font-black tracking-tighter">SQUAD <span class="text-green-500 italic">2026</span></h3>
-            <span class="text-[10px] text-zinc-500 font-bold uppercase border-b border-zinc-800">Bonek View</span>
-        </div>
-        <div class="grid grid-cols-2 gap-4" id="squad-container">
-            </div>
-    </section>
+    <footer class="mt-20 p-10 border-t border-white/5 text-center">
+        <img src="Persebaya.png" class="w-12 h-12 mx-auto mb-6 opacity-30">
+        <p class="text-[10px] font-black tracking-[0.6em] text-zinc-600 mb-2 uppercase">Official Fan Hub</p>
+        <p class="text-3xl font-black italic opacity-20">WANI!</p>
+    </footer>
 
-    <section class="px-6 py-8">
-        <h3 class="text-xl font-black mb-6 italic text-yellow-500 uppercase">Hall of Fame</h3>
-        <div class="space-y-3">
-            <div onclick="openLegend('Eri Irianto', 'Legenda abadi dengan nomor punggung 19. Meninggal saat membela Persebaya di lapangan. Sosok petarung sejati.')" class="glass p-4 rounded-2xl flex items-center gap-4 border-l-4 border-yellow-600 active:bg-white/5">
-                <div class="w-12 h-12 rounded-full bg-green-800 flex items-center justify-center font-black text-sm">EI19</div>
-                <div>
-                    <p class="font-black text-xs italic uppercase">Eri Irianto</p>
-                    <p class="text-[9px] text-zinc-500">The Eternal Legend</p>
-                </div>
-                <i class="fa-solid fa-chevron-right ml-auto text-zinc-700 text-xs"></i>
-            </div>
-        </div>
-    </section>
-
-    <section class="pb-10">
-        <h3 class="px-6 text-xl font-black mb-6 uppercase tracking-tighter">Bonek <span class="text-zinc-600 italic">Gallery</span></h3>
-        <div class="grid grid-cols-3 gap-1 px-1">
-            <div class="aspect-square bg-zinc-900 overflow-hidden"><img src="https://picsum.photos/400/400?random=21" class="w-full h-full object-cover"></div>
-            <div class="aspect-square bg-zinc-900 overflow-hidden"><img src="https://picsum.photos/400/400?random=22" class="w-full h-full object-cover"></div>
-            <div class="aspect-square bg-zinc-900 overflow-hidden"><img src="https://picsum.photos/400/400?random=23" class="w-full h-full object-cover"></div>
-        </div>
-    </section>
-
-    <div id="legendModal" class="modal-legend" onclick="closeLegend()">
-        <div class="glass p-8 rounded-[35px] w-full max-w-xs text-center border-t-4 border-green-500 animate-in fade-in zoom-in duration-300">
-            <h4 id="legendTitle" class="text-2xl font-black italic mb-4 uppercase"></h4>
-            <p id="legendContent" class="text-xs text-zinc-400 leading-relaxed"></p>
-            <div class="mt-8 py-2 px-4 bg-green-700 inline-block rounded-lg font-black text-[10px] uppercase">Tutup</div>
-        </div>
-    </div>
-
-    <script>
-        // Data Pemain dengan Link Fallback
-        const players = [
-            { name: 'Bruno Moreira', pos: 'Forward', no: '10', img: 'https://tmssl.akamaized.net//images/foto/galerie/bruno-moreira-1689239455-111353.jpg' },
-            { name: 'F. Rivera', pos: 'Midfield', no: '7', img: 'https://tmssl.akamaized.net//images/foto/galerie/francisco-rivera-1715832793-137255.jpg' },
-            { name: 'Flavio Silva', pos: 'Forward', no: '17', img: 'https://tmssl.akamaized.net//images/foto/galerie/flavio-silva-1681284985-104975.jpg' },
-            { name: 'Ernando Ari', pos: 'Gk', no: '21', img: 'https://tmssl.akamaized.net//images/foto/galerie/ernando-ari-1684494396-107693.jpg' }
-        ];
-
-        const container = document.getElementById('squad-container');
-        
-        players.forEach(p => {
-            // Fungsi untuk menangani gambar rusak
-            const initial = p.name.split(' ').map(n => n[0]).join('');
-            
-            container.innerHTML += `
-                <div class="player-card relative aspect-[3/4] glass shadow-lg">
-                    <img src="${p.img}" 
-                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'" 
-                         class="w-full h-full object-cover opacity-80">
-                    <div class="absolute inset-0 hidden flex items-center justify-center bg-gradient-to-br from-green-900 to-black text-4xl font-black text-white/20">${initial}</div>
-                    
-                    <div class="absolute bottom-0 w-full p-4 bg-gradient-to-t from-black via-black/80 to-transparent">
-                        <p class="text-[7px] font-black text-green-500 uppercase tracking-widest">${p.pos}</p>
-                        <p class="text-[11px] font-black uppercase italic tracking-tight">${p.name}</p>
-                    </div>
-                    <div class="absolute top-3 left-3 w-7 h-7 glass rounded-lg flex items-center justify-center text-[10px] font-black text-green-500">${p.no}</div>
-                </div>
-            `;
-        });
-
-        function openLegend(t, c) {
-            document.getElementById('legendTitle').innerText = t;
-            document.getElementById('legendContent').innerText = c;
-            document.getElementById('legendModal').style.display = 'flex';
-        }
-        function closeLegend() {
-            document.getElementById('legendModal').style.display = 'none';
-        }
-    </script>
 </body>
 </html>
