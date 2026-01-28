@@ -6,7 +6,7 @@
     <title>amnesfubbia</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@1,700&family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
     <style>
         body { background-color: #000; color: #fff; font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
@@ -385,6 +385,7 @@
                 let endpoint = (currentType === 'tv') ? 'discover/tv' : 'discover/movie';
                 url = `https://api.themoviedb.org/3/${endpoint}?api_key=${API_KEY}&language=id-ID&page=${page}&include_adult=false&sort_by=popularity.desc`;
                 if(currentSchedule === 'now_playing' || currentSchedule === 'upcoming') { const today = new Date().toISOString().split('T')[0]; if(currentSchedule === 'now_playing') { const prev = new Date(Date.now() - 60*24*60*60*1000).toISOString().split('T')[0]; url += `&primary_release_date.gte=${prev}&primary_release_date.lte=${today}`; } else { url += `&primary_release_date.gte=${today}`; } }
+                // Fix: Penajaman filter short film
                 if(currentType === 'short') { url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_runtime.lte=40&with_runtime.gte=1&page=${page}&sort_by=popularity.desc`; }
                 if(currentCountry) url += `&with_origin_country=${currentCountry}`;
                 if(currentGenre) url += `&with_genres=${currentGenre}`;
@@ -398,7 +399,8 @@
         function renderGrid(items, grid) { 
             items.forEach(m => { 
                 if(!m.poster_path) return; 
-                // Fix: Gunakan media_type asli dari API (penting untuk Search Multi)
+                // Fix: Hanya tampilkan movie/tv, hindari person di grid
+                if(m.media_type === 'person') return;
                 const mType = m.media_type || (currentType === 'tv' ? 'tv' : 'movie'); 
                 const card = document.createElement('div'); 
                 card.className = 'post-card'; 
@@ -463,9 +465,10 @@
             globalFullDesc = originalIndoDesc || dEn.overview || "Sinopsis belum tersedia untuk konten ini.";
             globalEnDesc = dEn.overview;
             
+            // Fix: Sesuai permintaan, langsung "Lihat terjemahan"
             if(globalEnDesc && globalEnDesc !== originalIndoDesc) { 
                 document.getElementById('mTranslateBtn').classList.remove('hidden'); 
-                document.getElementById('mTranslateBtn').innerText = (originalIndoDesc) ? "Lihat terjemahan" : "Terjemahkan ke ID"; 
+                document.getElementById('mTranslateBtn').innerText = "Lihat terjemahan"; 
             } else { document.getElementById('mTranslateBtn').classList.add('hidden'); }
             
             isExpanded = false; 
