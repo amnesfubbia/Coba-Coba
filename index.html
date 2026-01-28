@@ -398,10 +398,10 @@
         function renderGrid(items, grid) { 
             items.forEach(m => { 
                 if(!m.poster_path) return; 
+                // Fix: Gunakan media_type asli dari API (penting untuk Search Multi)
                 const mType = m.media_type || (currentType === 'tv' ? 'tv' : 'movie'); 
                 const card = document.createElement('div'); 
                 card.className = 'post-card'; 
-                // Fix: Gunakan dataset agar ID terkunci permanen di elemen saat dibuat
                 card.dataset.id = m.id;
                 card.dataset.type = mType;
                 card.onclick = function() { openModal(this.dataset.id, this.dataset.type); }; 
@@ -445,7 +445,6 @@
             track.innerHTML = ''; dots.innerHTML = ''; track.style.transform = 'translateX(0)';
             
             if(vids.length > 0) { 
-                // Fix: Mode Mute dihapus agar suara langsung aktif
                 vids.forEach((v, i) => { 
                     track.innerHTML += `<div class="carousel-slide"><iframe id="yt-${i}" src="https://www.youtube.com/embed/${v.key}?enablejsapi=1&autoplay=${i===0?1:0}&rel=0" class="w-full h-full" allow="autoplay; fullscreen"></iframe></div>`; 
                     dots.innerHTML += `<div class="dot w-1.5 h-1.5 rounded-full ${i===currentIdx?'bg-blue-500':'bg-zinc-700'}"></div>`; 
