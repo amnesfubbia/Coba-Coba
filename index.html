@@ -3,165 +3,173 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Persebaya | Database Lengkap</title>
+    <title>Resep Nusantara | Lengkap</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
-        :root { --green: #004d21; --light-green: #008037; --gold: #c5a059; }
-        body { background: #000; color: #fff; font-family: 'Plus Jakarta Sans', sans-serif; }
-        .menu-layer { position: fixed; inset: 0; background: #000; z-index: 100; transform: translateY(100%); transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); padding-bottom: 50px; }
-        .menu-layer.active { transform: translateY(0); }
-        .glass-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .gold-gradient { background: linear-gradient(to right, #c5a059, #f9e1b2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        body { background: #f8f9fa; font-family: 'Plus Jakarta Sans', sans-serif; color: #333; }
+        .recipe-page { position: fixed; inset: 0; background: white; z-index: 100; transform: translateX(100%); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); overflow-y: auto; }
+        .recipe-page.active { transform: translateX(0); }
+        .category-pill { cursor: pointer; transition: 0.3s; border: 1px solid #e2e8f0; }
+        .category-pill:hover, .category-pill.active { background: #059669; color: white; border-color: #059669; }
+        .recipe-card { cursor: pointer; transition: 0.3s; background: white; border-radius: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+        .recipe-card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+        .tag { font-size: 10px; font-weight: 800; padding: 4px 8px; border-radius: 6px; text-transform: uppercase; }
     </style>
 </head>
-<body class="p-6 pb-20">
+<body class="pb-10">
 
-    <header class="mb-8 flex justify-between items-center">
-        <div>
-            <h1 class="text-3xl font-black italic">DATABASE<br><span class="text-green-500">PERSEBAYA</span></h1>
-            <p class="text-[10px] text-zinc-500 tracking-[0.3em] font-bold">1927 - PRESENT DAY</p>
-        </div>
-        <img src="Persebaya.png" class="w-12 h-12 object-contain" onerror="this.src='https://upload.wikimedia.org/wikipedia/id/0/09/Persebaya_logo.png'">
+    <header class="p-6 bg-white border-b sticky top-0 z-50">
+        <h1 class="text-2xl font-extrabold text-emerald-800">Dapur <span class="text-orange-500">Nusantara</span></h1>
+        <p class="text-xs text-gray-500 font-medium">Resep Lengkap Sabang sampai Merauke</p>
     </header>
 
-    <div class="grid grid-cols-1 gap-4">
-        <div onclick="openPage('p-sejarah')" class="glass-card p-6 flex justify-between items-center cursor-pointer border-l-4 border-green-600">
-            <div><h3 class="font-black text-sm">CHRONICLES 1927</h3><p class="text-[9px] text-zinc-500 italic uppercase">Perjalanan Berdirinya Klub</p></div>
-            <i class="fa-solid fa-book-bookmark text-green-500"></i>
-        </div>
-        <div onclick="openPage('p-prestasi')" class="glass-card p-6 flex justify-between items-center cursor-pointer border-l-4 border-yellow-600">
-            <div><h3 class="font-black text-sm">TROPHY CABINET</h3><p class="text-[9px] text-zinc-500 italic uppercase">Daftar Gelar & Tahun Juara</p></div>
-            <i class="fa-solid fa-trophy text-yellow-500"></i>
-        </div>
-        <div onclick="openPage('p-legenda')" class="glass-card p-6 flex justify-between items-center cursor-pointer border-l-4 border-white">
-            <div><h3 class="font-black text-sm">HALL OF FAME</h3><p class="text-[9px] text-zinc-500 italic uppercase">Legenda Era Perserikatan - Modern</p></div>
-            <i class="fa-solid fa-star text-zinc-300"></i>
-        </div>
-        <div onclick="openPage('p-identitas')" class="glass-card p-6 flex justify-between items-center cursor-pointer border-l-4 border-zinc-700">
-            <div><h3 class="font-black text-sm">CULTURE & HOME</h3><p class="text-[9px] text-zinc-500 italic uppercase">Stadion GBT & Sejarah Bonek</p></div>
-            <i class="fa-solid fa-users-rays text-zinc-500"></i>
-        </div>
+    <div class="flex gap-2 p-6 overflow-x-auto no-scrollbar bg-white shadow-sm">
+        <div onclick="filterCategory('semua')" class="category-pill active px-5 py-2 rounded-full text-xs font-bold whitespace-nowrap">Semua</div>
+        <div onclick="filterCategory('makanan')" class="category-pill px-5 py-2 rounded-full text-xs font-bold whitespace-nowrap">Makanan Berat</div>
+        <div onclick="filterCategory('cemilan')" class="category-pill px-5 py-2 rounded-full text-xs font-bold whitespace-nowrap">Cemilan</div>
+        <div onclick="filterCategory('minuman')" class="category-pill px-5 py-2 rounded-full text-xs font-bold whitespace-nowrap">Minuman</div>
     </div>
 
-    <div id="p-sejarah" class="menu-layer overflow-y-auto">
-        <nav class="sticky top-0 bg-black p-6 flex items-center justify-between border-b border-white/5">
-            <button onclick="closePage('p-sejarah')" class="text-xs font-bold uppercase tracking-widest"><i class="fa-solid fa-chevron-down mr-2"></i> Tutup</button>
-            <span class="text-xs font-black text-green-500 italic">SEJARAH LENGKAP</span>
-        </nav>
-        <div class="p-6 space-y-8">
+    <main class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6" id="recipe-grid">
+        </main>
+
+    <div id="recipe-detail" class="recipe-page">
+        <div class="sticky top-0 bg-white/90 backdrop-blur p-6 flex items-center justify-between border-b">
+            <button onclick="closeDetail()" class="text-gray-800 font-bold text-sm"><i class="fa-solid fa-arrow-left mr-2"></i> Kembali</button>
+            <span id="detail-category" class="tag bg-emerald-100 text-emerald-700"></span>
+        </div>
+        <div class="p-8 max-w-2xl mx-auto">
+            <h2 id="detail-title" class="text-3xl font-black text-emerald-900 mb-2"></h2>
+            <p id="detail-origin" class="text-sm text-orange-600 font-bold mb-6 italic"></p>
+            
+            <div class="mb-8">
+                <h3 class="font-bold text-lg mb-4 border-b pb-2">Bahan-bahan:</h3>
+                <ul id="detail-ingredients" class="space-y-2 text-gray-600 text-sm list-disc pl-5 leading-relaxed"></ul>
+            </div>
+
             <div>
-                <h4 class="text-xl font-black mb-3 italic">1. Era Perlawanan (1927-1930)</h4>
-                <p class="text-xs text-zinc-400 leading-relaxed">Didirikan pada 18 Juni 1927 oleh M. Pamoedji dan Paijo dengan nama SIVB. Kelahirannya adalah bentuk perlawanan terhadap klub Belanda SVB. Pada 19 April 1930, Persebaya (SIVB) menjadi salah satu dari 7 pendiri PSSI di Yogyakarta.</p>
-            </div>
-            <div>
-                <h4 class="text-xl font-black mb-3 italic">2. Era Perserikatan (1950-1994)</h4>
-                <p class="text-xs text-zinc-400 leading-relaxed">Setelah kemerdekaan, nama berubah menjadi Persebaya. Di era ini, Persebaya dikenal memiliki gaya main "Short Pass" yang mematikan dan menjadi kiblat sepak bola nasional bersama Persija dan PSMS.</p>
-            </div>
-            <div>
-                <h4 class="text-xl font-black mb-3 italic">3. Era Modern & Perjuangan (2010-2017)</h4>
-                <p class="text-xs text-zinc-400 leading-relaxed">Era di mana klub dipaksa mati suri oleh federasi. Namun, berkat militansi Bonek yang tak kenal lelah (Gerakan Bonek Melawan), Persebaya akhirnya diakui kembali oleh PSSI pada Kongres Bandung 2017.</p>
-            </div>
-        </div>
-    </div>
-
-    <div id="p-prestasi" class="menu-layer overflow-y-auto">
-        <nav class="sticky top-0 bg-black p-6 flex items-center justify-between border-b border-white/10">
-            <button onclick="closePage('p-prestasi')" class="text-xs font-bold uppercase tracking-widest"><i class="fa-solid fa-chevron-down mr-2"></i> Tutup</button>
-            <span class="text-xs font-black text-yellow-500 italic">REKOR JUARA</span>
-        </nav>
-        <div class="p-6 space-y-6">
-            <div class="glass-card p-4">
-                <h5 class="text-yellow-600 font-black mb-2 italic uppercase">Perserikatan PSSI (6 Gelar)</h5>
-                <ul class="text-xs space-y-2 text-zinc-400 font-bold">
-                    <li>🏆 1950 - Juara vs Persija</li>
-                    <li>🏆 1951 - Juara</li>
-                    <li>🏆 1952 - Juara</li>
-                    <li>🏆 1978 - Juara vs Persija</li>
-                    <li>🏆 1988 - Juara vs Persija</li>
-                    <li>🏆 1990 - Finalis</li>
-                </ul>
-            </div>
-            <div class="glass-card p-4">
-                <h5 class="text-green-500 font-black mb-2 italic uppercase">Liga Indonesia (2 Gelar)</h5>
-                <ul class="text-xs space-y-2 text-zinc-400 font-bold">
-                    <li>🏆 1996/1997 - Juara vs Bandung Raya</li>
-                    <li>🏆 2004 - Juara vs Persija</li>
-                </ul>
-            </div>
-            <div class="glass-card p-4">
-                <h5 class="text-zinc-400 font-black mb-2 italic uppercase">Era Kebangkitan</h5>
-                <ul class="text-xs space-y-2 text-zinc-400 font-bold">
-                    <li>🏆 Liga 2 (2017)</li>
-                    <li>🏆 Piala Presiden (Runner Up 2019)</li>
-                    <li>🏆 Piala Gubernur Jatim (2020)</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-
-    <div id="p-legenda" class="menu-layer overflow-y-auto">
-        <nav class="sticky top-0 bg-black p-6 flex items-center justify-between border-b border-white/5">
-            <button onclick="closePage('p-legenda')" class="text-xs font-bold uppercase tracking-widest"><i class="fa-solid fa-chevron-down mr-2"></i> Tutup</button>
-            <span class="text-xs font-black text-zinc-300 italic">THE GREATS</span>
-        </nav>
-        <div class="p-6 space-y-4">
-            <div class="glass-card p-5">
-                <h4 class="font-black italic text-green-500">ERA AWAL & PERSERIKATAN</h4>
-                <div class="mt-3 text-[11px] space-y-4">
-                    <p><b class="text-white">Abdul Kadir:</b> "The Flying Horse". Pemain sayap lincah yang menjadi ikon Timnas dan Persebaya era 60-an.</p>
-                    <p><b class="text-white">Rusdy Bahalwan:</b> Legenda dua dunia. Juara sebagai pemain (1978) dan pelatih (1997).</p>
-                    <p><b class="text-white">Mustaqim:</b> Striker haus gol era 80-an yang membawa Persebaya disegani.</p>
-                </div>
-            </div>
-            <div class="glass-card p-5">
-                <h4 class="font-black italic text-yellow-600">ERA LIGA INDONESIA</h4>
-                <div class="mt-3 text-[11px] space-y-4">
-                    <p><b class="text-white">Eri Irianto (No. 19):</b> Gelandang dengan tendangan meriam. Sosoknya dihormati secara sakral di Surabaya.</p>
-                    <p><b class="text-white">Jacksen F. Tiago:</b> Legenda asing terbaik. Top skor dan pahlawan juara 1997.</p>
-                    <p><b class="text-white">Carlos de Mello:</b> Maestro lini tengah dengan umpan-umpan ajaib.</p>
-                    <p><b class="text-white">Bejo Sugiantoro:</b> Libero terbaik yang pernah dimiliki Persebaya dan Indonesia.</p>
-                </div>
-            </div>
-            <div class="glass-card p-5">
-                <h4 class="font-black italic text-blue-400">ERA MODERN</h4>
-                <div class="mt-3 text-[11px] space-y-4">
-                    <p><b class="text-white">Mat Halil:</b> Simbol loyalitas tanpa batas selama belasan tahun.</p>
-                    <p><b class="text-white">Andik Vermansah:</b> Jebolan kompetisi internal yang menjadi sensasi Asia.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="p-identitas" class="menu-layer overflow-y-auto">
-        <nav class="sticky top-0 bg-black p-6 flex items-center justify-between border-b border-white/5">
-            <button onclick="closePage('p-identitas')" class="text-xs font-bold uppercase tracking-widest"><i class="fa-solid fa-chevron-down mr-2"></i> Tutup</button>
-            <span class="text-xs font-black text-zinc-500 italic">STADION & BONEK</span>
-        </nav>
-        <div class="p-6 space-y-6">
-            <div class="glass-card p-6">
-                <h4 class="font-black text-lg mb-4 italic text-green-500 uppercase">Gelora Bung Tomo</h4>
-                <p class="text-xs text-zinc-400 leading-relaxed">Lokasi: Benowo, Surabaya Barat. Kapasitas: 45.000 penonton. Dilengkapi lampu standar FIFA dan menjadi salah satu venue utama Piala Dunia U-17 2023. GBT adalah simbol modernitas Persebaya.</p>
-            </div>
-            <div class="glass-card p-6">
-                <h4 class="font-black text-lg mb-4 italic text-green-500 uppercase">Militansi Bonek</h4>
-                <p class="text-xs text-zinc-400 leading-relaxed italic mb-4">"Salam Satu Nyali - WANI!"</p>
-                <p class="text-xs text-zinc-400 leading-relaxed">Istilah Bonek pertama kali muncul di era 80-an (Liputan Jawa Pos). Bonek menjadi pelopor kultur *Away Days* massal di Indonesia. Kini Bonek bertransformasi menjadi komunitas yang sangat terorganisir dengan gerakan sosial yang masif.</p>
+                <h3 class="font-bold text-lg mb-4 border-b pb-2">Cara Memasak:</h3>
+                <ol id="detail-steps" class="space-y-4 text-gray-600 text-sm list-decimal pl-5 leading-relaxed"></ol>
             </div>
         </div>
     </div>
 
     <script>
-        function openPage(id) {
-            document.getElementById(id).classList.add('active');
+        const recipes = [
+            {
+                id: 1,
+                category: 'makanan',
+                title: 'Rendang Daging',
+                origin: 'Sumatera Barat (Padang)',
+                ingredients: ['500g Daging Sapi', '1 Liter Santan Kental', '2 Batang Serai', '4 Lembar Daun Jeruk', 'Bumbu Halus: Bawang Merah, Putih, Cabai, Lengkuas, Jahe'],
+                steps: ['Tumis bumbu halus hingga harum.', 'Masukkan daging, aduk hingga berubah warna.', 'Tuang santan, kecilkan api.', 'Masak sambil diaduk perlahan selama 4-5 jam hingga santan mengering dan menjadi rendang hitam.'],
+                desc: 'Masakan terlezat dunia versi CNN.'
+            },
+            {
+                id: 2,
+                category: 'makanan',
+                title: 'Papeda Ikan Kuah Kuning',
+                origin: 'Papua / Maluku',
+                ingredients: ['100g Sagu Peras', '500g Ikan Tongkol/Mubara', 'Bumbu: Kunyit, Serai, Daun Kemangi, Jeruk Nipis'],
+                steps: ['Masak air hingga mendidih, siram ke sagu hingga bening dan kental (Papeda).', 'Rebus ikan dengan bumbu kuning, kemangi, dan jeruk nipis.', 'Sajikan papeda dengan menyiramkan kuah kuning ikan.'],
+                desc: 'Makanan pokok khas Indonesia Timur.'
+            },
+            {
+                id: 3,
+                category: 'cemilan',
+                title: 'Pisang Goreng Pasir',
+                origin: 'Kalimantan / Umum',
+                ingredients: ['Pisang Kepok', 'Tepung Terigu & Tepung Beras', 'Tepung Panir/Roti', 'Gula & Garam'],
+                steps: ['Celupkan pisang ke adonan tepung basah.', 'Gulingkan ke tepung panir hingga rata.', 'Goreng dalam minyak panas hingga coklat keemasan.'],
+                desc: 'Cemilan paling populer untuk teman kopi.'
+            },
+            {
+                id: 4,
+                category: 'minuman',
+                title: 'Es Pleret',
+                origin: 'Jawa Tengah (Blitar)',
+                ingredients: ['Tepung Beras', 'Santan', 'Gula Merah Cair', 'Es Batu'],
+                steps: ['Buat bulatan pleret dari tepung beras yang dikukus.', 'Siapkan gelas, beri gula merah.', 'Masukkan pleret, tuang santan dan es batu.'],
+                desc: 'Minuman segar tradisional yang unik.'
+            },
+            {
+                id: 5,
+                category: 'cemilan',
+                title: 'Cireng Salju',
+                origin: 'Jawa Barat (Sunda)',
+                ingredients: ['Tepung Tapioka (Aci)', 'Bawang Putih Halus', 'Daun Bawang', 'Air Panas'],
+                steps: ['Campur sebagian tapioka dengan air panas hingga jadi biang.', 'Campur biang dengan sisa tapioka kering.', 'Bentuk pipih dan goreng hingga garing di luar tapi kenyal di dalam.'],
+                desc: 'Jajanan kenyal yang bikin ketagihan.'
+            },
+            {
+                id: 6,
+                category: 'minuman',
+                title: 'Susu Kuda Liar',
+                origin: 'Nusa Tenggara Barat (Sumbawa)',
+                ingredients: ['Susu Kuda Murni', 'Madu Hutan Sumbawa'],
+                steps: ['Saring susu kuda mentah.', 'Campurkan dengan madu sesuai selera.', 'Minum dalam keadaan segar untuk stamina.'],
+                desc: 'Minuman kesehatan legendaris dari NTB.'
+            }
+        ];
+
+        function renderGrid(data) {
+            const grid = document.getElementById('recipe-grid');
+            grid.innerHTML = '';
+            data.forEach(r => {
+                grid.innerHTML += `
+                    <div class="recipe-card p-6 border border-gray-100" onclick="showDetail(${r.id})">
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="tag ${r.category === 'makanan' ? 'bg-orange-100 text-orange-600' : r.category === 'cemilan' ? 'bg-blue-100 text-blue-600' : 'bg-purple-100 text-purple-600'}">${r.category}</span>
+                            <i class="fa-solid fa-utensils text-gray-200"></i>
+                        </div>
+                        <h3 class="text-xl font-black text-gray-800">${r.title}</h3>
+                        <p class="text-[10px] font-bold text-emerald-600 uppercase mb-2">${r.origin}</p>
+                        <p class="text-xs text-gray-500">${r.desc}</p>
+                    </div>
+                `;
+            });
+        }
+
+        function filterCategory(cat) {
+            // Update UI Button
+            document.querySelectorAll('.category-pill').forEach(el => el.classList.remove('active'));
+            event.target.classList.add('active');
+
+            if(cat === 'semua') {
+                renderGrid(recipes);
+            } else {
+                const filtered = recipes.filter(r => r.category === cat);
+                renderGrid(filtered);
+            }
+        }
+
+        function showDetail(id) {
+            const recipe = recipes.find(r => r.id === id);
+            document.getElementById('detail-title').innerText = recipe.title;
+            document.getElementById('detail-origin').innerText = recipe.origin;
+            document.getElementById('detail-category').innerText = recipe.category;
+            
+            const ingList = document.getElementById('detail-ingredients');
+            ingList.innerHTML = '';
+            recipe.ingredients.forEach(i => ingList.innerHTML += `<li>${i}</li>`);
+
+            const stepList = document.getElementById('detail-steps');
+            stepList.innerHTML = '';
+            recipe.steps.forEach(s => stepList.innerHTML += `<li>${s}</li>`);
+
+            document.getElementById('recipe-detail').classList.add('active');
             document.body.style.overflow = 'hidden';
         }
-        function closePage(id) {
-            document.getElementById(id).classList.remove('active');
+
+        function closeDetail() {
+            document.getElementById('recipe-detail').classList.remove('active');
             document.body.style.overflow = 'auto';
         }
+
+        // Jalankan saat pertama buka
+        renderGrid(recipes);
     </script>
 </body>
 </html>
