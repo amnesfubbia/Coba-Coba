@@ -293,8 +293,8 @@
                 </div>
                 <div id="serverList" class="grid grid-cols-3 gap-2 mt-6"></div>
                 <div class="dl-grid">
-                    <button id="btnDownload1" class="dl-link-btn" onclick="highlightBtn(this); window.open(`https://multiembed.mov/directstream.php?video_id=${window.currentMediaId}&tmdb=1`)">Download 1</button>
-                    <button id="btnDownload2" class="dl-link-btn" onclick="highlightBtn(this); window.open(`https://dl.vidsrc.vip/${window.currentMediaType}/${window.currentMediaId}`)">Download 2</button>
+                    <button id="btnDownload1" class="dl-link-btn" onclick="highlightBtn(this); window.open(`https://dl.vidsrc.vip/${window.currentMediaType}/${window.currentMediaId}`)">Download 1</button>
+                    <button id="btnDownload2" class="dl-link-btn" onclick="highlightBtn(this); window.open(`https://multiembed.mov/directstream.php?video_id=${window.currentMediaId}&tmdb=1`)">Download 2</button>
                 </div>
             </div>
         </div>
@@ -566,7 +566,7 @@
                 }); 
                 document.getElementById('swipeOverlay').style.display = vids.length > 1 ? 'block' : 'none'; 
             } else { 
-                track.innerHTML = `<div class="carousel-slide"><iframe src="https://vidrock.net/embed/${type}/${id}${type==='tv'?'/1/1':''}" class="w-full h-full" allowfullscreen></iframe></div>`; 
+                track.innerHTML = `<div class="carousel-slide"><iframe src="https://vidsrc.me/embed/${type}?tmdb=${id}" class="w-full h-full" allowfullscreen></iframe></div>`; 
                 document.getElementById('swipeOverlay').style.display = 'none'; 
             }
 
@@ -607,7 +607,7 @@
             document.getElementById('mHashtags').innerHTML = `#${(dId.title||dId.name||"").replace(/[^a-zA-Z0-9]/g, '')} #${relYear} #${contentKind} <br> ${genresArr} ${studiosArr}`;
             const rel = dId.release_date || dId.first_air_date || ""; 
             document.getElementById('mDateDisplay').innerText = rel ? new Date(rel).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
-            document.getElementById('serverList').innerHTML = `<button class="server-btn" onclick="playVid('https://vidrock.net/embed/${type}/${id}${type==='tv'?'/1/1':''}', this)">Server 1</button><button class="server-btn" onclick="playVid('https://vidsrc.me/embed/${type}?tmdb=${id}', this)">Server 2</button><button class="server-btn" onclick="playVid('https://embed.smashystream.com/playere.php?tmdb=${id}', this)">Server 3</button>`;
+            document.getElementById('serverList').innerHTML = `<button class="server-btn" onclick="playVid('https://vidsrc.me/embed/${type}?tmdb=${id}', this)">Server 1</button><button class="server-btn" onclick="playVid('https://vidrock.net/embed/${type}/${id}${type==='tv'?'/1/1':''}', this)">Server 2</button><button class="server-btn" onclick="playVid('https://embed.smashystream.com/playere.php?tmdb=${id}', this)">Server 3</button>`;
             if(type === 'tv') { document.getElementById('seriesControl').classList.remove('hidden'); document.getElementById('seasonSel').innerHTML = (dId.seasons||[]).filter(s=>s.season_number>0).map(s=>`<option value="${s.season_number}">Season ${s.season_number}</option>`).join(''); loadEpisodes(); } else { document.getElementById('seriesControl').classList.add('hidden'); }
             updateLibButtons(id);
         }
