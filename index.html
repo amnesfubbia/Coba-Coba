@@ -194,7 +194,7 @@
                 </div>
                 <div class="flex gap-5">
                     <i class="fa-regular fa-square-plus text-2xl cursor-pointer" onclick="openComingSoon()"></i>
-                    <i class="fa-solid fa-bars text-2xl cursor-pointer" style="font-weight: 100;" onclick="toggleSideMenu()"></i>
+                    <i class="fa-solid fa-bars text-2xl cursor-pointer" onclick="toggleSideMenu()"></i>
                 </div>
             </div>
 
@@ -404,7 +404,6 @@
             document.addEventListener('click', (e) => { if(!e.target.closest('.search-input-box')) drop.style.display = 'none'; }); 
         }
 
-        // FUNGSI BARU: COMING SOON CALENDAR
         async function openComingSoon() {
             const grid = document.getElementById('searchGrid');
             const overlay = document.getElementById('searchOverlay');
