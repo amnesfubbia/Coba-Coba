@@ -68,7 +68,7 @@
         .highlight-item.active-hl .highlight-circle { border: 2px solid #fff; }
         .highlight-circle img { width: 100%; height: 100%; object-fit: cover; }
         
-        /* CLASS UNTUK LOGO STUDIO YANG LEBIH KECIL */
+        /* LOGO STUDIO LEBIH KECIL */
         .logo-small img { width: 75%; height: 75%; object-fit: contain; }
         
         .highlight-text { font-size: 11px; color: #fff; font-weight: 400; white-space: nowrap; }
@@ -383,7 +383,7 @@
                                 const meta = isPerson ? 'Pemeran / Aktor' : (mType === 'tv' ? 'Series' : 'Film');
                                 const imgPath = m.poster_path || m.profile_path || '';
                                 
-                                return `<div class="smart-item" onclick="${clickAction}">
+                                return `<div class="smart-item" onclick="${clickAction}; document.getElementById('smartSearchDropdown').style.display='none';">
                                     <img src="https://image.tmdb.org/t/p/w92${imgPath}">
                                     <div class="smart-info">
                                         <span class="smart-name">${m.title || m.name}</span>
@@ -431,7 +431,6 @@
                     div.classList.add('active-hl');
                     currentLibMode = false; currentCastId = ''; searchQuery = ''; currentCountry = h.c || ''; currentGenre = h.g || ''; currentCompany = h.com || ''; currentSchedule = 'trending'; currentType = h.t; currentYear = ''; loadFeed(true); 
                 }; 
-                // Jika h.s (studio/anime) true, gunakan class logo-small
                 const circleClass = h.s ? 'highlight-circle logo-small' : 'highlight-circle';
                 div.innerHTML = `<div class="${circleClass}"><img src="${h.img}" onerror="this.src='https://via.placeholder.com/100?text=${h.n}'"></div><div class="highlight-text">${h.n}</div>`; 
                 cont.appendChild(div); 
@@ -521,8 +520,17 @@
         }
 
         function openSearch() { document.getElementById('searchOverlay').style.display = 'block'; document.getElementById('searchInp').value = ''; document.getElementById('searchGrid').innerHTML = ''; document.getElementById('searchInp').focus(); document.body.style.overflow='hidden'; }
-        function closeSearch() { document.getElementById('searchOverlay').style.display = 'none'; document.body.style.overflow='auto'; searchQuery=''; currentCastId=''; }
-        function searchAction() { currentLibMode = false; currentCastId = ''; searchQuery = document.getElementById('searchInp').value; loadFeed(true); document.getElementById('smartSearchDropdown').style.display = 'none'; }
+        function closeSearch() { document.getElementById('searchOverlay').style.display = 'none'; document.body.style.overflow='auto'; searchQuery=''; currentCastId=''; document.getElementById('smartSearchDropdown').style.display = 'none'; }
+        
+        function searchAction() { 
+            currentLibMode = false; 
+            currentCastId = ''; 
+            searchQuery = document.getElementById('searchInp').value; 
+            // FIX: Tutup dropdown saran saat tekan enter
+            document.getElementById('smartSearchDropdown').style.display = 'none'; 
+            loadFeed(true); 
+        }
+
         function toggleFilterBar() { const b = document.getElementById('filterBar'); b.style.display = b.style.display === 'block' ? 'none' : 'block'; }
         
         function setSchedule(v, el) { 
