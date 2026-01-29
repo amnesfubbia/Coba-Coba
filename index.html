@@ -64,10 +64,11 @@
         .highlights-wrapper { padding: 0 15px 15px 15px; border-bottom: 1px solid #1c1c1c; }
         .highlights-container { display: flex; gap: 18px; overflow-x: auto; }
         .highlight-item { flex: 0 0 62px; text-align: center; cursor: pointer; }
-        .highlight-circle { width: 62px; height: 62px; border-radius: 50%; border: 0.5px solid #333; margin-bottom: 5px; display: flex; align-items: center; justify-content: center; background: #000; transition: border 0.3s; }
+        .highlight-circle { width: 62px; height: 62px; border-radius: 50%; border: 0.5px solid #333; margin-bottom: 5px; display: flex; align-items: center; justify-content: center; background: #000; transition: border 0.3s; overflow: hidden; }
         .highlight-item.active-hl .highlight-circle { border: 2px solid #fff; }
-        .highlight-circle .hl-logo { font-size: 10px; font-weight: 900; letter-spacing: -0.5px; text-transform: uppercase; color: #fff; text-align: center; line-height: 1; }
-        .highlight-text { font-size: 11px; color: #fff; font-weight: 400; }
+        .highlight-circle .hl-img { width: 100%; height: 100%; object-fit: cover; }
+        .highlight-circle .hl-flag { font-size: 32px; }
+        .highlight-text { font-size: 11px; color: #fff; font-weight: 400; white-space: nowrap; }
 
         .tab-nav { display: flex; border-top: 1px solid #1c1c1c; }
         .tab-item { flex: 1; text-align: center; padding: 12px 0; color: #a8a8a8; cursor: pointer; font-size: 18px; }
@@ -398,7 +399,17 @@
         }
 
         function initHighlights() { 
-            const hls = [{n: 'Disney', com: '2|6125|3166|34213', l: 'DSNY', t: 'movie'},{n: 'Pixar', com: '3', l: 'PIXR', t: 'movie'},{n: 'Dreamworks', com: '521|7|1778', l: 'DRMW', t: 'movie'},{n: 'Ghibli', com: '10342', l: 'GHBL', t: 'movie'},{n: 'Anime', g: 16, l: 'ANIM', t: 'movie', c: 'JP'},{n: 'Indonesia', c: 'ID', l: 'INDO', t: 'movie'},{n: 'Korea', c: 'KR', l: 'KOR', t: 'movie'},{n: 'India', c: 'IN', l: 'INDI', t: 'movie'},{n: 'Thailand', c: 'TH', l: 'THAI', t: 'movie'}]; 
+            const hls = [
+                {n: 'Disney', com: '2|6125|3166|34213', img: 'Disney.png', t: 'movie'},
+                {n: 'Pixar', com: '3', img: 'Pixar.png', t: 'movie'},
+                {n: 'Dreamworks', com: '521|7|1778', img: 'Dreamwork.png', t: 'movie'},
+                {n: 'Ghibli', com: '10342', img: 'Ghibli.png', t: 'movie'},
+                {n: 'Anime', g: 16, img: 'Anime.png', t: 'movie', c: 'JP'},
+                {n: 'Indonesia', c: 'ID', flag: '🇮🇩', t: 'movie'},
+                {n: 'Korea', c: 'KR', flag: '🇰🇷', t: 'movie'},
+                {n: 'India', c: 'IN', flag: '🇮🇳', t: 'movie'},
+                {n: 'Thailand', c: 'TH', flag: '🇹🇭', t: 'movie'}
+            ]; 
             const cont = document.getElementById('highlightList'); 
             hls.forEach(h => { 
                 const div = document.createElement('div'); 
@@ -408,7 +419,12 @@
                     div.classList.add('active-hl');
                     currentLibMode = false; currentCastId = ''; searchQuery = ''; currentCountry = h.c || ''; currentGenre = h.g || ''; currentCompany = h.com || ''; currentSchedule = 'trending'; currentType = h.t; currentYear = ''; loadFeed(true); 
                 }; 
-                div.innerHTML = `<div class="highlight-circle"><span class="hl-logo">${h.l}</span></div><div class="highlight-text">${h.n}</div>`; 
+                
+                let content = h.img 
+                    ? `<img src="${h.img}" class="hl-img" onerror="this.style.display='none'">` 
+                    : `<span class="hl-flag">${h.flag}</span>`;
+
+                div.innerHTML = `<div class="highlight-circle">${content}</div><div class="highlight-text">${h.n}</div>`; 
                 cont.appendChild(div); 
             }); 
         }
