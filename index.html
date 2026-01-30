@@ -276,7 +276,7 @@
                 <div class="flex gap-4">
                     <i id="btnLikeModal" class="interaction-icon"></i>
                     <i class="fa-regular fa-comment interaction-icon"></i>
-                    <i class="fa-regular fa-paper-plane interaction-icon"></i>
+                    <i class="fa-solid fa-expand interaction-icon" id="btnRotate" onclick="requestRotate()"></i>
                 </div>
                 <i id="btnBookModal" class="interaction-icon"></i>
             </div>
@@ -469,7 +469,7 @@
                 {n: 'Anime', g: 16, img: 'Anime.png', t: 'movie', c: 'JP', s: true},
                 {n: 'Indonesia', c: 'ID', img: 'Indonesia.png', t: 'movie', s: false},
                 {n: 'Korea', c: 'KR', img: 'Korea.png', t: 'movie', s: false},
-                {n: 'India', c: 'IN', img: 'India.png', t: 'movie', s: false},
+                {n: 'India', c: 'IN', img: 'Indonesia.png', t: 'movie', s: false},
                 {n: 'Thailand', c: 'TH', img: 'Thailand.png', t: 'movie', s: false}
             ]; 
             const cont = document.getElementById('highlightList'); 
@@ -635,8 +635,43 @@
             closeD(); loadFeed(true); 
         }
 
+        // FUNGSI BARU UNTUK SERVER 4, 5, 6
+        function getEmbedUrl(provider, type, id, s=1, e=1) {
+            if(provider === 'vidlink') {
+                return type === 'movie' ? `https://vidlink.pro/movie/${id}` : `https://vidlink.pro/tv/${id}/${s}/${e}`;
+            }
+            if(provider === 'vidnest') {
+                return type === 'movie' ? `https://vidnest.fun/movie/${id}` : `https://vidnest.fun/tv/${id}/${s}/${e}`;
+            }
+            if(provider === '2embed') {
+                return type === 'movie' ? `https://www.2embed.cc/embed/${id}` : `https://www.2embed.cc/embedtv/${id}&s=${s}&e=${e}`;
+            }
+            return "";
+        }
+
+        // FUNGSI BARU UNTUK ROTASI / FULLSCREEN
+        function requestRotate() {
+            const iframe = document.querySelector('#carouselTrack iframe');
+            if(!iframe) return;
+            
+            if (iframe.requestFullscreen) {
+                iframe.requestFullscreen();
+            } else if (iframe.webkitRequestFullscreen) {
+                iframe.webkitRequestFullscreen();
+            } else if (iframe.msRequestFullscreen) {
+                iframe.msRequestFullscreen();
+            }
+
+            // Mencoba mengunci ke landscape (hanya bekerja di mode fullscreen pada browser mobile tertentu)
+            if (screen.orientation && screen.orientation.lock) {
+                screen.orientation.lock('landscape').catch(e => console.log("Auto-rotate diblokir browser"));
+            }
+        }
+
         async function openModal(id, type) {
             window.currentMediaId = id; window.currentMediaType = type;
+            window.currentS = 1; window.currentE = 1; // Default episode
+            
             document.getElementById('movieModal').style.display = 'block'; 
             document.getElementById('movieModal').scrollTop = 0;
             document.getElementById('smartSearchDropdown').style.display = 'none'; document.body.style.overflow = 'hidden'; currentIdx = 0; isTranslated = false;
@@ -704,7 +739,17 @@
             document.getElementById('mHashtags').innerHTML = `#${(dId.title||dId.name||"").replace(/[^a-zA-Z0-9]/g, '')} #${relYear} #${contentKind} <br> ${genresArr} ${studiosArr}`;
             const rel = dId.release_date || dId.first_air_date || ""; 
             document.getElementById('mDateDisplay').innerText = rel ? new Date(rel).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
-            document.getElementById('serverList').innerHTML = `<button class="server-btn" onclick="playVid('https://vidsrc.me/embed/${type}?tmdb=${id}', this)">Server 1</button><button class="server-btn" onclick="playVid('https://vidrock.net/embed/${type}/${id}${type==='tv'?'/1/1':''}', this)">Server 2</button><button class="server-btn" onclick="playVid('https://embed.smashystream.com/playere.php?tmdb=${id}', this)">Server 3</button>`;
+            
+            // UPDATE LIST SERVER DENGAN URUTAN BARU
+            document.getElementById('serverList').innerHTML = `
+                <button class="server-btn" onclick="playVid('https://vidsrc.me/embed/${type}?tmdb=${id}', this)">Server 1</button>
+                <button class="server-btn" onclick="playVid(getEmbedUrl('vidlink', '${type}', '${id}'), this)">Server 2</button>
+                <button class="server-btn" onclick="playVid(getEmbedUrl('vidnest', '${type}', '${id}'), this)">Server 3</button>
+                <button class="server-btn" onclick="playVid('https://vidrock.net/embed/${type}/${id}${type==='tv'?'/1/1':''}', this)">Server 4</button>
+                <button class="server-btn" onclick="playVid(getEmbedUrl('2embed', '${type}', '${id}'), this)">Server 5</button>
+                <button class="server-btn" onclick="playVid('https://embed.smashystream.com/playere.php?tmdb=${id}', this)">Server 6</button>
+            `;
+
             if(type === 'tv') { document.getElementById('seriesControl').classList.remove('hidden'); document.getElementById('seasonSel').innerHTML = (dId.seasons||[]).filter(s=>s.season_number>0).map(s=>`<option value="${s.season_number}">Season ${s.season_number}</option>`).join(''); loadEpisodes(); } else { document.getElementById('seriesControl').classList.add('hidden'); }
             updateLibButtons(id);
         }
@@ -754,7 +799,33 @@
         }
         
         function highlightBtn(el) { document.querySelectorAll('.server-btn').forEach(b => b.classList.remove('active-link')); el.classList.add('active-link'); }
-        async function loadEpisodes() { const s = document.getElementById('seasonSel').value; const res = await fetch(`https://api.themoviedb.org/3/tv/${window.currentMediaId}/season/${s}?api_key=${API_KEY}`); const d = await res.json(); document.getElementById('episodeGrid').innerHTML = (d.episodes||[]).map(e => `<div class="pill text-[10px]" onclick="playVid('https://vidrock.net/embed/tv/${window.currentMediaId}/${s}/${e.episode_number}', this)">${e.episode_number}</div>`).join(''); }
+
+        async function loadEpisodes() { 
+            const s = document.getElementById('seasonSel').value; 
+            window.currentS = s;
+            const res = await fetch(`https://api.themoviedb.org/3/tv/${window.currentMediaId}/season/${s}?api_key=${API_KEY}`); 
+            const d = await res.json(); 
+            document.getElementById('episodeGrid').innerHTML = (d.episodes||[]).map(e => `
+                <div class="pill text-[10px]" onclick="playEpisode('${s}', '${e.episode_number}', this)">${e.episode_number}</div>
+            `).join(''); 
+        }
+
+        function playEpisode(s, e, el) {
+            window.currentE = e;
+            // Gunakan VidLink sebagai default saat pilih episode (Server 2 sekarang)
+            const url = getEmbedUrl('vidlink', 'tv', window.currentMediaId, s, e);
+            playVid(url, el);
+            
+            // Update semua server agar sinkron ke episode yang dipilih dengan urutan baru
+            document.getElementById('serverList').innerHTML = `
+                <button class="server-btn" onclick="playVid('https://vidsrc.me/embed/tv?tmdb=${window.currentMediaId}&sea=${s}&epi=${e}', this)">Server 1</button>
+                <button class="server-btn" onclick="playVid(getEmbedUrl('vidlink', 'tv', '${window.currentMediaId}', ${s}, ${e}), this)">Server 2</button>
+                <button class="server-btn" onclick="playVid(getEmbedUrl('vidnest', 'tv', '${window.currentMediaId}', ${s}, ${e}), this)">Server 3</button>
+                <button class="server-btn" onclick="playVid('https://vidrock.net/embed/tv/${window.currentMediaId}/${s}/${e}', this)">Server 4</button>
+                <button class="server-btn" onclick="playVid(getEmbedUrl('2embed', 'tv', '${window.currentMediaId}', ${s}, ${e}), this)">Server 5</button>
+                <button class="server-btn" onclick="playVid('https://embed.smashystream.com/playere.php?tmdb=${window.currentMediaId}&season=${s}&episode=${e}', this)">Server 6</button>
+            `;
+        }
         
         function setupSwipe() { 
             const overlay = document.getElementById('swipeOverlay'); 
