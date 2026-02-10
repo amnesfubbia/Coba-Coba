@@ -834,7 +834,7 @@
             const rel = dId.release_date || dId.first_air_date || ""; 
             document.getElementById('mDateDisplay').innerText = rel ? new Date(rel).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
             
-            // PERBAIKAN LINK SERVER (No 7-21) - MENGGUNAKAN FORMAT TERBARU & LEBIH STABIL
+            // PERBAIKAN SERVER (Fokus pada yang belum bisa: 7, 8, 10, 11, 12, 14, 16, 18, 19, 20, 21)
             document.getElementById('serverList').innerHTML = `
                 <button class="server-btn" onclick="playVid('https://vidsrc.me/embed/${type}?tmdb=${id}', this)">Server 1</button>
                 <button class="server-btn" onclick="playVid('https://vidsrc.cc/v2/embed/${type}/${id}${type==='tv'?'?s=1&e=1':''}', this)">Server 2</button>
@@ -842,11 +842,11 @@
                 <button class="server-btn" onclick="playVid('https://www.2embed.cc/embed/${id}', this)">Server 4</button>
                 <button class="server-btn" onclick="playVid('https://embed.smashystream.com/playere.php?tmdb=${id}', this)">Server 5</button>
                 <button class="server-btn" onclick="playVid('https://vidsrc.xyz/embed/${type}/${id}${seriesSuffix}', this)">Server 6</button>
-                <button class="server-btn" onclick="playVid('https://vidzee.pro/embed/${type}/${id}${seriesSuffix}', this)">Server 7</button>
-                <button class="server-btn" onclick="playVid('https://vidsrc.pm/embed/${type}/${id}${seriesSuffix}', this)">Server 8</button>
+                <button class="server-btn" onclick="playVid('https://vidsrc.in/embed/${type}/${id}${seriesSuffix}', this)">Server 7</button>
+                <button class="server-btn" onclick="playVid('https://vidsrc.vip/embed/${type}/${id}${seriesSuffix}', this)">Server 8</button>
                 <button class="server-btn" onclick="playVid('https://vidsrc.net/embed/${type}/${id}${seriesSuffix}', this)">Server 9</button>
-                <button class="server-btn" onclick="playVid('https://api.rizalmedia.com/embed/${type}/${id}${seriesSuffix}', this)">Server 10</button>
-                <button class="server-btn" onclick="playVid('https://111movies.com/embed/${type}/${id}${seriesSuffix}', this)">Server 11</button>
+                <button class="server-btn" onclick="playVid('https://player.rizalmedia.com/embed/${type}/${id}${seriesSuffix}', this)">Server 10</button>
+                <button class="server-btn" onclick="playVid('https://multiembed.mov/directstream.php?video_id=${id}&tmdb=1', this)">Server 11</button>
                 <button class="server-btn" onclick="playVid('https://www.vidbinge.com/embed/${type}/${id}', this)">Server 12</button>
                 <button class="server-btn" onclick="playVid('https://vidlink.pro/${type}/${id}${seriesSuffix}', this)">Server 13</button>
                 <button class="server-btn" onclick="playVid('https://embed.su/embed/${type}/${id}${seriesSuffix}', this)">Server 14</button>
