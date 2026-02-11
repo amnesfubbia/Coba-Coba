@@ -112,7 +112,6 @@
         .server-btn:active { background: #1c1c1c; }
         .server-btn.active-link { border: 2px solid #fff !important; background: rgba(255,255,255,0.1); }
         
-        /* ADJUSTED MARGIN DOWN FOR DOWNLOAD AREA */
         .dl-grid { display: grid; grid-template-columns: 1fr; gap: 8px; margin-top: 15px; margin-bottom: 5px; }
         .dl-link-btn { width: 100%; padding: 14px; border-radius: 12px; background: #000; color: #fff; font-size: 12px; font-weight: 800; text-transform: uppercase; text-align: center; border: 1px solid #333; cursor: pointer; }
         
@@ -137,7 +136,7 @@
         .ig-hashtags { color: #e0f1ff; display: block; margin-top: 10px; font-size: 13px; line-height: 1.5; }
         .ig-date { color: #a8a8a8; font-size: 11px; text-transform: uppercase; }
         
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #000; border-top: 1px solid #1c1c1c; display: flex; justify-content: space-around; padding: 12px 0; z-index: 300; }
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #000; border-top: 1px solid #1c1c1c; display: flex; justify-content: space-around; padding: 12px 0; z-index: 5000; }
         .bottom-nav i { color: #a8a8a8; transition: color 0.3s; }
         .bottom-nav i.active-nav { color: #fff; }
 
@@ -583,7 +582,6 @@
             const grid = document.getElementById('searchGrid');
             const overlay = document.getElementById('searchOverlay');
             
-            // Perbaikan: Sembunyikan header input pencarian saat menampilkan jadwal rilis
             document.querySelector('.search-header').style.display = 'none';
             
             overlay.style.display = 'block';
@@ -736,9 +734,8 @@
         }
 
         function openSearch() { 
-            // Pastikan header pencarian muncul kembali jika sebelumnya disembunyikan oleh openComingSoon
             document.querySelector('.search-header').style.display = 'flex';
-            document.getElementById('searchGrid').innerHTML = ''; // Bersihkan list jadwal jika ada
+            document.getElementById('searchGrid').innerHTML = ''; 
             document.getElementById('searchOverlay').style.display = 'block'; 
             document.getElementById('searchInp').focus(); 
             document.body.style.overflow='hidden'; 
@@ -862,7 +859,6 @@
             const rel = dId.release_date || dId.first_air_date || ""; 
             document.getElementById('mDateDisplay').innerText = rel ? new Date(rel).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
             
-            // SERVER LIST
             document.getElementById('serverList').innerHTML = `
                 <button class="server-btn" onclick="playVid('https://vidsrc.me/embed/${type}?tmdb=${id}', this)">Server 1</button>
                 <button class="server-btn" onclick="playVid('https://vidsrc.cc/v2/embed/${type}/${id}${type==='tv'?'?s=1&e=1':''}', this)">Server 2</button>
