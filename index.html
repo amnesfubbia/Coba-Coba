@@ -155,15 +155,16 @@
         .landscape-video-container { width: 100%; height: 100%; position: relative; }
         
         .ls-controls {
-            position: absolute; inset: 0; background: linear-gradient(0deg, rgba(0,0,0,0.6) 0%, transparent 50%, rgba(0,0,0,0.6) 100%);
+            position: absolute; inset: 0; background: linear-gradient(0deg, rgba(0,0,0,0.7) 0%, transparent 50%, rgba(0,0,0,0.7) 100%);
             display: flex; flex-direction: column; justify-content: space-between;
-            padding: 20px; opacity: 0; transition: opacity 0.3s; z-index: 10000; pointer-events: none;
+            padding: 30px; opacity: 0; transition: opacity 0.3s; z-index: 10000; pointer-events: none;
         }
         .ls-controls.visible { opacity: 1; pointer-events: auto; }
         .ls-top { display: flex; justify-content: space-between; align-items: center; }
-        .ls-btn { color: #fff; font-size: 22px; cursor: pointer; text-shadow: 0 0 10px rgba(0,0,0,0.8); transition: transform 0.1s; padding: 10px; }
+        .ls-center { display: flex; justify-content: center; align-items: center; gap: 80px; }
+        .ls-btn { color: #fff; font-size: 28px; cursor: pointer; text-shadow: 0 0 15px rgba(0,0,0,0.9); transition: transform 0.1s; }
         .ls-btn:active { transform: scale(1.1); }
-        .ls-lock-screen { position: absolute; inset: 0; z-index: 11000; display: none; align-items: flex-start; justify-content: flex-end; padding: 20px; background: rgba(0,0,0,0.01); pointer-events: auto; }
+        .ls-lock-screen { position: absolute; inset: 0; z-index: 11000; display: none; align-items: flex-start; justify-content: flex-end; padding: 30px; background: rgba(0,0,0,0.01); pointer-events: auto; }
         
         /* Landscape Mode Overrides */
         .landscape-active #movieModal { overflow: hidden !important; }
@@ -192,11 +193,15 @@
         <div class="ls-controls" id="lsUI">
             <div class="ls-top">
                 <i class="fa-solid fa-arrow-left ls-btn" onclick="event.stopPropagation(); handleLsBack()"></i>
-                <div id="lsTitle" class="text-white font-bold truncate max-w-[60%] text-xs opacity-80"></div>
+                <div id="lsTitle" class="text-white font-bold truncate max-w-[60%] text-sm"></div>
                 <i class="fa-solid fa-lock-open ls-btn" onclick="event.stopPropagation(); lockScreen()"></i>
             </div>
-            <div class="ls-center h-full w-full"></div>
-            <div class="ls-bottom text-center text-[9px] text-zinc-500 pb-2">Tap layar untuk kontrol</div>
+            <div class="ls-center">
+                <i id="lsMute" class="fa-solid fa-volume-high ls-btn" onclick="event.stopPropagation(); toggleLsMute()"></i>
+                <i id="lsPlay" class="fa-solid fa-pause ls-btn text-6xl" onclick="event.stopPropagation(); toggleLsPlay()"></i>
+                <i class="fa-solid fa-expand ls-btn" onclick="event.stopPropagation(); handleLsBack()"></i>
+            </div>
+            <div class="ls-bottom text-center text-[10px] text-zinc-400">Tap untuk menyembunyikan kontrol</div>
         </div>
     </div>
 
@@ -365,7 +370,7 @@
         let page = 1, loading = false, currentType = 'multi', currentGenre = '', currentYear = '', currentCountry = '', currentSchedule = 'trending', searchQuery = '', currentCompany = '', currentLibMode = false, currentCastId = '';
         let isExpanded = false, globalFullDesc = "", globalEnDesc = "", currentIdx = 0, startX = 0, isTranslated = false, originalIndoDesc = "";
         let abortController = null;
-        let lsControlTimer;
+        let isLsPaused = false, isLsMuted = false, lsControlTimer;
 
         window.onload = () => {
             setTimeout(() => {
@@ -382,7 +387,7 @@
         /* --- HP BACK BUTTON SYSTEM --- */
         window.addEventListener('popstate', function(event) {
             if (document.getElementById('landscapeOverlay').style.display === 'block') {
-                handleLsBack();
+                closeLandscapeSilently();
             } else if (document.getElementById('movieModal').style.display === 'block') {
                 closeModal();
             } else if (document.getElementById('searchOverlay').style.display === 'block') {
@@ -392,7 +397,7 @@
             }
         });
 
-        /* --- LANDSCAPE CONTROLS LOGIC --- */
+        /* --- LANDSCAPE CONTROLS LOGIC FIX --- */
         async function enterLandscape() {
             const overlay = document.getElementById('landscapeOverlay');
             const lsTitle = document.getElementById('lsTitle');
@@ -410,16 +415,20 @@
             try {
                 if (document.documentElement.requestFullscreen) {
                     await document.documentElement.requestFullscreen();
+                    if (screen.orientation && screen.orientation.lock) {
+                        await screen.orientation.lock('landscape').catch(() => {});
+                    }
                 }
-                if (screen.orientation && screen.orientation.lock) {
-                    await screen.orientation.lock('landscape').catch(() => {});
-                }
-            } catch (e) { console.warn("Fullscreen/Orientation lock failed:", e); }
+            } catch (e) {}
         }
 
         function handleLsBack() {
-            closeLandscapeSilently();
-            // Don't call history.back() here to prevent closing modal unexpectedly
+            // Ini akan mentrigger popstate di atas
+            if (window.history.state && window.history.state.view === 'landscape') {
+                window.history.back();
+            } else {
+                exitLandscape();
+            }
         }
 
         function closeLandscapeSilently() {
@@ -438,8 +447,17 @@
             }
         }
 
+        function exitLandscape() {
+            closeLandscapeSilently();
+            if (window.history.state && window.history.state.view === 'landscape') {
+                window.history.back();
+            }
+        }
+
         function toggleLsUI() {
+            // Jika dalam kondisi terkunci, jangan lakukan apa-apa
             if(document.getElementById('lsLockLayer').style.display === 'flex') return;
+            
             const ui = document.getElementById('lsUI');
             if(ui.classList.contains('visible')) {
                 ui.classList.remove('visible');
@@ -457,6 +475,32 @@
                     ui.classList.remove('visible');
                 }
             }, 3000);
+        }
+
+        function toggleLsPlay() {
+            const iframes = document.querySelectorAll('#carouselTrack iframe');
+            const currentIframe = iframes[currentIdx];
+            const btn = document.getElementById('lsPlay');
+            
+            isLsPaused = !isLsPaused;
+            const cmd = isLsPaused ? 'pauseVideo' : 'playVideo';
+            
+            currentIframe.contentWindow.postMessage(JSON.stringify({"event":"command","func":cmd,"args":""}), '*');
+            btn.className = isLsPaused ? 'fa-solid fa-play ls-btn text-6xl' : 'fa-solid fa-pause ls-btn text-6xl';
+            showLsUI();
+        }
+
+        function toggleLsMute() {
+            const iframes = document.querySelectorAll('#carouselTrack iframe');
+            const currentIframe = iframes[currentIdx];
+            const btn = document.getElementById('lsMute');
+            
+            isLsMuted = !isLsMuted;
+            const cmd = isLsMuted ? 'mute' : 'unMute';
+            
+            currentIframe.contentWindow.postMessage(JSON.stringify({"event":"command","func":cmd,"args":""}), '*');
+            btn.className = isLsMuted ? 'fa-solid fa-volume-xmark ls-btn' : 'fa-solid fa-volume-high ls-btn';
+            showLsUI();
         }
 
         function lockScreen() {
@@ -704,7 +748,8 @@
         }
 
         function openSearch() { 
-            closeModal(); closeD();
+            closeModal();
+            closeD();
             if(document.getElementById('sideMenu').style.display === 'block') toggleSideMenu();
             document.querySelector('.search-header').style.display = 'flex';
             document.getElementById('searchGrid').innerHTML = ''; 
@@ -717,14 +762,16 @@
         function closeSearch() { 
             document.getElementById('searchOverlay').style.display = 'none'; 
             document.body.style.overflow='auto'; 
-            searchQuery=''; currentCastId=''; 
+            searchQuery=''; 
+            currentCastId=''; 
             document.getElementById('searchInp').value = '';
             document.getElementById('smartSearchDropdown').style.display = 'none'; 
             updateActiveNav(document.getElementById('homeBtnNav'));
         }
         
         function searchAction() { 
-            currentLibMode = false; currentCastId = ''; 
+            currentLibMode = false; 
+            currentCastId = ''; 
             searchQuery = document.getElementById('searchInp').value; 
             document.getElementById('smartSearchDropdown').style.display = 'none'; 
             loadFeed(true); 
@@ -782,8 +829,7 @@
             const seriesSuffix = (type === 'tv') ? '/1/1' : ''; 
             document.getElementById('movieModal').style.display = 'block'; 
             document.getElementById('movieModal').scrollTop = 0;
-            document.getElementById('smartSearchDropdown').style.display = 'none'; 
-            document.body.style.overflow = 'hidden'; currentIdx = 0; isTranslated = false;
+            document.getElementById('smartSearchDropdown').style.display = 'none'; document.body.style.overflow = 'hidden'; currentIdx = 0; isTranslated = false;
             
             history.pushState({view: 'modal'}, "");
 
@@ -794,11 +840,13 @@
             ]);
             
             const dId = await rId.json(), dEn = await rEn.json(), dCast = await rCast.json();
+            
             const allVideos = [...(dId.videos?.results || []), ...(dEn.videos?.results || [])];
             const vids = allVideos.filter(v => 
                 v.site === 'YouTube' && 
                 (v.type === 'Trailer' || v.type === 'Teaser') && 
-                !v.name.toLowerCase().includes('private')
+                !v.name.toLowerCase().includes('private') &&
+                !v.name.toLowerCase().includes('deleted')
             ).slice(0, 4);
 
             const track = document.getElementById('carouselTrack'), dots = document.getElementById('carouselDots');
@@ -806,7 +854,8 @@
             
             if(vids.length > 0) { 
                 vids.forEach((v, i) => { 
-                    track.innerHTML += `<div class="carousel-slide"><iframe id="yt-${i}" src="https://www.youtube.com/embed/${v.key}?enablejsapi=1&autoplay=${i===0?1:0}&rel=0&mute=0" class="w-full h-full" allow="autoplay; fullscreen"></iframe></div>`; 
+                    // Ditambahkan controls=0 untuk menyembunyikan kontrol bawaan YouTube
+                    track.innerHTML += `<div class="carousel-slide"><iframe id="yt-${i}" src="https://www.youtube.com/embed/${v.key}?enablejsapi=1&autoplay=${i===0?1:0}&rel=0&mute=0&controls=0" class="w-full h-full" allow="autoplay; fullscreen"></iframe></div>`; 
                     if(vids.length > 1) {
                         dots.innerHTML += `<div class="dot w-1.5 h-1.5 rounded-full ${i===currentIdx?'bg-blue-500':'bg-zinc-700'}"></div>`; 
                     }
@@ -823,17 +872,17 @@
                 return `<div class="cast-item" onclick="searchByCast(${c.id})"><div class="cast-img-border"><div class="inner-border">${profileImg}</div></div><span class="cast-name">${c.name}</span></div>`;
             }).join('');
 
-            document.getElementById('mLikeDisplay').innerText = `${Math.floor((dId.vote_average || 0) * 1234).toLocaleString('id-ID')} suka`; 
-            document.getElementById('mTitle').innerText = dId.title || dId.name || dEn.title;
+            document.getElementById('mLikeDisplay').innerText = `${Math.floor((dId.vote_average || 0) * 1234).toLocaleString('id-ID')} suka`; document.getElementById('mTitle').innerText = dId.title || dId.name || dEn.title;
             originalIndoDesc = dId.overview;
-            globalFullDesc = originalIndoDesc || dEn.overview || "Sinopsis belum tersedia.";
+            globalFullDesc = originalIndoDesc || dEn.overview || "Sinopsis belum tersedia untuk konten ini.";
             globalEnDesc = dEn.overview;
             if(globalEnDesc && globalEnDesc !== originalIndoDesc) { document.getElementById('mTranslateBtn').classList.remove('hidden'); document.getElementById('mTranslateBtn').innerText = "Lihat terjemahan"; } else { document.getElementById('mTranslateBtn').classList.add('hidden'); }
             isExpanded = false; renderSynopsis();
 
             const relYear = (dId.release_date || dId.first_air_date || "2026").split('-')[0];
+            const contentKind = (type === 'tv') ? 'tv' : 'movie';
             const genresArr = (dId.genres || []).map(g => `#${g.name.replace(/[^a-zA-Z0-9]/g, '')}`).slice(0, 3).join(' ');
-            document.getElementById('mHashtags').innerHTML = `#${(dId.title||dId.name||"").replace(/[^a-zA-Z0-9]/g, '')} #${relYear} <br> ${genresArr}`;
+            document.getElementById('mHashtags').innerHTML = `#${(dId.title||dId.name||"").replace(/[^a-zA-Z0-9]/g, '')} #${relYear} #${contentKind} <br> ${genresArr}`;
             const rel = dId.release_date || dId.first_air_date || ""; 
             document.getElementById('mDateDisplay').innerText = rel ? new Date(rel).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
             
@@ -848,6 +897,8 @@
                 <button class="server-btn" onclick="playVid('https://moviesapi.club/${type}/${id}${seriesSuffix}', this)">Server 8</button>
                 <button class="server-btn" onclick="playVid('https://vidsrc.icu/embed/${type}/${id}${seriesSuffix}', this)">Server 9</button>
                 <button class="server-btn" onclick="playVid('https://embed.smashystream.com/playere.php?tmdb=${id}', this)">Server 10</button>
+                <button class="server-btn" onclick="playVid('https://vidrock.net/embed/${type}/${id}${seriesSuffix}', this)">Server 11</button>
+                <button class="server-btn" onclick="playVid('https://vidstorm.ru/embed/${type}/${id}${seriesSuffix}', this)">Server 12</button>
             `;
 
             if(type === 'tv') { document.getElementById('seriesControl').classList.remove('hidden'); document.getElementById('seasonSel').innerHTML = (dId.seasons||[]).filter(s=>s.season_number>0).map(s=>`<option value="${s.season_number}">Season ${s.season_number}</option>`).join(''); loadEpisodes(); } else { document.getElementById('seriesControl').classList.add('hidden'); }
@@ -887,7 +938,8 @@
         function playVid(url, el) { 
             const track = document.getElementById('carouselTrack'); 
             const dots = document.getElementById('carouselDots'); 
-            const finalUrl = url.includes('?') ? `${url}&enablejsapi=1&mute=0` : `${url}?enablejsapi=1&mute=0`;
+            const finalUrl = url.includes('?') ? `${url}&enablejsapi=1&mute=0&controls=0` : `${url}?enablejsapi=1&mute=0&controls=0`;
+            
             track.querySelectorAll('iframe').forEach(f => f.src = "");
             track.innerHTML = `<div class="carousel-slide"><iframe src="${finalUrl}" class="w-full h-full" allowfullscreen allow="autoplay"></iframe></div>`; 
             track.style.transform = 'translateX(0)'; currentIdx = 0; dots.innerHTML = ''; 
@@ -930,14 +982,14 @@
         function toggleLib(k) { let items = JSON.parse(localStorage.getItem(k) || '[]'); const idx = items.findIndex(x => x.id == window.currentMediaId); idx > -1 ? items.splice(idx,1) : items.push({id: window.currentMediaId, type: window.currentMediaType}); localStorage.setItem(k, JSON.stringify(items)); updateLibButtons(window.currentMediaId); }
         
         async function switchTab(mode, el) { 
-            closeModal(); closeSearch();
+            closeModal();
+            closeSearch();
             document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active')); 
             if(el) el.classList.add('active'); 
-            if(mode === 'bookmarks') updateActiveNav(document.getElementById('bookmarkBtnNav'));
-            else updateActiveNav(document.getElementById('homeBtnNav'));
-            const grid = document.getElementById('feedGrid'); grid.innerHTML = ''; 
-            if(mode === 'likes' || mode === 'bookmarks') { currentLibMode = true; showLibrary(mode); } 
-            else { currentLibMode = false; currentCastId = ''; searchQuery = ''; currentType='multi'; currentSchedule='trending'; currentCompany=''; loadFeed(true); } 
+            if(mode === 'bookmarks') { updateActiveNav(document.getElementById('bookmarkBtnNav')); } else { updateActiveNav(document.getElementById('homeBtnNav')); }
+            const grid = document.getElementById('feedGrid'); 
+            grid.innerHTML = ''; 
+            if(mode === 'likes' || mode === 'bookmarks') { currentLibMode = true; showLibrary(mode); } else { currentLibMode = false; currentCastId = ''; searchQuery = ''; currentType='multi'; currentSchedule='trending'; currentCompany=''; loadFeed(true); } 
         }
 
         async function showLibrary(k) { const items = JSON.parse(localStorage.getItem(k) || '[]'); const grid = document.getElementById('feedGrid'); grid.innerHTML = ''; if (!items.length) { grid.innerHTML = '<div class="col-span-3 text-center py-20 text-zinc-500 text-xs">Belum ada konten disimpan</div>'; return; } const promises = items.map(i => fetch(`https://api.themoviedb.org/3/${i.type}/${i.id}?api_key=${API_KEY}&language=id-ID`).then(r => r.json())); const results = await Promise.all(promises); renderGrid(results.filter(m => m.id), grid); }
