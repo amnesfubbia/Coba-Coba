@@ -83,7 +83,7 @@
         .badge-rating { position: absolute; top: 6px; left: 6px; padding: 2px 5px; border-radius: 2px; font-size: 7px; font-weight: 900; z-index: 5; background: rgba(255,255,255,0.9); color: #000; }
         .badge-type { position: absolute; top: 6px; right: 6px; padding: 2px 5px; border-radius: 2px; font-size: 7px; font-weight: 900; z-index: 5; background: rgba(0,0,0,0.7); color: #fff; text-transform: uppercase; border: 0.5px solid rgba(255,255,255,0.3); }
 
-        #searchOverlay { display: none; position: fixed; inset: 0; background: #000; z-index: 4500; overflow-y: auto; }
+        #searchOverlay { display: none; position: fixed; inset: 0; background: #000; z-index: 9600; overflow-y: auto; }
         .search-header { position: sticky; top: 0; background: #000; display: flex; align-items: center; padding: 10px 15px; gap: 10px; border-bottom: 1px solid #1c1c1c; z-index: 100; }
         .search-input-box { flex-grow: 1; background: #262626; border-radius: 10px; padding: 8px 12px; display: flex; align-items: center; position: relative; }
         .search-input-box input { background: transparent !important; border: none; outline: none; color: #fff !important; font-size: 14px; width: 100%; margin-left: 8px; }
@@ -141,7 +141,7 @@
         .bottom-nav i.active-nav { color: #fff; }
 
         /* SIDEBAR / ABOUT MENU */
-        #sideMenu { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 9500; display: none; padding: 40px 25px; overflow-y: auto; }
+        #sideMenu { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 9700; display: none; padding: 40px 25px; overflow-y: auto; }
         .side-close { position: absolute; top: 20px; right: 20px; font-size: 24px; cursor: pointer; }
         .about-title { font-size: 22px; font-weight: 900; margin-bottom: 20px; border-left: 4px solid #fff; padding-left: 12px; }
         .about-content { font-size: 14px; line-height: 1.6; color: #ccc; }
@@ -353,7 +353,7 @@
                 <div id="serverList" class="grid grid-cols-4 gap-2 mt-6"></div>
                 
                 <div class="dl-grid">
-                    <button id="btnDownload1" class="dl-link-btn" onclick="window.open(`https://dl.vidsrc.vip/${window.currentMediaType}/${window.currentMediaId}`)">Download</button>
+                    <button id="btnDownload1" class="dl-link-btn" onclick="const mType = window.currentMediaType === 'movie' ? 'movie' : 'tv'; window.open(`https://dl.vidsrc.vip/${mType}/${window.currentMediaId}`)">Download</button>
                 </div>
             </div>
         </div>
