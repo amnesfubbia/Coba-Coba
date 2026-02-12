@@ -843,26 +843,35 @@
             
             const dId = await rId.json(), dEn = await rEn.json(), dCast = await rCast.json();
             
+            // Perbaikan Logika Trailer: Menggabungkan video dari ID dan EN untuk memastikan hasil lebih maksimal
             const allVideos = [...(dId.videos?.results || []), ...(dEn.videos?.results || [])];
-            const vids = allVideos.filter(v => 
+            let vids = allVideos.filter(v => 
                 v.site === 'YouTube' && 
-                (v.type === 'Trailer' || v.type === 'Teaser') && 
+                (v.type === 'Trailer' || v.type === 'Teaser' || v.type === 'Clip') && 
                 !v.name.toLowerCase().includes('private') &&
                 !v.name.toLowerCase().includes('deleted')
-            ).slice(0, 4);
+            );
+
+            // Jika masih kosong, coba ambil video apa saja yang tersedia dari YouTube
+            if(vids.length === 0) {
+                vids = allVideos.filter(v => v.site === 'YouTube');
+            }
 
             const track = document.getElementById('carouselTrack'), dots = document.getElementById('carouselDots');
             track.innerHTML = ''; dots.innerHTML = ''; track.style.transform = 'translateX(0)';
             
             if(vids.length > 0) { 
-                vids.forEach((v, i) => { 
+                // Ambil maksimal 4 video unik
+                const uniqueVids = Array.from(new Set(vids.map(v => v.key))).map(key => vids.find(v => v.key === key)).slice(0, 4);
+                uniqueVids.forEach((v, i) => { 
                     track.innerHTML += `<div class="carousel-slide"><iframe id="yt-${i}" src="https://www.youtube.com/embed/${v.key}?enablejsapi=1&autoplay=${i===0?1:0}&rel=0&mute=0" class="w-full h-full" allow="autoplay; fullscreen"></iframe></div>`; 
-                    if(vids.length > 1) {
+                    if(uniqueVids.length > 1) {
                         dots.innerHTML += `<div class="dot w-1.5 h-1.5 rounded-full ${i===currentIdx?'bg-blue-500':'bg-zinc-700'}"></div>`; 
                     }
                 }); 
-                document.getElementById('swipeOverlay').style.display = vids.length > 1 ? 'block' : 'none'; 
+                document.getElementById('swipeOverlay').style.display = uniqueVids.length > 1 ? 'block' : 'none'; 
             } else { 
+                // Fallback: Jika tidak ada trailer sama sekali, tampilkan Server 1 otomatis
                 const fallbackUrl = `https://vidlink.pro/${type}/${id}${seriesSuffix}`;
                 track.innerHTML = `<div class="carousel-slide"><iframe src="${fallbackUrl}" class="w-full h-full" allowfullscreen allow="autoplay"></iframe></div>`; 
                 document.getElementById('swipeOverlay').style.display = 'none'; 
@@ -939,7 +948,7 @@
         function playVid(url, el) { 
             const track = document.getElementById('carouselTrack'); 
             const dots = document.getElementById('carouselDots'); 
-            const finalUrl = url.includes('?') ? `${url}&enablejsapi=1&mute=0&autoplay=1` : `${url}?enablejsapi=1&mute=0&autoplay=1`;
+            const finalUrl = url.includes('?') ? `${url}&enablejsapi=1&mute=0` : `${url}?enablejsapi=1&mute=0`;
             
             track.querySelectorAll('iframe').forEach(f => f.src = "");
             track.innerHTML = `<div class="carousel-slide"><iframe src="${finalUrl}" class="w-full h-full" allowfullscreen allow="autoplay"></iframe></div>`; 
