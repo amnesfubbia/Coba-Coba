@@ -935,12 +935,15 @@
         function playVid(url, el) { 
             const track = document.getElementById('carouselTrack'); 
             const dots = document.getElementById('carouselDots'); 
+            // Sembunyikan swipe overlay agar kontrol server streaming bisa ditekan
+            document.getElementById('swipeOverlay').style.display = 'none';
+            
             const finalUrl = url.includes('?') ? `${url}&enablejsapi=1&mute=0&controls=0` : `${url}?enablejsapi=1&mute=0&controls=0`;
             
             track.querySelectorAll('iframe').forEach(f => f.src = "");
             track.innerHTML = `<div class="carousel-slide"><iframe src="${finalUrl}" class="w-full h-full" allowfullscreen allow="autoplay"></iframe></div>`; 
             track.style.transform = 'translateX(0)'; currentIdx = 0; dots.innerHTML = ''; 
-            document.getElementById('swipeOverlay').style.display = 'none'; highlightBtn(el); 
+            highlightBtn(el); 
         }
         
         function highlightBtn(el) { document.querySelectorAll('.server-btn').forEach(b => b.classList.remove('active-link')); el.classList.add('active-link'); }
