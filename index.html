@@ -170,7 +170,7 @@
         .landscape-active #movieModal { overflow: hidden !important; }
         .landscape-active #modalScrollTop { height: 100vh; max-width: 100%; padding: 0; }
         .landscape-active .carousel-slide { height: 100vh; }
-        .landscape-active #mainVideoArea { height: 100vh !important; }
+        .landscape-active #mainVideoArea { height: 100vh !important; width: 100vw !important; }
     </style>
 </head>
 <body>
@@ -397,7 +397,7 @@
             }
         });
 
-        /* --- LANDSCAPE CONTROLS LOGIC (FIXED NO 4) --- */
+        /* --- LANDSCAPE CONTROLS LOGIC --- */
         async function enterLandscape() {
             const overlay = document.getElementById('landscapeOverlay');
             const lsTitle = document.getElementById('lsTitle');
@@ -434,11 +434,10 @@
             document.body.classList.remove('landscape-active');
             document.getElementById('landscapeOverlay').style.display = 'none';
             
-            // Mengembalikan video ke posisi aslinya di dalam modal (Setelah Cast Container)
             const videoArea = document.getElementById('mainVideoArea');
-            const targetContainer = document.getElementById('castContainer');
-            if (targetContainer && videoArea) {
-                targetContainer.insertAdjacentElement('afterend', videoArea);
+            const castContainer = document.getElementById('castContainer');
+            if (castContainer && videoArea) {
+                castContainer.after(videoArea);
             }
 
             if (document.exitFullscreen && document.fullscreenElement) {
@@ -478,27 +477,29 @@
         }
 
         function toggleLsPlay() {
-            const iframes = document.querySelectorAll('#carouselTrack iframe');
-            const currentIframe = iframes[currentIdx];
+            const currentIframe = document.querySelector(`#carouselTrack div:nth-child(${currentIdx + 1}) iframe`);
             const btn = document.getElementById('lsPlay');
             
             isLsPaused = !isLsPaused;
             const cmd = isLsPaused ? 'pauseVideo' : 'playVideo';
             
-            currentIframe.contentWindow.postMessage(JSON.stringify({"event":"command","func":cmd,"args":""}), '*');
+            if(currentIframe && currentIframe.contentWindow) {
+                currentIframe.contentWindow.postMessage(JSON.stringify({"event":"command","func":cmd,"args":""}), '*');
+            }
             btn.className = isLsPaused ? 'fa-solid fa-play ls-btn text-6xl' : 'fa-solid fa-pause ls-btn text-6xl';
             showLsUI();
         }
 
         function toggleLsMute() {
-            const iframes = document.querySelectorAll('#carouselTrack iframe');
-            const currentIframe = iframes[currentIdx];
+            const currentIframe = document.querySelector(`#carouselTrack div:nth-child(${currentIdx + 1}) iframe`);
             const btn = document.getElementById('lsMute');
             
             isLsMuted = !isLsMuted;
             const cmd = isLsMuted ? 'mute' : 'unMute';
             
-            currentIframe.contentWindow.postMessage(JSON.stringify({"event":"command","func":cmd,"args":""}), '*');
+            if(currentIframe && currentIframe.contentWindow) {
+                currentIframe.contentWindow.postMessage(JSON.stringify({"event":"command","func":cmd,"args":""}), '*');
+            }
             btn.className = isLsMuted ? 'fa-solid fa-volume-xmark ls-btn' : 'fa-solid fa-volume-high ls-btn';
             showLsUI();
         }
@@ -534,7 +535,6 @@
             
             document.querySelectorAll('.highlight-item').forEach(i => i.classList.remove('active-hl'));
             
-            // Reset visual buttons filters
             const btnCountry = document.getElementById('btnCountry');
             const btnGenre = document.getElementById('btnGenre');
             const btnYear = document.getElementById('yearBtn');
@@ -693,7 +693,6 @@
         function toggleFilter(e, id) { e.stopPropagation(); const d = document.getElementById(id); const overlay = document.getElementById('filterOverlay'); document.querySelectorAll('.filter-dropdown').forEach(el => el.style.display = 'none'); d.style.display = 'block'; d.scrollTop = 0; overlay.style.display = 'block'; document.body.style.overflow = 'hidden'; }
         function closeD() { document.querySelectorAll('.filter-dropdown').forEach(d => d.style.display = 'none'); document.getElementById('filterOverlay').style.display = 'none'; document.body.style.overflow = 'auto'; }
 
-        /* --- LOAD FEED (FIXED NO 5) --- */
         async function loadFeed(isNew = true) {
             if(loading && isNew) { if(abortController) abortController.abort(); }
             if(loading && !isNew) return;
@@ -730,7 +729,6 @@
                 if(currentCastId) items.sort((a,b) => b.popularity - a.popularity);
                 if(items.length === 0 && isNew) { grid.innerHTML = `<div class="col-span-3 text-center py-20 text-zinc-600 text-xs">Konten tidak ditemukan.</div>`; } 
                 else { renderGrid(items, grid); }
-                abortController = null; // Reset controller agar efisien
             } catch(e) { if(e.name !== 'AbortError') console.error(e); }
             loading = false;
         }
@@ -753,7 +751,6 @@
         }
 
         function openSearch() { 
-            // Tutup elemen-elemen yang mungkin menghalangi
             closeModal();
             closeD();
             if(document.getElementById('sideMenu').style.display === 'block') toggleSideMenu();
@@ -786,22 +783,13 @@
 
         function toggleFilterBar() { const b = document.getElementById('filterBar'); b.style.display = b.style.display === 'block' ? 'none' : 'block'; }
         
-        /* --- SET SCHEDULE (FIXED NO 2) --- */
         function setSchedule(v, el) { 
             currentLibMode = false; currentCastId = ''; searchQuery = ''; 
             const isActive = el.classList.contains('active');
             document.querySelectorAll('.btn-ig').forEach(b=>b.classList.remove('active')); 
-            
-            if(isActive) { 
-                currentSchedule = 'trending'; 
-            } else { 
-                el.classList.add('active'); 
-                currentSchedule = v; 
-                // Karena data Sedang/Segera Tayang umumnya untuk film, kita pindahkan tab ke 'movie'
-                currentType = 'movie';
-                document.querySelectorAll('.stat-item').forEach(s => s.classList.remove('active-stat'));
-                document.getElementById('stat-movie').classList.add('active-stat');
-            }
+            if(isActive) { currentSchedule = 'trending'; } 
+            else { el.classList.add('active'); currentSchedule = v; }
+            if(currentType === 'multi') currentType = 'movie';
             loadFeed(true); 
         }
 
@@ -870,7 +858,6 @@
             
             if(vids.length > 0) { 
                 vids.forEach((v, i) => { 
-                    // Menambahkan mute=0 agar suara aktif
                     track.innerHTML += `<div class="carousel-slide"><iframe id="yt-${i}" src="https://www.youtube.com/embed/${v.key}?enablejsapi=1&autoplay=${i===0?1:0}&rel=0&mute=0" class="w-full h-full" allow="autoplay; fullscreen"></iframe></div>`; 
                     if(vids.length > 1) {
                         dots.innerHTML += `<div class="dot w-1.5 h-1.5 rounded-full ${i===currentIdx?'bg-blue-500':'bg-zinc-700'}"></div>`; 
@@ -991,9 +978,16 @@
                     else if(diff < 0 && currentIdx > 0) currentIdx--; 
                     document.getElementById('carouselTrack').style.transform = `translateX(-${currentIdx * 100}%)`; 
                     document.querySelectorAll('.dot').forEach((d, i) => { d.className = `dot w-1.5 h-1.5 rounded-full ${i===currentIdx?'bg-blue-500':'bg-zinc-700'}`; }); 
-                    const oldVid = document.getElementById(`yt-${oldIdx}`), newVid = document.getElementById(`yt-${currentIdx}`);
-                    if(oldVid) try{oldVid.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');}catch(e){}
-                    if(newVid) try{newVid.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');}catch(e){}
+                    
+                    const oldVid = document.querySelector(`#carouselTrack div:nth-child(${oldIdx + 1}) iframe`);
+                    const newVid = document.querySelector(`#carouselTrack div:nth-child(${currentIdx + 1}) iframe`);
+                    
+                    if(oldVid && oldVid.contentWindow) try{oldVid.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');}catch(e){}
+                    if(newVid && newVid.contentWindow) try{newVid.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');}catch(e){}
+                    
+                    // Reset landscape button state
+                    isLsPaused = false;
+                    document.getElementById('lsPlay').className = 'fa-solid fa-pause ls-btn text-6xl';
                 } 
             }); 
         }
