@@ -386,7 +386,6 @@
 
         /* --- HP BACK BUTTON SYSTEM --- */
         window.addEventListener('popstate', function(event) {
-            // FIX MASALAH DOUBLE BACK: Cek urutan penutupan overlay
             if (document.getElementById('landscapeOverlay').style.display === 'block') {
                 closeLandscapeSilently();
             } else if (document.getElementById('movieModal').style.display === 'block') {
@@ -398,7 +397,7 @@
             }
         });
 
-        /* --- LANDSCAPE CONTROLS LOGIC --- */
+        /* --- LANDSCAPE CONTROLS LOGIC (FIXED NO 4) --- */
         async function enterLandscape() {
             const overlay = document.getElementById('landscapeOverlay');
             const lsTitle = document.getElementById('lsTitle');
@@ -410,27 +409,20 @@
             const videoArea = document.getElementById('mainVideoArea');
             document.getElementById('landscapeOverlay').appendChild(videoArea);
             
-            // FIX KONTROL TIDAK SINKRON: Cek apakah support YouTube API
-            checkControlSupport();
-            
             showLsUI();
             history.pushState({view: 'landscape'}, "");
 
-            // FIX BUG ORIENTASI: Penanganan error jika browser menolak penguncian
             try {
                 if (document.documentElement.requestFullscreen) {
                     await document.documentElement.requestFullscreen();
                     if (screen.orientation && screen.orientation.lock) {
-                        await screen.orientation.lock('landscape').catch((err) => {
-                            console.log("Auto-rotate blocked by browser");
-                        });
+                        await screen.orientation.lock('landscape').catch(() => {});
                     }
                 }
             } catch (e) {}
         }
 
         function handleLsBack() {
-            // Jika ada state landscape, gunakan history back agar trigger popstate
             if (window.history.state && window.history.state.view === 'landscape') {
                 window.history.back();
             } else {
@@ -442,24 +434,23 @@
             document.body.classList.remove('landscape-active');
             document.getElementById('landscapeOverlay').style.display = 'none';
             
-            // FIX MASALAH KEHILANGAN ELEMEN: Paksa video balik ke modal dengan urutan yang benar
+            // Mengembalikan video ke posisi aslinya di dalam modal (Setelah Cast Container)
             const videoArea = document.getElementById('mainVideoArea');
-            const castContainer = document.getElementById('castContainer');
-            if (videoArea && castContainer) {
-                castContainer.after(videoArea);
+            const targetContainer = document.getElementById('castContainer');
+            if (targetContainer && videoArea) {
+                targetContainer.insertAdjacentElement('afterend', videoArea);
             }
 
             if (document.exitFullscreen && document.fullscreenElement) {
                 document.exitFullscreen();
             }
             if (screen.orientation && screen.orientation.unlock) {
-                try { screen.orientation.unlock(); } catch(e) {}
+                screen.orientation.unlock();
             }
         }
 
         function exitLandscape() {
             closeLandscapeSilently();
-            // Pastikan history dibersihkan jika masih di state landscape
             if (window.history.state && window.history.state.view === 'landscape') {
                 window.history.back();
             }
@@ -486,22 +477,11 @@
             }, 3000);
         }
 
-        // FIX KONTROL TIDAK SINKRON: Sembunyikan tombol jika server bukan YouTube
-        function checkControlSupport() {
-            const iframes = document.querySelectorAll('#carouselTrack iframe');
-            const currentIframe = iframes[currentIdx];
-            const isYouTube = currentIframe && currentIframe.src.includes('youtube.com');
-            
-            document.getElementById('lsPlay').style.display = isYouTube ? 'block' : 'none';
-            document.getElementById('lsMute').style.display = isYouTube ? 'block' : 'none';
-        }
-
         function toggleLsPlay() {
             const iframes = document.querySelectorAll('#carouselTrack iframe');
             const currentIframe = iframes[currentIdx];
-            if(!currentIframe || !currentIframe.src.includes('youtube.com')) return;
-            
             const btn = document.getElementById('lsPlay');
+            
             isLsPaused = !isLsPaused;
             const cmd = isLsPaused ? 'pauseVideo' : 'playVideo';
             
@@ -513,9 +493,8 @@
         function toggleLsMute() {
             const iframes = document.querySelectorAll('#carouselTrack iframe');
             const currentIframe = iframes[currentIdx];
-            if(!currentIframe || !currentIframe.src.includes('youtube.com')) return;
-
             const btn = document.getElementById('lsMute');
+            
             isLsMuted = !isLsMuted;
             const cmd = isLsMuted ? 'mute' : 'unMute';
             
@@ -555,6 +534,7 @@
             
             document.querySelectorAll('.highlight-item').forEach(i => i.classList.remove('active-hl'));
             
+            // Reset visual buttons filters
             const btnCountry = document.getElementById('btnCountry');
             const btnGenre = document.getElementById('btnGenre');
             const btnYear = document.getElementById('yearBtn');
@@ -713,6 +693,7 @@
         function toggleFilter(e, id) { e.stopPropagation(); const d = document.getElementById(id); const overlay = document.getElementById('filterOverlay'); document.querySelectorAll('.filter-dropdown').forEach(el => el.style.display = 'none'); d.style.display = 'block'; d.scrollTop = 0; overlay.style.display = 'block'; document.body.style.overflow = 'hidden'; }
         function closeD() { document.querySelectorAll('.filter-dropdown').forEach(d => d.style.display = 'none'); document.getElementById('filterOverlay').style.display = 'none'; document.body.style.overflow = 'auto'; }
 
+        /* --- LOAD FEED (FIXED NO 5) --- */
         async function loadFeed(isNew = true) {
             if(loading && isNew) { if(abortController) abortController.abort(); }
             if(loading && !isNew) return;
@@ -749,6 +730,7 @@
                 if(currentCastId) items.sort((a,b) => b.popularity - a.popularity);
                 if(items.length === 0 && isNew) { grid.innerHTML = `<div class="col-span-3 text-center py-20 text-zinc-600 text-xs">Konten tidak ditemukan.</div>`; } 
                 else { renderGrid(items, grid); }
+                abortController = null; // Reset controller agar efisien
             } catch(e) { if(e.name !== 'AbortError') console.error(e); }
             loading = false;
         }
@@ -771,6 +753,7 @@
         }
 
         function openSearch() { 
+            // Tutup elemen-elemen yang mungkin menghalangi
             closeModal();
             closeD();
             if(document.getElementById('sideMenu').style.display === 'block') toggleSideMenu();
@@ -803,13 +786,22 @@
 
         function toggleFilterBar() { const b = document.getElementById('filterBar'); b.style.display = b.style.display === 'block' ? 'none' : 'block'; }
         
+        /* --- SET SCHEDULE (FIXED NO 2) --- */
         function setSchedule(v, el) { 
             currentLibMode = false; currentCastId = ''; searchQuery = ''; 
             const isActive = el.classList.contains('active');
             document.querySelectorAll('.btn-ig').forEach(b=>b.classList.remove('active')); 
-            if(isActive) { currentSchedule = 'trending'; } 
-            else { el.classList.add('active'); currentSchedule = v; }
-            if(currentType === 'multi') currentType = 'movie';
+            
+            if(isActive) { 
+                currentSchedule = 'trending'; 
+            } else { 
+                el.classList.add('active'); 
+                currentSchedule = v; 
+                // Karena data Sedang/Segera Tayang umumnya untuk film, kita pindahkan tab ke 'movie'
+                currentType = 'movie';
+                document.querySelectorAll('.stat-item').forEach(s => s.classList.remove('active-stat'));
+                document.getElementById('stat-movie').classList.add('active-stat');
+            }
             loadFeed(true); 
         }
 
@@ -878,6 +870,7 @@
             
             if(vids.length > 0) { 
                 vids.forEach((v, i) => { 
+                    // Menambahkan mute=0 agar suara aktif
                     track.innerHTML += `<div class="carousel-slide"><iframe id="yt-${i}" src="https://www.youtube.com/embed/${v.key}?enablejsapi=1&autoplay=${i===0?1:0}&rel=0&mute=0" class="w-full h-full" allow="autoplay; fullscreen"></iframe></div>`; 
                     if(vids.length > 1) {
                         dots.innerHTML += `<div class="dot w-1.5 h-1.5 rounded-full ${i===currentIdx?'bg-blue-500':'bg-zinc-700'}"></div>`; 
@@ -945,9 +938,6 @@
         }
         
         function closeModal() { 
-            // Pastikan jika landscape terbuka, ditutup dulu
-            if(document.body.classList.contains('landscape-active')) closeLandscapeSilently();
-            
             const track = document.getElementById('carouselTrack'); 
             if(track) {
                 track.querySelectorAll('iframe').forEach(f => f.src = ""); 
@@ -955,6 +945,7 @@
             }
             document.getElementById('movieModal').style.display = 'none'; 
             document.body.style.overflow = 'auto'; 
+            if(document.body.classList.contains('landscape-active')) closeLandscapeSilently();
         }
 
         function renderSynopsis() { const descEl = document.getElementById('mDesc'), toggleBtn = document.getElementById('mToggleBtn'); if (globalFullDesc.length > 90) { toggleBtn.classList.remove('hidden'); descEl.innerText = isExpanded ? globalFullDesc : globalFullDesc.substring(0, 90) + "..."; toggleBtn.innerText = isExpanded ? "ringkas" : "selengkapnya"; } else { descEl.innerText = globalFullDesc; toggleBtn.classList.add('hidden'); } }
@@ -969,11 +960,6 @@
             track.innerHTML = `<div class="carousel-slide"><iframe src="${finalUrl}" class="w-full h-full" allowfullscreen allow="autoplay"></iframe></div>`; 
             track.style.transform = 'translateX(0)'; currentIdx = 0; dots.innerHTML = ''; 
             document.getElementById('swipeOverlay').style.display = 'none'; highlightBtn(el); 
-            
-            // Perbarui kontrol landscape jika user berpindah server saat sedang mode landscape
-            if(document.getElementById('landscapeOverlay').style.display === 'block') {
-                checkControlSupport();
-            }
         }
         
         function highlightBtn(el) { document.querySelectorAll('.server-btn').forEach(b => b.classList.remove('active-link')); el.classList.add('active-link'); }
@@ -1008,9 +994,6 @@
                     const oldVid = document.getElementById(`yt-${oldIdx}`), newVid = document.getElementById(`yt-${currentIdx}`);
                     if(oldVid) try{oldVid.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');}catch(e){}
                     if(newVid) try{newVid.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');}catch(e){}
-                    
-                    // Update tombol kontrol landscape jika swipe video youtube
-                    if(document.getElementById('landscapeOverlay').style.display === 'block') checkControlSupport();
                 } 
             }); 
         }
