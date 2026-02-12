@@ -409,6 +409,10 @@
             const videoArea = document.getElementById('mainVideoArea');
             document.getElementById('landscapeOverlay').appendChild(videoArea);
             
+            // Atur status awal tombol play
+            document.getElementById('lsPlay').className = 'fa-solid fa-pause ls-btn text-6xl';
+            isLsPaused = false;
+            
             showLsUI();
             history.pushState({view: 'landscape'}, "");
 
@@ -434,6 +438,7 @@
             document.body.classList.remove('landscape-active');
             document.getElementById('landscapeOverlay').style.display = 'none';
             document.getElementById('lsLockLayer').style.display = 'none';
+            document.getElementById('lsUI').classList.remove('visible'); // Sembunyikan kontrol agar tidak flash saat balik
             
             const videoArea = document.getElementById('mainVideoArea');
             const castContainer = document.getElementById('castContainer');
@@ -464,12 +469,12 @@
 
         function showLsUI() {
             const ui = document.getElementById('lsUI');
+            if(document.getElementById('lsLockLayer').style.display === 'flex') return;
+            
             ui.classList.add('visible');
             clearTimeout(lsControlTimer);
             lsControlTimer = setTimeout(() => {
-                if(document.getElementById('lsLockLayer').style.display !== 'flex') {
-                    ui.classList.remove('visible');
-                }
+                ui.classList.remove('visible');
             }, 3500);
         }
 
@@ -492,7 +497,12 @@
             
             currentIframe.contentWindow.postMessage(JSON.stringify({"event":"command","func":cmd,"args":""}), '*');
             btn.className = isLsPaused ? 'fa-solid fa-play ls-btn text-6xl' : 'fa-solid fa-pause ls-btn text-6xl';
-            showLsUI();
+            
+            // Refresh timer auto-hide
+            clearTimeout(lsControlTimer);
+            lsControlTimer = setTimeout(() => {
+                document.getElementById('lsUI').classList.remove('visible');
+            }, 3500);
         }
 
         function toggleLsMute() {
@@ -505,7 +515,12 @@
             
             currentIframe.contentWindow.postMessage(JSON.stringify({"event":"command","func":cmd,"args":""}), '*');
             btn.className = isLsMuted ? 'fa-solid fa-volume-xmark ls-btn' : 'fa-solid fa-volume-high ls-btn';
-            showLsUI();
+            
+            // Refresh timer auto-hide
+            clearTimeout(lsControlTimer);
+            lsControlTimer = setTimeout(() => {
+                document.getElementById('lsUI').classList.remove('visible');
+            }, 3500);
         }
 
         function lockScreen() {
