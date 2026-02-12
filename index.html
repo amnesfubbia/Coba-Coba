@@ -187,8 +187,8 @@
     </div>
 
     <div id="landscapeOverlay" class="landscape-overlay" onclick="toggleLsUI()">
-        <div id="lsLockLayer" class="ls-lock-screen" style="display:none">
-            <i class="fa-solid fa-lock ls-btn text-white opacity-40" onclick="event.stopPropagation(); unlockScreen()"></i>
+        <div id="lsLockLayer" class="ls-lock-screen" style="display:none" onclick="event.stopPropagation(); showLockBtnTemporarily()">
+            <i id="lsLockIcon" class="fa-solid fa-lock ls-btn text-white opacity-40" onclick="event.stopPropagation(); unlockScreen()"></i>
         </div>
         <div class="ls-controls" id="lsUI">
             <div class="ls-top">
@@ -370,7 +370,7 @@
         let page = 1, loading = false, currentType = 'multi', currentGenre = '', currentYear = '', currentCountry = '', currentSchedule = 'trending', searchQuery = '', currentCompany = '', currentLibMode = false, currentCastId = '';
         let isExpanded = false, globalFullDesc = "", globalEnDesc = "", currentIdx = 0, startX = 0, isTranslated = false, originalIndoDesc = "";
         let abortController = null;
-        let isLsPaused = false, isLsMuted = false, lsControlTimer;
+        let isLsPaused = false, isLsMuted = false, lsControlTimer, lsLockTimer;
 
         window.onload = () => {
             setTimeout(() => {
@@ -423,7 +423,6 @@
         }
 
         function handleLsBack() {
-            // Ini akan mentrigger popstate di atas
             if (window.history.state && window.history.state.view === 'landscape') {
                 window.history.back();
             } else {
@@ -434,6 +433,7 @@
         function closeLandscapeSilently() {
             document.body.classList.remove('landscape-active');
             document.getElementById('landscapeOverlay').style.display = 'none';
+            document.getElementById('lsLockLayer').style.display = 'none';
             
             const videoArea = document.getElementById('mainVideoArea');
             const castContainer = document.getElementById('castContainer');
@@ -449,13 +449,9 @@
 
         function exitLandscape() {
             closeLandscapeSilently();
-            if (window.history.state && window.history.state.view === 'landscape') {
-                window.history.back();
-            }
         }
 
         function toggleLsUI() {
-            // Jika dalam kondisi terkunci, jangan lakukan apa-apa
             if(document.getElementById('lsLockLayer').style.display === 'flex') return;
             
             const ui = document.getElementById('lsUI');
@@ -474,7 +470,16 @@
                 if(document.getElementById('lsLockLayer').style.display !== 'flex') {
                     ui.classList.remove('visible');
                 }
-            }, 3000);
+            }, 3500);
+        }
+
+        function showLockBtnTemporarily() {
+            const icon = document.getElementById('lsLockIcon');
+            icon.style.opacity = "1";
+            clearTimeout(lsLockTimer);
+            lsLockTimer = setTimeout(() => {
+                icon.style.opacity = "0.4";
+            }, 2000);
         }
 
         function toggleLsPlay() {
@@ -506,6 +511,7 @@
         function lockScreen() {
             document.getElementById('lsUI').classList.remove('visible');
             document.getElementById('lsLockLayer').style.display = 'flex';
+            showLockBtnTemporarily();
         }
 
         function unlockScreen() {
@@ -854,7 +860,6 @@
             
             if(vids.length > 0) { 
                 vids.forEach((v, i) => { 
-                    // Ditambahkan controls=0 untuk menyembunyikan kontrol bawaan YouTube
                     track.innerHTML += `<div class="carousel-slide"><iframe id="yt-${i}" src="https://www.youtube.com/embed/${v.key}?enablejsapi=1&autoplay=${i===0?1:0}&rel=0&mute=0&controls=0" class="w-full h-full" allow="autoplay; fullscreen"></iframe></div>`; 
                     if(vids.length > 1) {
                         dots.innerHTML += `<div class="dot w-1.5 h-1.5 rounded-full ${i===currentIdx?'bg-blue-500':'bg-zinc-700'}"></div>`; 
