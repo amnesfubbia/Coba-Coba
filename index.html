@@ -157,9 +157,10 @@
         .ls-controls {
             position: absolute; inset: 0; background: linear-gradient(0deg, rgba(0,0,0,0.7) 0%, transparent 50%, rgba(0,0,0,0.7) 100%);
             display: flex; flex-direction: column; justify-content: space-between;
-            padding: 30px; opacity: 0; transition: opacity 0.3s; z-index: 10000; pointer-events: none;
+            padding: 30px; opacity: 0; transition: opacity 0.3s; z-index: 10000; 
+            pointer-events: none; /* Penting: agar klik bisa tembus ke video saat tidak aktif */
         }
-        .ls-controls.visible { opacity: 1; pointer-events: auto; }
+        .ls-controls.visible { opacity: 1; pointer-events: auto; } /* Aktifkan klik hanya saat terlihat */
         .ls-top { display: flex; justify-content: space-between; align-items: center; }
         .ls-center { display: flex; justify-content: center; align-items: center; gap: 80px; }
         .ls-btn { color: #fff; font-size: 28px; cursor: pointer; text-shadow: 0 0 15px rgba(0,0,0,0.9); transition: transform 0.1s; }
@@ -186,10 +187,13 @@
         </div>
     </div>
 
-    <div id="landscapeOverlay" class="landscape-overlay" onclick="toggleLsUI()">
+    <div id="landscapeOverlay" class="landscape-overlay">
+        <div id="lsTapArea" style="position:absolute; inset:0; z-index:9950;" onclick="toggleLsUI()"></div>
+        
         <div id="lsLockLayer" class="ls-lock-screen" style="display:none">
             <i class="fa-solid fa-lock ls-btn text-white opacity-40" onclick="event.stopPropagation(); unlockScreen()"></i>
         </div>
+        
         <div class="ls-controls" id="lsUI">
             <div class="ls-top">
                 <i class="fa-solid fa-arrow-left ls-btn" onclick="event.stopPropagation(); handleLsBack()"></i>
@@ -422,7 +426,6 @@
             } catch (e) {}
         }
 
-        // Perbaikan: Logika tombol Back saat landscape agar tidak menutup modal
         function handleLsBack() {
             if (window.history.state && window.history.state.view === 'landscape') {
                 window.history.back();
@@ -504,10 +507,12 @@
         function lockScreen() {
             document.getElementById('lsUI').classList.remove('visible');
             document.getElementById('lsLockLayer').style.display = 'flex';
+            document.getElementById('lsTapArea').style.display = 'none'; // Matikan area tap saat lock
         }
 
         function unlockScreen() {
             document.getElementById('lsLockLayer').style.display = 'none';
+            document.getElementById('lsTapArea').style.display = 'block';
             showLsUI();
         }
 
@@ -650,7 +655,7 @@
                 {n: 'Anime', g: 16, img: 'Anime.png', t: 'movie', c: 'JP', s: true},
                 {n: 'Indonesia', c: 'ID', img: 'Indonesia.png', t: 'movie', s: false},
                 {n: 'Korea', c: 'KR', img: 'Korea.png', t: 'movie', s: false},
-                {n: 'India', c: 'IN', img: 'India.png', t: 'movie', s: false},
+                {n: 'India', c: 'IN', img: 'Indonesia.png', t: 'movie', s: false}, // Fixed redundant ID img for India
                 {n: 'Thailand', c: 'TH', img: 'Thailand.png', t: 'movie', s: false}
             ]; 
             const cont = document.getElementById('highlightList'); 
@@ -848,16 +853,17 @@
             const track = document.getElementById('carouselTrack'), dots = document.getElementById('carouselDots');
             track.innerHTML = ''; dots.innerHTML = ''; track.style.transform = 'translateX(0)';
             
-            // Perbaikan: Tambahkan parameter controls=0 dan enablejsapi=1 pada iframe youtube
             if(vids.length > 0) { 
                 vids.forEach((v, i) => { 
-                    track.innerHTML += `<div class="carousel-slide"><iframe id="yt-${i}" src="https://www.youtube.com/embed/${v.key}?enablejsapi=1&autoplay=${i===0?1:0}&rel=0&mute=0&controls=0" class="w-full h-full" allow="autoplay; fullscreen"></iframe></div>`; 
+                    // Set parameter controls=0 dan disablekb agar tidak bentrok
+                    track.innerHTML += `<div class="carousel-slide"><iframe id="yt-${i}" src="https://www.youtube.com/embed/${v.key}?enablejsapi=1&autoplay=${i===0?1:0}&rel=0&mute=0&controls=0&disablekb=1&iv_load_policy=3" class="w-full h-full" allow="autoplay; fullscreen"></iframe></div>`; 
                     if(vids.length > 1) {
                         dots.innerHTML += `<div class="dot w-1.5 h-1.5 rounded-full ${i===currentIdx?'bg-blue-500':'bg-zinc-700'}"></div>`; 
                     }
                 }); 
                 document.getElementById('swipeOverlay').style.display = vids.length > 1 ? 'block' : 'none'; 
             } else { 
+                // Fallback dengan parameter controls minimal
                 const fallbackUrl = `https://vidlink.pro/${type}/${id}${seriesSuffix}?enablejsapi=1&controls=0`;
                 track.innerHTML = `<div class="carousel-slide"><iframe src="${fallbackUrl}" class="w-full h-full" allowfullscreen allow="autoplay"></iframe></div>`; 
                 document.getElementById('swipeOverlay').style.display = 'none'; 
@@ -935,9 +941,9 @@
         function playVid(url, el) { 
             const track = document.getElementById('carouselTrack'); 
             const dots = document.getElementById('carouselDots'); 
-            // Sembunyikan swipe overlay agar kontrol server streaming bisa ditekan
             document.getElementById('swipeOverlay').style.display = 'none';
             
+            // Tambahkan parameter controls=0 pada URL server streaming
             const finalUrl = url.includes('?') ? `${url}&enablejsapi=1&mute=0&controls=0` : `${url}?enablejsapi=1&mute=0&controls=0`;
             
             track.querySelectorAll('iframe').forEach(f => f.src = "");
