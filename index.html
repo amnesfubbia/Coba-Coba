@@ -382,20 +382,6 @@
             window.addEventListener('scroll', () => { 
                 document.getElementById('backToTop').style.display = window.scrollY > 500 ? 'flex' : 'none'; 
             }); 
-            
-            // Listener untuk mendeteksi error video YouTube
-            window.addEventListener('message', function(event) {
-                if (event.origin !== "https://www.youtube.com") return;
-                try {
-                    const data = JSON.parse(event.data);
-                    if (data.event === "onReady") {
-                        // Video berhasil dimuat
-                    }
-                    if (data.event === "infoDelivery" && data.info && data.info.error) {
-                        handleVideoError(currentIdx);
-                    }
-                } catch(e) {}
-            });
         };
 
         /* --- HP BACK BUTTON SYSTEM --- */
@@ -522,47 +508,6 @@
         function unlockScreen() {
             document.getElementById('lsLockLayer').style.display = 'none';
             showLsUI();
-        }
-
-        /* --- VIDEO ERROR HANDLER --- */
-        function handleVideoError(index) {
-            const slides = document.querySelectorAll('.carousel-slide');
-            const dots = document.querySelectorAll('.dot');
-            
-            if (slides.length > 1) {
-                // Hapus slide yang error
-                slides[index].remove();
-                if (dots[index]) dots[index].remove();
-                
-                // Reset index dan posisi track
-                currentIdx = 0;
-                document.getElementById('carouselTrack').style.transform = 'translateX(0)';
-                
-                // Mainkan video pertama yang tersisa
-                const nextVid = document.querySelector('.carousel-slide iframe');
-                if (nextVid) {
-                    const src = nextVid.src;
-                    nextVid.src = src.replace('autoplay=0', 'autoplay=1');
-                }
-                
-                // Update dots visual
-                const remainingDots = document.querySelectorAll('.dot');
-                remainingDots.forEach((d, i) => {
-                    d.className = `dot w-1.5 h-1.5 rounded-full ${i === 0 ? 'bg-blue-500' : 'bg-zinc-700'}`;
-                });
-
-                if (remainingDots.length <= 1) {
-                    document.getElementById('swipeOverlay').style.display = 'none';
-                    document.getElementById('carouselDots').innerHTML = '';
-                }
-            } else {
-                // Jika hanya ada 1 video dan itu error, paksa masuk ke mode player film
-                const seriesSuffix = (window.currentMediaType === 'tv') ? '/1/1' : '';
-                const fallbackUrl = `https://vidlink.pro/${window.currentMediaType}/${window.currentMediaId}${seriesSuffix}`;
-                document.getElementById('carouselTrack').innerHTML = `<div class="carousel-slide"><iframe src="${fallbackUrl}" class="w-full h-full" allowfullscreen allow="autoplay"></iframe></div>`;
-                document.getElementById('swipeOverlay').style.display = 'none';
-                document.getElementById('carouselDots').innerHTML = '';
-            }
         }
 
         /* --- CORE LOGIC --- */
@@ -911,7 +856,7 @@
             
             if(vids.length > 0) { 
                 vids.forEach((v, i) => { 
-                    track.innerHTML += `<div class="carousel-slide"><iframe id="yt-${i}" src="https://www.youtube.com/embed/${v.key}?enablejsapi=1&autoplay=${i===0?1:0}&rel=0&mute=0&origin=${window.location.origin}" class="w-full h-full" allow="autoplay; fullscreen" onerror="handleVideoError(${i})"></iframe></div>`; 
+                    track.innerHTML += `<div class="carousel-slide"><iframe id="yt-${i}" src="https://www.youtube.com/embed/${v.key}?enablejsapi=1&autoplay=${i===0?1:0}&rel=0&mute=0" class="w-full h-full" allow="autoplay; fullscreen"></iframe></div>`; 
                     if(vids.length > 1) {
                         dots.innerHTML += `<div class="dot w-1.5 h-1.5 rounded-full ${i===currentIdx?'bg-blue-500':'bg-zinc-700'}"></div>`; 
                     }
@@ -994,7 +939,7 @@
         function playVid(url, el) { 
             const track = document.getElementById('carouselTrack'); 
             const dots = document.getElementById('carouselDots'); 
-            const finalUrl = url.includes('?') ? `${url}&enablejsapi=1&mute=0` : `${url}?enablejsapi=1&mute=0`;
+            const finalUrl = url.includes('?') ? `${url}&enablejsapi=1&mute=0&autoplay=1` : `${url}?enablejsapi=1&mute=0&autoplay=1`;
             
             track.querySelectorAll('iframe').forEach(f => f.src = "");
             track.innerHTML = `<div class="carousel-slide"><iframe src="${finalUrl}" class="w-full h-full" allowfullscreen allow="autoplay"></iframe></div>`; 
