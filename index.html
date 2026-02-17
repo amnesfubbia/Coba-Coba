@@ -846,6 +846,7 @@
             
             let dId = await rId.json(), dCast = await rCast.json(), dExt = await rExt.json();
             currentImdbId = dExt.imdb_id || ""; 
+            const movieLang = dId.original_language || "";
 
             // Handle description & translation
             if(!dId.overview) {
@@ -859,12 +860,32 @@
                 document.getElementById('mTranslateBtn').classList.add('hidden');
             }
             
-            // LOGIKA TRAILER: Prioritas Youtube/Vimeo dengan type Trailer
+            // LOGIKA TRAILER PRIORITAS
             const videoResults = dId.videos?.results || [];
+            
+            // Urutan 1: Youtube/Vimeo Bahasa Film (Original Language)
             let vids = videoResults.filter(v => 
                 (v.site === 'YouTube' || v.site === 'Vimeo') && 
-                (v.type === 'Trailer' || v.type === 'Teaser')
+                (v.type === 'Trailer' || v.type === 'Teaser') &&
+                (v.iso_639_1 === movieLang)
             );
+
+            // Urutan 2: Jika tidak ada, ambil Bahasa Global (en)
+            if (vids.length === 0) {
+                vids = videoResults.filter(v => 
+                    (v.site === 'YouTube' || v.site === 'Vimeo') && 
+                    (v.type === 'Trailer' || v.type === 'Teaser') &&
+                    (v.iso_639_1 === 'en')
+                );
+            }
+
+            // Urutan 3: Jika masih tidak ada, ambil apa saja yang tersedia di Youtube/Vimeo
+            if (vids.length === 0) {
+                vids = videoResults.filter(v => 
+                    (v.site === 'YouTube' || v.site === 'Vimeo') && 
+                    (v.type === 'Trailer' || v.type === 'Teaser')
+                );
+            }
 
             // Sorting: Trailer > Teaser, YouTube > Vimeo
             vids.sort((a, b) => {
@@ -894,6 +915,7 @@
                 }); 
                 document.getElementById('swipeOverlay').style.display = vids.length > 1 ? 'block' : 'none'; 
             } else { 
+                // LOGIKA AUTO KE SERVER 1 JIKA TRAILER TIDAK ADA
                 track.innerHTML = `<div class="carousel-slide"><iframe id="player-frame" src="${defaultStream}" class="w-full h-full" allowfullscreen allow="autoplay"></iframe></div>`; 
                 document.getElementById('swipeOverlay').style.display = 'none'; 
             }
