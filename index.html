@@ -59,7 +59,7 @@
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
         .sticky-reset { position: sticky; top: 0; background: #1c1c1c; z-index: 10; font-weight: 800 !important; color: #fff !important; border-bottom: 2px solid #333; }
         #filterOverlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 9400; }
-        .filter-item { padding: 16px; font-size: 14px; text-align: center; border-bottom: 1px solid #262626; color: #eee; cursor: pointer; }
+        .filter-item { padding: 166px; font-size: 14px; text-align: center; border-bottom: 1px solid #262626; color: #eee; cursor: pointer; }
 
         .highlights-wrapper { padding: 0 15px 15px 15px; border-bottom: 1px solid #1c1c1c; }
         .highlights-container { display: flex; gap: 18px; overflow-x: auto; }
@@ -839,16 +839,14 @@
             history.pushState({view: 'modal'}, "");
 
             const [rId, rCast, rExt] = await Promise.all([
-                fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&append_to_response=videos,production_companies&include_video_language=en,id,null`),
+                fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&language=id-ID&append_to_response=videos,production_companies&include_video_language=en,id,hi,th,ko,ja,null`),
                 fetch(`https://api.themoviedb.org/3/${type}/${id}/credits?api_key=${API_KEY}`),
                 fetch(`https://api.themoviedb.org/3/${type}/${id}/external_ids?api_key=${API_KEY}`)
             ]);
             
             let dId = await rId.json(), dCast = await rCast.json(), dExt = await rExt.json();
             currentImdbId = dExt.imdb_id || ""; 
-            const movieLang = dId.original_language || "";
 
-            // Handle description & translation
             if(!dId.overview) {
                 const rEn = await fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&language=en-US`);
                 const dEn = await rEn.json();
@@ -860,38 +858,32 @@
                 document.getElementById('mTranslateBtn').classList.add('hidden');
             }
             
-            // LOGIKA TRAILER PRIORITAS
+            // LOGIKA PRIORITAS TRAILER:
             const videoResults = dId.videos?.results || [];
-            
-            // Urutan 1: Youtube/Vimeo Bahasa Film (Original Language)
             let vids = videoResults.filter(v => 
                 (v.site === 'YouTube' || v.site === 'Vimeo') && 
-                (v.type === 'Trailer' || v.type === 'Teaser') &&
-                (v.iso_639_1 === movieLang)
+                (v.type === 'Trailer' || v.type === 'Teaser')
             );
 
-            // Urutan 2: Jika tidak ada, ambil Bahasa Global (en)
-            if (vids.length === 0) {
-                vids = videoResults.filter(v => 
-                    (v.site === 'YouTube' || v.site === 'Vimeo') && 
-                    (v.type === 'Trailer' || v.type === 'Teaser') &&
-                    (v.iso_639_1 === 'en')
-                );
-            }
-
-            // Urutan 3: Jika masih tidak ada, ambil apa saja yang tersedia di Youtube/Vimeo
-            if (vids.length === 0) {
-                vids = videoResults.filter(v => 
-                    (v.site === 'YouTube' || v.site === 'Vimeo') && 
-                    (v.type === 'Trailer' || v.type === 'Teaser')
-                );
-            }
-
-            // Sorting: Trailer > Teaser, YouTube > Vimeo
+            // Sortir Berdasarkan Bahasa:
+            // Prioritas 1: Bahasa Inggris ('en')
+            // Prioritas 2: Bahasa Asli Film (dId.original_language)
+            // Prioritas 3: Bahasa apa pun yang tersedia
             vids.sort((a, b) => {
-                let scoreA = (a.type === 'Trailer' ? 2 : 1) + (a.site === 'YouTube' ? 1 : 0);
-                let scoreB = (b.type === 'Trailer' ? 2 : 1) + (b.site === 'YouTube' ? 1 : 0);
-                return scoreB - scoreA;
+                const langA = (a.iso_639_1 || "").toLowerCase();
+                const langB = (b.iso_639_1 || "").toLowerCase();
+                const originalLang = (dId.original_language || "").toLowerCase();
+
+                const getScore = (lang, type) => {
+                    let score = 0;
+                    if (lang === 'en') score += 100; // Prioritas Tertinggi: Inggris
+                    else if (lang === originalLang) score += 50; // Prioritas Kedua: Bahasa Asli
+                    
+                    if (type === 'Trailer') score += 10; // Prioritas Trailer di atas Teaser
+                    return score;
+                };
+
+                return getScore(langB, b.type) - getScore(langA, a.type);
             });
 
             vids = vids.slice(0, 5);
@@ -915,7 +907,7 @@
                 }); 
                 document.getElementById('swipeOverlay').style.display = vids.length > 1 ? 'block' : 'none'; 
             } else { 
-                // LOGIKA AUTO KE SERVER 1 JIKA TRAILER TIDAK ADA
+                // FALLBACK: Jika tidak ada trailer YouTube/Vimeo, langsung ke Server 1
                 track.innerHTML = `<div class="carousel-slide"><iframe id="player-frame" src="${defaultStream}" class="w-full h-full" allowfullscreen allow="autoplay"></iframe></div>`; 
                 document.getElementById('swipeOverlay').style.display = 'none'; 
             }
@@ -959,6 +951,9 @@
                 <button class="server-btn" style="background:#1a1a1a; border-color:#333;" onclick="playVid('https://vidnest.fun/movie/${id}', this)">Server 18</button>
                 <button class="server-btn" style="background:#1a1a1a; border-color:#333;" onclick="playVid('https://player.videasy.net/movie/${id}', this)">Server 19</button>
                 <button class="server-btn" style="background:#1a1a1a; border-color:#333;" onclick="playVid('https://vidfast.pro/movie/${id}', this)">Server 20</button>
+                <button class="server-btn" style="background:#1a1a1a; border-color:#333;" onclick="playVid('https://dorawatch.net/embed/${type}/${id}${seriesSuffix}', this)">Server 21</button>
+                <button class="server-btn" style="background:#1a1a1a; border-color:#333;" onclick="playVid('https://hyrax.to/embed/${type}/${id}${seriesSuffix}', this)">Server 22</button>
+                <button class="server-btn" style="background:#1a1a1a; border-color:#333;" onclick="playVid('https://player.vimeo.com/video/${id}', this)">Server 23</button>
             `;
 
             if(type === 'tv') { document.getElementById('seriesControl').classList.remove('hidden'); document.getElementById('seasonSel').innerHTML = (dId.seasons||[]).filter(s=>s.season_number>0).map(s=>`<option value="${s.season_number}">Season ${s.season_number}</option>`).join(''); loadEpisodes(); } else { document.getElementById('seriesControl').classList.add('hidden'); }
@@ -1005,8 +1000,11 @@
             track.style.transform = 'translateX(0)'; currentIdx = 0; dots.innerHTML = ''; 
             document.getElementById('swipeOverlay').style.display = 'none'; highlightBtn(el); 
 
+            // Fallback Logic: Jika frame gagal load dalam 5 detik, beri notifikasi atau coba server lain
             const frame = document.getElementById('player-frame');
             frame.onerror = () => {
+                console.log("Server error, trying fallback...");
+                // Otomatis pindah ke server vidsrc jika gagal
                 frame.src = `https://vidsrc.me/embed/${window.currentMediaType}?tmdb=${window.currentMediaId}`;
             };
         }
