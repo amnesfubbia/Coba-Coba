@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <style>
         body { background-color: #000; color: #fff; font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
@@ -153,13 +154,15 @@
         .bottom-nav i { color: #a8a8a8; transition: color 0.3s; }
         .bottom-nav i.active-nav { color: #fff; }
 
-        /* SIDEBAR / ABOUT MENU */
-        #sideMenu { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 9500; display: none; padding: 40px 25px; overflow-y: auto; }
+        /* SIDEBAR / ABOUT MENU - UPDATED WITH GLASSMORPHISM */
+        #sideMenu { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); z-index: 9500; display: none; padding: 40px 25px; overflow-y: auto; }
         .side-close { position: absolute; top: 20px; right: 20px; font-size: 24px; cursor: pointer; }
         .about-title { font-size: 22px; font-weight: 900; margin-bottom: 20px; border-left: 4px solid #fff; padding-left: 12px; }
         .about-content { font-size: 14px; line-height: 1.6; color: #ccc; }
-        .about-feature { margin-top: 20px; background: #111; padding: 15px; border-radius: 12px; border: 1px solid #222; }
-        .about-footer { margin-top: 40px; text-align: center; border-top: 1px solid #222; padding-top: 20px; font-size: 12px; color: #666; }
+        /* Glass Card Style for Features */
+        .about-feature { margin-top: 20px; background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); padding: 20px; border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); }
+        .about-footer { margin-top: 40px; text-align: center; border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 20px; font-size: 12px; color: #666; }
+        .feature-icon { font-size: 18px; color: #fff; width: 24px; text-align: center; }
 
         /* --- NEW LANDSCAPE CONTROLS --- */
         .landscape-overlay {
@@ -213,18 +216,30 @@
     </div>
 
     <div id="sideMenu">
-        <i class="fa-solid fa-xmark side-close" onclick="toggleSideMenu()"></i>
+        <i class="ph ph-x side-close" onclick="toggleSideMenu()"></i>
         <div class="about-title">About Amnesfubbia</div>
-        <div class="about-content">
+        <div class="about-content px-1">
             amnesfubbia adalah platform katalog sinema digital yang dirancang untuk memberikan pengalaman eksplorasi movie dan tv tanpa batas.
         </div>
         <div class="about-feature">
-            <div class="font-bold mb-3 text-white">Fitur Utama:</div>
-            <ul class="space-y-3 text-[13px]">
-                <li>🎬 <span class="font-semibold text-white">Database Luas:</span> Akses ke ribuan movie dan tv global.</li>
-                <li>🔍 <span class="font-semibold text-white">Smart Search:</span> Cari judul, aktor, atau studio favoritmu.</li>
-                <li>📥 <span class="font-semibold text-white">Personal Archive:</span> Simpan koleksi ke dalam Bookmark.</li>
-                <li>🌍 <span class="font-semibold text-white">Multi-Server:</span> Streaming lancar dengan banyak opsi server.</li>
+            <div class="font-bold mb-4 text-white text-sm">Fitur Utama:</div>
+            <ul class="space-y-4 text-[13px]">
+                <li class="flex items-center gap-3">
+                    <i class="ph ph-film-slate feature-icon"></i>
+                    <span><span class="font-semibold text-white">Database Luas:</span> Akses ke ribuan movie dan tv global.</span>
+                </li>
+                <li class="flex items-center gap-3">
+                    <i class="ph ph-magnifying-glass feature-icon"></i>
+                    <span><span class="font-semibold text-white">Smart Search:</span> Cari judul, aktor, atau studio favoritmu.</span>
+                </li>
+                <li class="flex items-center gap-3">
+                    <i class="ph ph-archive-box feature-icon"></i>
+                    <span><span class="font-semibold text-white">Personal Archive:</span> Simpan koleksi ke dalam Bookmark.</span>
+                </li>
+                <li class="flex items-center gap-3">
+                    <i class="ph ph-globe-hemisphere-west feature-icon"></i>
+                    <span><span class="font-semibold text-white">Multi-Server:</span> Streaming lancar dengan banyak opsi server.</span>
+                </li>
             </ul>
         </div>
         <div class="about-footer">
