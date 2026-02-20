@@ -485,6 +485,7 @@
         let abortController = null;
         let isLsPaused = false, isLsMuted = false, lsControlTimer;
         let currentImdbId = ""; 
+        let lastTrailerSources = []; // Variable untuk menyimpan trailer sementara
 
         window.onload = () => {
             setTimeout(() => {
@@ -615,19 +616,21 @@
             return data;
         }
 
-        /* --- FITUR: PROFIL AKTOR MENDETAIL (Updated Instagram Style) --- */
+        /* --- FITUR: PROFIL AKTOR MENDETAIL --- */
         async function openActorProfile(actorId) {
-            // Hentikan video yang sedang diputar di modal film
-            const track = document.getElementById('carouselTrack');
-            if(track) {
-                track.querySelectorAll('iframe').forEach(f => f.src = "");
-            }
+            // Simpan trailer yang ada sebelum dikosongkan agar bisa dikembalikan nanti
+            lastTrailerSources = [];
+            const frames = document.querySelectorAll('#carouselTrack iframe');
+            frames.forEach(f => {
+                lastTrailerSources.push(f.src);
+                // Matikan video agar suara tidak bentrok
+                f.src = "";
+            });
 
             const actorModal = document.getElementById('actorModal');
             actorModal.style.display = 'block';
             document.body.style.overflow = 'hidden';
             
-            // Push state hanya jika belum dalam state actor
             if (!window.history.state || window.history.state.view !== 'actor') {
                 history.pushState({view: 'actor'}, "");
             }
@@ -662,10 +665,7 @@
                     const mType = m.media_type || 'movie';
                     const card = document.createElement('div');
                     card.className = 'post-card';
-                    // FIX: Fungsi klik untuk membuka modal film
-                    card.onclick = () => { 
-                        openModal(m.id, mType); 
-                    };
+                    card.onclick = () => { openModal(m.id, mType); };
                     card.innerHTML = `
                         <div class="badge-rating">★ ${(m.vote_average||0).toFixed(1)}</div>
                         <div class="badge-type">${mType === 'tv' ? 'tv' : 'movie'}</div>
@@ -679,8 +679,16 @@
 
         function closeActorModal() {
             document.getElementById('actorModal').style.display = 'none';
-            // Jika modal film masih terbuka di belakangnya, jangan kembalikan overflow ke auto
-            if (document.getElementById('movieModal').style.display !== 'block') {
+            
+            // Kembalikan trailer ke modal film jika modal film sedang terbuka
+            if (document.getElementById('movieModal').style.display === 'block') {
+                const frames = document.querySelectorAll('#carouselTrack iframe');
+                frames.forEach((f, i) => {
+                    if (lastTrailerSources[i]) {
+                        f.src = lastTrailerSources[i];
+                    }
+                });
+            } else {
                 document.body.style.overflow = 'auto';
             }
         }
@@ -1049,7 +1057,7 @@
         }
 
         async function openModal(id, type) {
-            // FIX: Tutup modal aktor jika terbuka saat klik film baru
+            // Tutup modal aktor jika terbuka saat klik film baru
             const actorModal = document.getElementById('actorModal');
             if (actorModal.style.display === 'block') {
                 actorModal.style.display = 'none';
@@ -1085,7 +1093,6 @@
             currentIdx = 0; 
             isTranslated = false;
             
-            // Push state baru jika belum ada state modal
             if (!window.history.state || window.history.state.view !== 'modal') {
                 history.pushState({view: 'modal'}, "");
             }
