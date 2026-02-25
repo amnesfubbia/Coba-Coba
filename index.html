@@ -927,7 +927,6 @@
                 if(currentGenre) url += `&with_genres=${currentGenre}`;
                 if(currentCompany) url += `&with_companies=${currentCompany}`;
                 
-                // FIXED: Filter SHORT diperketat agar durasi panjang tidak nyasar
                 if(currentType === 'short') {
                     // Hanya movie dengan durasi maksimal 20 menit, minimal 1 menit, dan mengecualikan genre berita/dokumenter
                     url += `&with_runtime.lte=20&with_runtime.gte=1&without_genres=99,10770`; 
@@ -955,11 +954,9 @@
             loading = false;
         }
 
-        // FIXED: Memperbaiki sinkronisasi judul dan isinya menggunakan pengecekan ID unik
         function renderGrid(items, grid) { 
             items.forEach(m => { 
                 if(!m.poster_path || m.media_type === 'person') return; 
-                // Mencegah duplikasi item yang bisa merusak sinkronisasi grid
                 if (grid.querySelector(`[data-id="${m.id}"]`)) return;
 
                 let mType = m.media_type;
@@ -1117,14 +1114,15 @@
                 if(globalEnDesc) translateBtn.classList.remove('hidden');
             }
             
-            // FIXED: Memperketat filter video agar berita (news/press) tidak masuk sebagai film
             const allVideos = (dId.videos?.results || []).filter(v => 
                 (v.type === 'Trailer' || v.type === 'Teaser') && 
                 v.official === true &&
                 v.site === 'YouTube' && 
                 !v.name.toLowerCase().includes('shorts') &&
                 !v.name.toLowerCase().includes('news') &&
-                !v.name.toLowerCase().includes('press')
+                !v.name.toLowerCase().includes('press') &&
+                !v.name.toLowerCase().includes('interview') &&
+                !v.name.toLowerCase().includes('event')
             );
 
             const dots = document.getElementById('carouselDots');
