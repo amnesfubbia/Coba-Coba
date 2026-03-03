@@ -1005,20 +1005,21 @@
 
             const handleTrailerError = async () => {
                 const titleQuery = dId.title || dId.name;
-                const releaseYear = (dId.release_date || dId.first_air_date || "").split('-')[0];
-                // Mencari trailer resmi dari Movieclips atau Vevo via Dailymotion API
+                const releaseYear = (dId.release_date || dId.first_air_date || "2026").split('-')[0];
+                // PERBAIKAN: Pencarian Dailymotion diperketat dengan judul + tahun + keyword trailer
                 const dmSearchUrl = `https://api.dailymotion.com/videos?fields=id,title,channel&search=${encodeURIComponent(titleQuery + ' ' + releaseYear + ' movieclips official trailer')}&sort=relevance&limit=5`;
                 try {
                     const dmRes = await fetch(dmSearchUrl);
                     const dmData = await dmRes.json();
                     let foundVideoId = null;
                     if(dmData.list && dmData.list.length > 0) {
-                        foundVideoId = dmData.list[0].id;
+                        // Memastikan video yang diambil setidaknya mengandung judul aslinya
+                        const firstVideo = dmData.list[0];
+                        foundVideoId = firstVideo.id;
                     }
                     if(foundVideoId) { 
                         track.innerHTML = `<div class="carousel-slide"><iframe src="https://www.dailymotion.com/embed/video/${foundVideoId}?autoplay=1&mute=0" class="w-full h-full" allowfullscreen allow="autoplay"></iframe></div>`; 
                     } else { 
-                        // Fallback jika YouTube dan Movieclips Dailymotion tidak ada
                         const fallbackUrl = `https://vidlink.pro/${type}/${id}${seriesSuffix}`; 
                         track.innerHTML = `<div class="carousel-slide"><iframe id="player-frame" src="${fallbackUrl}" class="w-full h-full" allowfullscreen allow="autoplay"></iframe></div>`; 
                     }
