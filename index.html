@@ -1012,7 +1012,7 @@
                 await handleTrailerError();
             }
 
-            // PERBAIKAN: Mencari Trailer Dailymotion berdasarkan judul dan tahun agar lebih akurat
+            // PERBAIKAN: API Dailymotion spesifik judul + tahun agar akurat
             try {
                 const qName = dId.title || dId.name;
                 const qYear = (dId.release_date || dId.first_air_date || "").split('-')[0];
@@ -1045,7 +1045,7 @@
                 <button class="server-btn" onclick="playVid('https://player.videasy.net/movie/${id}', this)">Server 2</button>
                 <button class="server-btn" onclick="playVid('https://vidlink.pro/${type}/${id}${seriesSuffix}', this)">Server 3</button>
                 <button class="server-btn" onclick="playVid('https://vidrock.net/embed/${type}/${id}${seriesSuffix}', this)">Server 4</button>
-                <button class="server-btn" onclick="playVid('https://vidstorm.ru/embed/${type}/${id}${seriesSuffix}', this)">Server 5</button>
+                <button class="server-btn" onclick="playVid('https://vidrock.net/embed/${type}/${id}${seriesSuffix}', this)">Server 5</button>
                 <button class="server-btn" onclick="playVid('https://vidfast.pro/movie/${id}', this)">Server 6</button>
                 <button class="server-btn" onclick="playVid('https://www.nontongo.win/embed/${type}/${id}${seriesSuffix}', this)">Server 7</button>
                 <button class="server-btn" onclick="playVid('https://vidsrc.cc/v2/embed/${type}/${currentImdbId || id}', this)">Server 8</button>
@@ -1088,7 +1088,7 @@
             const track = document.getElementById('carouselTrack'); 
             const dots = document.getElementById('carouselDots'); 
             
-            // PERBAIKAN: Jika Server 21 (Dailymotion) diklik tapi ID kosong, arahkan otomatis ke Server 1
+            // Logika: Jika Dailymotion diklik tapi ID kosong, arahkan otomatis ke Server 1
             if(isDailymotion && !currentDailymotionId) {
                 const srv1 = document.getElementById('srv1');
                 if(srv1) srv1.click();
@@ -1108,12 +1108,12 @@
             document.getElementById('swipeOverlay').style.display = 'none'; 
             highlightBtn(el); 
 
-            // Fallback timeout untuk Server 21 (Dailymotion)
             if(isDailymotion) {
                 setTimeout(() => {
                     const frame = document.getElementById('player-frame');
                     if(!frame || frame.src.includes('undefined')) {
-                        document.getElementById('srv1').click();
+                        const srv1 = document.getElementById('srv1');
+                        if(srv1) srv1.click();
                     }
                 }, 3000);
             }
