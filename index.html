@@ -430,7 +430,7 @@
                 <div id="serverList" class="server-scroll-wrapper mt-4 px-4"></div>
                 
                 <div class="dl-grid">
-                    <button id="btnDownload1" class="dl-link-btn" onclick="window.open(`https://dl.vidsrc.vip/download/${window.currentMediaType}/${window.currentMediaId}`)">Download</button>
+                    <button id="btnDownload1" class="dl-link-btn" onclick="handleDownload()">Download</button>
                 </div>
             </div>
         </div>
@@ -504,6 +504,16 @@
                 document.getElementById('backToTop').style.display = window.scrollY > 500 ? 'flex' : 'none'; 
             }); 
         };
+
+        // --- PENANGANAN DOWNLOAD ---
+        function handleDownload() {
+            if(window.currentMediaId && window.currentMediaType) {
+                const downloadUrl = `https://dl.vidsrc.vip/${window.currentMediaType}/${window.currentMediaId}`;
+                window.open(downloadUrl, '_blank');
+            } else {
+                alert("ID Media tidak ditemukan.");
+            }
+        }
 
         // --- PENANGANAN BACK BERTAHAP (POPSTATE) ---
         window.addEventListener('popstate', function(event) {
@@ -1101,7 +1111,7 @@
             document.getElementById('serverList').innerHTML = `
                 <button class="server-btn" id="srv1" onclick="playVid('https://vidrock.net/embed/${type}/${id}${seriesSuffix}', this)">Server 1</button>
                 <button class="server-btn" onclick="playVid('https://vidsrc.cc/v2/embed/${type}/${currentImdbId || id}', this)">Server 2</button>
-                <button class="server-btn" onclick="playVid('https://vidlink.pro/embed/${type}/${id}${seriesSuffix}', this)">Server 3</button>
+                <button class="server-btn" onclick="playVid('https://vidlink.pro/${type}/${id}${seriesSuffix}', this)">Server 3</button>
                 <button class="server-btn" onclick="playVid('https://vidstorm.ru/embed/${type}/${id}', this)">Server 4</button>
                 <button class="server-btn" onclick="playVid('https://111movies.com/movie/${id}', this)">Server 5</button>
                 <button class="server-btn" onclick="playVid('https://www.nontongo.win/embed/${type}/${id}${seriesSuffix}', this)">Server 6</button>
