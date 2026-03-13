@@ -427,7 +427,51 @@
                     <div id="episodeGrid" class="grid grid-cols-5 gap-2"></div>
                 </div>
 
-                <div id="serverList" class="server-scroll-wrapper mt-4 px-4"></div>
+                <div id="serverList" class="server-scroll-wrapper mt-4 px-4 flex flex-col gap-2">
+                    <div class="flex gap-2 no-scrollbar">
+                        <button class="server-btn" id="srv1" onclick="playVid('https://vidrock.net/embed/${window.currentMediaType}/${window.currentMediaId}${window.currentMediaType === \'tv\' ? \'/1/1\' : \'\'}', this)">Server 1</button>
+                        <button class="server-btn" onclick="playVid('https://vidsrc.cc/v2/embed/${window.currentMediaType}/${window.currentImdbId || window.currentMediaId}', this)">Server 2</button>
+                        <button class="server-btn" onclick="playVid('https://vidlink.pro/${window.currentMediaType}/${window.currentMediaId}${window.currentMediaType === \'tv\' ? \'/1/1\' : \'\'}', this)">Server 3</button>
+                        <button class="server-btn" onclick="playVid('https://vidstorm.ru/embed/${window.currentMediaType}/${window.currentMediaId}${window.currentMediaType === \'tv\' ? \'/1/1\' : \'\'}', this)">Server 4</button>
+                        <button class="server-btn" onclick="playVid('https://111movies.com/movie/${window.currentMediaId}', this)">Server 5</button>
+                        <button class="server-btn" onclick="playVid('https://www.nontongo.win/embed/${window.currentMediaType}/${window.currentMediaId}${window.currentMediaType === \'tv\' ? \'/1/1\' : \'\'}', this)">Server 6</button>
+                        <button class="server-btn" onclick="playVid('https://player.videasy.net/movie/${window.currentMediaId}', this)">Server 7</button>
+                        <button class="server-btn" onclick="playVid('https://vidfast.pro/movie/${window.currentMediaId}', this)">Server 8</button>
+                        <button class="server-btn" onclick="playVid('https://moviesapi.club/${window.currentMediaType}/${window.currentMediaId}${window.currentMediaType === \'tv\' ? \'/1/1\' : \'\'}', this)">Server 9</button>
+                        <button class="server-btn" onclick="playVid('https://vidsrc.cc/v2/embed/${window.currentMediaType}/${window.currentMediaId}${window.currentMediaType===\'tv\'?\'?s=1&e=1\':\'\'}', this)">Server 10</button>
+                        <button class="server-btn" onclick="playVid('https://multiembed.mov/directstream.php?video_id=${window.currentMediaId}&tmdb=1', this)">Server 11</button>
+                        <button class="server-btn" onclick="playVid('https://www.2embed.cc/embed/${window.currentMediaId}', this)">Server 12</button>
+                        <button class="server-btn" onclick="playVid('https://vidsrc.xyz/embed/${window.currentMediaType}/${window.currentMediaId}${window.currentMediaType === \'tv\' ? \'/1/1\' : \'\'}', this)">Server 13</button>
+                        <button class="server-btn" onclick="playVid('https://vidsrc.me/embed/${window.currentMediaType}?tmdb=${window.currentMediaId}${window.currentMediaType === \'tv\' ? \'/1/1\' : \'\'}', this)">Server 14</button>
+                        <button class="server-btn" onclick="playVid('https://vidsrc.net/embed/${window.currentMediaType}/${window.currentMediaId}${window.currentMediaType === \'tv\' ? \'/1/1\' : \'\'}', this)">Server 15</button>
+                        <button class="server-btn" onclick="playVid('https://vidsrc.icu/embed/${window.currentMediaType}/${window.currentMediaId}${window.currentMediaType === \'tv\' ? \'/1/1\' : \'\'}', this)">Server 16</button>
+                        <button class="server-btn" onclick="playVid('https://vidnest.fun/movie/${window.currentMediaId}', this)">Server 17</button>
+                        <button class="server-btn" onclick="playVid('https://player.autoembed.cc/embed/${window.currentMediaType}/${window.currentMediaId}', this)">Server 18</button>
+                        <button class="server-btn" onclick="playVid('https://warezcdn.site/filme/${window.currentMediaId}', this)">Server 19</button>
+                        <button class="server-btn" onclick="playVid('https://embed.smashystream.com/playere.php?tmdb=${window.currentMediaId}', this)">Server 20</button>
+                        <button class="server-btn" onclick="playVid('https://www.dailymotion.com/embed/video/${window.currentDailymotionId}', this, true)">Server 21</button>
+                    </div>
+                    <div class="flex gap-2 no-scrollbar">
+                        <button class="server-btn" onclick="playVid('https://database.gdriveplayer.us/player.php?tmdb=${window.currentMediaId}', this)">Server 22</button>
+                        <button class="server-btn" onclick="playVid('https://nontongratis.vip/embed/${window.currentMediaType}/${window.currentMediaId}${window.currentMediaType === \'tv\' ? \'/1/1\' : \'\'}', this)">Server 23</button>
+                        <button class="server-btn" onclick="playVid('https://vidpro.xyz/embed/${window.currentMediaType}/${window.currentMediaId}${window.currentMediaType === \'tv\' ? \'/1/1\' : \'\'}', this)">Server 24</button>
+                        <button class="server-btn" onclick="playVid('https://vidsrc.to/embed/${window.currentMediaType}/${window.currentMediaId}${window.currentMediaType === \'tv\' ? \'/1/1\' : \'\'}', this)">Server 25</button>
+                        <button class="server-btn" onclick="playVid('https://embed.su/embed/${window.currentMediaType}/${window.currentMediaId}${window.currentMediaType === \'tv\' ? \'/1/1\' : \'\'}', this)">Server 26</button>
+                        <button class="server-btn" onclick="playVid('https://autoembed.cc/embed/${window.currentMediaType}/${window.currentMediaId}${window.currentMediaType === \'tv\' ? \'/1/1\' : \'\'}', this)">Server 27</button>
+                        <button class="server-btn" onclick="playVid('https://vidsrc.pro/embed/${window.currentMediaType}/${window.currentMediaId}${window.currentMediaType === \'tv\' ? \'/1/1\' : \'\'}', this)">Server 28</button>
+                        <button class="server-btn" onclick="playVid('https://vidsrc.in/embed/${window.currentMediaType}/${window.currentMediaId}${window.currentMediaType === \'tv\' ? \'/1/1\' : \'\'}', this)">Server 29</button>
+                        <button class="server-btn" onclick="playVid('https://movieapi.res/embed/${window.currentMediaType}/${window.currentMediaId}${window.currentMediaType === \'tv\' ? \'/1/1\' : \'\'}', this)">Server 30</button>
+                        <button class="server-btn" onclick="playVid('https://hydra.do/embed/${window.currentMediaType}/${window.currentMediaId}${window.currentMediaType === \'tv\' ? \'/1/1\' : \'\'}', this)">Server 31</button>
+                        <button class="server-btn" onclick="playVid('https://blackvid.space/embed/${window.currentMediaType}/${window.currentMediaId}${window.currentMediaType === \'tv\' ? \'/1/1\' : \'\'}', this)">Server 32</button>
+                        <button class="server-btn" onclick="playVid('https://embed.vip/embed/${window.currentMediaType}/${window.currentMediaId}${window.currentMediaType === \'tv\' ? \'/1/1\' : \'\'}', this)">Server 33</button>
+                        <button class="server-btn" onclick="playVid('https://iframe.pro/embed/${window.currentMediaType}/${window.currentMediaId}${window.currentMediaType === \'tv\' ? \'/1/1\' : \'\'}', this)">Server 34</button>
+                        <button class="server-btn" onclick="playVid('https://frembed.live/api/film.php?id=${window.currentMediaId}', this)">Server 35</button>
+                        <button class="server-btn" onclick="playVid('https://zoechip.com/embed-player/${window.currentMediaId}', this)">Server 36</button>
+                        <button class="server-btn" onclick="playVid('https://vidsrc.stream/embed/${window.currentMediaType}/${window.currentMediaId}', this)">Server 37</button>
+                        <button class="server-btn" onclick="playVid('https://topembed.pw/embed/${window.currentMediaType}/${window.currentMediaId}${window.currentMediaType === \'tv\' ? \'/1/1\' : \'\'}', this)">Server 38</button>
+                        <button class="server-btn" onclick="playVid('https://cinezy.com/embed/${window.currentMediaId}', this)">Server 39</button>
+                    </div>
+                </div>
                 
                 <div class="dl-grid">
                     <button id="btnDownload1" class="dl-link-btn" onclick="handleDownload()">Download</button>
@@ -1034,7 +1078,6 @@
             }
             
             document.getElementById('carouselDots').innerHTML = "";
-            document.getElementById('serverList').innerHTML = "";
             document.getElementById('mToggleBtn').classList.add('hidden');
             document.getElementById('mTranslateBtn').classList.add('hidden');
             document.getElementById('seriesControl').classList.add('hidden');
@@ -1108,29 +1151,6 @@
             const rel = dId.release_date || dId.first_air_date || ""; 
             document.getElementById('mDateDisplay').innerText = rel ? new Date(rel).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
             
-            document.getElementById('serverList').innerHTML = `
-                <button class="server-btn" id="srv1" onclick="playVid('https://vidrock.net/embed/${type}/${id}${seriesSuffix}', this)">Server 1</button>
-                <button class="server-btn" onclick="playVid('https://vidsrc.cc/v2/embed/${type}/${currentImdbId || id}', this)">Server 2</button>
-                <button class="server-btn" onclick="playVid('https://vidlink.pro/${type}/${id}${seriesSuffix}', this)">Server 3</button>
-                <button class="server-btn" onclick="playVid('https://vidstorm.ru/embed/${type}/${id}${seriesSuffix}', this)">Server 4</button>
-                <button class="server-btn" onclick="playVid('https://111movies.com/movie/${id}', this)">Server 5</button>
-                <button class="server-btn" onclick="playVid('https://www.nontongo.win/embed/${type}/${id}${seriesSuffix}', this)">Server 6</button>
-                <button class="server-btn" onclick="playVid('https://player.videasy.net/movie/${id}', this)">Server 7</button>
-                <button class="server-btn" onclick="playVid('https://vidfast.pro/movie/${id}', this)">Server 8</button>
-                <button class="server-btn" onclick="playVid('https://moviesapi.club/${type}/${id}${seriesSuffix}', this)">Server 9</button>
-                <button class="server-btn" onclick="playVid('https://vidsrc.cc/v2/embed/${type}/${id}${type==='tv'?'?s=1&e=1':''}', this)">Server 10</button>
-                <button class="server-btn" onclick="playVid('https://multiembed.mov/directstream.php?video_id=${id}&tmdb=1', this)">Server 11</button>
-                <button class="server-btn" onclick="playVid('https://www.2embed.cc/embed/${id}', this)">Server 12</button>
-                <button class="server-btn" onclick="playVid('https://vidsrc.xyz/embed/${type}/${id}${seriesSuffix}', this)">Server 13</button>
-                <button class="server-btn" onclick="playVid('https://vidsrc.me/embed/${type}?tmdb=${id}${seriesSuffix}', this)">Server 14</button>
-                <button class="server-btn" onclick="playVid('https://vidsrc.net/embed/${type}/${id}${seriesSuffix}', this)">Server 15</button>
-                <button class="server-btn" onclick="playVid('https://vidsrc.icu/embed/${type}/${id}${seriesSuffix}', this)">Server 16</button>
-                <button class="server-btn" onclick="playVid('https://vidnest.fun/movie/${id}', this)">Server 17</button>
-                <button class="server-btn" onclick="playVid('https://player.autoembed.cc/embed/${type}/${id}', this)">Server 18</button>
-                <button class="server-btn" onclick="playVid('https://warezcdn.site/filme/${id}', this)">Server 19</button>
-                <button class="server-btn" onclick="playVid('https://embed.smashystream.com/playere.php?tmdb=${id}', this)">Server 20</button>
-                <button class="server-btn" onclick="playVid('https://www.dailymotion.com/embed/video/${currentDailymotionId}', this, true)">Server 21</button>
-            `;
             if(type === 'tv') { document.getElementById('seriesControl').classList.remove('hidden'); document.getElementById('seasonSel').innerHTML = (dId.seasons||[]).filter(s=>s.season_number>0).map(s=>`<option value="${s.season_number}">Season ${s.season_number}</option>`).join(''); loadEpisodes(); } else { document.getElementById('seriesControl').classList.add('hidden'); }
             updateLibButtons(id);
         }
