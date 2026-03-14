@@ -218,7 +218,6 @@
         .actor-stats-row {
             flex-grow: 1; display: flex; justify-content: space-around; text-align: center; gap: 5px;
         }
-        .actor-stat-col { display: flex; flex-direction: column; gap: 1px; }
         .actor-stat-num { font-size: 15px; font-weight: 800; color: #fff; line-height: 1; }
         .actor-stat-lbl { font-size: 11px; color: #8e8e8e; font-weight: 400; line-height: 1; }
 
@@ -1142,8 +1141,6 @@
                 <button class="server-btn" onclick="changeServer(19, this)">Server 19</button>
                 <button class="server-btn" onclick="changeServer(20, this)">Server 20</button>
                 <button class="server-btn" onclick="changeServer(21, this)">Server 21</button>
-                <button class="server-btn" onclick="changeServer(22, this)">Server 22</button>
-                <button class="server-btn" onclick="changeServer(23, this)">Server 23</button>
             `;
             if(type === 'tv') { document.getElementById('seriesControl').classList.remove('hidden'); document.getElementById('seasonSel').innerHTML = (dId.seasons||[]).filter(s=>s.season_number>0).map(s=>`<option value="${s.season_number}">Season ${s.season_number}</option>`).join(''); loadEpisodes(); } else { document.getElementById('seriesControl').classList.add('hidden'); }
             updateLibButtons(id);
@@ -1244,8 +1241,6 @@
                 case 19: return `https://warezcdn.site/${type==='tv'?'serie':'filme'}/${id}${type==='tv'?`/${s}/${e}`:''}`;
                 case 20: return `https://embed.smashystream.com/playere.php?tmdb=${id}${type==='tv'?`&season=${s}&episode=${e}`:''}`;
                 case 21: return `https://www.dailymotion.com/embed/video/${currentDailymotionId}`;
-                case 22: return `https://drive.google.com/file/d/${id}/preview`;
-                case 23: return `https://vidpop.xyz/embed/${id}${type==='tv'?`?s=${s}&e=${e}`:''}`;
                 default: return `https://vidrock.net/embed/${type}/${id}${seriesSuffix}`;
             }
         }
