@@ -1131,27 +1131,27 @@
                 <button class="server-btn" onclick="playVid('https://embed.smashystream.com/playere.php?tmdb=${id}', this)">Server 20</button>
                 <button class="server-btn" onclick="playVid('https://www.dailymotion.com/embed/video/${currentDailymotionId}', this, true)">Server 21</button>
                 <button class="server-btn" onclick="playVid('https://database.gdriveplayer.us/player.php?tmdb=${id}', this)">Server 22</button>
-                <button class="server-btn" onclick="playVid('https://nontongratis.vip/${id}', this)">Server 23</button>
-                <button class="server-btn" onclick="playVid('https://vidpro.xyz/${type}/${id}', this)">Server 24</button>
-                <button class="server-btn" onclick="playVid('https://vidsrc.to/${type}/${id}', this)">Server 25</button>
-                <button class="server-btn" onclick="playVid('https://embed.su/${type}/${id}', this)">Server 26</button>
-                <button class="server-btn" onclick="playVid('https://autoembed.cc/${type}/${id}', this)">Server 27</button>
-                <button class="server-btn" onclick="playVid('https://www.vidpop.xyz/embed/${type}/${id}', this)">Server 28</button>
+                <button class="server-btn" onclick="playVid('https://nontongratis.vip/embed/${id}', this)">Server 23</button>
+                <button class="server-btn" onclick="playVid('https://vidpro.xyz/embed/${id}', this)">Server 24</button>
+                <button class="server-btn" onclick="playVid('https://vidsrc.to/embed/${id}', this)">Server 25</button>
+                <button class="server-btn" onclick="playVid('https://embed.su/embed/${id}', this)">Server 26</button>
+                <button class="server-btn" onclick="playVid('https://autoembed.cc/embed/${id}', this)">Server 27</button>
+                <button class="server-btn" onclick="playVid('https://www.vidpop.xyz/embed/embed/${id}', this)">Server 28</button>
                 <button class="server-btn" onclick="playVid('https://www.vidpop.xyz/${type}/${id}', this)">Server 29</button>
-                <button class="server-btn" onclick="playVid('https://movieapi.res/${type}/${id}', this)">Server 30</button>
-                <button class="server-btn" onclick="playVid('https://hydra.do/${type}/${id}', this)">Server 31</button
-                <button class="server-btn" onclick="playVid('https://www.vidpop.xyz/${type}/${id} ', this)">Server 32</button>
-                <button class="server-btn" onclick="playVid('https://blackvid.space/${type}/${id}', this)">Server 33</button>
-                <button class="server-btn" onclick="playVid('https://embed.vip/${type}/${id}', this)">Server 34</button>
-                <button class="server-btn" onclick="playVid('https://iframe.pro/${type}/${id}', this)">Server 35</button>
-                <button class="server-btn" onclick="playVid('https://frembed.live/api/film.php?id=${type}/${id}', this)">Server 36</button>
-                <button class="server-btn" onclick="playVid('https://zoechip.com/embed-player/${type}/${id}', this)">Server 37</button>
-                <button class="server-btn" onclick="playVid('https://vidsrc.stream/${type}/${id}', this)">Server 38</button>
-                <button class="server-btn" onclick="playVid('https://topembed.pw/${type}/${id}', this)">Server 39</button>
-                <button class="server-btn" onclick="playVid('https://cinezy.com/${type}/${id}', this)">Server 40</button>
-                <button class="server-btn" onclick="playVid('https://nono.is/${type}/${id}', this)">Server 41</button>
-                <button class="server-btn" onclick="playVid('https://www.primewire.tf/${type}/${id}', this)">Server 42</button>
-                <button class="server-btn" onclick="playVid('https://www.cloudembed.to/${type}/${id}', this)">Server 43</button>
+                <button class="server-btn" onclick="playVid('https://movieapi.res/embed/${id}', this)">Server 30</button>
+                <button class="server-btn" onclick="playVid('https://hydra.do/embed/${id}', this)">Server 31</button
+                <button class="server-btn" onclick="playVid('https://www.vidpop.xyz/embed/?id ', this)">Server 32</button>
+                <button class="server-btn" onclick="playVid('https://blackvid.space/embed/${id}', this)">Server 33</button>
+                <button class="server-btn" onclick="playVid('https://embed.vip/embed/${id}', this)">Server 34</button>
+                <button class="server-btn" onclick="playVid('https://iframe.pro/embed/${id}', this)">Server 35</button>
+                <button class="server-btn" onclick="playVid('https://frembed.live/api/film.php?id=', this)">Server 36</button>
+                <button class="server-btn" onclick="playVid('https://zoechip.com/embed-player/embed/${id}', this)">Server 37</button>
+                <button class="server-btn" onclick="playVid('https://vidsrc.stream/embed/${id}', this)">Server 38</button>
+                <button class="server-btn" onclick="playVid('https://topembed.pw/embed/${id}', this)">Server 39</button>
+                <button class="server-btn" onclick="playVid('https://cinezy.com/embed/${id}', this)">Server 40</button>
+                <button class="server-btn" onclick="playVid('https://nono.is/embed/${id}', this)">Server 41</button>
+                <button class="server-btn" onclick="playVid('https://www.primewire.tf/embed/${id}', this)">Server 42</button>
+                <button class="server-btn" onclick="playVid('https://www.cloudembed.to/embed/${id}', this)">Server 43</button>
             `;
             if(type === 'tv') { document.getElementById('seriesControl').classList.remove('hidden'); document.getElementById('seasonSel').innerHTML = (dId.seasons||[]).filter(s=>s.season_number>0).map(s=>`<option value="${s.season_number}">Season ${s.season_number}</option>`).join(''); loadEpisodes(); } else { document.getElementById('seriesControl').classList.add('hidden'); }
             updateLibButtons(id);
