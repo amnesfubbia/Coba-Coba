@@ -16,179 +16,8 @@
             --text: #fff; --text2: #efefef; --text3: #8e8e8e; --text4: #555;
             --card: #111; --card2: #1a1a1a;
         }
-        body.light-theme {
-            --bg: #f2f2f7; --bg2: #fff; --bg3: #fff; --bg4: #f2f2f7;
-            --border: #e5e5ea; --border2: #d1d1d6;
-            --text: #000; --text2: #1c1c1e; --text3: #6c6c70; --text4: #aeaeb2;
-            --card: #fff; --card2: #f2f2f7;
-        }
         body { background-color: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; transition: background-color 0.3s, color 0.3s; }
 
-        /* Light theme targeted overrides */
-        body.light-theme .modal-player,
-        body.light-theme #actorModal,
-        body.light-theme #tvModal,
-        body.light-theme #sideMenu,
-        body.light-theme #searchOverlay,
-        body.light-theme #soundtrackModal,
-        body.light-theme .filter-dropdown { background: var(--bg) !important; }
-
-        body.light-theme .profile-header,
-        body.light-theme .highlights-wrapper,
-        body.light-theme .tab-nav { background: var(--bg2) !important; }
-
-        body.light-theme .top-bar,
-        body.light-theme .bio,
-        body.light-theme .action-buttons { background: var(--bg2); }
-
-        body.light-theme .btn-ig { background: #e5e5ea !important; color: #000 !important; }
-        body.light-theme .btn-ig.active { background: #d1d1d6 !important; border-color: #aeaeb2 !important; }
-        body.light-theme .btn-icon-sq { background: #e5e5ea !important; color: #000 !important; }
-
-        body.light-theme .movie-grid,
-        body.light-theme #feedGrid { background: var(--bg); }
-
-        body.light-theme .post-card { background: #e5e5ea; }
-        body.light-theme .badge-rating { background: rgba(0,0,0,0.75) !important; color: #fff !important; }
-        body.light-theme .badge-type { background: rgba(0,0,0,0.6) !important; color: #fff !important; }
-
-        body.light-theme .ig-logo { color: #000; }
-        body.light-theme .stat-val { color: #000; }
-        body.light-theme .stat-label { color: #6c6c70; }
-        body.light-theme .bio-name { color: #000; }
-        body.light-theme .ig-caption { color: #1c1c1e; }
-        body.light-theme .ig-hashtags { color: #007aff; }
-        body.light-theme .ig-date { color: #8e8e93; }
-
-        body.light-theme .bottom-nav { background: rgba(242,242,247,0.95) !important; border-top-color: #e5e5ea !important; }
-        body.light-theme .bottom-nav i { color: #8e8e93; }
-        body.light-theme .bottom-nav i.active-nav { color: #000; }
-
-        body.light-theme .tab-item { color: #8e8e93; }
-        body.light-theme .tab-item.active { color: #000; border-bottom-color: #000; }
-        body.light-theme .tab-nav { border-top-color: #e5e5ea; }
-
-        body.light-theme .highlight-circle { border-color: #e5e5ea; background: #fff; }
-        body.light-theme .highlight-text { color: #000; }
-        body.light-theme .highlights-wrapper { border-bottom-color: #e5e5ea; }
-
-        body.light-theme .pill { border-color: #d1d1d6; color: #000; }
-        body.light-theme .pill.active-pill { border-color: #000; background: rgba(0,0,0,0.05); }
-
-        body.light-theme .search-header { background: var(--bg) !important; border-bottom-color: #e5e5ea; }
-        body.light-theme .search-input-box { background: #e5e5ea; }
-        body.light-theme .search-input-box input { color: #000 !important; }
-
-        body.light-theme #smartSearchDropdown { background: #fff; border-color: #e5e5ea; }
-        body.light-theme .smart-item { border-bottom-color: #f2f2f7; }
-        body.light-theme .smart-name { color: #000; }
-        body.light-theme .smart-meta { color: #8e8e93; }
-
-        body.light-theme .modal-player .sticky { background: rgba(255,255,255,0.95) !important; border-bottom-color: #e5e5ea !important; }
-        body.light-theme #mTitle { color: #000; }
-        body.light-theme .interaction-icon { color: #000; }
-        body.light-theme .ig-likes-count { color: #000; }
-        body.light-theme .ig-username { color: #000; }
-        body.light-theme .toggle-btn { color: #8e8e93; }
-        body.light-theme #mTranslateBtn { color: #007aff; }
-
-        body.light-theme .server-btn { background: #f2f2f7; color: #000; border-color: #e5e5ea; }
-        body.light-theme .server-btn.active-link { background: rgba(0,0,0,0.08) !important; border-color: #000 !important; }
-        body.light-theme .dl-link-btn { background: #fff; color: #000; border-color: #e5e5ea; }
-
-        body.light-theme .about-topbar { background: rgba(242,242,247,0.92) !important; border-bottom-color: #e5e5ea; }
-        body.light-theme .about-topbar-title { color: #000; }
-        body.light-theme .about-close-btn { color: #000; }
-        body.light-theme .about-app-name { color: #000; }
-        body.light-theme .about-app-tagline { color: #6c6c70; }
-        body.light-theme .about-version-badge { background: #e5e5ea; border-color: #d1d1d6; color: #6c6c70; }
-        body.light-theme .about-stat-card { background: #fff; border-color: #e5e5ea; }
-        body.light-theme .about-stat-num { color: #000; }
-        body.light-theme .about-stat-lbl { color: #6c6c70; }
-        body.light-theme .about-section-label { color: #8e8e93; }
-        body.light-theme .about-feature-row { background: #fff; border-bottom-color: #f2f2f7; }
-        body.light-theme .about-feat-title { color: #000; }
-        body.light-theme .about-feat-desc { color: #6c6c70; }
-        body.light-theme .about-info-row { background: #fff; }
-        body.light-theme .about-info-label { color: #000; }
-        body.light-theme .about-info-value { color: #6c6c70; }
-        body.light-theme .about-link-row { background: #fff; }
-        body.light-theme .about-link-label { color: #000; }
-        body.light-theme .about-credits-made { color: #8e8e93; }
-        body.light-theme .about-credits-by { color: #000; }
-        body.light-theme .about-credits-copy { color: #aeaeb2; }
-
-        body.light-theme .actor-topbar { background: rgba(242,242,247,0.92) !important; border-bottom-color: #e5e5ea; }
-        body.light-theme .actor-cover { background: #e5e5ea; }
-        body.light-theme .actor-cover-name { color: #000; }
-        body.light-theme .actor-stats-bar { border-bottom-color: #e5e5ea; }
-        body.light-theme .actor-stat-num { color: #000; }
-        body.light-theme .actor-stat-lbl { color: #6c6c70; }
-        body.light-theme .actor-stat-divider { background: #e5e5ea; }
-        body.light-theme .actor-btn-msg { background: #e5e5ea; color: #000; }
-        body.light-theme .actor-btn-sq { background: #e5e5ea; color: #000; }
-        body.light-theme .actor-bio-name { color: #000; }
-        body.light-theme .actor-bio-text { color: #1c1c1e; }
-        body.light-theme .actor-bio-meta { color: #8e8e93; }
-        body.light-theme .actor-highlights-wrapper { border-bottom-color: #e5e5ea; }
-        body.light-theme .actor-hl-circle { border-color: #e5e5ea; background: #fff; }
-        body.light-theme .actor-hl-label { color: #000; }
-        body.light-theme .actor-tab-nav { background: #fff; border-top-color: #e5e5ea; }
-        body.light-theme .actor-tab-item { color: #8e8e93; }
-        body.light-theme .actor-tab-item.active { color: #000; border-bottom-color: #000; }
-
-        body.light-theme .tv-topbar { background: rgba(242,242,247,0.92) !important; border-bottom-color: #e5e5ea; }
-        body.light-theme .tv-topbar-title { color: #000; }
-        body.light-theme .tv-search-box { background: #e5e5ea; border-color: #d1d1d6; }
-        body.light-theme .tv-search-box input { color: #000; }
-        body.light-theme .tv-category-label { color: #8e8e93; }
-        body.light-theme .tv-ch-card { background: #fff; border-color: #e5e5ea; }
-        body.light-theme .tv-ch-logo-box { background: #f2f2f7; color: #000; }
-        body.light-theme .tv-ch-name { color: #6c6c70; }
-        body.light-theme .tv-now-bar { background: #fff; border-bottom-color: #f2f2f7; }
-        body.light-theme .tv-now-show { color: #000; }
-        body.light-theme .tv-now-time { color: #8e8e93; }
-        body.light-theme .tv-now-next-show { color: #6c6c70; }
-        body.light-theme .tv-schedule-show { color: #000; }
-        body.light-theme .tv-schedule-genre { color: #8e8e93; }
-        body.light-theme .tv-schedule-row { border-bottom-color: #f2f2f7; }
-        body.light-theme .tv-schedule-row.past { opacity: 0.4; }
-        body.light-theme .tv-switcher-btn-new { background: #fff; border-color: #e5e5ea; }
-        body.light-theme .tv-switcher-name-new { color: #6c6c70; }
-        body.light-theme .tv-switcher-section-title { color: #8e8e93; }
-        body.light-theme .tv-switcher-logo-new { background: #f2f2f7; color: #000; }
-
-        body.light-theme .filter-item { color: #000; border-bottom-color: #f2f2f7; }
-        body.light-theme .sticky-reset { background: #f2f2f7 !important; color: #000 !important; border-bottom-color: #e5e5ea; }
-        body.light-theme .date-chip { background: #fff; }
-        body.light-theme .date-chip .d-day { color: #000; }
-        body.light-theme .date-chip .d-month { color: #8e8e93; }
-        body.light-theme .date-chip.active-date { border-color: #000; }
-        body.light-theme .calendar-item { border-bottom-color: #f2f2f7; }
-        body.light-theme .cal-title { color: #000; }
-        body.light-theme .cal-meta { color: #8e8e93; }
-        body.light-theme .cal-genre-pill { background: #f2f2f7; color: #6c6c70; }
-
-        body.light-theme .music-card { background: #fff; border-color: #f2f2f7; }
-        body.light-theme #soundtrackModal { background: #f2f2f7; border-top-color: #e5e5ea; }
-
-        body.light-theme #sideMenu { background: #f2f2f7; }
-        body.light-theme .about-hero { border-bottom-color: #e5e5ea; }
-        body.light-theme .about-stats-row { border-bottom-color: #e5e5ea; }
-        body.light-theme .about-hero-glow { background: radial-gradient(circle, rgba(0,122,255,0.1) 0%, transparent 70%); }
-
-        body.light-theme .seriesControl,
-        body.light-theme #seriesControl { background: #f2f2f7 !important; border-color: #e5e5ea !important; }
-        body.light-theme #seasonSel { background: #fff !important; color: #000 !important; border-color: #e5e5ea !important; }
-        body.light-theme .ep-btn { border-color: #e5e5ea !important; color: #000 !important; }
-
-        body.light-theme .about-info-row:not(:last-child) { border-bottom-color: #f2f2f7; }
-        body.light-theme .about-feature-row:not(:last-child) { border-bottom-color: #f2f2f7; }
-        body.light-theme .about-link-row:not(:last-child) { border-bottom-color: #f2f2f7; }
-
-        body.light-theme #themeToggle { background: #34c759 !important; }
-        body.light-theme #themeThumb { transform: translateX(18px); }
-        body.light-theme #themeLabel { color: #000 !important; }
         /* Fix Horizontal Scroll & Safari Smoothness */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -webkit-overflow-scrolling: touch; }
@@ -269,6 +98,14 @@
         .search-header { position: sticky; top: 0; background: #000; display: flex; align-items: center; padding: 10px 15px; gap: 10px; border-bottom: 1px solid #1c1c1c; z-index: 100; }
         .search-input-box { flex-grow: 1; background: #262626; border-radius: 10px; padding: 8px 12px; display: flex; align-items: center; position: relative; }
         .search-input-box input { background: transparent !important; border: none; outline: none; color: #fff !important; font-size: 14px; width: 100%; margin-left: 8px; }
+        /* Search type tabs */
+        .search-tab {
+            flex: 1; text-align: center; padding: 10px 0;
+            font-size: 12px; font-weight: 700; color: #555;
+            cursor: pointer; border-bottom: 2px solid transparent;
+            transition: color 0.2s, border-color 0.2s;
+        }
+        .search-tab.active { color: #fff; border-bottom-color: #fff; }
         
         #smartSearchDropdown { position: absolute; top: 100%; left: 0; right: 0; background: #1a1a1a; border-radius: 0 0 10px 10px; border: 1px solid #333; border-top: none; display: none; z-index: 500; max-height: 300px; overflow-y: auto; }
         .smart-item { display: flex; align-items: center; padding: 10px; gap: 12px; border-bottom: 1px solid #262626; cursor: pointer; }
@@ -363,9 +200,8 @@
         /* Sticky topbar */
         .about-topbar {
             position: sticky; top: 0; z-index: 100;
-            background: rgba(0,0,0,0.9);
-            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-            border-bottom: 1px solid #1a1a1a;
+            background: #000;
+            border-bottom: 1px solid #1c1c1c;
             display: flex; align-items: center; padding: 0 16px; height: 54px;
         }
         .about-topbar-title {
@@ -377,39 +213,26 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* Hero section */
+        /* Hero section - solid black, no glow */
         .about-hero {
             display: flex; flex-direction: column; align-items: center;
-            padding: 36px 20px 28px;
-            border-bottom: 1px solid #111;
-            position: relative; overflow: hidden;
+            padding: 28px 20px 22px;
+            border-bottom: 1px solid #1c1c1c;
+            background: #000;
         }
-        .about-hero-glow {
-            position: absolute; top: -40px; left: 50%; transform: translateX(-50%);
-            width: 220px; height: 220px; border-radius: 50%;
-            background: radial-gradient(circle, rgba(220,39,67,0.18) 0%, transparent 70%);
-            pointer-events: none;
-        }
-        .about-app-icon {
-            width: 88px; height: 88px; border-radius: 22px;
-            background: #000; border: 1px solid #1c1c1c;
-            display: flex; align-items: center; justify-content: center;
-            overflow: hidden; margin-bottom: 14px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.05);
-        }
-        .about-app-icon img { width: 100%; height: 100%; object-fit: contain; }
+        .about-hero-glow { display: none; }
         .about-app-name {
-            font-size: 24px; font-weight: 900; color: #fff;
-            letter-spacing: -1px; margin-bottom: 4px;
+            font-size: 20px; font-weight: 900; color: #fff;
+            letter-spacing: -0.5px; margin-bottom: 6px;
         }
         .about-app-tagline {
             font-size: 13px; color: #8e8e8e; font-weight: 400; text-align: center;
-            line-height: 1.4; margin-bottom: 20px;
+            line-height: 1.4; margin-bottom: 18px;
         }
         .about-version-badge {
-            background: #1a1a1a; border: 1px solid #2a2a2a;
+            background: #111; border: 1px solid #1c1c1c;
             border-radius: 20px; padding: 5px 14px;
-            font-size: 11px; font-weight: 700; color: #8e8e8e;
+            font-size: 11px; font-weight: 700; color: #555;
             letter-spacing: 0.3px;
         }
 
@@ -492,6 +315,19 @@
         .about-link-row:active { background: #1a1a1a; }
         .about-link-label { font-size: 14px; color: #fff; font-weight: 500; }
         .about-link-arrow { color: #444; font-size: 12px; }
+
+        /* About Page hero - solid black, no glow */
+        .about-hero {
+            display: flex; flex-direction: column; align-items: center;
+            padding: 28px 20px 24px;
+            border-bottom: 1px solid #1c1c1c;
+            background: #000;
+        }
+        .about-hero-glow { display: none; }
+        .about-app-name {
+            font-size: 20px; font-weight: 900; color: #fff;
+            letter-spacing: -0.5px; margin-bottom: 6px;
+        }
 
         /* Credits footer */
         .about-credits {
@@ -666,8 +502,7 @@
         /* Sticky top nav bar */
         .actor-topbar {
             position: sticky; top: 0; z-index: 200;
-            background: rgba(0,0,0,0.85);
-            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            background: #000;
             border-bottom: 1px solid #1a1a1a;
             display: flex; align-items: center; padding: 0 15px; height: 54px;
         }
@@ -681,7 +516,7 @@
 
         /* Cover / backdrop blur area */
         .actor-cover {
-            position: relative; height: 140px; overflow: hidden; background: #0a0a0a;
+            position: relative; height: 90px; overflow: hidden; background: #0a0a0a;
         }
         .actor-cover-blur {
             position: absolute; inset: -20px;
@@ -698,8 +533,8 @@
         .actor-profile-row {
             position: relative; z-index: 10;
             display: flex; align-items: flex-end; gap: 14px;
-            padding: 0 15px 14px;
-            margin-top: -54px;
+            padding: 0 15px 12px;
+            margin-top: -44px;
         }
 
         /* IG-style ring */
@@ -757,15 +592,15 @@
             display: flex; gap: 7px; padding: 14px 15px 0;
         }
         .actor-btn-follow {
-            flex: 1; background: #0095f6; color: #fff;
-            font-size: 13px; font-weight: 700;
+            flex: 1; background: #262626; color: #fff;
+            font-size: 13px; font-weight: 600;
             border-radius: 8px; padding: 7px 10px; text-align: center; cursor: pointer;
             transition: background 0.2s;
         }
-        .actor-btn-follow:active { background: #007ad1; }
+        .actor-btn-follow:active { background: #363636; }
         .actor-btn-msg {
             flex: 1; background: #262626; color: #fff;
-            font-size: 13px; font-weight: 700;
+            font-size: 13px; font-weight: 600;
             border-radius: 8px; padding: 7px 10px; text-align: center; cursor: pointer;
             transition: background 0.2s;
         }
@@ -1017,8 +852,7 @@
             position: relative; transition: background 0.2s;
         }
         .tv-schedule-row.now-playing {
-            background: rgba(255,59,48,0.05);
-            border-left: 2px solid #ff3b30;
+            background: rgba(255,59,48,0.04);
         }
         .tv-schedule-row.past { opacity: 0.45; }
         .tv-schedule-time {
@@ -1077,6 +911,167 @@
             font-size: 8px; font-weight: 900; color: #fff;
         }
         .tv-switcher-name-new { font-size: 8px; font-weight: 700; color: #ccc; }
+
+        /* TV Modal bottom nav - icons only, match main nav */
+        .tv-bottom-nav {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: #000; border-top: 1px solid #1c1c1c;
+            display: flex; justify-content: space-around;
+            padding: 12px 0; z-index: 9700;
+        }
+        .tv-bottom-item {
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; color: #a8a8a8;
+            -webkit-tap-highlight-color: transparent;
+            padding: 0 16px;
+        }
+        .tv-bottom-item i { font-size: 22px; transition: color 0.2s; }
+        .tv-bottom-item:active i { opacity: 0.6; }
+        .tv-bottom-active i { color: #fff !important; }
+
+        /* ===== FOOTBALL MODAL ===== */
+        #footballModal {
+            display: none; position: fixed; inset: 0; z-index: 9600;
+            background: #000; overflow: hidden;
+            animation: aboutSlideIn 0.3s cubic-bezier(0.25,1,0.5,1);
+        }
+        /* Football topbar */
+        .fb-topbar {
+            position: sticky; top: 0; z-index: 200;
+            background: #000; border-bottom: 1px solid #1c1c1c;
+            display: flex; align-items: center; padding: 0 15px; height: 54px; gap: 12px;
+        }
+        .fb-topbar-title { flex: 1; font-size: 15px; font-weight: 800; color: #fff; }
+        /* Football tab nav - horizontal scroll */
+        .fb-tab-bar {
+            display: flex; overflow-x: auto; border-bottom: 1px solid #1c1c1c;
+            background: #000; scrollbar-width: none; -webkit-overflow-scrolling: touch;
+            position: sticky; top: 54px; z-index: 100;
+        }
+        .fb-tab-bar::-webkit-scrollbar { display: none; }
+        .fb-tab {
+            flex: 0 0 auto; padding: 11px 18px;
+            font-size: 12px; font-weight: 700; color: #555;
+            cursor: pointer; border-bottom: 2px solid transparent;
+            white-space: nowrap; transition: color 0.2s, border-color 0.2s;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .fb-tab.active { color: #fff; border-bottom-color: #fff; }
+        /* Football content area */
+        .fb-content { height: calc(100vh - 104px); overflow-y: auto; -webkit-overflow-scrolling: touch; }
+        /* League selector strip */
+        .fb-league-strip {
+            display: flex; overflow-x: auto; gap: 8px; padding: 12px 15px;
+            scrollbar-width: none; border-bottom: 1px solid #1c1c1c;
+        }
+        .fb-league-strip::-webkit-scrollbar { display: none; }
+        .fb-league-pill {
+            flex: 0 0 auto; padding: 6px 14px; border-radius: 20px;
+            background: #111; border: 1px solid #1c1c1c;
+            font-size: 11px; font-weight: 700; color: #8e8e8e;
+            cursor: pointer; transition: all 0.2s; white-space: nowrap;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .fb-league-pill.active { background: #fff; color: #000; border-color: #fff; }
+        /* Match card */
+        .fb-match-card {
+            padding: 14px 15px; border-bottom: 1px solid #111;
+            cursor: pointer; transition: background 0.2s;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .fb-match-card:active { background: #0a0a0a; }
+        .fb-match-league { font-size: 9px; font-weight: 800; color: #555; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+        .fb-match-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+        .fb-team { display: flex; flex-direction: column; align-items: center; gap: 5px; flex: 1; }
+        .fb-team-logo {
+            width: 40px; height: 40px; border-radius: 50%; background: #111;
+            border: 1px solid #1c1c1c; display: flex; align-items: center;
+            justify-content: center; font-size: 10px; font-weight: 900; color: #fff;
+            overflow: hidden;
+        }
+        .fb-team-logo img { width: 100%; height: 100%; object-fit: contain; padding: 4px; }
+        .fb-team-name { font-size: 11px; font-weight: 700; color: #fff; text-align: center; line-height: 1.2; max-width: 80px; }
+        .fb-score-box { text-align: center; flex: 0 0 80px; }
+        .fb-score { font-size: 24px; font-weight: 900; color: #fff; letter-spacing: 2px; }
+        .fb-score-live { font-size: 9px; font-weight: 800; color: #ff3b30; text-transform: uppercase; letter-spacing: 1px; animation: livePulse 1.5s infinite; }
+        .fb-score-time { font-size: 11px; color: #555; font-weight: 600; margin-top: 2px; }
+        .fb-score-status { font-size: 10px; color: #8e8e8e; }
+        /* Standing table */
+        .fb-standing-header {
+            display: grid; grid-template-columns: 30px 1fr 28px 28px 28px 28px 45px;
+            padding: 8px 15px; font-size: 9px; font-weight: 800;
+            color: #555; text-transform: uppercase; letter-spacing: 1px;
+            border-bottom: 1px solid #1c1c1c;
+        }
+        .fb-standing-row {
+            display: grid; grid-template-columns: 30px 1fr 28px 28px 28px 28px 45px;
+            padding: 10px 15px; border-bottom: 1px solid #0f0f0f;
+            align-items: center; cursor: pointer; transition: background 0.2s;
+        }
+        .fb-standing-row:active { background: #0a0a0a; }
+        .fb-standing-pos { font-size: 12px; font-weight: 700; color: #8e8e8e; }
+        .fb-standing-pos.top3 { color: #fff; }
+        .fb-standing-team { display: flex; align-items: center; gap: 8px; min-width: 0; }
+        .fb-standing-logo { width: 22px; height: 22px; object-fit: contain; flex-shrink: 0; }
+        .fb-standing-name { font-size: 12px; font-weight: 700; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .fb-standing-num { font-size: 12px; color: #8e8e8e; text-align: center; }
+        .fb-standing-pts { font-size: 12px; font-weight: 800; color: #fff; text-align: center; }
+        /* Team / Player card */
+        .fb-team-card {
+            display: flex; align-items: center; gap: 14px;
+            padding: 13px 15px; border-bottom: 1px solid #111;
+            cursor: pointer; transition: background 0.2s;
+        }
+        .fb-team-card:active { background: #0a0a0a; }
+        .fb-team-card-logo { width: 46px; height: 46px; border-radius: 8px; background: #111; border: 1px solid #1c1c1c; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; }
+        .fb-team-card-logo img { width: 80%; height: 80%; object-fit: contain; }
+        .fb-team-card-info { flex: 1; min-width: 0; }
+        .fb-team-card-name { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 2px; }
+        .fb-team-card-sub { font-size: 11px; color: #8e8e8e; }
+        /* Player card */
+        .fb-player-card {
+            display: flex; align-items: center; gap: 12px;
+            padding: 11px 15px; border-bottom: 1px solid #111;
+            cursor: pointer;
+        }
+        .fb-player-num { width: 28px; font-size: 16px; font-weight: 900; color: #333; text-align: center; flex-shrink: 0; }
+        .fb-player-photo { width: 42px; height: 42px; border-radius: 50%; background: #111; border: 1px solid #1c1c1c; overflow: hidden; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+        .fb-player-photo img { width: 100%; height: 100%; object-fit: cover; }
+        .fb-player-info { flex: 1; min-width: 0; }
+        .fb-player-name { font-size: 13px; font-weight: 700; color: #fff; }
+        .fb-player-pos { font-size: 10px; color: #8e8e8e; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+        .fb-player-stat { font-size: 12px; font-weight: 700; color: #fff; flex-shrink: 0; }
+        /* Section label */
+        .fb-section-label {
+            padding: 16px 15px 8px; font-size: 10px; font-weight: 800;
+            color: #555; text-transform: uppercase; letter-spacing: 2px;
+        }
+        /* Club detail header */
+        .fb-club-header {
+            padding: 24px 15px 16px; display: flex; flex-direction: column;
+            align-items: center; gap: 10px; border-bottom: 1px solid #1c1c1c;
+        }
+        .fb-club-badge { width: 80px; height: 80px; object-fit: contain; }
+        .fb-club-name { font-size: 20px; font-weight: 900; color: #fff; letter-spacing: -0.5px; }
+        .fb-club-meta { font-size: 12px; color: #8e8e8e; }
+        .fb-trophy-row { display: flex; align-items: center; gap: 12px; padding: 13px 15px; border-bottom: 1px solid #111; }
+        .fb-trophy-icon { width: 36px; height: 36px; background: #111; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+        .fb-trophy-name { flex: 1; font-size: 13px; font-weight: 700; color: #fff; }
+        .fb-trophy-count { font-size: 13px; font-weight: 800; color: #fff; }
+        /* Empty / loading states */
+        .fb-loading { text-align: center; padding: 60px 20px; }
+        .fb-loading i { font-size: 36px; color: #1c1c1c; display: block; margin-bottom: 14px; }
+        .fb-loading-text { font-size: 13px; color: #555; }
+        .fb-empty { text-align: center; padding: 60px 20px; }
+        .fb-empty i { font-size: 36px; color: #1c1c1c; display: block; margin-bottom: 14px; }
+        .fb-empty-text { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+        .fb-empty-sub { font-size: 12px; color: #555; line-height: 1.5; }
+        /* Detail modal (club/player) inside football */
+        #fbDetailPanel {
+            display: none; position: absolute; inset: 0; z-index: 50;
+            background: #000; overflow-y: auto;
+            animation: aboutSlideIn 0.28s cubic-bezier(0.25,1,0.5,1);
+        }
     </style>
 </head>
 <body>
@@ -1151,10 +1146,7 @@
         <!-- Hero -->
         <div class="about-hero">
             <div class="about-hero-glow"></div>
-            <div class="about-app-icon">
-                <img src="amnesfubbia.png" alt="Logo">
-            </div>
-            <div class="about-app-name">amnesfubbia</div>
+            <div class="about-app-name" style="font-size:20px;">amnesfubbia</div>
             <div class="about-app-tagline">Platform katalog sinema digital.<br>Discover. Watch. Archive.</div>
             <div class="about-version-badge">Versi 2.0.0 · Build 2026</div>
         </div>
@@ -1227,15 +1219,6 @@
                     <div class="about-feat-desc">Tonton siaran langsung channel TV nasional Indonesia.</div>
                 </div>
             </div>
-            <div class="about-feature-row">
-                <div class="about-feat-icon-wrap" style="background:#2a1a20">
-                    <i class="ph ph-device-mobile-camera" style="color:#f48fb1"></i>
-                </div>
-                <div class="about-feat-text">
-                    <div class="about-feat-title">Mode Landscape</div>
-                    <div class="about-feat-desc">Tonton dalam mode layar penuh horizontal dengan kontrol profesional.</div>
-                </div>
-            </div>
         </div>
 
         <!-- Data source -->
@@ -1273,24 +1256,6 @@
             <div class="about-info-row">
                 <span class="about-info-label">Bahasa</span>
                 <span class="about-info-value">Indonesia / Inggris</span>
-            </div>
-            <div class="about-info-row" style="cursor:pointer" onclick="toggleTheme()">
-                <span class="about-info-label">Tema Aplikasi</span>
-                <div style="display:flex;align-items:center;gap:8px">
-                    <span class="about-info-value" id="themeLabel">Gelap</span>
-                    <div id="themeToggle" style="
-                        width:44px;height:26px;border-radius:99px;
-                        background:#333;position:relative;transition:background 0.3s;
-                        flex-shrink:0;
-                    ">
-                        <div id="themeThumb" style="
-                            position:absolute;top:3px;left:3px;
-                            width:20px;height:20px;border-radius:50%;
-                            background:#fff;transition:transform 0.3s;
-                            box-shadow:0 1px 4px rgba(0,0,0,0.4);
-                        "></div>
-                    </div>
-                </div>
             </div>
         </div>
 
@@ -1385,11 +1350,28 @@
             <i class="fa-solid fa-arrow-left text-xl text-white" onclick="closeSearch()"></i>
             <div class="search-input-box">
                 <i class="fa-solid fa-magnifying-glass text-zinc-500 text-xs"></i>
-                <input type="text" id="searchInp" autocomplete="off" placeholder="Cari movie, tv, atau aktor..." onkeydown="if(event.key==='Enter') searchAction()">
+                <input type="text" id="searchInp" autocomplete="off" placeholder="Cari movie, tv, atau aktor..." onkeydown="if(event.key==='Enter') searchAction()" oninput="handleSearchInput(this.value)">
+                <i class="fa-solid fa-xmark text-zinc-500 text-xs cursor-pointer" id="searchClearBtn" style="display:none;padding-left:6px" onclick="clearSearch()"></i>
                 <div id="smartSearchDropdown" class="no-scrollbar"></div>
             </div>
         </div>
-        <div id="searchContent" class="flex flex-col">
+        <!-- Search type tabs (tampil saat ada hasil) -->
+        <div id="searchTypeTabs" style="display:none; border-bottom:1px solid #1c1c1c; background:#000; position:sticky; top:54px; z-index:90; flex-direction:row;">
+            <div class="search-tab active" id="stab-all" onclick="setSearchTab('multi',this)">Semua</div>
+            <div class="search-tab" id="stab-movie" onclick="setSearchTab('movie',this)">Film</div>
+            <div class="search-tab" id="stab-tv" onclick="setSearchTab('tv',this)">Serial</div>
+        </div>
+        <!-- Empty/idle state -->
+        <div id="searchEmptyState" style="padding:40px 20px; text-align:center;">
+            <i class="fa-solid fa-magnifying-glass" style="font-size:40px;color:#222;margin-bottom:16px;display:block"></i>
+            <div style="font-size:15px;font-weight:700;color:#fff;margin-bottom:6px">Cari Film & Serial</div>
+            <div style="font-size:13px;color:#555;line-height:1.5">Ketik judul film, nama serial,<br>nama aktor, atau nama studio</div>
+            <div style="margin-top:28px;text-align:left">
+                <div style="font-size:10px;font-weight:800;color:#333;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;padding:0 4px">Pencarian Populer</div>
+                <div id="popularChips" style="display:flex;flex-wrap:wrap;gap:8px"></div>
+            </div>
+        </div>
+        <div id="searchContent" style="display:none; flex-direction:column;">
             <div id="calendarHeader" class="hidden sticky-wrapper"></div>
             <div id="searchGrid" class="movie-grid"></div>
         </div>
@@ -1525,12 +1507,8 @@
 
         <!-- Action buttons (IG style) -->
         <div class="actor-action-row">
-            <div class="actor-btn-follow" onclick="searchByCast(window._currentActorId)">
-                <i class="fa-solid fa-table-cells-large mr-1"></i> Lihat Filmografi
-            </div>
-            <div class="actor-btn-msg" id="actorImdbBtn" onclick="openActorImdb()">
-                <i class="fa-solid fa-arrow-up-right-from-square mr-1"></i> IMDb
-            </div>
+            <div class="actor-btn-follow" onclick="searchByCast(window._currentActorId)">Filmografi</div>
+            <div class="actor-btn-msg" id="actorImdbBtn" onclick="openActorImdb()">IMDb</div>
             <div class="actor-btn-sq"><i class="fa-solid fa-chevron-down"></i></div>
         </div>
 
@@ -1568,21 +1546,72 @@
             <i class="fa-solid fa-chevron-left" style="font-size:20px;color:#fff;cursor:pointer;padding:6px" onclick="closeTvModal()"></i>
             <div class="tv-live-dot"></div>
             <div class="tv-topbar-title">Live TV Indonesia</div>
-            <i class="fa-solid fa-magnifying-glass" style="font-size:16px;color:#8e8e8e;cursor:pointer;padding:6px" onclick="document.getElementById('tvSearchInp').focus()"></i>
+            <i class="fa-solid fa-magnifying-glass" style="font-size:16px;color:#8e8e8e;cursor:pointer;padding:6px" onclick="focusTvSearch()"></i>
         </div>
-        <div class="tv-search-box">
+        <div class="tv-search-box" id="tvSearchBox" style="display:none">
             <i class="fa-solid fa-magnifying-glass text-zinc-500 text-xs"></i>
-            <input type="text" id="tvSearchInp" placeholder="Cari channel..." autocomplete="off" oninput="filterTvChannels(this.value)">
+            <input type="text" id="tvSearchInp" placeholder="Cari channel TV..." autocomplete="off" oninput="filterTvChannels(this.value)">
+            <i class="fa-solid fa-xmark" style="color:#8e8e8e;font-size:14px;cursor:pointer;padding:2px 0 2px 4px" onclick="closeTvSearch()"></i>
         </div>
-        <div id="tvChannelList"></div>
+        <div id="tvChannelList" style="padding-bottom:70px"></div>
+
+        <!-- Bottom nav khusus TV - ikon saja, 5 tombol -->
+        <nav class="tv-bottom-nav">
+            <div class="tv-bottom-item" onclick="closeTvModal(); updateActiveNav(document.getElementById('homeBtnNav'))">
+                <i class="fa-solid fa-house"></i>
+            </div>
+            <div class="tv-bottom-item tv-bottom-search" onclick="focusTvSearch()">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </div>
+            <div class="tv-bottom-item" onclick="closeTvModal(); openFootballModal()">
+                <i class="fa-solid fa-futbol"></i>
+            </div>
+            <div class="tv-bottom-item tv-bottom-active">
+                <i class="fa-solid fa-clapperboard"></i>
+            </div>
+            <div class="tv-bottom-item" onclick="closeTvModal(); updateActiveNav(document.getElementById('bookmarkBtnNav')); switchTab('bookmarks', document.getElementById('tabBookmark'))">
+                <i class="fa-solid fa-bookmark"></i>
+            </div>
+        </nav>
     </div>
 
     <nav class="bottom-nav">
         <i class="fa-solid fa-house cursor-pointer text-xl active-nav" id="homeBtnNav" onclick="updateActiveNav(this); backToHome()"></i>
         <i class="fa-solid fa-magnifying-glass cursor-pointer text-xl" id="searchBtnNav" onclick="updateActiveNav(this); openSearch()"></i>
+        <i class="fa-solid fa-futbol cursor-pointer text-xl" id="footballBtnNav" onclick="updateActiveNav(this); openFootballModal()"></i>
         <i class="fa-solid fa-clapperboard cursor-pointer text-xl" id="tvBtnNav" onclick="updateActiveNav(this); openTvModal()"></i>
         <i class="fa-solid fa-bookmark cursor-pointer text-xl" id="bookmarkBtnNav" onclick="updateActiveNav(this); switchTab('bookmarks', document.getElementById('tabBookmark'))"></i>
     </nav>
+
+    <!-- ===== FOOTBALL MODAL ===== -->
+    <div id="footballModal">
+        <div id="fbDetailPanel"></div>
+
+        <div class="fb-topbar">
+            <i class="fa-solid fa-chevron-left" style="font-size:20px;color:#fff;cursor:pointer;padding:6px;-webkit-tap-highlight-color:transparent" onclick="closeFootballModal()"></i>
+            <div class="fb-topbar-title" id="fbTopbarTitle">Skor & Sepak Bola</div>
+        </div>
+
+        <!-- Tab bar -->
+        <div class="fb-tab-bar" id="fbTabBar">
+            <div class="fb-tab active" onclick="switchFbTab('scores',this)">Skor</div>
+            <div class="fb-tab" onclick="switchFbTab('standings',this)">Klasemen</div>
+            <div class="fb-tab" onclick="switchFbTab('clubs',this)">Klub</div>
+            <div class="fb-tab" onclick="switchFbTab('players',this)">Pemain</div>
+            <div class="fb-tab" onclick="switchFbTab('leagues',this)">Liga</div>
+        </div>
+
+        <!-- League strip -->
+        <div class="fb-league-strip" id="fbLeagueStrip"></div>
+
+        <!-- Main content -->
+        <div class="fb-content" id="fbMainContent">
+            <div class="fb-loading">
+                <i class="fa-solid fa-futbol fa-spin"></i>
+                <div class="fb-loading-text">Memuat data...</div>
+            </div>
+        </div>
+    </div>
 
     <script>
         const API_KEY = 'bfa7df5310c9974f62f26c6789a8c00d';
@@ -1607,6 +1636,14 @@
 
         window.onload = () => {
             initFilters(); initHighlights(); loadFeed(); setupSwipe(); initSmartSearch(); initTvChannels();
+            // Isi popular chips
+            const chips = ['Avengers','One Piece','Interstellar','Squid Game','Parasite','Dune','Breaking Bad','Inception'];
+            const container = document.getElementById('popularChips');
+            if (container) {
+                container.innerHTML = chips.map(t =>
+                    `<span onclick="quickSearch('${t}')" style="background:#111;border:1px solid #1c1c1c;border-radius:20px;padding:6px 14px;font-size:12px;color:#ccc;cursor:pointer;-webkit-tap-highlight-color:transparent">${t}</span>`
+                ).join('');
+            }
             window.addEventListener('scroll', () => { 
                 document.getElementById('backToTop').style.display = window.scrollY > 500 ? 'flex' : 'none'; 
             }); 
@@ -1955,9 +1992,31 @@
         function initTvChannels() { renderTvList(''); }
         function filterTvChannels(q) { renderTvList(q); }
 
+        function focusTvSearch() {
+            const box = document.getElementById('tvSearchBox');
+            const inp = document.getElementById('tvSearchInp');
+            box.style.display = 'flex';
+            inp.focus();
+            // highlight search icon in bottom nav
+            document.querySelectorAll('.tv-bottom-item').forEach(el => el.classList.remove('tv-bottom-active'));
+            document.querySelector('.tv-bottom-search').classList.add('tv-bottom-active');
+        }
+
+        function closeTvSearch() {
+            const box = document.getElementById('tvSearchBox');
+            const inp = document.getElementById('tvSearchInp');
+            box.style.display = 'none';
+            inp.value = '';
+            renderTvList('');
+            // restore TV active
+            document.querySelectorAll('.tv-bottom-item').forEach(el => el.classList.remove('tv-bottom-active'));
+            document.querySelector('.tv-bottom-item:nth-child(3)').classList.add('tv-bottom-active');
+        }
+
         function openTvModal() {
             closeModal(); closeSearch();
             document.getElementById('tvSearchInp').value = '';
+            document.getElementById('tvSearchBox').style.display = 'none';
             renderTvList('');
             document.getElementById('tvModal').style.display = 'block';
             document.getElementById('tvModal').scrollTop = 0;
@@ -2116,14 +2175,16 @@
 
         function closeSoundtrack() {
             document.getElementById('soundtrackModal').style.display = 'none';
-            document.querySelectorAll('.audio-player-mini').forEach(a => a.pause());
-            if (document.getElementById('movieModal').style.display === 'block') {
-                replayTrailer();
-            }
+            document.querySelectorAll('.audio-player-mini').forEach(a => { a.pause(); a.currentTime = 0; });
+            document.getElementById('filterOverlay').style.display = 'none';
+            // Resume video yang sudah ada (tidak reload)
+            document.querySelectorAll('#carouselTrack iframe').forEach(iframe => {
+                try {
+                    iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+                } catch(e) {}
+            });
             if (document.getElementById('movieModal').style.display !== 'block') {
                 document.body.style.overflow = 'auto';
-            } else {
-                document.getElementById('filterOverlay').style.display = 'none';
             }
         }
 
@@ -2148,6 +2209,15 @@
             } 
             else if (document.getElementById('tvModal').style.display === 'block') {
                 closeTvModal();
+            }
+            else if (document.getElementById('footballModal').style.display === 'block') {
+                // Cek apakah detail panel terbuka dulu
+                const detail = document.getElementById('fbDetailPanel');
+                if (detail.style.display === 'block') {
+                    detail.style.display = 'none';
+                } else {
+                    closeFootballModal();
+                }
             }
             else if (document.getElementById('movieModal').style.display === 'block') {
                 closeModal();
@@ -2385,18 +2455,31 @@
                 // Bio text (biography)
                 const bioText = details.biography || '';
                 const bioEl = document.getElementById('actorBiography');
+                // Bersihkan tombol lama kalau ada
+                const oldToggle = bioEl.nextElementSibling;
+                if (oldToggle && oldToggle.classList.contains('toggle-btn')) oldToggle.remove();
+
                 if (bioText) {
-                    const short = bioText.length > 120;
-                    bioEl.innerText = short ? bioText.substring(0, 120) + '...' : bioText;
-                    if (short) {
-                        const more = document.createElement('span');
-                        more.className = 'toggle-btn';
-                        more.innerText = 'selengkapnya';
-                        more.onclick = () => { bioEl.innerText = bioText; more.remove(); };
-                        bioEl.after(more);
+                    bioEl.style.display = '';
+                    const SHORT_LEN = 120;
+                    let expanded = false;
+                    if (bioText.length > SHORT_LEN) {
+                        bioEl.innerText = bioText.substring(0, SHORT_LEN) + '...';
+                        const toggle = document.createElement('span');
+                        toggle.className = 'toggle-btn';
+                        toggle.innerText = 'selengkapnya';
+                        toggle.onclick = () => {
+                            expanded = !expanded;
+                            bioEl.innerText = expanded ? bioText : bioText.substring(0, SHORT_LEN) + '...';
+                            toggle.innerText = expanded ? 'ringkas' : 'selengkapnya';
+                        };
+                        bioEl.after(toggle);
+                    } else {
+                        bioEl.innerText = bioText;
                     }
                 } else {
-                    bioEl.innerText = 'Tidak ada biografi.';
+                    bioEl.innerText = '';
+                    bioEl.style.display = 'none';
                 }
 
                 // Bio meta: birth date, place, gender
@@ -2507,7 +2590,10 @@
                         track.appendChild(slide);
                     }
                 });
-            } else { document.body.style.overflow = 'auto'; }
+                // body tetap hidden karena movieModal masih buka
+            } else {
+                document.body.style.overflow = 'auto';
+            }
         }
 
         function searchByStudio(studioId, studioName) {
@@ -2600,55 +2686,119 @@
             document.addEventListener('click', (e) => { if(!e.target.closest('.search-input-box')) drop.style.display = 'none'; }); 
         }
 
+        let calendarMediaType = 'movie';
+
         async function openComingSoon() {
-            const grid = document.getElementById('searchGrid');
+            calendarMediaType = 'movie'; // reset tiap buka
             const overlay = document.getElementById('searchOverlay');
             const calendarHeader = document.getElementById('calendarHeader');
             overlay.style.display = 'block';
+            showSearchEmptyState(); // hide search results
+            // Show only calendar header, not search tabs
+            document.getElementById('searchTypeTabs').style.display = 'none';
+            document.getElementById('searchEmptyState').style.display = 'none';
+            document.getElementById('searchContent').style.display = 'flex';
+            document.getElementById('searchGrid').innerHTML = '<div id="calendarList" class="col-span-3"></div>';
             calendarHeader.classList.remove('hidden');
             document.body.style.overflow = 'hidden';
-            
             history.pushState({view: 'search'}, "");
 
-            let dateStripHTML = '<div class="date-strip no-scrollbar">';
+            // Build tab + date strip
             const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
-            for(let i=0; i<14; i++) {
+            let headerHTML = `
+                <div style="display:flex;border-bottom:1px solid #1c1c1c;background:#000">
+                    <div class="search-tab active" id="calTabMovie" onclick="switchCalTab('movie',this)" style="flex:1">Film</div>
+                    <div class="search-tab" id="calTabTv" onclick="switchCalTab('tv',this)" style="flex:1">Serial</div>
+                </div>
+                <div class="date-strip no-scrollbar" id="calDateStrip">`;
+            for(let i = 0; i < 30; i++) {
                 let d = new Date(); d.setDate(d.getDate() + i);
-                let active = i === 0 ? 'active-date' : '';
-                dateStripHTML += `<div class="date-chip ${active}" onclick="filterByDate('${d.toISOString().split('T')[0]}', this)"><span class="d-month">${months[d.getMonth()]}</span><span class="d-day">${d.getDate()}</span></div>`;
+                const active = i === 0 ? 'active-date' : '';
+                headerHTML += `<div class="date-chip ${active}" onclick="filterByDate('${d.toISOString().split('T')[0]}', this)"><span class="d-month">${months[d.getMonth()]}</span><span class="d-day">${d.getDate()}</span></div>`;
             }
-            dateStripHTML += '</div>';
-            calendarHeader.innerHTML = dateStripHTML;
-            grid.innerHTML = '<div id="calendarList" class="col-span-3"></div>';
+            headerHTML += '</div>';
+            calendarHeader.innerHTML = headerHTML;
             filterByDate(new Date().toISOString().split('T')[0]);
+        }
+
+        function switchCalTab(type, el) {
+            calendarMediaType = type;
+            document.querySelectorAll('#calendarHeader .search-tab').forEach(t => t.classList.remove('active'));
+            el.classList.add('active');
+            // Re-filter with active date
+            const activeChip = document.querySelector('.date-chip.active-date');
+            const dateStr = activeChip ? activeChip.getAttribute('onclick').match(/'([^']+)'/)?.[1] : new Date().toISOString().split('T')[0];
+            filterByDate(dateStr);
         }
 
         async function filterByDate(dateStr, el) {
             if(el) { document.querySelectorAll('.date-chip').forEach(c => c.classList.remove('active-date')); el.classList.add('active-date'); }
             const list = document.getElementById('calendarList');
-            list.innerHTML = '<div class="text-center py-10 text-zinc-500 text-xs">Mencari tayangan...</div>';
+            list.innerHTML = '<div class="text-center py-10 text-zinc-500 text-xs animate-pulse">Mencari tayangan...</div>';
             try {
-                const res = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&language=id-ID&sort_by=popularity.desc&primary_release_date.gte=${dateStr}&primary_release_date.lte=${dateStr}`);
+                const mediaType = calendarMediaType || 'movie';
+                let apiUrl;
+                if (mediaType === 'tv') {
+                    apiUrl = `https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}&language=id-ID&sort_by=popularity.desc&first_air_date.gte=${dateStr}&first_air_date.lte=${dateStr}&include_adult=false`;
+                } else {
+                    apiUrl = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&language=id-ID&sort_by=popularity.desc&primary_release_date.gte=${dateStr}&primary_release_date.lte=${dateStr}&include_adult=false`;
+                }
+                const res = await fetch(apiUrl);
                 const data = await res.json();
-                if(data.results.length === 0) { list.innerHTML = '<div class="text-center py-20 text-zinc-600 text-xs">Tidak ada jadwal rilis hari ini.</div>'; return; }
-                list.innerHTML = '';
-                const gRes = await fetch(`https://api.themoviedb.org/3/genre/movie/list?api_key=${API_KEY}&language=id-ID`);
+
+                if (!data.results || data.results.length === 0) {
+                    const typeLabel = mediaType === 'tv' ? 'serial' : 'film';
+                    list.innerHTML = `<div style="text-align:center;padding:60px 20px">
+                        <i class="fa-regular fa-calendar-xmark" style="font-size:36px;color:#222;margin-bottom:14px;display:block"></i>
+                        <div style="font-size:14px;font-weight:700;color:#fff;margin-bottom:6px">Tidak ada jadwal</div>
+                        <div style="font-size:12px;color:#555">Belum ada ${typeLabel} yang rilis<br>pada tanggal ini.</div>
+                    </div>`;
+                    return;
+                }
+
+                const gEndpoint = mediaType === 'tv' ? 'tv' : 'movie';
+                const gRes = await fetch(`https://api.themoviedb.org/3/genre/${gEndpoint}/list?api_key=${API_KEY}&language=id-ID`);
                 const gData = await gRes.json();
                 const genreMap = {}; gData.genres.forEach(g => genreMap[g.id] = g.name);
+
+                list.innerHTML = '';
                 data.results.forEach(m => {
-                    const genres = m.genre_ids.slice(0, 2).map(id => `<span class="cal-genre-pill">${genreMap[id]}</span>`).join('');
+                    const title = m.title || m.name || '';
+                    const releaseDate = m.release_date || m.first_air_date || '';
+                    const year = releaseDate.split('-')[0];
+                    const rating = (m.vote_average || 0).toFixed(1);
+                    const genres = (m.genre_ids || []).slice(0, 2).map(id => `<span class="cal-genre-pill">${genreMap[id] || ''}</span>`).join('');
+                    const posterSrc = m.poster_path ? `https://image.tmdb.org/t/p/w185${m.poster_path}` : '';
                     const item = document.createElement('div');
                     item.className = 'calendar-item active:bg-zinc-900';
-                    item.onclick = () => openModal(m.id, 'movie');
-                    item.innerHTML = `<div class="calendar-poster"><img src="https://image.tmdb.org/t/p/w185${m.poster_path}" onerror="this.src='https://via.placeholder.com/185x278?text=No+Poster'" class="w-full h-full object-cover" loading="lazy"></div><div class="calendar-info"><div class="cal-title">${m.title}</div><div class="cal-meta"><span class="cal-rating">★ ${m.vote_average.toFixed(1)}</span><span class="text-zinc-600">•</span><span>${m.release_date.split('-')[0]}</span></div><div class="flex gap-1 mt-1">${genres}</div></div><i class="fa-solid fa-chevron-right text-zinc-800 text-xs"></i>`;
+                    item.onclick = () => openModal(m.id, mediaType);
+                    item.innerHTML = `
+                        <div class="calendar-poster"><img src="${posterSrc}" onerror="this.parentElement.style.background='#111'" class="w-full h-full object-cover" loading="lazy"></div>
+                        <div class="calendar-info">
+                            <div class="cal-title">${title}</div>
+                            <div class="cal-meta">
+                                <span class="cal-rating">★ ${rating}</span>
+                                <span class="text-zinc-600">·</span>
+                                <span style="font-size:11px;color:#8e8e8e">${year}</span>
+                                <span class="text-zinc-600">·</span>
+                                <span style="font-size:10px;color:#555;text-transform:uppercase;font-weight:700">${mediaType === 'tv' ? 'Serial' : 'Film'}</span>
+                            </div>
+                            <div class="flex gap-1 mt-1 flex-wrap">${genres}</div>
+                        </div>
+                        <i class="fa-solid fa-chevron-right" style="color:#2a2a2a;font-size:11px;flex-shrink:0"></i>`;
                     list.appendChild(item);
                 });
-            } catch (e) { list.innerHTML = '<div class="text-center py-10">Gagal memuat data.</div>'; }
+            } catch (e) { list.innerHTML = '<div class="text-center py-10 text-zinc-600 text-xs">Gagal memuat data.</div>'; }
         }
 
         function searchByCast(castId) { 
-            closeModal(); currentCastId = castId; searchQuery = ''; document.getElementById('searchInp').value = ''; 
-            document.getElementById('searchOverlay').style.display = 'block'; document.getElementById('smartSearchDropdown').style.display = 'none';
+            closeActorModal();
+            closeModal(); 
+            currentCastId = castId; searchQuery = ''; 
+            document.getElementById('searchInp').value = ''; 
+            document.getElementById('searchOverlay').style.display = 'block';
+            document.getElementById('smartSearchDropdown').style.display = 'none';
+            showSearchResults();
             document.body.style.overflow='hidden'; 
             history.pushState({view: 'search'}, "");
             loadFeed(true); 
@@ -2686,12 +2836,44 @@
             let yearHTML = '<div class="filter-item sticky-reset" onclick="setYear(\'\')">Semua Tahun</div>'; 
             for(let y=2026; y>=1930; y--) yearHTML += `<div class="filter-item" onclick="setYear(${y})">${y}</div>`; 
             yD.innerHTML = yearHTML; 
-            const countries = [['ID','Indonesia'],['US','USA'],['KR','Korea Selatan'],['JP','Jepang'],['IN','India'],['TH','Thailand'],['CN','China'],['PH','Filipina'],['GB','Inggris'],['FR','Prancis'],['ES','Spanyol'],['IT','Italia'],['TR','Turki'],['DE','Jerman']]; 
+
+            // Negara — Indonesia pertama, sisanya abjad
+            const countries = [
+                ['ID','Indonesia'],
+                ['DZ','Aljazair'],['AR','Argentina'],['AU','Australia'],
+                ['AT','Austria'],['BE','Belgia'],['BR','Brasil'],
+                ['CA','Kanada'],['CL','Cile'],['CN','China'],
+                ['CO','Kolombia'],['HR','Kroasia'],['CZ','Ceko'],
+                ['DK','Denmark'],['EG','Mesir'],['FI','Finlandia'],
+                ['FR','Prancis'],['DE','Jerman'],['GR','Yunani'],
+                ['HK','Hong Kong'],['HU','Hungaria'],['IN','India'],
+                ['IE','Irlandia'],['IL','Israel'],['IT','Italia'],
+                ['JP','Jepang'],['MX','Meksiko'],['MY','Malaysia'],
+                ['MA','Maroko'],['NL','Belanda'],['NZ','Selandia Baru'],
+                ['NG','Nigeria'],['NO','Norwegia'],['PK','Pakistan'],
+                ['PH','Filipina'],['PL','Polandia'],['PT','Portugal'],
+                ['RO','Rumania'],['RU','Rusia'],['SA','Arab Saudi'],
+                ['ZA','Afrika Selatan'],['KR','Korea Selatan'],['ES','Spanyol'],
+                ['SE','Swedia'],['CH','Swiss'],['TW','Taiwan'],
+                ['TH','Thailand'],['TR','Turki'],['UA','Ukraina'],
+                ['AE','UEA'],['GB','Inggris'],['US','Amerika Serikat'],
+                ['VN','Vietnam']
+            ];
             const cD = document.getElementById('countryDropdown'); 
             let countryHTML = '<div class="filter-item sticky-reset" onclick="setCountry(\'\',\'Negara\')">Semua Negara</div>'; 
             countries.forEach(c => countryHTML += `<div class="filter-item" onclick="setCountry('${c[0]}','${c[1]}')">${c[1]}</div>`); 
             cD.innerHTML = countryHTML; 
-            const genres = [[28,'Action'],[12,'Adventure'],[16,'Animasi'],[35,'Komedi'],[80,'Crime'],[99,'Dokumenter'],[18,'Drama'],[10751,'Family'],[14,'Fantasy'],[36,'History'],[27,'Horror'],[10402,'Music'],[9648,'Misteri'],[10749,'Romance'],[878,'Sci-Fi'],[53,'Thriller']]; 
+
+            // Genre — lengkap, urut abjad (ID TMDb)
+            const genres = [
+                [28,'Action'],[12,'Adventure'],[16,'Animasi'],
+                [35,'Komedi'],[80,'Crime'],
+                [99,'Dokumenter'],[18,'Drama'],[10751,'Family'],
+                [14,'Fantasy'],[36,'History'],[27,'Horror'],
+                [10402,'Musik'],[9648,'Misteri'],[10749,'Romance'],
+                [878,'Sci-Fi'],[10770,'TV Movie'],[53,'Thriller'],
+                [10752,'War'],[37,'Western']
+            ].sort((a,b) => a[1].localeCompare(b[1]));
             const gD = document.getElementById('genreDropdown'); 
             let genreHTML = '<div class="filter-item sticky-reset" onclick="setGenre(\'\',\'Genre\')">Semua Genre</div>'; 
             genres.forEach(g => genreHTML += `<div class="filter-item" onclick="setGenre('${g[0]}','${g[1]}')">${g[1]}</div>`); 
@@ -2709,7 +2891,13 @@
             if(isNew) { page = 1; grid.innerHTML = ''; }
             let url;
             if(currentCastId) { url = `https://api.themoviedb.org/3/person/${currentCastId}/combined_credits?api_key=${API_KEY}&language=id-ID`; }
-            else if(searchQuery) { url = `https://api.themoviedb.org/3/search/multi?query=${encodeURIComponent(searchQuery)}&api_key=${API_KEY}&page=${page}&include_adult=false`; }
+            else if(searchQuery) { 
+                if (searchTabType === 'multi' || searchTabType === 'person') {
+                    url = `https://api.themoviedb.org/3/search/multi?query=${encodeURIComponent(searchQuery)}&api_key=${API_KEY}&page=${page}&include_adult=false`;
+                } else {
+                    url = `https://api.themoviedb.org/3/search/${searchTabType}?query=${encodeURIComponent(searchQuery)}&api_key=${API_KEY}&page=${page}&include_adult=false`;
+                }
+            }
             else if(currentType === 'multi') { url = `https://api.themoviedb.org/3/trending/all/day?api_key=${API_KEY}&language=id-ID&page=${page}`; }
             else {
                 let endpoint = (currentType === 'tv') ? 'discover/tv' : 'discover/movie';
@@ -2753,30 +2941,85 @@
             }); 
         }
 
+        // Search tab state
+        let searchTabType = 'multi';
+
+        function setSearchTab(type, el) {
+            searchTabType = type;
+            document.querySelectorAll('.search-tab').forEach(t => t.classList.remove('active'));
+            el.classList.add('active');
+            if (searchQuery) searchAction();
+        }
+
+        function handleSearchInput(val) {
+            const clearBtn = document.getElementById('searchClearBtn');
+            clearBtn.style.display = val ? 'block' : 'none';
+            if (!val) {
+                showSearchEmptyState();
+            }
+        }
+
+        function clearSearch() {
+            document.getElementById('searchInp').value = '';
+            document.getElementById('searchClearBtn').style.display = 'none';
+            document.getElementById('smartSearchDropdown').style.display = 'none';
+            showSearchEmptyState();
+        }
+
+        function showSearchEmptyState() {
+            document.getElementById('searchEmptyState').style.display = 'block';
+            document.getElementById('searchContent').style.display = 'none';
+            document.getElementById('searchTypeTabs').style.display = 'none';
+            searchQuery = '';
+        }
+
+        function showSearchResults() {
+            document.getElementById('searchEmptyState').style.display = 'none';
+            document.getElementById('searchContent').style.display = 'flex';
+            document.getElementById('searchTypeTabs').style.display = 'flex';
+        }
+
+        function quickSearch(term) {
+            document.getElementById('searchInp').value = term;
+            document.getElementById('searchClearBtn').style.display = 'block';
+            document.getElementById('smartSearchDropdown').style.display = 'none';
+            searchQuery = term;
+            showSearchResults();
+            loadFeed(true);
+        }
+
         function openSearch() { 
-            closeModal(); closeD(); closeActorModal(); closeTvModal(); if(document.getElementById('sideMenu').style.display === 'block') toggleSideMenu();
-            document.querySelector('.search-header').style.display = 'flex';
-            document.getElementById('searchGrid').innerHTML = ''; 
-            document.getElementById('searchOverlay').style.display = 'block'; 
-            document.getElementById('searchInp').focus(); 
-            document.body.style.overflow='hidden'; 
-            updateActiveNav(document.getElementById('homeBtnNav'));
+            closeModal(); closeD(); closeActorModal(); closeTvModal();
+            if(document.getElementById('sideMenu').style.display === 'block') toggleSideMenu();
+            document.getElementById('searchGrid').innerHTML = '';
+            document.getElementById('searchOverlay').style.display = 'block';
+            showSearchEmptyState();
+            document.getElementById('searchInp').value = '';
+            document.getElementById('searchClearBtn').style.display = 'none';
+            document.getElementById('searchInp').focus();
+            document.body.style.overflow = 'hidden';
+            updateActiveNav(document.getElementById('searchBtnNav'));
             history.pushState({view: 'search'}, "");
         }
 
         function closeSearch() { 
             document.getElementById('searchOverlay').style.display = 'none'; 
             document.getElementById('calendarHeader').classList.add('hidden');
-            document.body.style.overflow='auto'; 
-            searchQuery=''; currentCastId=''; document.getElementById('searchInp').value = '';
-            document.getElementById('smartSearchDropdown').style.display = 'none'; 
+            document.body.style.overflow = 'auto'; 
+            searchQuery = ''; currentCastId = '';
+            document.getElementById('searchInp').value = '';
+            document.getElementById('searchClearBtn').style.display = 'none';
+            document.getElementById('smartSearchDropdown').style.display = 'none';
             updateActiveNav(document.getElementById('homeBtnNav'));
         }
         
         function searchAction() { 
-            currentLibMode = false; currentCastId = ''; searchQuery = document.getElementById('searchInp').value; 
+            currentLibMode = false; currentCastId = '';
+            searchQuery = document.getElementById('searchInp').value;
+            if (!searchQuery) { showSearchEmptyState(); return; }
             document.getElementById('calendarHeader').classList.add('hidden');
-            document.getElementById('smartSearchDropdown').style.display = 'none'; 
+            document.getElementById('smartSearchDropdown').style.display = 'none';
+            showSearchResults();
             loadFeed(true); 
         }
 
@@ -3140,12 +3383,444 @@
         async function showLibrary(k) { const items = JSON.parse(localStorage.getItem(k) || '[]'); const grid = document.getElementById('feedGrid'); grid.innerHTML = ''; if (!items.length) { grid.innerHTML = '<div class="col-span-3 text-center py-20 text-zinc-500 text-xs">Belum ada konten disimpan</div>'; return; } const promises = items.map(i => fetchWithCache(`https://api.themoviedb.org/3/${i.type}/${i.id}?api_key=${API_KEY}&language=id-ID`).then(r => r)); const results = await Promise.all(promises); renderGrid(results.filter(m => m.id), grid); }
         window.onscroll = () => { if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 1000 && !loading && !searchQuery && !currentLibMode) { page++; loadFeed(false); } };
 
-        // ===== THEME TOGGLE =====
+        // ===== FOOTBALL MODULE =====
+        const FB_API = 'https://v3.football.api-sports.io';
+        const FB_KEY = ''; // user perlu isi API key dari api-football.com (gratis 100 req/hari)
+
+        const FB_LEAGUES = [
+            { id: 39,  name: 'Premier League',   flag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿', country: 'England' },
+            { id: 140, name: 'La Liga',           flag: '🇪🇸', country: 'Spain' },
+            { id: 135, name: 'Serie A',           flag: '🇮🇹', country: 'Italy' },
+            { id: 78,  name: 'Bundesliga',        flag: '🇩🇪', country: 'Germany' },
+            { id: 61,  name: 'Ligue 1',           flag: '🇫🇷', country: 'France' },
+            { id: 88,  name: 'Eredivisie',        flag: '🇳🇱', country: 'Netherlands' },
+            { id: 94,  name: 'Primeira Liga',     flag: '🇵🇹', country: 'Portugal' },
+            { id: 2,   name: 'Champions League',  flag: '🏆', country: 'Europe' },
+            { id: 3,   name: 'Europa League',     flag: '🏆', country: 'Europe' },
+            { id: 253, name: 'Liga 1 Indonesia',  flag: '🇮🇩', country: 'Indonesia' },
+        ];
+
+        let fbCurrentLeague = FB_LEAGUES[0];
+        let fbCurrentTab = 'scores';
+        const fbCache = {};
+
+        function openFootballModal() {
+            closeModal(); closeSearch(); closeTvModal(); closeActorModal();
+            if (document.getElementById('sideMenu').style.display === 'block') toggleSideMenu();
+            document.getElementById('footballModal').style.display = 'block';
+            document.getElementById('fbDetailPanel').style.display = 'none';
+            document.body.style.overflow = 'hidden';
+            updateActiveNav(document.getElementById('footballBtnNav'));
+            history.pushState({view: 'football'}, "");
+            buildFbLeagueStrip();
+            switchFbTab('scores', document.querySelector('.fb-tab'));
+        }
+
+        function closeFootballModal() {
+            document.getElementById('footballModal').style.display = 'none';
+            document.getElementById('fbDetailPanel').style.display = 'none';
+            document.body.style.overflow = 'auto';
+            updateActiveNav(document.getElementById('homeBtnNav'));
+        }
+
+        function buildFbLeagueStrip() {
+            const strip = document.getElementById('fbLeagueStrip');
+            strip.innerHTML = FB_LEAGUES.map((l, i) =>
+                `<div class="fb-league-pill ${i===0?'active':''}" onclick="selectFbLeague(${l.id}, this)">${l.flag} ${l.name}</div>`
+            ).join('');
+        }
+
+        function selectFbLeague(id, el) {
+            document.querySelectorAll('.fb-league-pill').forEach(p => p.classList.remove('active'));
+            el.classList.add('active');
+            fbCurrentLeague = FB_LEAGUES.find(l => l.id === id) || FB_LEAGUES[0];
+            loadFbContent();
+        }
+
+        function switchFbTab(tab, el) {
+            fbCurrentTab = tab;
+            document.querySelectorAll('.fb-tab').forEach(t => t.classList.remove('active'));
+            if (el) el.classList.add('active');
+            loadFbContent();
+        }
+
+        async function fbFetch(endpoint) {
+            const key = endpoint;
+            if (fbCache[key]) return fbCache[key];
+            if (!FB_KEY) return null; // no key = use mock data
+            try {
+                const res = await fetch(`${FB_API}${endpoint}`, {
+                    headers: { 'x-apisports-key': FB_KEY }
+                });
+                const data = await res.json();
+                fbCache[key] = data;
+                return data;
+            } catch(e) { return null; }
+        }
+
+        async function loadFbContent() {
+            const content = document.getElementById('fbMainContent');
+            const year = new Date().getFullYear();
+            const leagueId = fbCurrentLeague.id;
+
+            content.innerHTML = `<div class="fb-loading"><i class="fa-solid fa-futbol fa-spin" style="color:#fff;font-size:30px;display:block;margin-bottom:14px"></i><div class="fb-loading-text">Memuat...</div></div>`;
+
+            if (!FB_KEY) {
+                // Tampilkan info cara setup API key
+                content.innerHTML = renderFbSetupGuide();
+                return;
+            }
+
+            try {
+                if (fbCurrentTab === 'scores') {
+                    const today = new Date().toISOString().split('T')[0];
+                    const data = await fbFetch(`/fixtures?league=${leagueId}&season=${year}&date=${today}`);
+                    content.innerHTML = renderFbScores(data);
+                } else if (fbCurrentTab === 'standings') {
+                    const data = await fbFetch(`/standings?league=${leagueId}&season=${year}`);
+                    content.innerHTML = renderFbStandings(data);
+                } else if (fbCurrentTab === 'clubs') {
+                    const data = await fbFetch(`/teams?league=${leagueId}&season=${year}`);
+                    content.innerHTML = renderFbClubs(data, leagueId, year);
+                } else if (fbCurrentTab === 'players') {
+                    const data = await fbFetch(`/players/topscorers?league=${leagueId}&season=${year}`);
+                    content.innerHTML = renderFbTopScorers(data);
+                } else if (fbCurrentTab === 'leagues') {
+                    const data = await fbFetch(`/leagues?id=${leagueId}`);
+                    content.innerHTML = renderFbLeagueInfo(data, leagueId, year);
+                }
+            } catch(e) {
+                content.innerHTML = `<div class="fb-empty"><i class="fa-solid fa-wifi"></i><div class="fb-empty-text">Gagal memuat</div><div class="fb-empty-sub">Periksa koneksi internet kamu.</div></div>`;
+            }
+        }
+
+        function renderFbSetupGuide() {
+            return `
+            <div style="padding:24px 20px">
+                <div style="text-align:center;margin-bottom:24px">
+                    <i class="fa-solid fa-futbol" style="font-size:48px;color:#1c1c1c;display:block;margin-bottom:16px"></i>
+                    <div style="font-size:18px;font-weight:900;color:#fff;margin-bottom:8px">Menu Skor Siap</div>
+                    <div style="font-size:13px;color:#555;line-height:1.6">Untuk mengaktifkan data live, tambahkan API key gratis dari API-Football.</div>
+                </div>
+                <div style="background:#111;border:1px solid #1c1c1c;border-radius:14px;padding:20px;margin-bottom:16px">
+                    <div style="font-size:10px;font-weight:800;color:#555;letter-spacing:2px;text-transform:uppercase;margin-bottom:14px">Cara Aktivasi</div>
+                    <div style="display:flex;flex-direction:column;gap:14px">
+                        <div style="display:flex;gap:12px;align-items:flex-start">
+                            <div style="width:24px;height:24px;border-radius:50%;background:#fff;color:#000;font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0">1</div>
+                            <div><div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:2px">Daftar gratis</div><div style="font-size:12px;color:#555">Buka api-football.com → Sign Up</div></div>
+                        </div>
+                        <div style="display:flex;gap:12px;align-items:flex-start">
+                            <div style="width:24px;height:24px;border-radius:50%;background:#fff;color:#000;font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0">2</div>
+                            <div><div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:2px">Salin API Key</div><div style="font-size:12px;color:#555">Dashboard → API Key → Copy</div></div>
+                        </div>
+                        <div style="display:flex;gap:12px;align-items:flex-start">
+                            <div style="width:24px;height:24px;border-radius:50%;background:#fff;color:#000;font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0">3</div>
+                            <div><div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:2px">Tempel di kode</div><div style="font-size:12px;color:#555">Cari <code style="background:#000;padding:2px 6px;border-radius:4px;color:#0095f6">const FB_KEY = ''</code> → isi key kamu</div></div>
+                        </div>
+                    </div>
+                </div>
+                <div style="background:#0a0a0a;border:1px solid #1c1c1c;border-radius:14px;padding:16px">
+                    <div style="font-size:10px;font-weight:800;color:#555;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px">Fitur yang Tersedia</div>
+                    ${[
+                        ['🏟️','Skor Live & Jadwal','Pertandingan hari ini, kemarin, besok'],
+                        ['🏆','Klasemen Liga','Lengkap dengan poin, selisih gol, form'],
+                        ['⚽','Data Klub','Skuad, statistik, trofi, sejarah klub'],
+                        ['👤','Data Pemain','Top scorer, assist, profil lengkap'],
+                        ['📊','Info Liga','Sejarah, format kompetisi, peserta'],
+                    ].map(f => `
+                        <div style="display:flex;gap:12px;align-items:center;padding:8px 0;border-bottom:1px solid #111">
+                            <span style="font-size:18px;width:28px;text-align:center">${f[0]}</span>
+                            <div><div style="font-size:13px;font-weight:700;color:#fff">${f[1]}</div><div style="font-size:11px;color:#555">${f[2]}</div></div>
+                        </div>`).join('')}
+                </div>
+                <div style="margin-top:14px;text-align:center;font-size:11px;color:#333">Gratis 100 request/hari · Cukup untuk penggunaan normal</div>
+            </div>`;
+        }
+
+        function renderFbScores(data) {
+            const fixtures = data?.response || [];
+            if (!fixtures.length) {
+                return `<div class="fb-empty"><i class="fa-regular fa-calendar-xmark"></i><div class="fb-empty-text">Tidak ada pertandingan</div><div class="fb-empty-sub">Tidak ada jadwal hari ini<br>di ${fbCurrentLeague.name}.</div></div>`;
+            }
+            return fixtures.map(f => {
+                const home = f.teams.home, away = f.teams.away;
+                const goals = f.goals;
+                const status = f.fixture.status;
+                const isLive = ['1H','HT','2H','ET','BT','P','SUSP','INT'].includes(status.short);
+                const isDone = status.short === 'FT' || status.short === 'AET' || status.short === 'PEN';
+                const scoreDisplay = (goals.home !== null) ? `${goals.home} - ${goals.away}` : 'vs';
+                const timeDisplay = isLive ? `${status.elapsed}'` : (isDone ? 'Selesai' : f.fixture.date?.substring(11,16) + ' WIB');
+                return `<div class="fb-match-card" onclick="openFbFixture(${f.fixture.id})">
+                    <div class="fb-match-league">${f.league.name} · ${f.league.round}</div>
+                    <div class="fb-match-row">
+                        <div class="fb-team">
+                            <div class="fb-team-logo"><img src="${home.logo}" onerror="this.style.display='none'"></div>
+                            <div class="fb-team-name">${home.name}</div>
+                        </div>
+                        <div class="fb-score-box">
+                            <div class="fb-score">${scoreDisplay}</div>
+                            ${isLive ? `<div class="fb-score-live">● LIVE ${status.elapsed}'</div>` : `<div class="fb-score-time">${timeDisplay}</div>`}
+                        </div>
+                        <div class="fb-team" style="align-items:center">
+                            <div class="fb-team-logo"><img src="${away.logo}" onerror="this.style.display='none'"></div>
+                            <div class="fb-team-name">${away.name}</div>
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function renderFbStandings(data) {
+            const groups = data?.response?.[0]?.league?.standings || [];
+            if (!groups.length) return `<div class="fb-empty"><i class="fa-solid fa-table-list"></i><div class="fb-empty-text">Klasemen belum tersedia</div></div>`;
+            let html = '';
+            groups.forEach(group => {
+                html += `<div class="fb-section-label">${group[0]?.group || 'Klasemen'}</div>
+                <div class="fb-standing-header">
+                    <div>#</div><div>Klub</div><div>M</div><div>M</div><div>S</div><div>K</div><div>Pts</div>
+                </div>`;
+                group.forEach((t, i) => {
+                    const posClass = i < 3 ? 'top3' : '';
+                    html += `<div class="fb-standing-row" onclick="openFbTeamDetail(${t.team.id})">
+                        <div class="fb-standing-pos ${posClass}">${t.rank}</div>
+                        <div class="fb-standing-team">
+                            <img class="fb-standing-logo" src="${t.team.logo}" onerror="this.style.display='none'">
+                            <span class="fb-standing-name">${t.team.name}</span>
+                        </div>
+                        <div class="fb-standing-num">${t.all.played}</div>
+                        <div class="fb-standing-num">${t.all.win}</div>
+                        <div class="fb-standing-num">${t.all.draw}</div>
+                        <div class="fb-standing-num">${t.all.lose}</div>
+                        <div class="fb-standing-pts">${t.points}</div>
+                    </div>`;
+                });
+            });
+            return html;
+        }
+
+        function renderFbClubs(data, leagueId, year) {
+            const teams = data?.response || [];
+            if (!teams.length) return `<div class="fb-empty"><i class="fa-solid fa-shield-halved"></i><div class="fb-empty-text">Data klub tidak tersedia</div></div>`;
+            return teams.map(t => `
+                <div class="fb-team-card" onclick="openFbTeamDetail(${t.team.id})">
+                    <div class="fb-team-card-logo"><img src="${t.team.logo}" onerror="this.style.display='none'"></div>
+                    <div class="fb-team-card-info">
+                        <div class="fb-team-card-name">${t.team.name}</div>
+                        <div class="fb-team-card-sub">${t.team.country} · Berdiri ${t.team.founded || '—'}</div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right" style="color:#2a2a2a;font-size:12px"></i>
+                </div>`).join('');
+        }
+
+        function renderFbTopScorers(data) {
+            const players = data?.response || [];
+            if (!players.length) return `<div class="fb-empty"><i class="fa-solid fa-ranking-star"></i><div class="fb-empty-text">Data pemain tidak tersedia</div></div>`;
+            let html = `<div class="fb-section-label">Top Scorer ${fbCurrentLeague.name}</div>`;
+            html += players.map((p, i) => `
+                <div class="fb-player-card" onclick="openFbPlayerDetail(${p.player.id})">
+                    <div class="fb-player-num">${i+1}</div>
+                    <div class="fb-player-photo"><img src="${p.player.photo}" onerror="this.style.display='none'"></div>
+                    <div class="fb-player-info">
+                        <div class="fb-player-name">${p.player.name}</div>
+                        <div class="fb-player-pos">${p.statistics[0]?.team?.name || '—'}</div>
+                    </div>
+                    <div class="fb-player-stat">${p.statistics[0]?.goals?.total || 0} ⚽</div>
+                </div>`).join('');
+            return html;
+        }
+
+        function renderFbLeagueInfo(data, leagueId, year) {
+            const league = data?.response?.[0];
+            if (!league) return `<div class="fb-empty"><i class="fa-solid fa-trophy"></i><div class="fb-empty-text">Info liga tidak tersedia</div></div>`;
+            const l = league.league, c = league.country;
+            const seasons = league.seasons || [];
+            let html = `
+                <div class="fb-club-header">
+                    <img class="fb-club-badge" src="${l.logo}" onerror="this.style.display='none'">
+                    <div class="fb-club-name">${l.name}</div>
+                    <div class="fb-club-meta">${c.name} · Tipe: ${l.type}</div>
+                </div>
+                <div class="fb-section-label">Musim Tersedia</div>`;
+            html += seasons.slice(-5).reverse().map(s =>
+                `<div style="display:flex;justify-content:space-between;padding:12px 15px;border-bottom:1px solid #111">
+                    <span style="font-size:13px;font-weight:700;color:#fff">${s.year}</span>
+                    <span style="font-size:12px;color:#555">${s.start?.substring(0,7) || ''} – ${s.end?.substring(0,7) || ''}</span>
+                </div>`
+            ).join('');
+            return html;
+        }
+
+        async function openFbTeamDetail(teamId) {
+            const panel = document.getElementById('fbDetailPanel');
+            panel.style.display = 'block';
+            panel.innerHTML = `<div style="padding:80px 20px;text-align:center"><i class="fa-solid fa-futbol fa-spin" style="font-size:30px;color:#fff"></i></div>`;
+            history.pushState({view:'fb-detail'}, "");
+            const year = new Date().getFullYear();
+            try {
+                const [teamData, playersData, trophiesData] = await Promise.all([
+                    fbFetch(`/teams?id=${teamId}`),
+                    fbFetch(`/players/squads?team=${teamId}`),
+                    fbFetch(`/trophies?team=${teamId}`)
+                ]);
+                const team = teamData?.response?.[0]?.team;
+                const venue = teamData?.response?.[0]?.venue;
+                const squad = playersData?.response?.[0]?.players || [];
+                const trophies = trophiesData?.response || [];
+                if (!team) { panel.innerHTML = `<div class="fb-empty" style="margin-top:80px"><i class="fa-solid fa-shield-halved"></i><div class="fb-empty-text">Data tidak tersedia</div></div>`; return; }
+
+                const positions = ['Goalkeeper','Defender','Midfielder','Attacker'];
+                let squadHTML = positions.map(pos => {
+                    const posPlayers = squad.filter(p => p.position === pos);
+                    if (!posPlayers.length) return '';
+                    return `<div class="fb-section-label">${pos}</div>` +
+                        posPlayers.map(p => `
+                            <div class="fb-player-card" onclick="openFbPlayerDetail(${p.id})">
+                                <div class="fb-player-num">${p.number || '—'}</div>
+                                <div class="fb-player-photo"><img src="${p.photo}" onerror="this.style.display='none'"></div>
+                                <div class="fb-player-info">
+                                    <div class="fb-player-name">${p.name}</div>
+                                    <div class="fb-player-pos">${p.position}</div>
+                                </div>
+                            </div>`).join('');
+                }).join('');
+
+                let trophiesHTML = trophies.length ? trophies.slice(0,15).map(t => `
+                    <div class="fb-trophy-row">
+                        <div class="fb-trophy-icon">🏆</div>
+                        <div class="fb-trophy-name">${t.league}<br><span style="font-size:11px;color:#555">${t.country || ''} · ${t.season}</span></div>
+                        <div class="fb-trophy-count" style="font-size:11px;color:#8e8e8e">${t.place}</div>
+                    </div>`).join('') : `<div style="padding:20px 15px;font-size:13px;color:#555">Data trofi belum tersedia.</div>`;
+
+                panel.innerHTML = `
+                    <div style="position:sticky;top:0;background:#000;border-bottom:1px solid #1c1c1c;display:flex;align-items:center;padding:0 15px;height:54px;z-index:100">
+                        <i class="fa-solid fa-chevron-left" style="font-size:20px;color:#fff;cursor:pointer;padding:6px" onclick="closeFbDetail()"></i>
+                        <div style="flex:1;text-align:center;font-size:14px;font-weight:800;color:#fff;padding:0 8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${team.name}</div>
+                    </div>
+                    <div class="fb-club-header">
+                        <img class="fb-club-badge" src="${team.logo}" onerror="this.style.display='none'">
+                        <div class="fb-club-name">${team.name}</div>
+                        <div class="fb-club-meta">${team.country} · Berdiri ${team.founded || '—'}</div>
+                        ${venue ? `<div style="font-size:11px;color:#555;text-align:center">${venue.name}, kapasitas ${(venue.capacity||0).toLocaleString('id-ID')}</div>` : ''}
+                    </div>
+                    <div class="fb-section-label">Trofi & Gelar</div>
+                    ${trophiesHTML}
+                    <div class="fb-section-label">Skuad</div>
+                    ${squadHTML || '<div style="padding:20px 15px;font-size:13px;color:#555">Data skuad tidak tersedia.</div>'}
+                    <div style="height:60px"></div>`;
+            } catch(e) {
+                panel.innerHTML = `<div class="fb-empty" style="margin-top:80px"><i class="fa-solid fa-triangle-exclamation"></i><div class="fb-empty-text">Gagal memuat data klub</div></div>`;
+            }
+        }
+
+        async function openFbPlayerDetail(playerId) {
+            const panel = document.getElementById('fbDetailPanel');
+            panel.style.display = 'block';
+            panel.innerHTML = `<div style="padding:80px 20px;text-align:center"><i class="fa-solid fa-futbol fa-spin" style="font-size:30px;color:#fff"></i></div>`;
+            history.pushState({view:'fb-detail'}, "");
+            const year = new Date().getFullYear();
+            try {
+                const data = await fbFetch(`/players?id=${playerId}&season=${year}`);
+                const p = data?.response?.[0];
+                if (!p) { panel.innerHTML = `<div class="fb-empty" style="margin-top:80px"><i class="fa-solid fa-user"></i><div class="fb-empty-text">Data pemain tidak tersedia</div></div>`; return; }
+                const pl = p.player, stats = p.statistics[0] || {};
+                const statRows = [
+                    ['⚽ Gol', stats.goals?.total || 0],
+                    ['🎯 Assist', stats.goals?.assists || 0],
+                    ['🟨 Kartu Kuning', stats.cards?.yellow || 0],
+                    ['🟥 Kartu Merah', stats.cards?.red || 0],
+                    ['⏱ Menit Dimainkan', (stats.games?.minutes || 0).toLocaleString('id-ID')],
+                    ['👟 Tembakan (Tepat)', `${stats.shots?.total || 0} (${stats.shots?.on || 0})`],
+                    ['🔑 Dribel Berhasil', stats.dribbles?.success || 0],
+                    ['✅ Akurasi Umpan', stats.passes?.accuracy ? `${stats.passes.accuracy}%` : '—'],
+                ].map(r => `
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 15px;border-bottom:1px solid #111">
+                        <span style="font-size:13px;color:#fff">${r[0]}</span>
+                        <span style="font-size:14px;font-weight:800;color:#fff">${r[1]}</span>
+                    </div>`).join('');
+
+                panel.innerHTML = `
+                    <div style="position:sticky;top:0;background:#000;border-bottom:1px solid #1c1c1c;display:flex;align-items:center;padding:0 15px;height:54px;z-index:100">
+                        <i class="fa-solid fa-chevron-left" style="font-size:20px;color:#fff;cursor:pointer;padding:6px" onclick="closeFbDetail()"></i>
+                        <div style="flex:1;text-align:center;font-size:14px;font-weight:800;color:#fff">${pl.name}</div>
+                    </div>
+                    <div class="fb-club-header">
+                        <img src="${pl.photo}" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:1px solid #1c1c1c" onerror="this.style.display='none'">
+                        <div class="fb-club-name">${pl.name}</div>
+                        <div class="fb-club-meta">${stats.team?.name || ''} · ${pl.nationality || ''}</div>
+                        <div style="font-size:11px;color:#555">Lahir: ${pl.birth?.date || '—'} · Usia: ${pl.age || '—'} th</div>
+                        <div style="font-size:11px;color:#555">${pl.height || '—'} · ${pl.weight || '—'} · ${pl.position || '—'}</div>
+                    </div>
+                    <div class="fb-section-label">Statistik Musim ${year}</div>
+                    ${statRows}
+                    <div style="height:60px"></div>`;
+            } catch(e) {
+                panel.innerHTML = `<div class="fb-empty" style="margin-top:80px"><i class="fa-solid fa-user"></i><div class="fb-empty-text">Gagal memuat data pemain</div></div>`;
+            }
+        }
+
+        async function openFbFixture(fixtureId) {
+            const panel = document.getElementById('fbDetailPanel');
+            panel.style.display = 'block';
+            panel.innerHTML = `<div style="padding:80px 20px;text-align:center"><i class="fa-solid fa-futbol fa-spin" style="font-size:30px;color:#fff"></i></div>`;
+            history.pushState({view:'fb-detail'}, "");
+            try {
+                const data = await fbFetch(`/fixtures?id=${fixtureId}`);
+                const f = data?.response?.[0];
+                if (!f) { panel.innerHTML = `<div class="fb-empty" style="margin-top:80px"><i class="fa-solid fa-futbol"></i><div class="fb-empty-text">Data pertandingan tidak tersedia</div></div>`; return; }
+                const home = f.teams.home, away = f.teams.away;
+                const goals = f.goals, events = f.events || [], stats = f.statistics || [];
+
+                const eventsHTML = events.length ? events.map(e => {
+                    const icon = e.type === 'Goal' ? '⚽' : e.type === 'Card' ? (e.detail.includes('Yellow') ? '🟨' : '🟥') : e.type === 'subst' ? '🔄' : '📌';
+                    const isHome = e.team.id === home.id;
+                    return `<div style="display:flex;align-items:center;gap:10px;padding:10px 15px;border-bottom:1px solid #111;${isHome?'':'flex-direction:row-reverse;text-align:right'}">
+                        <div style="font-size:11px;font-weight:700;color:#555;width:30px;text-align:center">${e.time.elapsed}'</div>
+                        <div style="font-size:18px">${icon}</div>
+                        <div style="flex:1"><div style="font-size:13px;font-weight:700;color:#fff">${e.player.name || ''}</div><div style="font-size:10px;color:#555">${e.detail || ''}</div></div>
+                    </div>`;
+                }).join('') : `<div style="padding:20px 15px;font-size:13px;color:#555;text-align:center">Belum ada event.</div>`;
+
+                panel.innerHTML = `
+                    <div style="position:sticky;top:0;background:#000;border-bottom:1px solid #1c1c1c;display:flex;align-items:center;padding:0 15px;height:54px;z-index:100">
+                        <i class="fa-solid fa-chevron-left" style="font-size:20px;color:#fff;cursor:pointer;padding:6px" onclick="closeFbDetail()"></i>
+                        <div style="flex:1;text-align:center;font-size:13px;font-weight:800;color:#fff">${home.name} vs ${away.name}</div>
+                    </div>
+                    <div style="padding:24px 15px;text-align:center;border-bottom:1px solid #1c1c1c">
+                        <div style="font-size:11px;font-weight:800;color:#555;letter-spacing:1px;text-transform:uppercase;margin-bottom:16px">${f.league.name} · ${f.league.round}</div>
+                        <div style="display:flex;align-items:center;justify-content:space-around">
+                            <div style="display:flex;flex-direction:column;align-items:center;gap:8px">
+                                <img src="${home.logo}" style="width:50px;height:50px;object-fit:contain">
+                                <div style="font-size:13px;font-weight:700;color:#fff;max-width:80px;text-align:center">${home.name}</div>
+                            </div>
+                            <div style="text-align:center">
+                                <div style="font-size:32px;font-weight:900;color:#fff;letter-spacing:4px">${goals.home ?? '—'} - ${goals.away ?? '—'}</div>
+                                <div style="font-size:10px;color:${f.fixture.status.short==='FT'?'#555':'#ff3b30'};font-weight:700">${f.fixture.status.long}</div>
+                            </div>
+                            <div style="display:flex;flex-direction:column;align-items:center;gap:8px">
+                                <img src="${away.logo}" style="width:50px;height:50px;object-fit:contain">
+                                <div style="font-size:13px;font-weight:700;color:#fff;max-width:80px;text-align:center">${away.name}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fb-section-label">Jalannya Pertandingan</div>
+                    ${eventsHTML}
+                    <div style="height:60px"></div>`;
+            } catch(e) {
+                panel.innerHTML = `<div class="fb-empty" style="margin-top:80px"><i class="fa-solid fa-futbol"></i><div class="fb-empty-text">Gagal memuat detail pertandingan</div></div>`;
+            }
+        }
+
+        function closeFbDetail() {
+            document.getElementById('fbDetailPanel').style.display = 'none';
+            window.history.back();
+        }
+
+        // ===== THEME TOGGLE (disabled - UI removed) =====
         function toggleTheme() {
             const isLight = document.body.classList.toggle('light-theme');
             localStorage.setItem('amnesTheme', isLight ? 'light' : 'dark');
-            document.getElementById('themeLabel').innerText = isLight ? 'Terang' : 'Gelap';
-            // toggle pill color handled by CSS
+            const lbl = document.getElementById('themeLabel');
+            if (lbl) lbl.innerText = isLight ? 'Terang' : 'Gelap';
         }
 
         // Apply saved theme on load
@@ -3153,11 +3828,6 @@
             const saved = localStorage.getItem('amnesTheme');
             if (saved === 'light') {
                 document.body.classList.add('light-theme');
-                // update label after DOM ready
-                document.addEventListener('DOMContentLoaded', () => {
-                    const lbl = document.getElementById('themeLabel');
-                    if (lbl) lbl.innerText = 'Terang';
-                });
             }
         })();
     </script>
