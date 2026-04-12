@@ -3031,6 +3031,8 @@
             globalEnDesc = dEn.overview || "";
             const translateBtn = document.getElementById('mTranslateBtn');
             if (originalIndoDesc.trim() !== "") { globalFullDesc = originalIndoDesc; translateBtn.innerText = "Lihat versi asli"; translateBtn.classList.remove('hidden'); } else { globalFullDesc = globalEnDesc || "Sinopsis belum tersedia."; translateBtn.innerText = "Lihat terjemahan"; if(globalEnDesc) translateBtn.classList.remove('hidden'); }
+
+            try {
                 const qName = dId.title || dId.name;
                 const qYear = (dId.release_date || dId.first_air_date || "").split('-')[0];
                 const searchQueryDaily = encodeURIComponent(`${qName} ${qYear} official trailer`);
