@@ -2408,7 +2408,7 @@
                 if (topWorks.length > 0) {
                     document.getElementById('actorKnownForWrapper').style.display = 'block';
                     document.getElementById('actorKnownFor').innerHTML = topWorks.map(w => `
-                        <div class="actor-hl-item" onclick="openModal(${w.id}, '${w.media_type}')">
+                        <div class="actor-hl-item" onclick="openModalFromActor(${w.id}, '${w.media_type}')">
                             <div class="actor-hl-circle">
                                 <img src="https://image.tmdb.org/t/p/w185${w.poster_path}" loading="lazy">
                             </div>
@@ -2428,7 +2428,7 @@
                     movieFilms.forEach(m => {
                         const card = document.createElement('div');
                         card.className = 'post-card';
-                        card.onclick = () => openModal(m.id, 'movie');
+                        card.onclick = () => openModalFromActor(m.id, 'movie');
                         card.innerHTML = `<div class="badge-rating">★ ${(m.vote_average||0).toFixed(1)}</div><div class="badge-type">movie</div><img src="https://image.tmdb.org/t/p/w185${m.poster_path}" loading="lazy" onload="this.style.opacity=1" style="opacity:0">`;
                         filmGrid.appendChild(card);
                     });
@@ -2445,7 +2445,7 @@
                     tvFilms.forEach(m => {
                         const card = document.createElement('div');
                         card.className = 'post-card';
-                        card.onclick = () => openModal(m.id, 'tv');
+                        card.onclick = () => openModalFromActor(m.id, 'tv');
                         card.innerHTML = `<div class="badge-rating">★ ${(m.vote_average||0).toFixed(1)}</div><div class="badge-type">tv</div><img src="https://image.tmdb.org/t/p/w185${m.poster_path}" loading="lazy" onload="this.style.opacity=1" style="opacity:0">`;
                         tvGrid.appendChild(card);
                     });
@@ -2493,6 +2493,18 @@
                 document.body.style.overflow = 'auto';
                 history.replaceState({view: 'home'}, '');
             }
+        }
+
+        // Buka modal film dari dalam actorModal (poster diklik)
+        // Tutup actorModal dulu agar tidak tertutup z-index, lalu buka modal film
+        function openModalFromActor(id, type) {
+            // Tutup actorModal tanpa mengubah history (replaceState ke modal)
+            document.getElementById('actorModal').style.display = 'none';
+            // Bersihkan lastTrailerSources karena kita buka film baru
+            lastTrailerSources = [];
+            // Push state baru untuk film yang akan dibuka
+            // (openModal akan push state sendiri)
+            openModal(id, type);
         }
 
         function searchByStudio(studioId, studioName) {
@@ -2736,31 +2748,97 @@
             for(let y=2026; y>=1930; y--) yearHTML += `<div class="filter-item" onclick="setYear(${y})">${y}</div>`; 
             yD.innerHTML = yearHTML; 
 
-            // Negara — Indonesia pertama, sisanya abjad
+            // Negara — Indonesia pertama, sisanya urut A-Z
             const countries = [
                 ['ID','Indonesia'],
-                ['DZ','Aljazair'],['AR','Argentina'],['AU','Australia'],
-                ['AT','Austria'],['BE','Belgia'],['BR','Brasil'],
-                ['CA','Kanada'],['CL','Cile'],['CN','China'],
-                ['CO','Kolombia'],['HR','Kroasia'],['CZ','Ceko'],
-                ['DK','Denmark'],['EG','Mesir'],['FI','Finlandia'],
-                ['FR','Prancis'],['DE','Jerman'],['GR','Yunani'],
-                ['HK','Hong Kong'],['HU','Hungaria'],['IN','India'],
-                ['IE','Irlandia'],['IL','Israel'],['IT','Italia'],
-                ['JP','Jepang'],['MX','Meksiko'],['MY','Malaysia'],
-                ['MA','Maroko'],['NL','Belanda'],['NZ','Selandia Baru'],
-                ['NG','Nigeria'],['NO','Norwegia'],['PK','Pakistan'],
-                ['PH','Filipina'],['PL','Polandia'],['PT','Portugal'],
-                ['RO','Rumania'],['RU','Rusia'],['SA','Arab Saudi'],
-                ['ZA','Afrika Selatan'],['KR','Korea Selatan'],['ES','Spanyol'],
-                ['SE','Swedia'],['CH','Swiss'],['TW','Taiwan'],
-                ['TH','Thailand'],['TR','Turki'],['UA','Ukraina'],
-                ['AE','UEA'],['GB','Inggris'],['US','Amerika Serikat'],
-                ['VN','Vietnam']
+                // --- A ---
+                ['ZA','Afrika Selatan'],
+                ['DZ','Aljazair'],
+                ['US','Amerika Serikat'],
+                ['AR','Argentina'],
+                ['AU','Australia'],
+                ['AT','Austria'],
+                // --- B ---
+                ['NL','Belanda'],
+                ['BE','Belgia'],
+                ['BR','Brasil'],
+                // --- C ---
+                ['CZ','Ceko'],
+                ['CL','Cile'],
+                ['CN','China'],
+                // --- D ---
+                ['DK','Denmark'],
+                // --- E ---
+                ['ET','Ethiopia'],
+                // --- F ---
+                ['PH','Filipina'],
+                ['FI','Finlandia'],
+                ['FR','Prancis'],
+                // --- G ---
+                ['GH','Ghana'],
+                // --- H ---
+                ['HK','Hong Kong'],
+                ['HR','Kroasia'],
+                ['HU','Hungaria'],
+                // --- I ---
+                ['IN','India'],
+                ['GB','Inggris'],
+                ['IE','Irlandia'],
+                ['IL','Israel'],
+                ['IT','Italia'],
+                // --- J ---
+                ['JP','Jepang'],
+                ['DE','Jerman'],
+                // --- K ---
+                ['KZ','Kazakhstan'],
+                ['KH','Kamboja'],
+                ['CA','Kanada'],
+                ['CM','Kamerun'],
+                ['CO','Kolombia'],
+                ['KR','Korea Selatan'],
+                ['HR','Kroasia'],
+                // --- M ---
+                ['MY','Malaysia'],
+                ['MA','Maroko'],
+                ['MX','Meksiko'],
+                ['EG','Mesir'],
+                // --- N ---
+                ['NG','Nigeria'],
+                ['NO','Norwegia'],
+                // --- P ---
+                ['PK','Pakistan'],
+                ['PL','Polandia'],
+                ['PT','Portugal'],
+                // --- R ---
+                ['RO','Rumania'],
+                ['RU','Rusia'],
+                // --- S ---
+                ['SA','Arab Saudi'],
+                ['NZ','Selandia Baru'],
+                ['ES','Spanyol'],
+                ['SE','Swedia'],
+                ['CH','Swiss'],
+                // --- T ---
+                ['TW','Taiwan'],
+                ['TH','Thailand'],
+                ['TR','Turki'],
+                // --- U ---
+                ['UA','Ukraina'],
+                ['AE','UEA'],
+                // --- V ---
+                ['VN','Vietnam'],
+                // --- Y ---
+                ['GR','Yunani'],
             ];
+            // Deduplicate (ada Kroasia 2x), sort Indonesia pertama, sisanya A-Z
+            const countrySeen = new Set();
+            const countriesUniq = [countries[0]];
+            countries.slice(1).forEach(c => { if (!countrySeen.has(c[0])) { countrySeen.add(c[0]); countriesUniq.push(c); }});
+            countriesUniq.slice(1).sort((a,b) => a[1].localeCompare(b[1], 'id'));
+            const countriesFinal = [countriesUniq[0], ...countriesUniq.slice(1).sort((a,b) => a[1].localeCompare(b[1], 'id'))];
             const cD = document.getElementById('countryDropdown'); 
             let countryHTML = '<div class="filter-item sticky-reset" onclick="setCountry(\'\',\'Negara\')">Semua Negara</div>'; 
-            countries.forEach(c => countryHTML += `<div class="filter-item" onclick="setCountry('${c[0]}','${c[1]}')">${c[1]}</div>`); 
+            countriesFinal.forEach(c => countryHTML += `<div class="filter-item" onclick="setCountry('${c[0]}','${c[1]}')">${c[1]}</div>`); 
             cD.innerHTML = countryHTML; 
 
             // Genre — lengkap, urut abjad (ID TMDb)
@@ -2990,6 +3068,12 @@
                         rVideos = (enVids.results || []).filter(v => v.site === 'YouTube' && (v.type === 'Trailer' || v.type === 'Teaser'));
                     } catch(e2) {}
                 }
+                if (rVideos.length === 0) {
+                    try {
+                        const rawVids = await fetchWithCache(`https://api.themoviedb.org/3/${type}/${id}/videos?api_key=${API_KEY}&include_video_language=en,hi,ko,ja,zh,th,id,ar,ru,null`);
+                        rVideos = (rawVids.results || []).filter(v => v.site === 'YouTube' && (v.type === 'Trailer' || v.type === 'Teaser'));
+                    } catch(e3) {}
+                }
                 rVideos.sort((a, b) => { const sA=(a.official?2:0)+(a.type==='Trailer'?1:0); const sB=(b.official?2:0)+(b.type==='Trailer'?1:0); return sB-sA; });
                 const seenR = new Set(); rVideos = rVideos.filter(v => { if(seenR.has(v.key)) return false; seenR.add(v.key); return true; });
                 if(rVideos.length > 0) {
@@ -3067,16 +3151,25 @@
                 document.getElementById('swipeOverlay').style.display = 'none';
             };
 
-            // Ambil semua video YouTube (Trailer & Teaser), tanpa filter official agar lebih lengkap
+            // Ambil semua video YouTube (Trailer & Teaser)
+            // dId.videos sudah di-append tapi kadang kosong untuk film non-English
+            // original_title dipakai untuk film dengan judul non-Latin
             let allVideosRaw = (dId.videos?.results || []);
             let allVideos = allVideosRaw.filter(v => v.site === 'YouTube' && (v.type === 'Trailer' || v.type === 'Teaser'));
             
-            // Fallback ke endpoint EN-US jika masih kosong
+            // Fallback 1: fetch video dari endpoint en-US (lebih banyak tersedia)
             if (allVideos.length === 0) {
                 try {
                     const enVids = await fetchWithCache(`https://api.themoviedb.org/3/${type}/${id}/videos?api_key=${API_KEY}&language=en-US`);
                     allVideos = (enVids.results || []).filter(v => v.site === 'YouTube' && (v.type === 'Trailer' || v.type === 'Teaser'));
                 } catch(e2) {}
+            }
+            // Fallback 2: jika masih kosong, cari video tanpa filter bahasa (include_video_language=null)
+            if (allVideos.length === 0) {
+                try {
+                    const rawVids = await fetchWithCache(`https://api.themoviedb.org/3/${type}/${id}/videos?api_key=${API_KEY}&include_video_language=en,hi,ko,ja,zh,th,id,ar,ru,null`);
+                    allVideos = (rawVids.results || []).filter(v => v.site === 'YouTube' && (v.type === 'Trailer' || v.type === 'Teaser'));
+                } catch(e3) {}
             }
             
             // Urutan: Official Trailer > Official Teaser > Trailer > Teaser
@@ -3105,7 +3198,8 @@
             }
 
             try {
-                const qName = dId.title || dId.name;
+                // Pakai judul en-US agar pencarian Dailymotion dapat hasil yang tepat
+                const qName = dEn.title || dEn.name || dId.title || dId.name;
                 const qYear = (dId.release_date || dId.first_air_date || "").split('-')[0];
                 const searchQueryDaily = encodeURIComponent(`${qName} ${qYear} official trailer`);
                 const dailyRes = await fetch(`https://api.dailymotion.com/videos?search=${searchQueryDaily}&fields=id,title&limit=1`);
@@ -3122,12 +3216,15 @@
                 const profileImg = c.profile_path ? `<img src="https://image.tmdb.org/t/p/w185${c.profile_path}" loading="lazy" class="rounded-full">` : `<div style="width:100%; height:100%; background:#222; display:flex; align-items:center; justify-content:center; color:#555;"><i class="fa-solid fa-user"></i></div>`;
                 return `<div class="cast-item" onclick="openActorProfile(${c.id})"><div class="cast-img-border"><div class="inner-border">${profileImg}</div></div><span class="cast-name">${c.name}</span></div>`;
             }).join('');
-            document.getElementById('mLikeDisplay').innerText = `${Math.floor((dId.vote_average || 0) * 1234).toLocaleString('id-ID')} suka`; document.getElementById('mTitle').innerText = dId.title || dId.name;
+            document.getElementById('mLikeDisplay').innerText = `${Math.floor((dId.vote_average || 0) * 1234).toLocaleString('id-ID')} suka`;
+            // Prioritaskan judul en-US agar selalu Latin (mencegah aksara India/Thai/Cyrillic dll)
+            const displayTitle = dEn.title || dEn.name || dId.title || dId.name || '';
+            document.getElementById('mTitle').innerText = displayTitle;
             isExpanded = false; renderSynopsis();
             const relYear = (dId.release_date || dId.first_air_date || "2026").split('-')[0];
             const contentKind = (type === 'tv') ? 'tv' : 'movie';
             const genresArr = (dId.genres || []).map(g => `#${g.name.replace(/[^a-zA-Z0-9]/g, '')}`).slice(0, 3).join(' ');
-            document.getElementById('mHashtags').innerHTML = `<br> #${(dId.title||dId.name||"").replace(/[^a-zA-Z0-9]/g, '')} #${relYear} #${contentKind} <br> ${genresArr}`;
+            document.getElementById('mHashtags').innerHTML = `<br> #${(displayTitle).replace(/[^a-zA-Z0-9]/g, '')} #${relYear} #${contentKind} <br> ${genresArr}`;
             const rel = dId.release_date || dId.first_air_date || ""; 
             document.getElementById('mDateDisplay').innerText = rel ? new Date(rel).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
             
