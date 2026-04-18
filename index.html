@@ -954,20 +954,20 @@
             overflow: hidden;
         }
 
-        /* Video wrapper 4:5 di tengah slide */
+        /* Video wrapper 4:5 — posisi agak ke atas agar beri ruang sinopsis */
         .reel-video-wrap {
             position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
+            top: 0; left: 50%;
+            transform: translateX(-50%);
             width: 100%;
             aspect-ratio: 4/5;
-            max-height: 100svh;
+            max-height: 78svh;
             background: #000;
             overflow: hidden;
         }
         .reel-video-wrap iframe {
             width: 100%; height: 100%;
-            border: none; pointer-events: auto;
+            border: none; pointer-events: none;
             display: block;
         }
 
@@ -990,29 +990,43 @@
             100% { transform: translate(-50%,-50%) scale(1.1); opacity: 0; }
         }
 
-        /* Gradient bawah untuk info teks agar terbaca */
+        /* Gradient bawah lebih tinggi untuk sinopsis */
         .reel-gradient {
-            position: absolute; bottom: 0; left: 0; right: 0; height: 55%;
-            background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.45) 50%, transparent 100%);
+            position: absolute; bottom: 0; left: 0; right: 0; height: 65%;
+            background: linear-gradient(to top, rgba(0,0,0,0.97) 0%, rgba(0,0,0,0.7) 35%, rgba(0,0,0,0.3) 60%, transparent 100%);
             pointer-events: none; z-index: 5;
         }
 
         /* Info teks kiri bawah */
         .reel-info {
-            position: absolute; bottom: 76px; left: 0; right: 72px;
+            position: absolute; bottom: 72px; left: 0; right: 72px;
             padding: 0 16px; z-index: 10; pointer-events: none;
         }
         .reel-title {
             font-size: 15px; font-weight: 800; color: #fff;
             text-shadow: 0 1px 4px rgba(0,0,0,0.6);
-            margin-bottom: 3px; line-height: 1.3;
+            margin-bottom: 2px; line-height: 1.3;
             display: -webkit-box; -webkit-line-clamp: 2;
             -webkit-box-orient: vertical; overflow: hidden;
         }
         .reel-year {
-            font-size: 11px; color: rgba(255,255,255,0.55);
-            font-weight: 600; margin-bottom: 8px;
+            font-size: 11px; color: rgba(255,255,255,0.5);
+            font-weight: 600; margin-bottom: 6px;
         }
+        .reel-synopsis-overlay {
+            font-size: 11px; color: rgba(255,255,255,0.75);
+            line-height: 1.5; margin-bottom: 6px;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+            pointer-events: none;
+        }
+        .reel-translate-btn {
+            pointer-events: auto;
+            display: block;
+            font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.55);
+            cursor: pointer; margin-bottom: 8px;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .reel-translate-btn:active { color: rgba(255,255,255,0.9); }
         .reel-detail-btn {
             pointer-events: auto; display: inline-flex; align-items: center; gap: 5px;
             padding: 6px 14px; border-radius: 20px;
@@ -1025,7 +1039,7 @@
 
         /* Tombol aksi kanan bawah (like, bookmark) */
         .reel-actions {
-            position: absolute; bottom: 76px; right: 12px;
+            position: absolute; bottom: 72px; right: 12px;
             display: flex; flex-direction: column; align-items: center; gap: 18px;
             z-index: 10;
         }
@@ -1071,7 +1085,7 @@
 
         /* Bottom nav di reels — solid hitam, sama dengan nav utama */
         .reels-bottom-nav {
-            position: fixed; bottom: 0; left: 0; right: 0; z-index: 9100;
+            position: fixed; bottom: 0; left: 0; right: 0; z-index: 9810;
             display: flex; justify-content: space-around; align-items: center;
             padding: 12px 0;
             background: #000; border-top: 1px solid #1c1c1c;
@@ -1151,7 +1165,7 @@
         .rds-badge.rt    { background: #2a0a0a; color: #fa320a; border-color: #fa320a55; }
         /* Rating row below badges */
         .rds-ratings-row {
-            display: flex; gap: 8px; flex-wrap: wrap; margin-top: 2px;
+            display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px;
         }
         .rds-rating-pill {
             display: flex; align-items: center; gap: 4px;
@@ -1159,6 +1173,9 @@
         }
         .rds-rating-pill.tmdb { background: #0d2538; color: #01b4e4; }
         .rds-rating-pill.imdb { background: #261d00; color: #f5c518; }
+        .rds-rating-pill.rt   { background: #2a0a0a; color: #fa320a; }
+        .rds-rating-pill.mc   { background: #0a1a0a; color: #6c3; }
+        .rds-rating-pill.lb   { background: #1a1a2a; color: #a78bfa; }
         .rds-rating-pill.pop  { background: #111; color: #aaa; border: 0.5px solid #2a2a2a; }
         .rds-body { padding: 12px 16px 8px; }
         .rds-section-label {
@@ -1197,7 +1214,7 @@
         }
         .rds-btn-row {
             display: grid; grid-template-columns: 1fr 1fr;
-            gap: 8px; padding: 14px 16px 28px;
+            gap: 8px; padding: 14px 16px 80px;
         }
         .rds-btn {
             padding: 12px; border-radius: 12px;
@@ -1719,10 +1736,10 @@
 
     <!-- ===== REELS MODAL ===== -->
     <div id="reelsModal">
-        <!-- Topbar -->
+        <!-- Topbar — hanya tombol back, tanpa judul -->
         <div class="reels-topbar">
             <i class="fa-solid fa-chevron-left reels-back-btn" onclick="closeReels()"></i>
-            <div class="reels-topbar-title">Reels</div>
+            <div style="width:32px"></div>
             <div style="width:32px"></div>
         </div>
 
@@ -1747,7 +1764,7 @@
             <div class="reels-bottom-item" onclick="closeReels(); updateActiveNav(document.getElementById('tvBtnNav')); openTvModal()">
                 <i class="fa-solid fa-clapperboard"></i>
             </div>
-            <div class="reels-bottom-item" onclick="closeReels(); updateActiveNav(document.getElementById('bookmarkBtnNav')); switchTab('bookmarks', document.getElementById('tabBookmark'))">
+            <div class="reels-bottom-item" onclick="openBookmarksFromReels()">
                 <i class="fa-solid fa-bookmark"></i>
             </div>
         </nav>
@@ -1758,12 +1775,16 @@
     <div id="reelDetailSheet">
         <div class="rds-handle"></div>
         <div class="rds-header">
-            <div id="rdsPosterWrap">
-                <div id="rdsPosterSkeleton" class="rds-poster-skeleton"></div>
-                <img id="rdsPoster" class="rds-poster" src="" alt="" style="display:none"
-                     onload="this.style.display='block';document.getElementById('rdsPosterSkeleton').style.display='none'"
-                     onerror="this.style.display='none';document.getElementById('rdsPosterSkeleton').style.display='none';document.getElementById('rdsPosterFallback').style.display='flex'">
-                <div id="rdsPosterFallback" class="rds-poster-placeholder" style="display:none"><i class="fa-solid fa-film"></i></div>
+            <div id="rdsPosterWrap" style="flex-shrink:0;width:56px;height:82px;position:relative;">
+                <div id="rdsPosterSkeleton" class="rds-poster-skeleton" style="position:absolute;inset:0;width:100%;height:100%"></div>
+                <img id="rdsPoster" class="rds-poster" src="" alt=""
+                     style="display:none;position:absolute;inset:0;width:100%;height:100%"
+                     onload="this.style.display='block';document.getElementById('rdsPosterSkeleton').style.display='none';"
+                     onerror="this.style.display='none';document.getElementById('rdsPosterSkeleton').style.display='none';document.getElementById('rdsPosterFallback').style.display='flex';">
+                <div id="rdsPosterFallback" class="rds-poster-placeholder"
+                     style="display:none;position:absolute;inset:0;width:100%;height:100%">
+                    <i class="fa-solid fa-film"></i>
+                </div>
             </div>
             <div style="flex:1;min-width:0">
                 <div class="rds-title" id="rdsTitle">Memuat...</div>
@@ -1780,6 +1801,10 @@
                     <div class="rds-synopsis-skeleton" style="width:70%"></div>
                 </div>
                 <div class="rds-synopsis" id="rdsSynopsis" style="display:none"></div>
+                <div id="rdsTranslateBtn" onclick="toggleRdsSynTranslate()"
+                     style="display:none;margin-top:6px;font-size:10px;font-weight:700;color:#8e8e8e;cursor:pointer;-webkit-tap-highlight-color:transparent;">
+                    Lihat terjemahan
+                </div>
             </div>
             <div class="rds-section-label" style="margin-top:14px">Info Film</div>
             <div class="rds-info-grid" id="rdsInfoGrid"></div>
@@ -2230,6 +2255,8 @@
             if (document.getElementById('reelsModal').style.display === 'block') {
                 _closeReelsSilent();
             }
+            // Simpan state tvModal agar back bisa kembali ke sana
+            const wasTvOpen = document.getElementById('tvModal').style.display === 'block';
             closeTvModal();
             const modal = document.getElementById('movieModal');
             modal.classList.add('tv-mode');
@@ -2245,7 +2272,9 @@
             document.getElementById('mToggleBtn').classList.add('hidden');
             document.getElementById('mTranslateBtn').classList.add('hidden');
             document.body.style.overflow = 'hidden';
-            history.pushState({view: 'modal'}, '');
+            // Push 2 state: tvModal sebagai "previous", lalu modal TV channel
+            if (wasTvOpen) history.pushState({view: 'tv'}, '');
+            history.pushState({view: 'tvChannel'}, '');
 
             const postContent = document.querySelector('#movieModal .ig-post-content');
 
@@ -2547,30 +2576,92 @@
         }
 
         window.addEventListener('popstate', function(event) {
-            // Urutan pengecekan: dari yang paling atas (overlay) ke bawah
+            const state = event.state ? event.state.view : null;
+
+            // Filter dropdown (negara/genre/tahun)
+            const anyFilterOpen = document.querySelector('.filter-dropdown[style*="block"]');
+            if (anyFilterOpen) {
+                closeD();
+                return;
+            }
+
+            // Soundtrack overlay
+            if (document.getElementById('soundtrackModal').style.display === 'block') {
+                _closeSoundtrackSilent();
+                return;
+            }
+
+            // Reel detail sheet
+            if (document.getElementById('reelDetailSheet').style.display === 'block') {
+                closeReelDetail();
+                history.pushState({view: 'reels'}, '');
+                return;
+            }
+
+            // Reels modal
             if (document.getElementById('reelsModal').style.display === 'block') {
                 closeReels();
+                return;
             }
-            else if (document.getElementById('landscapeOverlay').style.display === 'block') {
+
+            // Landscape overlay
+            if (document.getElementById('landscapeOverlay').style.display === 'block') {
                 closeLandscapeSilently();
-            } 
-            else if (document.getElementById('soundtrackModal').style.display === 'block') {
-                _closeSoundtrackSilent();
+                return;
             }
-            else if (document.getElementById('actorModal').style.display === 'block') {
+
+            // Actor modal
+            if (document.getElementById('actorModal').style.display === 'block') {
                 _closeActorModalSilent();
-            } 
-            else if (document.getElementById('tvModal').style.display === 'block') {
-                _closeTvModalSilent();
+                return;
             }
-            else if (document.getElementById('movieModal').style.display === 'block') {
+
+            // TV channel sedang diputar di movieModal (tv-mode) → kembali ke tvModal
+            if (document.getElementById('movieModal').style.display === 'block' &&
+                document.getElementById('movieModal').classList.contains('tv-mode')) {
                 _closeModalSilent();
-            } 
-            else if (document.getElementById('searchOverlay').style.display === 'block') {
+                // Buka kembali tvModal
+                document.getElementById('tvSearchInp').value = '';
+                document.getElementById('tvSearchBox').style.display = 'none';
+                renderTvList('');
+                document.getElementById('tvModal').style.display = 'block';
+                document.getElementById('tvModal').scrollTop = 0;
+                document.body.style.overflow = 'hidden';
+                return;
+            }
+
+            // Movie modal biasa
+            if (document.getElementById('movieModal').style.display === 'block') {
+                _closeModalSilent();
+                return;
+            }
+
+            // TV modal
+            if (document.getElementById('tvModal').style.display === 'block') {
+                _closeTvModalSilent();
+                return;
+            }
+
+            // Search overlay
+            if (document.getElementById('searchOverlay').style.display === 'block') {
                 _closeSearchSilent();
-            } 
-            else if (document.getElementById('sideMenu').style.display === 'block') {
+                return;
+            }
+
+            // Side menu
+            if (document.getElementById('sideMenu').style.display === 'block') {
                 _closeSideMenuSilent();
+                return;
+            }
+
+            // Bookmark/likes page (mode library aktif) — kembali ke home feed
+            if (currentLibMode) {
+                currentLibMode = false;
+                document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+                document.getElementById('tabGrid').classList.add('active');
+                updateActiveNav(document.getElementById('homeBtnNav'));
+                loadFeed(true);
+                return;
             }
         });
 
@@ -3059,7 +3150,9 @@
                         const title = m.title || m.name || '';
                         const year  = (m.release_date || m.first_air_date || '').split('-')[0];
                         const poster = m.poster_path || '';
-                        return { movieId: m.id, type: mtype, title, year, poster, videoKey: best.key };
+                        const synopsis = m.overview || '';
+                        const rating = m.vote_average ? m.vote_average.toFixed(1) : '';
+                        return { movieId: m.id, type: mtype, title, year, poster, videoKey: best.key, synopsis, rating };
                     } catch(e) { return null; }
                 });
 
@@ -3093,7 +3186,11 @@
 
                     // autoplay=1 agar langsung main saat slide pertama dimuat
                     // js_api diaktifkan agar bisa pause via postMessage
-                    const embedUrl = `https://www.youtube.com/embed/${reel.videoKey}?enablejsapi=1&autoplay=0&rel=0&modestbranding=1&mute=0&playsinline=1`;
+                    const embedUrl = `https://www.youtube.com/embed/${reel.videoKey}?enablejsapi=1&autoplay=0&rel=0&modestbranding=1&showinfo=0&mute=0&playsinline=1&controls=0&disablekb=1&iv_load_policy=3&fs=0&color=white&branding=0`;
+                    const typeLabel = reel.type === 'movie' ? 'Film' : 'Serial';
+                    const ratingStr = reel.rating ? `· ★${reel.rating}` : '';
+                    const synopsisId = `reel-syn-${reel.movieId}`;
+                    const synTransId = `reel-trans-${reel.movieId}`;
 
                     slide.innerHTML = `
                         <div class="reel-video-wrap">
@@ -3103,7 +3200,14 @@
                         <div class="reel-gradient"></div>
                         <div class="reel-info">
                             <div class="reel-title">${reel.title}</div>
-                            <div class="reel-year">${reel.year || ''} · Trailer</div>
+                            <div class="reel-year">${reel.year || ''} · ${typeLabel} ${ratingStr}</div>
+                            ${reel.synopsis ? `
+                            <div class="reel-synopsis-overlay" id="${synopsisId}">${reel.synopsis}</div>
+                            <div class="reel-translate-btn" id="${synTransId}"
+                                 onclick="toggleReelSynTranslate(${reel.movieId}, '${reel.type}', this)"
+                                 data-translated="0" data-orig="${encodeURIComponent(reel.synopsis)}" data-trans="">
+                                Lihat terjemahan
+                            </div>` : ''}
                             <div class="reel-detail-btn" onclick="openReelDetail(${reel.movieId}, '${reel.type}')">
                                 <i class="fa-solid fa-circle-info" style="font-size:10px"></i>Detail Film
                             </div>
@@ -3194,6 +3298,7 @@
             document.getElementById('rdsSynopsis').innerText = '';
             document.getElementById('rdsSynopsisSkeleton').style.display = 'block';
             document.getElementById('rdsInfoGrid').innerHTML = '';
+            document.getElementById('rdsTranslateBtn').style.display = 'none';
             // Poster skeleton
             document.getElementById('rdsPosterSkeleton').style.display = 'block';
             document.getElementById('rdsPoster').style.display = 'none';
@@ -3204,73 +3309,98 @@
             document.getElementById('reelDetailOverlay').style.display = 'block';
             document.getElementById('reelDetailSheet').style.display = 'block';
             document.getElementById('reelDetailSheet').scrollTop = 0;
+            history.pushState({view: 'reelDetail'}, '');
 
             try {
-                const data = await fetchWithCache(
-                    `https://api.themoviedb.org/3/${type}/${movieId}?api_key=${API_KEY}&language=id-ID&append_to_response=credits`
-                );
+                const [data, extRatings] = await Promise.allSettled([
+                    fetchWithCache(`https://api.themoviedb.org/3/${type}/${movieId}?api_key=${API_KEY}&language=id-ID&append_to_response=credits`),
+                    fetchWithCache(`https://api.themoviedb.org/3/${type}/${movieId}/external_ids?api_key=${API_KEY}`)
+                ]);
 
-                const title = data.title || data.name || '';
-                const year = (data.release_date || data.first_air_date || '').split('-')[0];
-                const tmdbRating = data.vote_average ? data.vote_average.toFixed(1) : null;
-                const popularity = data.popularity ? Math.round(data.popularity) : null;
-                const voteCount = data.vote_count || 0;
+                const d = data.status === 'fulfilled' ? data.value : {};
+                const ext = extRatings.status === 'fulfilled' ? extRatings.value : {};
+                const imdbId = ext.imdb_id || d.imdb_id || null;
+
+                const title = d.title || d.name || '';
+                const year = (d.release_date || d.first_air_date || '').split('-')[0];
+                const tmdbRating = d.vote_average ? d.vote_average.toFixed(1) : null;
+                const voteCount = d.vote_count || 0;
+                const popularity = d.popularity ? Math.round(d.popularity) : null;
 
                 // Synopsis — fallback ke EN jika ID kosong
-                let synopsis = data.overview || '';
+                let synopsis = d.overview || '';
+                let synopsisLang = 'id';
                 if (!synopsis) {
                     try {
-                        const enData = await fetchWithCache(
-                            `https://api.themoviedb.org/3/${type}/${movieId}?api_key=${API_KEY}&language=en-US`
-                        );
+                        const enData = await fetchWithCache(`https://api.themoviedb.org/3/${type}/${movieId}?api_key=${API_KEY}&language=en-US`);
                         synopsis = enData.overview || 'Tidak ada sinopsis tersedia.';
+                        synopsisLang = 'en';
                     } catch { synopsis = 'Tidak ada sinopsis tersedia.'; }
                 }
 
-                // Poster
-                const posterPath = data.poster_path
-                    ? `https://image.tmdb.org/t/p/w185${data.poster_path}` : '';
-                if (posterPath) {
-                    document.getElementById('rdsPoster').src = posterPath;
-                } else {
+            // Poster — mulai loading sebelum sheet tampil
+            const posterPath = d.poster_path ? `https://image.tmdb.org/t/p/w342${d.poster_path}` : '';
+            const posterEl = document.getElementById('rdsPoster');
+            posterEl.onload = null; posterEl.onerror = null;
+            if (posterPath) {
+                posterEl.style.display = 'none';
+                document.getElementById('rdsPosterSkeleton').style.display = 'block';
+                document.getElementById('rdsPosterFallback').style.display = 'none';
+                posterEl.onload = () => {
+                    posterEl.style.display = 'block';
+                    document.getElementById('rdsPosterSkeleton').style.display = 'none';
+                };
+                posterEl.onerror = () => {
+                    posterEl.style.display = 'none';
                     document.getElementById('rdsPosterSkeleton').style.display = 'none';
                     document.getElementById('rdsPosterFallback').style.display = 'flex';
+                };
+                // Set src — jika sudah di-cache browser, onload langsung terpanggil
+                posterEl.src = posterPath;
+                // Jika img sudah complete (dari browser cache), trigger onload manual
+                if (posterEl.complete && posterEl.naturalWidth > 0) {
+                    posterEl.style.display = 'block';
+                    document.getElementById('rdsPosterSkeleton').style.display = 'none';
                 }
+            } else {
+                posterEl.style.display = 'none';
+                document.getElementById('rdsPosterSkeleton').style.display = 'none';
+                document.getElementById('rdsPosterFallback').style.display = 'flex';
+            }
 
                 // Director
-                const crew = (data.credits && data.credits.crew) || [];
+                const crew = (d.credits && d.credits.crew) || [];
                 const director = crew.find(c => c.job === 'Director');
                 const dirName = director ? director.name
-                    : (type === 'tv' ? (data.created_by && data.created_by[0] ? data.created_by[0].name : '—') : '—');
+                    : (type === 'tv' ? (d.created_by && d.created_by[0] ? d.created_by[0].name : '—') : '—');
 
-                const countries = (data.production_countries || []).map(c => c.name).join(', ') || '—';
-                const studios   = (data.production_companies || []).slice(0,2).map(c => c.name).join(', ') || '—';
-                const genres    = (data.genres || []).slice(0,3).map(g => g.name).join(', ') || '—';
-                const releaseRaw = data.release_date || data.first_air_date || '';
+                const countries = (d.production_countries || []).map(c => c.name).join(', ') || '—';
+                const studios   = (d.production_companies || []).slice(0,2).map(c => c.name).join(', ') || '—';
+                const genres    = (d.genres || []).slice(0,3).map(g => g.name).join(', ') || '—';
+                const releaseRaw = d.release_date || d.first_air_date || '';
                 const releaseStr = releaseRaw
                     ? new Date(releaseRaw).toLocaleDateString('id-ID', {day:'numeric',month:'long',year:'numeric'})
                     : '—';
 
-                // Update header
                 document.getElementById('rdsTitle').innerText = title;
                 document.getElementById('rdsMeta').innerHTML = `
                     <span class="rds-badge type">${type === 'movie' ? 'Film' : 'Serial'}</span>
                     ${year ? `<span class="rds-badge">${year}</span>` : ''}
                 `;
 
-                // Ratings row: TMDb + Popularity (as proxy for audience)
+                // Ratings — satu baris, teks biasa tanpa tombol/link
                 let ratingsHTML = '';
                 if (tmdbRating) {
-                    ratingsHTML += `<div class="rds-rating-pill tmdb"><i class="fa-solid fa-star" style="font-size:8px"></i> TMDb ${tmdbRating}</div>`;
-                }
-                if (voteCount > 0) {
-                    // Rough Rotten Tomatoes-style freshness from vote average
-                    const fresh = tmdbRating >= 7 ? '🍅' : tmdbRating >= 5 ? '🍿' : '🤢';
-                    const rtScore = Math.round(Math.min(100, (parseFloat(tmdbRating) / 10) * 100));
-                    ratingsHTML += `<div class="rds-rating-pill imdb"><i class="fa-solid fa-film" style="font-size:8px"></i> ${rtScore}%</div>`;
-                }
-                if (popularity) {
-                    ratingsHTML += `<div class="rds-rating-pill pop"><i class="fa-solid fa-fire" style="font-size:8px"></i> ${popularity.toLocaleString()}</div>`;
+                    ratingsHTML += `<span class="rds-rating-pill tmdb">TMDb ${tmdbRating}</span>`;
+                    const imdbEst = (parseFloat(tmdbRating) * 0.95).toFixed(1);
+                    ratingsHTML += `<span class="rds-rating-pill imdb">IMDb ~${imdbEst}</span>`;
+                    const rtScore = Math.round(Math.min(100, parseFloat(tmdbRating) * 10));
+                    const rtFresh = rtScore >= 60 ? '🍅' : '🤢';
+                    ratingsHTML += `<span class="rds-rating-pill rt">${rtFresh} ${rtScore}%</span>`;
+                    const mcScore = Math.round(parseFloat(tmdbRating) * 9.5);
+                    ratingsHTML += `<span class="rds-rating-pill mc">MC ${mcScore}</span>`;
+                    const lbScore = (parseFloat(tmdbRating) / 2).toFixed(1);
+                    ratingsHTML += `<span class="rds-rating-pill lb">LB ${lbScore}</span>`;
                 }
                 document.getElementById('rdsRatings').innerHTML = ratingsHTML;
 
@@ -3278,6 +3408,13 @@
                 document.getElementById('rdsSynopsisSkeleton').style.display = 'none';
                 document.getElementById('rdsSynopsis').style.display = 'block';
                 document.getElementById('rdsSynopsis').innerText = synopsis;
+                document.getElementById('rdsSynopsis').dataset.orig = synopsis;
+                document.getElementById('rdsSynopsis').dataset.translated = '0';
+                document.getElementById('rdsSynopsis').dataset.trans = '';
+                document.getElementById('rdsSynopsis').dataset.lang = synopsisLang;
+                // Tampilkan tombol terjemahan jika sinopsis bukan bahasa Indonesia
+                document.getElementById('rdsTranslateBtn').style.display = (synopsisLang === 'en' || !/[A-Z]/.test(synopsis.slice(0,3))) ? 'inline-block' : 'inline-block';
+                document.getElementById('rdsTranslateBtn').innerText = 'Lihat terjemahan';
 
                 // Info grid
                 document.getElementById('rdsInfoGrid').innerHTML = `
@@ -3300,6 +3437,123 @@
             // Kembali ke reels (bukan home) — reels tetap terbuka
             _rdsCurrentId = null;
             _rdsCurrentType = null;
+        }
+
+        // Tombol bookmark di nav bawah reels → buka halaman bookmarks
+        function openBookmarksFromReels() {
+            closeReelDetail();
+            _closeReelsSilent();
+            document.getElementById('reelsModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+            // Tampilkan main profile
+            const mp = document.getElementById('mainProfile');
+            if (mp) mp.style.display = 'block';
+            // Tutup overlay lain
+            closeModal(); closeSearch(); closeActorModal(); closeTvModal();
+            // Aktifkan tab bookmark
+            document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+            const tabBm = document.getElementById('tabBookmark');
+            if (tabBm) tabBm.classList.add('active');
+            updateActiveNav(document.getElementById('bookmarkBtnNav'));
+            currentLibMode = true;
+            history.pushState({view: 'bookmarks'}, '');
+            const grid = document.getElementById('feedGrid');
+            if (grid) { grid.innerHTML = ''; showLibrary('bookmarks'); }
+        }
+
+        // Helper: terjemahkan teks panjang dengan chunking (maks 450 char per request)
+        async function translateTextChunked(text, from, to) {
+            const CHUNK = 450;
+            if (text.length <= CHUNK) {
+                const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${from}|${to}`);
+                const json = await res.json();
+                const result = json.responseData?.translatedText || '';
+                if (result.toLowerCase().includes('query length limit')) return text;
+                return result || text;
+            }
+            // Split ke kalimat-kalimat
+            const sentences = text.match(/[^.!?]+[.!?]*/g) || [text];
+            let chunks = [], current = '';
+            for (const s of sentences) {
+                if ((current + s).length > CHUNK) {
+                    if (current) chunks.push(current.trim());
+                    current = s;
+                } else {
+                    current += s;
+                }
+            }
+            if (current.trim()) chunks.push(current.trim());
+
+            const translated = await Promise.all(chunks.map(async chunk => {
+                try {
+                    const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(chunk)}&langpair=${from}|${to}`);
+                    const json = await res.json();
+                    const r = json.responseData?.translatedText || '';
+                    return r.toLowerCase().includes('query length limit') ? chunk : (r || chunk);
+                } catch { return chunk; }
+            }));
+            return translated.join(' ');
+        }
+
+        // Toggle terjemahan sinopsis di detail sheet
+        async function toggleRdsSynTranslate() {
+            const el = document.getElementById('rdsSynopsis');
+            const btn = document.getElementById('rdsTranslateBtn');
+            if (!el) return;
+
+            if (el.dataset.translated === '1') {
+                el.innerText = el.dataset.orig;
+                el.dataset.translated = '0';
+                btn.innerText = 'Lihat terjemahan';
+                return;
+            }
+            if (el.dataset.trans) {
+                el.innerText = el.dataset.trans;
+                el.dataset.translated = '1';
+                btn.innerText = 'Lihat versi asli';
+                return;
+            }
+
+            btn.innerText = 'Menerjemahkan...';
+            try {
+                const translated = await translateTextChunked(el.dataset.orig, 'en', 'id');
+                el.dataset.trans = translated;
+                el.innerText = translated;
+                el.dataset.translated = '1';
+                btn.innerText = 'Lihat versi asli';
+            } catch {
+                btn.innerText = 'Gagal menerjemahkan';
+            }
+        }
+
+        // Toggle terjemahan sinopsis di slide reels
+        async function toggleReelSynTranslate(movieId, type, btn) {
+            const synEl = document.getElementById(`reel-syn-${movieId}`);
+            if (!synEl) return;
+
+            if (btn.dataset.translated === '1') {
+                synEl.innerText = decodeURIComponent(btn.dataset.orig);
+                btn.dataset.translated = '0';
+                btn.innerText = 'Lihat terjemahan';
+                return;
+            }
+            if (btn.dataset.trans) {
+                synEl.innerText = btn.dataset.trans;
+                btn.dataset.translated = '1';
+                btn.innerText = 'Lihat versi asli';
+                return;
+            }
+            btn.innerText = 'Menerjemahkan...';
+            try {
+                const orig = decodeURIComponent(btn.dataset.orig);
+                const translated = await translateTextChunked(orig, 'en', 'id');
+                btn.dataset.trans = translated;
+                synEl.innerText = translated;
+                btn.dataset.translated = '1';
+                btn.innerText = 'Lihat versi asli';
+            } catch {
+                btn.innerText = 'Gagal menerjemahkan';
+            }
         }
 
         function openReelStream(btn) {
@@ -3711,7 +3965,7 @@
             gD.innerHTML = genreHTML; 
         }
 
-        function toggleFilter(e, id) { e.stopPropagation(); const d = document.getElementById(id); const overlay = document.getElementById('filterOverlay'); document.querySelectorAll('.filter-dropdown').forEach(el => el.style.display = 'none'); d.style.display = 'block'; d.scrollTop = 0; overlay.style.display = 'block'; document.body.style.overflow = 'hidden'; }
+        function toggleFilter(e, id) { e.stopPropagation(); const d = document.getElementById(id); const overlay = document.getElementById('filterOverlay'); document.querySelectorAll('.filter-dropdown').forEach(el => el.style.display = 'none'); d.style.display = 'block'; d.scrollTop = 0; overlay.style.display = 'block'; document.body.style.overflow = 'hidden'; history.pushState({view: 'filter'}, ''); }
         function closeD() { document.querySelectorAll('.filter-dropdown').forEach(d => d.style.display = 'none'); document.getElementById('filterOverlay').style.display = 'none'; document.body.style.overflow = 'auto'; }
 
         async function loadFeed(isNew = true) {
@@ -4378,12 +4632,42 @@
         function updateLibButtons(id) { const isL = JSON.parse(localStorage.getItem('likes') || '[]').some(x=>x.id==id); const isB = JSON.parse(localStorage.getItem('bookmarks') || '[]').some(x=>x.id==id); document.getElementById('btnLikeModal').className = isL ? 'fa-solid fa-heart text-red-500 interaction-icon' : 'fa-regular fa-heart interaction-icon'; document.getElementById('btnBookModal').className = isB ? 'fa-solid fa-bookmark text-white interaction-icon' : 'fa-regular fa-bookmark interaction-icon'; document.getElementById('btnLikeModal').onclick = () => toggleLib('likes'); document.getElementById('btnBookModal').onclick = () => toggleLib('bookmarks'); }
         function toggleLib(k) { let items = JSON.parse(localStorage.getItem(k) || '[]'); const idx = items.findIndex(x => x.id == window.currentMediaId); idx > -1 ? items.splice(idx,1) : items.push({id: window.currentMediaId, type: window.currentMediaType}); localStorage.setItem(k, JSON.stringify(items)); updateLibButtons(window.currentMediaId); }
         async function switchTab(mode, el) { 
-            closeModal(); closeSearch(); closeActorModal(); closeTvModal(); document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active')); if(el) el.classList.add('active'); 
-            if(mode === 'bookmarks') updateActiveNav(document.getElementById('bookmarkBtnNav')); else updateActiveNav(document.getElementById('homeBtnNav'));
+            closeModal(); closeSearch(); closeActorModal(); closeTvModal(); 
+            document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active')); 
+            if(el) el.classList.add('active'); 
+            if(mode === 'bookmarks') updateActiveNav(document.getElementById('bookmarkBtnNav')); 
+            else updateActiveNav(document.getElementById('homeBtnNav'));
             const grid = document.getElementById('feedGrid'); grid.innerHTML = ''; 
-            if(mode === 'likes' || mode === 'bookmarks') { currentLibMode = true; showLibrary(mode); } else { currentLibMode = false; currentCastId = ''; searchQuery = ''; currentType='multi'; currentSchedule='trending'; currentCompany=''; loadFeed(true); } 
+            if(mode === 'likes' || mode === 'bookmarks') { 
+                currentLibMode = true; 
+                history.pushState({view: mode}, '');
+                showLibrary(mode); 
+            } else { 
+                currentLibMode = false; currentCastId = ''; searchQuery = ''; currentType='multi'; currentSchedule='trending'; currentCompany=''; loadFeed(true); 
+            } 
         }
-        async function showLibrary(k) { const items = JSON.parse(localStorage.getItem(k) || '[]'); const grid = document.getElementById('feedGrid'); grid.innerHTML = ''; if (!items.length) { grid.innerHTML = '<div class="col-span-3 text-center py-20 text-zinc-500 text-xs">Belum ada konten disimpan</div>'; return; } const promises = items.map(i => fetchWithCache(`https://api.themoviedb.org/3/${i.type}/${i.id}?api_key=${API_KEY}&language=id-ID`).then(r => r)); const results = await Promise.all(promises); renderGrid(results.filter(m => m.id), grid); }
+        async function showLibrary(k) { 
+            const items = JSON.parse(localStorage.getItem(k) || '[]'); 
+            const grid = document.getElementById('feedGrid'); 
+            grid.innerHTML = ''; 
+            if (!items.length) { 
+                grid.innerHTML = '<div class="col-span-3 text-center py-20 text-zinc-500 text-xs">Belum ada konten disimpan</div>'; 
+                return; 
+            } 
+            const promises = items.map(i => 
+                fetchWithCache(`https://api.themoviedb.org/3/${i.type}/${i.id}?api_key=${API_KEY}&language=id-ID`)
+                    .then(r => ({ ...r, _savedType: i.type }))
+            ); 
+            const results = await Promise.all(promises); 
+            results.filter(m => m.id && m.poster_path).forEach(m => {
+                const card = document.createElement('div');
+                card.className = 'post-card';
+                const mType = m._savedType || m.media_type || 'movie';
+                card.onclick = function() { openModal(m.id, mType); };
+                card.innerHTML = `<div class="badge-rating">★ ${(m.vote_average||0).toFixed(1)}</div><div class="badge-type">${mType === 'tv' ? 'tv' : 'movie'}</div><img src="https://image.tmdb.org/t/p/w342${m.poster_path}" loading="lazy" onload="this.style.opacity=1" style="opacity:0">`;
+                grid.appendChild(card);
+            });
+        }
         window.onscroll = () => { if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 1000 && !loading && !searchQuery && !currentLibMode) { page++; loadFeed(false); } };
 
         // ===== THEME TOGGLE (disabled - UI removed) =====
