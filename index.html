@@ -1115,7 +1115,9 @@
         #reelDetailSheet::-webkit-scrollbar { display: none; }
         #reelDetailOverlay {
             display: none;
-            position: fixed; inset: 0;
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            bottom: 56px; /* tinggalkan ruang untuk bottom nav */
             background: rgba(0,0,0,0.6);
             z-index: 9799;
         }
@@ -1749,26 +1751,26 @@
                 <div class="spinner"></div>
             </div>
         </div>
-
-        <!-- Bottom nav reels -->
-        <nav class="reels-bottom-nav">
-            <div class="reels-bottom-item" onclick="closeReels(); updateActiveNav(document.getElementById('homeBtnNav')); backToHome()">
-                <i class="fa-solid fa-house"></i>
-            </div>
-            <div class="reels-bottom-item" onclick="closeReels(); openSearch()">
-                <i class="fa-solid fa-magnifying-glass"></i>
-            </div>
-            <div class="reels-bottom-item active-reel-nav">
-                <i class="fa-solid fa-circle-play"></i>
-            </div>
-            <div class="reels-bottom-item" onclick="closeReels(); updateActiveNav(document.getElementById('tvBtnNav')); openTvModal()">
-                <i class="fa-solid fa-clapperboard"></i>
-            </div>
-            <div class="reels-bottom-item" onclick="openBookmarksFromReels()">
-                <i class="fa-solid fa-bookmark"></i>
-            </div>
-        </nav>
     </div>
+
+    <!-- Bottom nav reels — terpisah dari reelsModal agar tidak tertutup overlay -->
+    <nav class="reels-bottom-nav" id="reelsBottomNav" style="display:none">
+        <div class="reels-bottom-item" onclick="closeReels(); updateActiveNav(document.getElementById('homeBtnNav')); backToHome()">
+            <i class="fa-solid fa-house"></i>
+        </div>
+        <div class="reels-bottom-item" onclick="closeReels(); openSearch()">
+            <i class="fa-solid fa-magnifying-glass"></i>
+        </div>
+        <div class="reels-bottom-item active-reel-nav">
+            <i class="fa-solid fa-circle-play"></i>
+        </div>
+        <div class="reels-bottom-item" onclick="closeReels(); updateActiveNav(document.getElementById('tvBtnNav')); openTvModal()">
+            <i class="fa-solid fa-clapperboard"></i>
+        </div>
+        <div class="reels-bottom-item" onclick="openBookmarksFromReels()">
+            <i class="fa-solid fa-bookmark"></i>
+        </div>
+    </nav>
 
     <!-- ===== REEL DETAIL BOTTOM SHEET ===== -->
     <div id="reelDetailOverlay" onclick="closeReelDetail()"></div>
@@ -2542,6 +2544,7 @@
 
         function _closeReelsSilent() {
             document.getElementById('reelsModal').style.display = 'none';
+            document.getElementById('reelsBottomNav').style.display = 'none';
             document.querySelectorAll('#reelsContainer iframe').forEach(f => {
                 try { f.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*'); } catch(e) {}
             });
@@ -3060,6 +3063,7 @@
         async function openReels() {
             const modal = document.getElementById('reelsModal');
             modal.style.display = 'block';
+            document.getElementById('reelsBottomNav').style.display = 'flex';
             document.body.style.overflow = 'hidden';
             history.pushState({view: 'reels'}, '');
 
@@ -3070,11 +3074,17 @@
 
         function closeReels() {
             document.getElementById('reelsModal').style.display = 'none';
+            document.getElementById('reelsBottomNav').style.display = 'none';
             document.body.style.overflow = 'auto';
             // Hentikan semua video yang sedang main
             document.querySelectorAll('#reelsContainer iframe').forEach(f => {
                 try { f.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*'); } catch(e) {}
             });
+            // Reset agar setiap buka reels dapat konten baru/acak
+            _reelsLoaded = false;
+            _reelsData = [];
+            _reelsPage = 1;
+            document.getElementById('reelsContainer').innerHTML = '<div class="reel-loading"><div class="spinner"></div></div>';
             history.replaceState({view: 'home'}, '');
         }
 
@@ -3111,7 +3121,8 @@
             if (isNew) {
                 container.innerHTML = '<div class="reel-loading"><div class="spinner"></div></div>';
                 _reelsData = [];
-                _reelsPage = 1;
+                // Acak halaman awal (1-5) agar konten berbeda tiap buka
+                _reelsPage = Math.floor(Math.random() * 5) + 1;
                 _reelsLoaded = false;
             }
 
@@ -3141,7 +3152,17 @@
                             `https://api.themoviedb.org/3/${mtype}/${m.id}/videos?api_key=${API_KEY}&language=en-US`
                         );
                         // Prioritas: Official Trailer > Trailer > Teaser > Clip
-                        const allVids = (vRes.results || []).filter(v => v.site === 'YouTube');
+                        let allVids = (vRes.results || []).filter(v => v.site === 'YouTube');
+                        
+                        // Filter akun non-English (Korea, India, Jepang, dll)
+                        const _nonLatinPat = /[\u0900-\u097F\u3040-\u30FF\u4E00-\u9FFF\uAC00-\uD7FF\u0600-\u06FF]/;
+                        const _regionalKw = /\b(korean?|hindi|japanese|arabic|chinese|thai|dubbed?|dub|tamil|telugu|bengali|urdu|turkish)\b/i;
+                        const _enVids = allVids.filter(v => {
+                            const nm = v.name || '';
+                            return !_nonLatinPat.test(nm) && !_regionalKw.test(nm) && (!v.iso_639_1 || v.iso_639_1 === 'en' || v.iso_639_1 === 'null');
+                        });
+                        if (_enVids.length > 0) allVids = _enVids;
+                        
                         const scoreVid = v => (v.official?4:0) + (v.type==='Trailer'?3:0) + (v.type==='Teaser'?1:0);
                         allVids.sort((a, b) => scoreVid(b) - scoreVid(a));
                         const best = allVids[0];
@@ -3186,7 +3207,7 @@
 
                     // autoplay=1 agar langsung main saat slide pertama dimuat
                     // js_api diaktifkan agar bisa pause via postMessage
-                    const embedUrl = `https://www.youtube.com/embed/${reel.videoKey}?enablejsapi=1&autoplay=0&rel=0&modestbranding=1&showinfo=0&mute=0&playsinline=1&controls=0&disablekb=1&iv_load_policy=3&fs=0&color=white&branding=0`;
+                    const embedUrl = `https://www.youtube.com/embed/${reel.videoKey}?enablejsapi=1&autoplay=0&rel=0&modestbranding=1&showinfo=0&mute=0&playsinline=1&controls=0&disablekb=1&iv_load_policy=3&fs=0&color=white&branding=0&origin=${encodeURIComponent(location.origin || 'https://amnesfubbia.github.io')}`;
                     const typeLabel = reel.type === 'movie' ? 'Film' : 'Serial';
                     const ratingStr = reel.rating ? `· ★${reel.rating}` : '';
                     const synopsisId = `reel-syn-${reel.movieId}`;
@@ -3249,10 +3270,8 @@
                     const iframe = entry.target.querySelector('iframe');
                     if (!iframe) return;
                     if (entry.isIntersecting && entry.intersectionRatio >= 0.8) {
-                        // Slide masuk layar → play
                         try { iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*'); } catch(e) {}
                     } else {
-                        // Slide keluar layar → pause
                         try { iframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*'); } catch(e) {}
                     }
                 });
@@ -3260,6 +3279,8 @@
 
             document.querySelectorAll('.reel-slide').forEach(slide => {
                 _reelsObserver.observe(slide);
+                // Setup fallback timer untuk slide yang sudah ada
+                if (typeof setupSlideTimer === 'function') setupSlideTimer(slide);
             });
 
             // Load more saat slide terakhir terlihat
@@ -3273,6 +3294,171 @@
                     }
                 }, { threshold: 0.5 });
                 loadMoreObserver.observe(lastSlide);
+            }
+        }
+
+        // ===== AUTO-SCROLL REELS SAAT VIDEO SELESAI =====
+        // Gunakan polling durasi — lebih reliable dari postMessage state change
+        // karena controls=0 sering memblokir onStateChange di banyak browser mobile
+        let _reelAutoScrollTimer = null;
+        let _reelCurrentIframe = null;
+        let _reelAutoScrollEnabled = true; // nonaktif saat detail sheet terbuka
+
+        function startReelEndTimer(iframe) {
+            stopReelEndTimer();
+            if (!iframe) return;
+            _reelCurrentIframe = iframe;
+
+            // Minta durasi dan currentTime via postMessage secara berkala
+            let checkInterval = setInterval(() => {
+                // Berhenti jika reels tidak aktif atau detail sheet terbuka
+                if (document.getElementById('reelsModal').style.display !== 'block') {
+                    clearInterval(checkInterval);
+                    return;
+                }
+                if (document.getElementById('reelDetailSheet').style.display === 'block') return;
+
+                // Kirim request getDuration dan getCurrentTime
+                try {
+                    iframe.contentWindow.postMessage(JSON.stringify({
+                        event: 'command', func: 'getDuration', args: ''
+                    }), '*');
+                } catch(e) {}
+            }, 1000);
+
+            _reelAutoScrollTimer = checkInterval;
+        }
+
+        function stopReelEndTimer() {
+            if (_reelAutoScrollTimer) {
+                clearInterval(_reelAutoScrollTimer);
+                _reelAutoScrollTimer = null;
+            }
+        }
+
+        // Listener pesan dari YouTube iframe
+        if (!window._reelsYTListenerAdded) {
+            window._reelsYTListenerAdded = true;
+
+            // Track waktu selesai tiap slide
+            const _slideEndTimes = new WeakMap();
+            const _slideStartTimes = new WeakMap();
+
+            window.addEventListener('message', function(e) {
+                if (!e.origin.includes('youtube.com')) return;
+                let data;
+                try { data = JSON.parse(e.data); } catch { return; }
+
+                const reelsModal = document.getElementById('reelsModal');
+                const detailSheet = document.getElementById('reelDetailSheet');
+                if (!reelsModal || reelsModal.style.display !== 'block') return;
+
+                // onStateChange: 1=playing, 0=ended, 2=paused
+                if (data.event === 'onStateChange') {
+                    if (data.info === 1) {
+                        // Video mulai bermain — catat waktu mulai
+                        const playingIframe = [...document.querySelectorAll('#reelsContainer iframe')]
+                            .find(f => { try { return f.contentWindow === e.source; } catch { return false; } });
+                        if (playingIframe) {
+                            const slide = playingIframe.closest('.reel-slide');
+                            if (slide) _slideStartTimes.set(slide, Date.now());
+                        }
+                    }
+                    if (data.info === 0) {
+                        // Video selesai → scroll ke berikutnya
+                        if (detailSheet && detailSheet.style.display === 'block') return;
+                        scrollToNextReel(e.source);
+                    }
+                }
+
+                // onReady — daftarkan event listener
+                if (data.event === 'onReady') {
+                    try {
+                        e.source.postMessage(JSON.stringify({
+                            event: 'listening',
+                            id: data.id || ''
+                        }), '*');
+                    } catch {}
+                }
+            });
+
+            // Fallback: IntersectionObserver track kapan slide masuk layar,
+            // lalu gunakan timer berdasarkan durasi rata-rata trailer (2,5 menit)
+            // Ini fallback jika postMessage tidak bekerja
+            function setupSlideTimer(slide) {
+                if (slide._timerSet) return;
+                slide._timerSet = true;
+
+                const iframe = slide.querySelector('iframe');
+                if (!iframe) return;
+
+                // Coba approach alternatif: load event iframe
+                // Setelah iframe loaded, tunggu ~150 detik (rata-rata trailer) lalu scroll
+                let elapsed = 0;
+                const TRAILER_DURATION = 150; // detik estimasi
+
+                let slideTimer = null;
+                let obs = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting && entry.intersectionRatio >= 0.8) {
+                            // Slide masuk layar — mulai timer fallback
+                            if (!slideTimer) {
+                                slideTimer = setTimeout(() => {
+                                    const detailSheet = document.getElementById('reelDetailSheet');
+                                    const reelsModal = document.getElementById('reelsModal');
+                                    if (reelsModal.style.display !== 'block') return;
+                                    if (detailSheet && detailSheet.style.display === 'block') return;
+                                    scrollToNextReel(null, slide);
+                                }, TRAILER_DURATION * 1000);
+                            }
+                        } else {
+                            // Slide keluar layar — batalkan timer
+                            if (slideTimer) { clearTimeout(slideTimer); slideTimer = null; slide._timerSet = false; }
+                        }
+                    });
+                }, { threshold: 0.8 });
+                obs.observe(slide);
+            }
+
+            // Observer untuk pasang timer ke setiap slide baru
+            const _newSlideObserver = new MutationObserver((mutations) => {
+                mutations.forEach(m => {
+                    m.addedNodes.forEach(node => {
+                        if (node.classList && node.classList.contains('reel-slide')) {
+                            setupSlideTimer(node);
+                        }
+                    });
+                });
+            });
+            const container = document.getElementById('reelsContainer');
+            if (container) _newSlideObserver.observe(container, { childList: true });
+        }
+
+        function scrollToNextReel(source, currentSlide) {
+            const container = document.getElementById('reelsContainer');
+            if (!container) return;
+
+            let slide = currentSlide;
+            if (!slide && source) {
+                // Cari slide dari iframe source
+                const iframes = container.querySelectorAll('iframe');
+                iframes.forEach(f => {
+                    try { if (f.contentWindow === source) slide = f.closest('.reel-slide'); } catch {}
+                });
+            }
+            if (!slide) {
+                // Fallback: slide yang sedang visible
+                container.querySelectorAll('.reel-slide').forEach(s => {
+                    const r = s.getBoundingClientRect();
+                    if (r.top >= -100 && r.top <= 100) slide = s;
+                });
+            }
+
+            const next = slide ? slide.nextElementSibling : null;
+            if (next && next.classList.contains('reel-slide')) {
+                next.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } else if (container) {
+                container.scrollBy({ top: window.innerHeight, behavior: 'smooth' });
             }
         }
 
@@ -3441,24 +3627,37 @@
 
         // Tombol bookmark di nav bawah reels → buka halaman bookmarks
         function openBookmarksFromReels() {
-            closeReelDetail();
-            _closeReelsSilent();
+            // Tutup detail sheet jika terbuka
+            document.getElementById('reelDetailOverlay').style.display = 'none';
+            document.getElementById('reelDetailSheet').style.display = 'none';
+            _rdsCurrentId = null; _rdsCurrentType = null;
+
+            // Tutup reels + nav
             document.getElementById('reelsModal').style.display = 'none';
+            document.getElementById('reelsBottomNav').style.display = 'none';
+            document.querySelectorAll('#reelsContainer iframe').forEach(f => {
+                try { f.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*'); } catch(e) {}
+            });
             document.body.style.overflow = 'auto';
-            // Tampilkan main profile
-            const mp = document.getElementById('mainProfile');
-            if (mp) mp.style.display = 'block';
-            // Tutup overlay lain
-            closeModal(); closeSearch(); closeActorModal(); closeTvModal();
-            // Aktifkan tab bookmark
-            document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
-            const tabBm = document.getElementById('tabBookmark');
-            if (tabBm) tabBm.classList.add('active');
+
+            // Pastikan mainProfile tampil
+            document.getElementById('mainProfile').style.display = 'block';
+
+            // Update nav & tab
             updateActiveNav(document.getElementById('bookmarkBtnNav'));
+            document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+            document.getElementById('tabBookmark').classList.add('active');
+            document.getElementById('tabLikes').classList.remove('active');
+            document.getElementById('tabGrid').classList.remove('active');
+
+            // Push history
             currentLibMode = true;
             history.pushState({view: 'bookmarks'}, '');
+
+            // Load bookmark grid
             const grid = document.getElementById('feedGrid');
-            if (grid) { grid.innerHTML = ''; showLibrary('bookmarks'); }
+            grid.innerHTML = '';
+            showLibrary('bookmarks');
         }
 
         // Helper: terjemahkan teks panjang dengan chunking (maks 450 char per request)
@@ -4298,26 +4497,52 @@
             };
 
             // Ambil semua video YouTube (Trailer & Teaser)
-            // dId.videos sudah di-append tapi kadang kosong untuk film non-English
-            // original_title dipakai untuk film dengan judul non-Latin
             let allVideosRaw = (dId.videos?.results || []);
             let allVideos = allVideosRaw.filter(v => v.site === 'YouTube' && (v.type === 'Trailer' || v.type === 'Teaser'));
             
-            // Fallback 1: fetch video dari endpoint en-US (lebih banyak tersedia)
+            // Fallback 1: fetch video dari endpoint en-US
             if (allVideos.length === 0) {
                 try {
                     const enVids = await fetchWithCache(`https://api.themoviedb.org/3/${type}/${id}/videos?api_key=${API_KEY}&language=en-US`);
                     allVideos = (enVids.results || []).filter(v => v.site === 'YouTube' && (v.type === 'Trailer' || v.type === 'Teaser'));
                 } catch(e2) {}
             }
-            // Fallback 2: jika masih kosong, cari video tanpa filter bahasa (include_video_language=null)
+            // Fallback 2: jika masih kosong, cari semua bahasa
             if (allVideos.length === 0) {
                 try {
                     const rawVids = await fetchWithCache(`https://api.themoviedb.org/3/${type}/${id}/videos?api_key=${API_KEY}&include_video_language=en,hi,ko,ja,zh,th,id,ar,ru,null`);
                     allVideos = (rawVids.results || []).filter(v => v.site === 'YouTube' && (v.type === 'Trailer' || v.type === 'Teaser'));
                 } catch(e3) {}
             }
+
+            // FILTER BAHASA: prioritaskan bahasa Inggris, buang yg non-English jika ada EN
+            const enVideos = allVideos.filter(v => !v.iso_639_1 || v.iso_639_1 === 'en' || v.iso_639_1 === 'null');
+            const nonEnLangs = ['ko','ja','hi','ar','zh','th','ru','pt','es','fr','de','it','tr'];
+            // Jika ada video EN, buang yang non-English kecuali tidak ada sama sekali pilihan
+            if (enVideos.length > 0) {
+                allVideos = enVideos;
+            }
+
+            // FILTER AKUN NON-ENGLISH: buang trailer dari akun Korea, India, Jepang, dll
+            // Deteksi dari nama video yang mengandung karakter non-Latin atau keyword regional
+            const nonEnglishChannelPattern = /[\u0900-\u097F\u3040-\u30FF\u4E00-\u9FFF\uAC00-\uD7FF\u0600-\u06FF]/; // Hindi, JP, CN, KR, Arab
+            const regionalKeywords = /\b(korean?|hindi|japanese|arabic|chinese|thai|dubbed?|dub|indo(nesia)?|malay|tamil|telugu|bengali|urdu|persian|turkish|greek|hebrew|polish|dutch|swedish|norwegian|danish|finnish|czech|hungarian|romanian|bulgarian|serbian|croatian|slovene|slovak|catalan|tagalog|vietnamese|khmer|burmese|sinhala)\b/i;
             
+            // Pisahkan: trailer bahasa Inggris murni vs trailer non-English
+            const cleanEnVideos = allVideos.filter(v => {
+                const name = v.name || '';
+                // Tolak jika nama video mengandung script non-Latin (Korea, Jepang, Arab, Hindi, dll)
+                if (nonEnglishChannelPattern.test(name)) return false;
+                // Tolak jika mengandung keyword bahasa non-English
+                if (regionalKeywords.test(name)) return false;
+                return true;
+            });
+            
+            // Gunakan cleanEnVideos jika ada, fallback ke allVideos
+            if (cleanEnVideos.length > 0) {
+                allVideos = cleanEnVideos;
+            }
+
             // Urutan: Official Trailer > Official Teaser > Trailer > Teaser
             allVideos.sort((a, b) => {
                 const sA = (a.official ? 2 : 0) + (a.type === 'Trailer' ? 1 : 0);
@@ -4325,26 +4550,27 @@
                 return sB - sA;
             });
 
-            // Filter 1: Buang trailer portrait/vertical (tidak sesuai tampilan landscape)
+            // Filter: Buang trailer portrait/vertical
             const portraitKeywords = /\bvertical\b|\bportrait\b|9\s*:\s*16|\breels?\b|\btiktok\b|#shorts|\bshorts\b/i;
             allVideos = allVideos.filter(v => !portraitKeywords.test(v.name || ''));
 
-            // Filter 2: Deduplikasi ketat — buang video dengan key sama
+            // Deduplikasi 1: buang video dengan key sama
             const seenKeys = new Set();
             allVideos = allVideos.filter(v => { if (seenKeys.has(v.key)) return false; seenKeys.add(v.key); return true; });
 
-            // Filter 3: Deduplikasi berdasarkan nama mirip (versi berbeda video yang sama)
-            // Normalisasi judul: lowercase, hapus angka romawi/versi/tag bahasa di akhir
+            // Deduplikasi 2: buang versi trailer yang sama dari akun berbeda
+            // Normalisasi nama: hapus tag bahasa/region di akhir, hapus nama channel, bandingkan isi
             function normalizeTitle(name) {
                 return (name || '').toLowerCase()
+                    .replace(/\s*[\|\-–]\s*.{0,30}$/, '')      // hapus "| Channel Name" atau "- Korea"
                     .replace(/\s+(v\d+|version|ver\.?|#\d+|\[.*?\]|\(.*?\))\s*$/gi, '')
-                    .replace(/[^a-z0-9\s]/g, '')
-                    .replace(/\s+/g, ' ').trim();
+                    .replace(/\b(official|trailer|teaser|clip|hd|4k|subtitled?|dubbed?|sub|dub)\b/gi, '')
+                    .replace(/[^a-z0-9\s]/g, '').replace(/\s+/g, ' ').trim();
             }
             const seenTitles = new Set();
             allVideos = allVideos.filter(v => {
                 const norm = normalizeTitle(v.name);
-                if (!norm) return true; // tidak ada nama, biarkan lolos
+                if (!norm) return true;
                 if (seenTitles.has(norm)) return false;
                 seenTitles.add(norm);
                 return true;
