@@ -4698,6 +4698,8 @@
             const relYear = (dId.release_date || dId.first_air_date || "2026").split('-')[0];
             const contentKind = (type === 'tv') ? 'tv' : 'movie';
             const genresArr = (dId.genres || []).map(g => `#${g.name.replace(/[^a-zA-Z0-9]/g, '')}`).slice(0, 3).join(' ');
+            const rel = dId.release_date || dId.first_air_date || "";
+            document.getElementById('mDateDisplay').innerText = rel ? new Date(rel).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
             // Build movie info grid
             const runTime = dId.runtime ? `${dId.runtime} menit` : (dId.episode_run_time && dId.episode_run_time[0] ? `${dId.episode_run_time[0]} menit/ep` : '—');
             const miCountries = (dId.production_countries || []).map(c => c.name).join(', ') || '—';
@@ -4708,7 +4710,8 @@
             const miLanguage = langMap[langCode] || (langCode ? langCode.toUpperCase() : '—');
             const miReleaseStr = rel ? new Date(rel).toLocaleDateString('id-ID', {day:'numeric',month:'long',year:'numeric'}) : '—';
             const infoGridEl = document.getElementById('mInfoGrid');
-            infoGridEl.innerHTML = `
+            if (infoGridEl) {
+                infoGridEl.innerHTML = `
                 <div class="minfo-cell"><div class="minfo-key">Released</div><div class="minfo-val">${miReleaseStr}</div></div>
                 <div class="minfo-cell"><div class="minfo-key">Run Time</div><div class="minfo-val">${runTime}</div></div>
                 <div class="minfo-cell"><div class="minfo-key">Country</div><div class="minfo-val">${miCountries}</div></div>
@@ -4716,10 +4719,9 @@
                 <div class="minfo-cell full-width"><div class="minfo-key">Studios</div><div class="minfo-val">${miStudios}</div></div>
                 <div class="minfo-cell full-width"><div class="minfo-key">Genre</div><div class="minfo-val">${miGenres}</div></div>
             `;
-            infoGridEl.style.display = 'grid';
+                infoGridEl.style.display = 'grid';
+            }
             document.getElementById('mHashtags').innerHTML = `<br> #${(displayTitle).replace(/[^a-zA-Z0-9]/g, '')} #${relYear} #${contentKind} <br> ${genresArr}`;
-            const rel = dId.release_date || dId.first_air_date || ""; 
-            document.getElementById('mDateDisplay').innerText = rel ? new Date(rel).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
             
             let serverButtonsHTML = '';
             for(let i=1; i<=17; i++) {
