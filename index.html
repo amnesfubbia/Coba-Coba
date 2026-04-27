@@ -1244,32 +1244,163 @@
         }
 
 
-        /* ===== MOVIE INFO GRID (below synopsis) ===== */
+        /* ===== MOVIE INFO GRID (2 col, no border) ===== */
         .minfo-grid {
             display: grid; grid-template-columns: 1fr 1fr;
-            gap: 0; border-radius: 12px; overflow: hidden;
-            border: 1px solid #1c1c1c; margin-top: 10px; margin-bottom: 10px;
+            gap: 8px 12px; margin-top: 10px; margin-bottom: 10px;
         }
-        .minfo-cell {
-            background: #0a0a0a; padding: 9px 12px;
-            border-bottom: 1px solid #1a1a1a;
-            border-right: 1px solid #1a1a1a;
-        }
-        .minfo-cell:nth-child(even) { border-right: none; }
-        .minfo-cell:nth-last-child(-n+2) { border-bottom: none; }
-        .minfo-cell.full-width { grid-column: 1 / -1; border-right: none; }
-        .minfo-cell.full-width:last-child { border-bottom: none; }
+        .minfo-cell { background: transparent; padding: 0; }
+        .minfo-cell.full-width { grid-column: 1 / -1; }
         .minfo-key {
-            font-size: 8px; font-weight: 800; color: #555;
-            text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 3px;
+            font-size: 9px; font-weight: 800; color: #555;
+            text-transform: uppercase; letter-spacing: 1.5px;
+            margin-bottom: 2px; display: block;
         }
         .minfo-val {
-            font-size: 11px; font-weight: 600; color: #e0e0e0; line-height: 1.4;
+            font-size: 12px; font-weight: 600; color: #ccc;
+            line-height: 1.4; display: block;
         }
 
+        /* ===== RATING BADGES in modal ===== */
+        .modal-rating-bar {
+            display: flex; align-items: center; gap: 8px;
+            padding: 8px 15px 4px; flex-wrap: wrap;
+        }
+        .modal-rating-badge {
+            display: inline-flex; align-items: center; gap: 4px;
+            padding: 4px 10px; border-radius: 8px;
+            font-size: 11px; font-weight: 800; line-height: 1;
+        }
+        .modal-rating-badge.tmdb { background: #0d2538; color: #01b4e4; }
+        .modal-rating-badge.imdb { background: #261d00; color: #f5c518; }
+
+        /* ===== SIMILAR FILMS strip ===== */
+        .similar-section { padding: 12px 0 4px; }
+        .similar-label {
+            font-size: 10px; font-weight: 800; color: #555;
+            text-transform: uppercase; letter-spacing: 2px;
+            padding: 0 15px; margin-bottom: 10px; display: block;
+        }
+        .similar-scroll {
+            display: flex; gap: 8px; overflow-x: auto;
+            padding: 0 15px 4px; scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+        }
+        .similar-scroll::-webkit-scrollbar { display: none; }
+        .similar-card {
+            flex: 0 0 90px; cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .similar-poster {
+            width: 90px; height: 130px; border-radius: 8px;
+            object-fit: cover; background: #111;
+            display: block; margin-bottom: 4px;
+            opacity: 0; transition: opacity 0.3s;
+        }
+        .similar-poster.loaded { opacity: 1; }
+        .similar-title {
+            font-size: 10px; font-weight: 600; color: #ccc;
+            line-height: 1.3; overflow: hidden;
+            display: -webkit-box; -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+        .similar-rating {
+            font-size: 9px; color: #555; margin-top: 2px;
+        }
+
+        /* ===== RECENTLY VIEWED strip ===== */
+        #recentlyViewedWrapper {
+            display: none; padding: 0 15px 15px 15px;
+            border-bottom: 1px solid #1c1c1c;
+        }
+        .recently-label {
+            font-size: 10px; font-weight: 800; color: #555;
+            text-transform: uppercase; letter-spacing: 2px;
+            margin-bottom: 10px; display: block;
+            padding-top: 12px;
+        }
+        .recently-scroll {
+            display: flex; gap: 10px; overflow-x: auto;
+            scrollbar-width: none; -webkit-overflow-scrolling: touch;
+        }
+        .recently-scroll::-webkit-scrollbar { display: none; }
+        .recently-item {
+            flex: 0 0 60px; text-align: center; cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .recently-img {
+            width: 60px; height: 88px; border-radius: 8px;
+            object-fit: cover; background: #111;
+            display: block; margin-bottom: 4px;
+        }
+        .recently-title {
+            font-size: 9px; color: #8e8e8e; font-weight: 500;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+
+        /* ===== BADGE NEW on poster ===== */
+        .badge-new {
+            position: absolute; bottom: 6px; left: 6px;
+            padding: 2px 5px; border-radius: 2px;
+            font-size: 7px; font-weight: 900; z-index: 5;
+            background: #ff3b30; color: #fff;
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+
+        /* ===== PULL TO REFRESH ===== */
+        #pullRefreshIndicator {
+            position: fixed; top: 0; left: 0; right: 0;
+            height: 0; overflow: hidden; z-index: 8999;
+            display: flex; align-items: flex-end; justify-content: center;
+            background: transparent; transition: height 0.2s;
+            pointer-events: none;
+        }
+        .pull-inner {
+            display: flex; align-items: center; gap: 8px;
+            padding-bottom: 10px; color: #555;
+            font-size: 11px; font-weight: 700;
+        }
+        .pull-spinner {
+            width: 18px; height: 18px;
+            border: 2px solid rgba(255,255,255,0.1);
+            border-top-color: #fff; border-radius: 50%;
+            animation: spin 0.8s linear infinite; display: none;
+        }
+        .pull-arrow {
+            font-size: 14px; transition: transform 0.2s; color: #8e8e8e;
+        }
+        .pull-arrow.ready { transform: rotate(180deg); color: #fff; }
+
+        /* ===== LONG PRESS DELETE overlay ===== */
+        .post-card.lib-delete-mode::after {
+            content: '';
+            position: absolute; inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 6;
+        }
+        .delete-badge {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            background: #ff3b30; color: #fff;
+            width: 36px; height: 36px; border-radius: 50%;
+            display: none; align-items: center; justify-content: center;
+            font-size: 16px; z-index: 7;
+            box-shadow: 0 2px 12px rgba(255,59,48,0.5);
+        }
+        .post-card.lib-delete-mode .delete-badge { display: flex; }
+
+        /* ===== SORT BY pill (gantiin Rating di filter, Rating jadi Sort) ===== */
     </style>
 </head>
 <body>
+
+    <div id="pullRefreshIndicator">
+        <div class="pull-inner">
+            <i class="fa-solid fa-arrow-down pull-arrow" id="pullArrow"></i>
+            <div class="pull-spinner" id="pullSpinner"></div>
+            <span id="pullText">Tarik untuk refresh</span>
+        </div>
+    </div>
 
     <noscript>
         <div style="position:fixed;inset:0;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:99999;text-align:center;padding:30px">
@@ -1539,6 +1670,11 @@
 
         <div class="highlights-wrapper no-scrollbar"><div class="highlights-container no-scrollbar" id="highlightList"></div></div>
 
+        <div id="recentlyViewedWrapper">
+            <span class="recently-label">Terakhir Dilihat</span>
+            <div class="recently-scroll" id="recentlyScroll"></div>
+        </div>
+
         <div class="tab-nav">
             <div class="tab-item active" id="tabGrid" onclick="switchTab('grid', this)"><i class="fa-solid fa-table-cells"></i></div>
             <div class="tab-item" id="tabLikes" onclick="switchTab('likes', this)"><i class="fa-regular fa-heart"></i></div>
@@ -1628,6 +1764,7 @@
                 </div>
             </div>
             
+            <div id="mRatingBar" class="modal-rating-bar" style="display:none"></div>
             <div class="ig-post-content">
                 <div class="mb-1">
                     <span class="ig-username">amnesfubbia</span>
@@ -1636,8 +1773,6 @@
                         <span id="mToggleBtn" class="toggle-btn hidden" onclick="handleToggleDesc()">selengkapnya</span>
                     </div>
                 </div>
-
-                <div id="mInfoGrid" class="minfo-grid" style="display:none"></div>
                 
                 <div id="mHashtags" class="ig-hashtags"></div>
 
@@ -1659,6 +1794,10 @@
                 <div class="dl-grid">
                     <button id="btnDownload1" class="dl-link-btn" onclick="handleDownload()">Download</button>
                     <button id="btnTrailerDailymotion" class="dl-link-btn btn-trailer-special" onclick="changeServer(21, this)">Trailer</button>
+                </div>
+                <div id="mSimilarSection" class="similar-section" style="display:none">
+                    <span class="similar-label">Film Serupa</span>
+                    <div class="similar-scroll" id="mSimilarScroll"></div>
                 </div>
             </div>
         </div>
@@ -2554,7 +2693,6 @@
                 postContent.innerHTML = `
                 <div class="mb-1"><span class="ig-username">amnesfubbia</span><span id="mDesc" class="ig-caption"></span>
                 <div class="mt-1"><span id="mToggleBtn" class="toggle-btn hidden" onclick="handleToggleDesc()">selengkapnya</span></div></div>
-                <div id="mInfoGrid" class="minfo-grid" style="display:none"></div>
                 <div id="mHashtags" class="ig-hashtags"></div>
                 <div class="flex items-center gap-2 mt-1.5">
                     <div id="mDateDisplay" class="ig-date"></div>
@@ -2571,6 +2709,10 @@
                 <div class="dl-grid">
                     <button id="btnDownload1" class="dl-link-btn" onclick="handleDownload()">Download</button>
                     <button id="btnTrailerDailymotion" class="dl-link-btn btn-trailer-special" onclick="changeServer(21, this)">Trailer</button>
+                </div>
+                <div id="mSimilarSection" class="similar-section" style="display:none">
+                    <span class="similar-label">Film Serupa</span>
+                    <div class="similar-scroll" id="mSimilarScroll"></div>
                 </div>`;
             }
             document.body.style.overflow = 'auto';
@@ -4281,7 +4423,9 @@
                 const card = document.createElement('div'); 
                 card.className = 'post-card'; 
                 card.onclick = function() { openModal(m.id, mType); }; 
-                card.innerHTML = `<div class="badge-rating">★ ${(m.vote_average||0).toFixed(1)}</div><div class="badge-type">${currentType==='short'?'SHORT':(mType==='tv'?'tv':'movie')}</div><img src="https://image.tmdb.org/t/p/w342${m.poster_path}" loading="lazy" onload="this.style.opacity=1" style="opacity:0">`; 
+                const releaseD = m.release_date || m.first_air_date || '';
+                const newBadge = isNewRelease(releaseD) ? '<div class="badge-new">NEW</div>' : '';
+                card.innerHTML = `<div class="badge-rating">★ ${(m.vote_average||0).toFixed(1)}</div><div class="badge-type">${currentType==='short'?'SHORT':(mType==='tv'?'tv':'movie')}</div>${newBadge}<img src="https://image.tmdb.org/t/p/w342${m.poster_path}" loading="lazy" onload="this.style.opacity=1" style="opacity:0">`; 
                 fragment.appendChild(card); 
             });
             grid.appendChild(fragment);
@@ -4698,30 +4842,9 @@
             const relYear = (dId.release_date || dId.first_air_date || "2026").split('-')[0];
             const contentKind = (type === 'tv') ? 'tv' : 'movie';
             const genresArr = (dId.genres || []).map(g => `#${g.name.replace(/[^a-zA-Z0-9]/g, '')}`).slice(0, 3).join(' ');
-            const rel = dId.release_date || dId.first_air_date || "";
-            document.getElementById('mDateDisplay').innerText = rel ? new Date(rel).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
-            // Build movie info grid
-            const runTime = dId.runtime ? `${dId.runtime} menit` : (dId.episode_run_time && dId.episode_run_time[0] ? `${dId.episode_run_time[0]} menit/ep` : '—');
-            const miCountries = (dId.production_countries || []).map(c => c.name).join(', ') || '—';
-            const miStudios = (dId.production_companies || []).slice(0, 3).map(c => c.name).join(', ') || '—';
-            const miGenres = (dId.genres || []).map(g => g.name).join(', ') || '—';
-            const langMap = {'en':'English','id':'Indonesia','ko':'Korean','ja':'Japanese','zh':'Mandarin','hi':'Hindi','fr':'French','de':'German','es':'Spanish','it':'Italian','pt':'Portuguese','ru':'Russian','ar':'Arabic','th':'Thai','nl':'Dutch','tr':'Turkish','pl':'Polish','sv':'Swedish','da':'Danish','fi':'Finnish','no':'Norwegian','vi':'Vietnamese','ms':'Malay','tl':'Filipino'};
-            const langCode = dId.original_language || '';
-            const miLanguage = langMap[langCode] || (langCode ? langCode.toUpperCase() : '—');
-            const miReleaseStr = rel ? new Date(rel).toLocaleDateString('id-ID', {day:'numeric',month:'long',year:'numeric'}) : '—';
-            const infoGridEl = document.getElementById('mInfoGrid');
-            if (infoGridEl) {
-                infoGridEl.innerHTML = `
-                <div class="minfo-cell"><div class="minfo-key">Released</div><div class="minfo-val">${miReleaseStr}</div></div>
-                <div class="minfo-cell"><div class="minfo-key">Run Time</div><div class="minfo-val">${runTime}</div></div>
-                <div class="minfo-cell"><div class="minfo-key">Country</div><div class="minfo-val">${miCountries}</div></div>
-                <div class="minfo-cell"><div class="minfo-key">Language</div><div class="minfo-val">${miLanguage}</div></div>
-                <div class="minfo-cell full-width"><div class="minfo-key">Studios</div><div class="minfo-val">${miStudios}</div></div>
-                <div class="minfo-cell full-width"><div class="minfo-key">Genre</div><div class="minfo-val">${miGenres}</div></div>
-            `;
-                infoGridEl.style.display = 'grid';
-            }
             document.getElementById('mHashtags').innerHTML = `<br> #${(displayTitle).replace(/[^a-zA-Z0-9]/g, '')} #${relYear} #${contentKind} <br> ${genresArr}`;
+            const rel = dId.release_date || dId.first_air_date || ""; 
+            document.getElementById('mDateDisplay').innerText = rel ? new Date(rel).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
             
             let serverButtonsHTML = '';
             for(let i=1; i<=17; i++) {
@@ -4733,6 +4856,16 @@
 
             if(type === 'tv') { document.getElementById('seriesControl').classList.remove('hidden'); document.getElementById('seasonSel').innerHTML = (dId.seasons||[]).filter(s=>s.season_number>0).map(s=>`<option value="${s.season_number}">Season ${s.season_number}</option>`).join(''); loadEpisodes(); } else { document.getElementById('seriesControl').classList.add('hidden'); }
             updateLibButtons(id);
+
+            // Rating badges
+            renderModalRatingBadges(dId.vote_average, currentImdbId);
+
+            // Recently viewed
+            const rvPoster = dId.poster_path || '';
+            addToRecentlyViewed(id, type, rvPoster, displayTitle);
+
+            // Similar films (async, non-blocking)
+            loadSimilarFilms(id, type);
         }
 
         async function handleTranslate() {
@@ -4754,6 +4887,8 @@
                 track.querySelectorAll('iframe').forEach(f => { f.src = ""; f.remove(); }); 
                 track.innerHTML = ''; 
             } 
+            const _rb = document.getElementById('mRatingBar'); if(_rb){ _rb.style.display='none'; _rb.innerHTML=''; }
+            const _ss = document.getElementById('mSimilarSection'); if(_ss) _ss.style.display='none';
             const modal = document.getElementById('movieModal');
             modal.classList.remove('tv-mode');
             modal.style.display = 'none'; 
@@ -4766,7 +4901,6 @@
                     <span id="mDesc" class="ig-caption"></span>
                     <div class="mt-1"><span id="mToggleBtn" class="toggle-btn hidden" onclick="handleToggleDesc()">selengkapnya</span></div>
                 </div>
-                <div id="mInfoGrid" class="minfo-grid" style="display:none"></div>
                 <div id="mHashtags" class="ig-hashtags"></div>
                 <div class="flex items-center gap-2 mt-1.5">
                     <div id="mDateDisplay" class="ig-date"></div>
@@ -4783,6 +4917,10 @@
                 <div class="dl-grid">
                     <button id="btnDownload1" class="dl-link-btn" onclick="handleDownload()">Download</button>
                     <button id="btnTrailerDailymotion" class="dl-link-btn btn-trailer-special" onclick="changeServer(21, this)">Trailer</button>
+                </div>
+                <div id="mSimilarSection" class="similar-section" style="display:none">
+                    <span class="similar-label">Film Serupa</span>
+                    <div class="similar-scroll" id="mSimilarScroll"></div>
                 </div>`;
             }
             document.body.style.overflow = 'auto'; 
@@ -4982,8 +5120,9 @@
                 const card = document.createElement('div');
                 card.className = 'post-card';
                 const mType = m._savedType || m.media_type || 'movie';
-                card.onclick = function() { openModal(m.id, mType); };
-                card.innerHTML = `<div class="badge-rating">★ ${(m.vote_average||0).toFixed(1)}</div><div class="badge-type">${mType === 'tv' ? 'tv' : 'movie'}</div><img src="https://image.tmdb.org/t/p/w342${m.poster_path}" loading="lazy" onload="this.style.opacity=1" style="opacity:0">`;
+                card.onclick = function() { if (!_longPressActive) openModal(m.id, mType); };
+                card.innerHTML = `<div class="badge-rating">★ ${(m.vote_average||0).toFixed(1)}</div><div class="badge-type">${mType === 'tv' ? 'tv' : 'movie'}</div><div class="delete-badge"><i class="fa-solid fa-trash"></i></div><img src="https://image.tmdb.org/t/p/w342${m.poster_path}" loading="lazy" onload="this.style.opacity=1" style="opacity:0">`;
+                setupLongPressDelete(card, m.id, mType, k);
                 grid.appendChild(card);
             });
         }
@@ -5014,6 +5153,201 @@
                 document.body.classList.add('light-theme');
             }
         })();
+
+        // ===== RECENTLY VIEWED =====
+        const RV_KEY = 'recentlyViewed';
+        const RV_MAX = 15;
+
+        function addToRecentlyViewed(id, type, poster, title) {
+            let items = JSON.parse(localStorage.getItem(RV_KEY) || '[]');
+            // Hapus jika sudah ada
+            items = items.filter(x => x.id != id);
+            // Tambah di depan
+            items.unshift({ id, type, poster, title });
+            // Batasi
+            if (items.length > RV_MAX) items = items.slice(0, RV_MAX);
+            localStorage.setItem(RV_KEY, JSON.stringify(items));
+            renderRecentlyViewed();
+        }
+
+        function renderRecentlyViewed() {
+            const items = JSON.parse(localStorage.getItem(RV_KEY) || '[]');
+            const wrapper = document.getElementById('recentlyViewedWrapper');
+            const scroll = document.getElementById('recentlyScroll');
+            if (!items.length) { wrapper.style.display = 'none'; return; }
+            wrapper.style.display = 'block';
+            scroll.innerHTML = items.map(item => `
+                <div class="recently-item" onclick="openModal(${item.id}, '${item.type}')">
+                    <img class="recently-img" src="https://image.tmdb.org/t/p/w185${item.poster || ''}"
+                         onerror="this.style.background='#1a1a1a'" loading="lazy">
+                    <div class="recently-title">${item.title || ''}</div>
+                </div>`).join('');
+        }
+
+        // Init recently viewed on load
+        window.addEventListener('DOMContentLoaded', () => {
+            renderRecentlyViewed();
+        });
+
+        // ===== BADGE NEW helper =====
+        function isNewRelease(releaseDate) {
+            if (!releaseDate) return false;
+            const release = new Date(releaseDate);
+            const diffDays = (Date.now() - release.getTime()) / (1000 * 60 * 60 * 24);
+            return diffDays >= 0 && diffDays <= 30;
+        }
+
+        // ===== SIMILAR FILMS =====
+        async function loadSimilarFilms(id, type) {
+            const section = document.getElementById('mSimilarSection');
+            const scroll = document.getElementById('mSimilarScroll');
+            if (!section || !scroll) return;
+            section.style.display = 'none';
+            scroll.innerHTML = '';
+            try {
+                const data = await fetchWithCache(
+                    `https://api.themoviedb.org/3/${type}/${id}/similar?api_key=${API_KEY}&language=en-US&page=1`
+                );
+                const items = (data.results || []).filter(m => m.poster_path).slice(0, 12);
+                if (!items.length) return;
+                section.style.display = 'block';
+                scroll.innerHTML = items.map(m => {
+                    const t = m.title || m.name || '';
+                    const r = m.vote_average ? m.vote_average.toFixed(1) : '';
+                    return `<div class="similar-card" onclick="openModal(${m.id}, '${type}')">
+                        <img class="similar-poster" src="https://image.tmdb.org/t/p/w185${m.poster_path}"
+                             loading="lazy" onload="this.classList.add('loaded')">
+                        <div class="similar-title">${t}</div>
+                        ${r ? `<div class="similar-rating">★ ${r}</div>` : ''}
+                    </div>`;
+                }).join('');
+            } catch(e) {}
+        }
+
+        // ===== RATING BADGES in modal =====
+        function renderModalRatingBadges(tmdbRating, imdbId) {
+            const bar = document.getElementById('mRatingBar');
+            if (!bar) return;
+            if (!tmdbRating) { bar.style.display = 'none'; return; }
+            const rating = parseFloat(tmdbRating);
+            const imdbEst = (rating * 0.95).toFixed(1);
+            bar.innerHTML = `
+                <span class="modal-rating-badge tmdb">
+                    <i class="fa-solid fa-star" style="font-size:9px"></i> ${rating.toFixed(1)} TMDb
+                </span>
+                <span class="modal-rating-badge imdb">
+                    <i class="fa-solid fa-star" style="font-size:9px"></i> ~${imdbEst} IMDb
+                </span>`;
+            bar.style.display = 'flex';
+        }
+
+        // ===== PULL TO REFRESH =====
+        (function initPullToRefresh() {
+            let startY = 0, currentY = 0, pulling = false, refreshing = false;
+            const indicator = document.getElementById('pullRefreshIndicator');
+            const arrow = document.getElementById('pullArrow');
+            const spinner = document.getElementById('pullSpinner');
+            const pullText = document.getElementById('pullText');
+            const THRESHOLD = 70;
+
+            document.addEventListener('touchstart', e => {
+                // Only when at top of page and no modal open
+                if (window.scrollY > 0) return;
+                if (document.getElementById('movieModal').style.display === 'block') return;
+                if (document.getElementById('searchOverlay').style.display === 'block') return;
+                if (document.getElementById('reelsModal').style.display === 'block') return;
+                if (refreshing) return;
+                startY = e.touches[0].clientY;
+                pulling = true;
+            }, { passive: true });
+
+            document.addEventListener('touchmove', e => {
+                if (!pulling || refreshing) return;
+                currentY = e.touches[0].clientY;
+                const diff = Math.max(0, currentY - startY);
+                if (diff <= 0) return;
+                const height = Math.min(diff * 0.5, THRESHOLD + 10);
+                indicator.style.height = height + 'px';
+                if (diff * 0.5 >= THRESHOLD) {
+                    arrow.classList.add('ready');
+                    pullText.innerText = 'Lepas untuk refresh';
+                } else {
+                    arrow.classList.remove('ready');
+                    pullText.innerText = 'Tarik untuk refresh';
+                }
+            }, { passive: true });
+
+            document.addEventListener('touchend', async () => {
+                if (!pulling || refreshing) return;
+                pulling = false;
+                const diff = Math.max(0, currentY - startY);
+                if (diff * 0.5 >= THRESHOLD) {
+                    refreshing = true;
+                    arrow.style.display = 'none';
+                    spinner.style.display = 'block';
+                    pullText.innerText = 'Memperbarui...';
+                    indicator.style.height = '50px';
+                    // Clear cache & reload
+                    try { sessionStorage.clear(); } catch(e) {}
+                    await loadFeed(true);
+                    renderRecentlyViewed();
+                    setTimeout(() => {
+                        indicator.style.height = '0px';
+                        arrow.style.display = 'block';
+                        spinner.style.display = 'none';
+                        pullText.innerText = 'Tarik untuk refresh';
+                        arrow.classList.remove('ready');
+                        refreshing = false;
+                    }, 500);
+                } else {
+                    indicator.style.height = '0px';
+                    arrow.classList.remove('ready');
+                    pullText.innerText = 'Tarik untuk refresh';
+                }
+                currentY = 0; startY = 0;
+            }, { passive: true });
+        })();
+
+        // ===== LONG PRESS DELETE from bookmark/likes grid =====
+        let _longPressTimer = null;
+        let _longPressActive = false;
+
+        function setupLongPressDelete(card, itemId, itemType, storageKey) {
+            card.addEventListener('touchstart', () => {
+                _longPressTimer = setTimeout(() => {
+                    _longPressActive = true;
+                    card.classList.add('lib-delete-mode');
+                }, 600);
+            }, { passive: true });
+
+            card.addEventListener('touchend', (e) => {
+                clearTimeout(_longPressTimer);
+                if (_longPressActive) {
+                    e.preventDefault();
+                    _longPressActive = false;
+                    // Remove from storage
+                    let items = JSON.parse(localStorage.getItem(storageKey) || '[]');
+                    items = items.filter(x => x.id != itemId);
+                    localStorage.setItem(storageKey, JSON.stringify(items));
+                    // Animate out
+                    card.style.transition = 'opacity 0.25s, transform 0.25s';
+                    card.style.opacity = '0';
+                    card.style.transform = 'scale(0.9)';
+                    setTimeout(() => card.remove(), 250);
+                    // Show empty state if grid empty
+                    const grid = document.getElementById('feedGrid');
+                    if (grid && grid.querySelectorAll('.post-card').length === 0) {
+                        grid.innerHTML = '<div class="col-span-3 text-center py-20 text-zinc-500 text-xs">Belum ada konten disimpan</div>';
+                    }
+                }
+            }, { passive: false });
+
+            card.addEventListener('touchmove', () => {
+                clearTimeout(_longPressTimer);
+                _longPressActive = false;
+                card.classList.remove('lib-delete-mode');
+            }, { passive: true });
+        }
     </script>
 </body>
 </html>
