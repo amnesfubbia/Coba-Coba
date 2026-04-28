@@ -1290,13 +1290,13 @@
         }
         .similar-scroll::-webkit-scrollbar { display: none; }
         .similar-card {
-            flex: 0 0 88px; cursor: pointer;
+            flex: 0 0 70px; cursor: pointer;
             -webkit-tap-highlight-color: transparent;
         }
         .similar-poster {
-            width: 88px; height: 128px; border-radius: 8px;
+            width: 70px; height: 100px; border-radius: 6px;
             object-fit: cover; background: #111;
-            display: block; margin-bottom: 4px;
+            display: block; margin-bottom: 3px;
             opacity: 0; transition: opacity 0.3s;
         }
         .similar-poster.loaded { opacity: 1; }
@@ -3429,7 +3429,7 @@
                     // js_api diaktifkan agar bisa pause via postMessage
                     // enablejsapi=1 wajib agar YT.Player onStateChange bekerja
                     // controls=1 dibiarkan agar event state change tidak diblokir
-                    const embedUrl = `https://www.youtube.com/embed/${reel.videoKey}?enablejsapi=1&autoplay=0&rel=0&modestbranding=1&showinfo=0&playsinline=1&iv_load_policy=3&origin=${encodeURIComponent(location.origin || location.href.split('/').slice(0,3).join('/'))}`;
+                    const embedUrl = `https://www.youtube.com/embed/${reel.videoKey}?enablejsapi=1&autoplay=${isNew && _reelsData.length===1?1:0}&rel=0&modestbranding=1&showinfo=0&playsinline=1&iv_load_policy=3&mute=0&origin=${encodeURIComponent(location.origin || location.href.split('/').slice(0,3).join('/'))}`;
                     const typeLabel = reel.type === 'movie' ? 'Film' : 'Serial';
                     const ratingStr = reel.rating ? `· ★${reel.rating}` : '';
                     const synopsisId = `reel-syn-${reel.movieId}`;
@@ -3474,6 +3474,18 @@
 
                 setupReelsAutoplay();
                 setupReelSwipeLeft();
+                // Manual trigger play untuk slide pertama
+                if (isNew) {
+                    setTimeout(() => {
+                        const firstSlide = document.querySelector('.reel-slide');
+                        if (firstSlide) {
+                            const fi = firstSlide.querySelector('iframe');
+                            if (fi) {
+                                try { fi.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*'); } catch(e) {}
+                            }
+                        }
+                    }, 1800);
+                }
                 _reelsPage++;
 
             } catch(e) {
@@ -4817,6 +4829,27 @@
             const relYear = (dId.release_date || dId.first_air_date || "2026").split('-')[0];
             const contentKind = (type === 'tv') ? 'tv' : 'movie';
             const genresArr = (dId.genres || []).map(g => `#${g.name.replace(/[^a-zA-Z0-9]/g, '')}`).slice(0, 3).join(' ');
+            // Info grid
+            const rel2 = dId.release_date || dId.first_air_date || "";
+            const runTime = dId.runtime ? `${dId.runtime} menit` : (dId.episode_run_time && dId.episode_run_time[0] ? `${dId.episode_run_time[0]} menit/ep` : '—');
+            const miCountries = (dId.production_countries || []).map(c => c.name).join(', ') || '—';
+            const miStudios = (dId.production_companies || []).slice(0, 3).map(c => c.name).join(', ') || '—';
+            const miGenres = (dId.genres || []).map(g => g.name).join(', ') || '—';
+            const langMap2 = {'en':'English','id':'Indonesia','ko':'Korean','ja':'Japanese','zh':'Mandarin','hi':'Hindi','fr':'French','de':'German','es':'Spanish','it':'Italian','pt':'Portuguese','ru':'Russian','ar':'Arabic','th':'Thai','nl':'Dutch','tr':'Turkish','pl':'Polish','sv':'Swedish','da':'Danish','fi':'Finnish','no':'Norwegian','vi':'Vietnamese','ms':'Malay','tl':'Filipino'};
+            const langCode2 = dId.original_language || '';
+            const miLanguage = langMap2[langCode2] || (langCode2 ? langCode2.toUpperCase() : '—');
+            const miReleaseStr = rel2 ? new Date(rel2).toLocaleDateString('id-ID', {day:'numeric',month:'long',year:'numeric'}) : '—';
+            const infoGridEl = document.getElementById('mInfoGrid');
+            if (infoGridEl) {
+                infoGridEl.innerHTML = `
+                <div class="minfo-cell"><span class="minfo-key">Released</span><span class="minfo-val">${miReleaseStr}</span></div>
+                <div class="minfo-cell"><span class="minfo-key">Run Time</span><span class="minfo-val">${runTime}</span></div>
+                <div class="minfo-cell"><span class="minfo-key">Country</span><span class="minfo-val">${miCountries}</span></div>
+                <div class="minfo-cell"><span class="minfo-key">Language</span><span class="minfo-val">${miLanguage}</span></div>
+                <div class="minfo-cell full-width"><span class="minfo-key">Studios</span><span class="minfo-val">${miStudios}</span></div>
+                <div class="minfo-cell full-width"><span class="minfo-key">Genre</span><span class="minfo-val">${miGenres}</span></div>`;
+                infoGridEl.style.display = 'grid';
+            }
             document.getElementById('mHashtags').innerHTML = `<br> #${(displayTitle).replace(/[^a-zA-Z0-9]/g, '')} #${relYear} #${contentKind} <br> ${genresArr}`;
             const rel = dId.release_date || dId.first_air_date || ""; 
             document.getElementById('mDateDisplay').innerText = rel ? new Date(rel).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
