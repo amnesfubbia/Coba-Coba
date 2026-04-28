@@ -1264,18 +1264,20 @@
         /* ===== RATING BADGES in modal ===== */
         .modal-rating-bar {
             display: flex; align-items: center; gap: 8px;
-            padding: 8px 15px 4px; flex-wrap: wrap;
+            padding: 6px 15px 2px; flex-wrap: wrap;
         }
         .modal-rating-badge {
-            display: inline-flex; align-items: center; gap: 4px;
+            display: inline-flex; align-items: center; gap: 5px;
             padding: 4px 10px; border-radius: 8px;
-            font-size: 11px; font-weight: 800; line-height: 1;
+            font-size: 12px; font-weight: 700; line-height: 1;
+            color: #fff;
         }
-        .modal-rating-badge.tmdb { background: #0d2538; color: #01b4e4; }
-        .modal-rating-badge.imdb { background: #261d00; color: #f5c518; }
+        .modal-rating-badge i { font-size: 12px; }
+        .modal-rating-badge.tmdb i { color: #01b4e4; }
+        .modal-rating-badge.imdb i { color: #f5c518; }
 
         /* ===== SIMILAR FILMS strip ===== */
-        .similar-section { padding: 12px 0 4px; }
+        .similar-section { padding: 14px 0 4px; }
         .similar-label {
             font-size: 10px; font-weight: 800; color: #555;
             text-transform: uppercase; letter-spacing: 2px;
@@ -1288,54 +1290,43 @@
         }
         .similar-scroll::-webkit-scrollbar { display: none; }
         .similar-card {
-            flex: 0 0 90px; cursor: pointer;
+            flex: 0 0 88px; cursor: pointer;
             -webkit-tap-highlight-color: transparent;
         }
         .similar-poster {
-            width: 90px; height: 130px; border-radius: 8px;
+            width: 88px; height: 128px; border-radius: 8px;
             object-fit: cover; background: #111;
             display: block; margin-bottom: 4px;
             opacity: 0; transition: opacity 0.3s;
         }
         .similar-poster.loaded { opacity: 1; }
-        .similar-title {
-            font-size: 10px; font-weight: 600; color: #ccc;
-            line-height: 1.3; overflow: hidden;
-            display: -webkit-box; -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-        }
         .similar-rating {
-            font-size: 9px; color: #555; margin-top: 2px;
+            font-size: 9px; color: #555; text-align: center;
         }
 
         /* ===== RECENTLY VIEWED strip ===== */
         #recentlyViewedWrapper {
-            display: none; padding: 0 15px 15px 15px;
+            display: none; padding: 12px 15px 15px 15px;
             border-bottom: 1px solid #1c1c1c;
         }
         .recently-label {
             font-size: 10px; font-weight: 800; color: #555;
             text-transform: uppercase; letter-spacing: 2px;
             margin-bottom: 10px; display: block;
-            padding-top: 12px;
         }
         .recently-scroll {
-            display: flex; gap: 10px; overflow-x: auto;
+            display: flex; gap: 8px; overflow-x: auto;
             scrollbar-width: none; -webkit-overflow-scrolling: touch;
         }
         .recently-scroll::-webkit-scrollbar { display: none; }
         .recently-item {
-            flex: 0 0 60px; text-align: center; cursor: pointer;
+            flex: 0 0 58px; cursor: pointer;
             -webkit-tap-highlight-color: transparent;
         }
         .recently-img {
-            width: 60px; height: 88px; border-radius: 8px;
+            width: 58px; height: 86px; border-radius: 8px;
             object-fit: cover; background: #111;
-            display: block; margin-bottom: 4px;
-        }
-        .recently-title {
-            font-size: 9px; color: #8e8e8e; font-weight: 500;
-            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+            display: block;
         }
 
         /* ===== BADGE NEW on poster ===== */
@@ -1352,50 +1343,31 @@
             position: fixed; top: 0; left: 0; right: 0;
             height: 0; overflow: hidden; z-index: 8999;
             display: flex; align-items: flex-end; justify-content: center;
-            background: transparent; transition: height 0.2s;
-            pointer-events: none;
+            pointer-events: none; transition: height 0.15s;
         }
         .pull-inner {
             display: flex; align-items: center; gap: 8px;
-            padding-bottom: 10px; color: #555;
+            padding-bottom: 10px; color: #8e8e8e;
             font-size: 11px; font-weight: 700;
         }
         .pull-spinner {
-            width: 18px; height: 18px;
-            border: 2px solid rgba(255,255,255,0.1);
+            width: 16px; height: 16px;
+            border: 2px solid rgba(255,255,255,0.15);
             border-top-color: #fff; border-radius: 50%;
             animation: spin 0.8s linear infinite; display: none;
         }
         .pull-arrow {
-            font-size: 14px; transition: transform 0.2s; color: #8e8e8e;
+            font-size: 13px; transition: transform 0.2s; color: #8e8e8e;
         }
         .pull-arrow.ready { transform: rotate(180deg); color: #fff; }
+        .pull-inner.ready { color: #fff; }
 
-        /* ===== LONG PRESS DELETE overlay ===== */
-        .post-card.lib-delete-mode::after {
-            content: '';
-            position: absolute; inset: 0;
-            background: rgba(0,0,0,0.5);
-            z-index: 6;
-        }
-        .delete-badge {
-            position: absolute; top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            background: #ff3b30; color: #fff;
-            width: 36px; height: 36px; border-radius: 50%;
-            display: none; align-items: center; justify-content: center;
-            font-size: 16px; z-index: 7;
-            box-shadow: 0 2px 12px rgba(255,59,48,0.5);
-        }
-        .post-card.lib-delete-mode .delete-badge { display: flex; }
-
-        /* ===== SORT BY pill (gantiin Rating di filter, Rating jadi Sort) ===== */
     </style>
 </head>
 <body>
 
     <div id="pullRefreshIndicator">
-        <div class="pull-inner">
+        <div class="pull-inner" id="pullInner">
             <i class="fa-solid fa-arrow-down pull-arrow" id="pullArrow"></i>
             <div class="pull-spinner" id="pullSpinner"></div>
             <span id="pullText">Tarik untuk refresh</span>
@@ -1773,6 +1745,8 @@
                         <span id="mToggleBtn" class="toggle-btn hidden" onclick="handleToggleDesc()">selengkapnya</span>
                     </div>
                 </div>
+
+                <div id="mInfoGrid" class="minfo-grid" style="display:none"></div>
                 
                 <div id="mHashtags" class="ig-hashtags"></div>
 
@@ -2693,6 +2667,7 @@
                 postContent.innerHTML = `
                 <div class="mb-1"><span class="ig-username">amnesfubbia</span><span id="mDesc" class="ig-caption"></span>
                 <div class="mt-1"><span id="mToggleBtn" class="toggle-btn hidden" onclick="handleToggleDesc()">selengkapnya</span></div></div>
+                <div id="mInfoGrid" class="minfo-grid" style="display:none"></div>
                 <div id="mHashtags" class="ig-hashtags"></div>
                 <div class="flex items-center gap-2 mt-1.5">
                     <div id="mDateDisplay" class="ig-date"></div>
@@ -4423,9 +4398,9 @@
                 const card = document.createElement('div'); 
                 card.className = 'post-card'; 
                 card.onclick = function() { openModal(m.id, mType); }; 
-                const releaseD = m.release_date || m.first_air_date || '';
-                const newBadge = isNewRelease(releaseD) ? '<div class="badge-new">NEW</div>' : '';
-                card.innerHTML = `<div class="badge-rating">★ ${(m.vote_average||0).toFixed(1)}</div><div class="badge-type">${currentType==='short'?'SHORT':(mType==='tv'?'tv':'movie')}</div>${newBadge}<img src="https://image.tmdb.org/t/p/w342${m.poster_path}" loading="lazy" onload="this.style.opacity=1" style="opacity:0">`; 
+                const _rd = m.release_date || m.first_air_date || '';
+                const _nb = isNewRelease(_rd) ? '<div class="badge-new">NEW</div>' : '';
+                card.innerHTML = `<div class="badge-rating">★ ${(m.vote_average||0).toFixed(1)}</div><div class="badge-type">${currentType==='short'?'SHORT':(mType==='tv'?'tv':'movie')}</div>${_nb}<img src="https://image.tmdb.org/t/p/w342${m.poster_path}" loading="lazy" onload="this.style.opacity=1" style="opacity:0">`;
                 fragment.appendChild(card); 
             });
             grid.appendChild(fragment);
@@ -4857,14 +4832,13 @@
             if(type === 'tv') { document.getElementById('seriesControl').classList.remove('hidden'); document.getElementById('seasonSel').innerHTML = (dId.seasons||[]).filter(s=>s.season_number>0).map(s=>`<option value="${s.season_number}">Season ${s.season_number}</option>`).join(''); loadEpisodes(); } else { document.getElementById('seriesControl').classList.add('hidden'); }
             updateLibButtons(id);
 
-            // Rating badges
-            renderModalRatingBadges(dId.vote_average, currentImdbId);
+            // Rating badges (bintang berwarna, angka putih)
+            renderModalRatingBadges(dId.vote_average);
 
-            // Recently viewed
-            const rvPoster = dId.poster_path || '';
-            addToRecentlyViewed(id, type, rvPoster, displayTitle);
+            // Recently viewed (poster saja)
+            addToRecentlyViewed(id, type, dId.poster_path || '');
 
-            // Similar films (async, non-blocking)
+            // Similar films (non-blocking)
             loadSimilarFilms(id, type);
         }
 
@@ -4889,6 +4863,7 @@
             } 
             const _rb = document.getElementById('mRatingBar'); if(_rb){ _rb.style.display='none'; _rb.innerHTML=''; }
             const _ss = document.getElementById('mSimilarSection'); if(_ss) _ss.style.display='none';
+            const _ig2 = document.getElementById('mInfoGrid'); if(_ig2){ _ig2.style.display='none'; _ig2.innerHTML=''; }
             const modal = document.getElementById('movieModal');
             modal.classList.remove('tv-mode');
             modal.style.display = 'none'; 
@@ -4901,6 +4876,7 @@
                     <span id="mDesc" class="ig-caption"></span>
                     <div class="mt-1"><span id="mToggleBtn" class="toggle-btn hidden" onclick="handleToggleDesc()">selengkapnya</span></div>
                 </div>
+                <div id="mInfoGrid" class="minfo-grid" style="display:none"></div>
                 <div id="mHashtags" class="ig-hashtags"></div>
                 <div class="flex items-center gap-2 mt-1.5">
                     <div id="mDateDisplay" class="ig-date"></div>
@@ -5120,9 +5096,8 @@
                 const card = document.createElement('div');
                 card.className = 'post-card';
                 const mType = m._savedType || m.media_type || 'movie';
-                card.onclick = function() { if (!_longPressActive) openModal(m.id, mType); };
-                card.innerHTML = `<div class="badge-rating">★ ${(m.vote_average||0).toFixed(1)}</div><div class="badge-type">${mType === 'tv' ? 'tv' : 'movie'}</div><div class="delete-badge"><i class="fa-solid fa-trash"></i></div><img src="https://image.tmdb.org/t/p/w342${m.poster_path}" loading="lazy" onload="this.style.opacity=1" style="opacity:0">`;
-                setupLongPressDelete(card, m.id, mType, k);
+                card.onclick = function() { openModal(m.id, mType); };
+                card.innerHTML = `<div class="badge-rating">★ ${(m.vote_average||0).toFixed(1)}</div><div class="badge-type">${mType === 'tv' ? 'tv' : 'movie'}</div><img src="https://image.tmdb.org/t/p/w342${m.poster_path}" loading="lazy" onload="this.style.opacity=1" style="opacity:0">`;
                 grid.appendChild(card);
             });
         }
@@ -5158,13 +5133,10 @@
         const RV_KEY = 'recentlyViewed';
         const RV_MAX = 15;
 
-        function addToRecentlyViewed(id, type, poster, title) {
+        function addToRecentlyViewed(id, type, poster) {
             let items = JSON.parse(localStorage.getItem(RV_KEY) || '[]');
-            // Hapus jika sudah ada
             items = items.filter(x => x.id != id);
-            // Tambah di depan
-            items.unshift({ id, type, poster, title });
-            // Batasi
+            items.unshift({ id, type, poster });
             if (items.length > RV_MAX) items = items.slice(0, RV_MAX);
             localStorage.setItem(RV_KEY, JSON.stringify(items));
             renderRecentlyViewed();
@@ -5174,27 +5146,23 @@
             const items = JSON.parse(localStorage.getItem(RV_KEY) || '[]');
             const wrapper = document.getElementById('recentlyViewedWrapper');
             const scroll = document.getElementById('recentlyScroll');
+            if (!wrapper || !scroll) return;
             if (!items.length) { wrapper.style.display = 'none'; return; }
             wrapper.style.display = 'block';
             scroll.innerHTML = items.map(item => `
                 <div class="recently-item" onclick="openModal(${item.id}, '${item.type}')">
                     <img class="recently-img" src="https://image.tmdb.org/t/p/w185${item.poster || ''}"
                          onerror="this.style.background='#1a1a1a'" loading="lazy">
-                    <div class="recently-title">${item.title || ''}</div>
                 </div>`).join('');
         }
 
-        // Init recently viewed on load
-        window.addEventListener('DOMContentLoaded', () => {
-            renderRecentlyViewed();
-        });
+        window.addEventListener('DOMContentLoaded', () => { renderRecentlyViewed(); });
 
         // ===== BADGE NEW helper =====
         function isNewRelease(releaseDate) {
             if (!releaseDate) return false;
-            const release = new Date(releaseDate);
-            const diffDays = (Date.now() - release.getTime()) / (1000 * 60 * 60 * 24);
-            return diffDays >= 0 && diffDays <= 30;
+            const diff = (Date.now() - new Date(releaseDate).getTime()) / (1000 * 60 * 60 * 24);
+            return diff >= 0 && diff <= 30;
         }
 
         // ===== SIMILAR FILMS =====
@@ -5212,46 +5180,43 @@
                 if (!items.length) return;
                 section.style.display = 'block';
                 scroll.innerHTML = items.map(m => {
-                    const t = m.title || m.name || '';
                     const r = m.vote_average ? m.vote_average.toFixed(1) : '';
                     return `<div class="similar-card" onclick="openModal(${m.id}, '${type}')">
                         <img class="similar-poster" src="https://image.tmdb.org/t/p/w185${m.poster_path}"
                              loading="lazy" onload="this.classList.add('loaded')">
-                        <div class="similar-title">${t}</div>
                         ${r ? `<div class="similar-rating">★ ${r}</div>` : ''}
                     </div>`;
                 }).join('');
             } catch(e) {}
         }
 
-        // ===== RATING BADGES in modal =====
-        function renderModalRatingBadges(tmdbRating, imdbId) {
+        // ===== RATING BADGES in modal (bintang berwarna, angka putih) =====
+        function renderModalRatingBadges(tmdbRating) {
             const bar = document.getElementById('mRatingBar');
-            if (!bar) return;
-            if (!tmdbRating) { bar.style.display = 'none'; return; }
+            if (!bar || !tmdbRating) { if(bar) bar.style.display = 'none'; return; }
             const rating = parseFloat(tmdbRating);
             const imdbEst = (rating * 0.95).toFixed(1);
             bar.innerHTML = `
                 <span class="modal-rating-badge tmdb">
-                    <i class="fa-solid fa-star" style="font-size:9px"></i> ${rating.toFixed(1)} TMDb
+                    <i class="fa-solid fa-star"></i>${rating.toFixed(1)} TMDb
                 </span>
                 <span class="modal-rating-badge imdb">
-                    <i class="fa-solid fa-star" style="font-size:9px"></i> ~${imdbEst} IMDb
+                    <i class="fa-solid fa-star"></i>~${imdbEst} IMDb
                 </span>`;
             bar.style.display = 'flex';
         }
 
         // ===== PULL TO REFRESH =====
         (function initPullToRefresh() {
-            let startY = 0, currentY = 0, pulling = false, refreshing = false;
+            let startY = 0, curY = 0, pulling = false, refreshing = false;
             const indicator = document.getElementById('pullRefreshIndicator');
             const arrow = document.getElementById('pullArrow');
             const spinner = document.getElementById('pullSpinner');
             const pullText = document.getElementById('pullText');
-            const THRESHOLD = 70;
+            const pullInner = document.getElementById('pullInner');
+            const THRESHOLD = 65;
 
             document.addEventListener('touchstart', e => {
-                // Only when at top of page and no modal open
                 if (window.scrollY > 0) return;
                 if (document.getElementById('movieModal').style.display === 'block') return;
                 if (document.getElementById('searchOverlay').style.display === 'block') return;
@@ -5263,31 +5228,28 @@
 
             document.addEventListener('touchmove', e => {
                 if (!pulling || refreshing) return;
-                currentY = e.touches[0].clientY;
-                const diff = Math.max(0, currentY - startY);
+                curY = e.touches[0].clientY;
+                const diff = Math.max(0, curY - startY);
                 if (diff <= 0) return;
-                const height = Math.min(diff * 0.5, THRESHOLD + 10);
-                indicator.style.height = height + 'px';
-                if (diff * 0.5 >= THRESHOLD) {
-                    arrow.classList.add('ready');
-                    pullText.innerText = 'Lepas untuk refresh';
-                } else {
-                    arrow.classList.remove('ready');
-                    pullText.innerText = 'Tarik untuk refresh';
-                }
+                const h = Math.min(diff * 0.45, THRESHOLD + 12);
+                indicator.style.height = h + 'px';
+                const ready = diff * 0.45 >= THRESHOLD;
+                arrow.className = 'pull-arrow fa-solid fa-arrow-down' + (ready ? ' ready' : '');
+                pullInner.className = 'pull-inner' + (ready ? ' ready' : '');
+                pullText.innerText = ready ? 'Lepas untuk refresh' : 'Tarik untuk refresh';
             }, { passive: true });
 
             document.addEventListener('touchend', async () => {
                 if (!pulling || refreshing) return;
                 pulling = false;
-                const diff = Math.max(0, currentY - startY);
-                if (diff * 0.5 >= THRESHOLD) {
+                const diff = Math.max(0, curY - startY);
+                if (diff * 0.45 >= THRESHOLD) {
                     refreshing = true;
                     arrow.style.display = 'none';
                     spinner.style.display = 'block';
                     pullText.innerText = 'Memperbarui...';
-                    indicator.style.height = '50px';
-                    // Clear cache & reload
+                    pullInner.className = 'pull-inner ready';
+                    indicator.style.height = '48px';
                     try { sessionStorage.clear(); } catch(e) {}
                     await loadFeed(true);
                     renderRecentlyViewed();
@@ -5296,58 +5258,19 @@
                         arrow.style.display = 'block';
                         spinner.style.display = 'none';
                         pullText.innerText = 'Tarik untuk refresh';
-                        arrow.classList.remove('ready');
+                        arrow.className = 'pull-arrow fa-solid fa-arrow-down';
+                        pullInner.className = 'pull-inner';
                         refreshing = false;
                     }, 500);
                 } else {
                     indicator.style.height = '0px';
-                    arrow.classList.remove('ready');
+                    arrow.className = 'pull-arrow fa-solid fa-arrow-down';
+                    pullInner.className = 'pull-inner';
                     pullText.innerText = 'Tarik untuk refresh';
                 }
-                currentY = 0; startY = 0;
+                curY = 0; startY = 0;
             }, { passive: true });
         })();
-
-        // ===== LONG PRESS DELETE from bookmark/likes grid =====
-        let _longPressTimer = null;
-        let _longPressActive = false;
-
-        function setupLongPressDelete(card, itemId, itemType, storageKey) {
-            card.addEventListener('touchstart', () => {
-                _longPressTimer = setTimeout(() => {
-                    _longPressActive = true;
-                    card.classList.add('lib-delete-mode');
-                }, 600);
-            }, { passive: true });
-
-            card.addEventListener('touchend', (e) => {
-                clearTimeout(_longPressTimer);
-                if (_longPressActive) {
-                    e.preventDefault();
-                    _longPressActive = false;
-                    // Remove from storage
-                    let items = JSON.parse(localStorage.getItem(storageKey) || '[]');
-                    items = items.filter(x => x.id != itemId);
-                    localStorage.setItem(storageKey, JSON.stringify(items));
-                    // Animate out
-                    card.style.transition = 'opacity 0.25s, transform 0.25s';
-                    card.style.opacity = '0';
-                    card.style.transform = 'scale(0.9)';
-                    setTimeout(() => card.remove(), 250);
-                    // Show empty state if grid empty
-                    const grid = document.getElementById('feedGrid');
-                    if (grid && grid.querySelectorAll('.post-card').length === 0) {
-                        grid.innerHTML = '<div class="col-span-3 text-center py-20 text-zinc-500 text-xs">Belum ada konten disimpan</div>';
-                    }
-                }
-            }, { passive: false });
-
-            card.addEventListener('touchmove', () => {
-                clearTimeout(_longPressTimer);
-                _longPressActive = false;
-                card.classList.remove('lib-delete-mode');
-            }, { passive: true });
-        }
     </script>
 </body>
 </html>
