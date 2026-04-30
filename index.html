@@ -1232,13 +1232,11 @@
             text-align: center; cursor: pointer;
             text-transform: uppercase; letter-spacing: 0.5px;
             -webkit-tap-highlight-color: transparent;
-            border: 1px solid #333;
-            background: #000; color: #fff;
-            transition: border-color 0.15s, background 0.15s;
+            border: none; background: transparent;
+            color: #8e8e8e;
+            transition: color 0.15s;
         }
-        .rds-btn:active, .rds-btn.pressed {
-            border-color: #fff; background: #111;
-        }
+        .rds-btn:active, .rds-btn.pressed { color: #fff; }
 
 
         /* ===== MOVIE INFO GRID (2 col, no border) ===== */
@@ -1358,6 +1356,32 @@
         }
         .pull-arrow.ready { transform: rotate(180deg); color: #fff; }
         .pull-inner.ready { color: #fff; }
+
+
+        /* ===== ANIMATION STUDIO PILLS ===== */
+        .studio-pills-wrapper {
+            padding: 12px 15px;
+            border-bottom: 1px solid #1c1c1c;
+            overflow-x: auto; -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+        .studio-pills-wrapper::-webkit-scrollbar { display: none; }
+        .studio-pills-row {
+            display: flex; gap: 8px; width: max-content;
+        }
+        .studio-pill {
+            padding: 7px 14px; border-radius: 8px;
+            font-size: 11px; font-weight: 800;
+            border: 1px solid #1c1c1c; background: #0a0a0a;
+            color: #fff; cursor: pointer; white-space: nowrap;
+            transition: all 0.18s; -webkit-tap-highlight-color: transparent;
+            text-transform: none; letter-spacing: 0;
+        }
+        .studio-pill:active { background: #1a1a1a; }
+        .studio-pill.active-studio {
+            border-color: #fff; background: rgba(255,255,255,0.07);
+            color: #fff;
+        }
 
     </style>
 </head>
@@ -1638,7 +1662,9 @@
             </div>
         </div>
 
-        <div class="highlights-wrapper no-scrollbar"><div class="highlights-container no-scrollbar" id="highlightList"></div></div>
+        <div class="studio-pills-wrapper">
+            <div class="studio-pills-row" id="studioPillsRow"></div>
+        </div>
 
         <div id="recentlyViewedWrapper">
             <span class="recently-label">Terakhir Dilihat</span>
@@ -4054,7 +4080,7 @@
             if(document.getElementById('reelsModal').style.display === 'block') closeReels();
             currentGenre = ''; currentYear = ''; currentCountry = ''; currentRating = ''; currentSchedule = 'trending'; 
             currentType = 'multi'; searchQuery = ''; currentCastId = ''; currentCompany = '';
-            document.querySelectorAll('.highlight-item').forEach(i => i.classList.remove('active-hl'));
+            document.querySelectorAll('.studio-pill').forEach(p => p.classList.remove('active-studio'));
             const btnCountry = document.getElementById('btnCountry');
             const btnGenre = document.getElementById('btnGenre');
             const btnYear = document.getElementById('yearBtn');
@@ -4238,31 +4264,41 @@
             loadFeed(true); 
         }
 
-        function initHighlights() { 
-            const hls = [
-                {n: 'Disney', com: '2|6125|3166|34213', img: 'Disney.png', t: 'movie', s: true},
-                {n: 'Pixar', com: '3', img: 'Pixar.png', t: 'movie', s: true},
-                {n: 'Dreamworks', com: '521|778', img: 'Dreamwork.png', t: 'movie', s: true},
-                {n: 'Ghibli', com: '10342', img: 'Ghibli.png', t: 'movie', s: true},
-                {n: 'Anime', g: 16, img: 'Anime.png', t: 'movie', c: 'JP', s: true},
-                {n: 'Indonesia', c: 'ID', img: 'Indonesia.png', t: 'movie', s: false},
-                {n: 'Korea', c: 'KR', img: 'Korea.png', t: 'movie', s: false},
-                {n: 'India', c: 'IN', img: 'India.png', t: 'movie', s: false},
-                {n: 'Thailand', c: 'TH', img: 'Thailand.png', t: 'movie', s: false}
-            ]; 
-            const cont = document.getElementById('highlightList'); 
-            hls.forEach(h => { 
-                const div = document.createElement('div'); 
-                div.className = 'highlight-item'; 
-                div.onclick = () => { 
-                    document.querySelectorAll('.highlight-item').forEach(i => i.classList.remove('active-hl'));
-                    div.classList.add('active-hl');
-                    currentLibMode = false; currentCastId = ''; searchQuery = ''; currentCountry = h.c || ''; currentGenre = h.g || ''; currentCompany = h.com || ''; currentSchedule = 'trending'; currentType = h.t; currentYear = ''; loadFeed(true); 
-                }; 
-                const circleClass = h.s ? 'highlight-circle logo-small' : 'highlight-circle';
-                div.innerHTML = `<div class="${circleClass}"><img src="${h.img}" alt="${h.n}"></div><div class="highlight-text">${h.n}</div>`; 
-                cont.appendChild(div); 
-            }); 
+        function initHighlights() {
+            const studios = [
+                { n: 'Disney',     com: '2|6125|3166|34213' },
+                { n: 'Pixar',      com: '3' },
+                { n: 'Laika',      com: '6704' },
+                { n: 'DreamWorks', com: '7576|778|521' },
+                { n: 'Ghibli',     com: '10342' },
+                { n: 'Anime',      com: '', g: 16, c: 'JP' },
+            ];
+            const row = document.getElementById('studioPillsRow');
+            if (!row) return;
+            studios.forEach(s => {
+                const pill = document.createElement('div');
+                pill.className = 'studio-pill';
+                pill.innerText = s.n;
+                pill.onclick = () => {
+                    const isActive = pill.classList.contains('active-studio');
+                    // Reset semua
+                    document.querySelectorAll('.studio-pill').forEach(p => p.classList.remove('active-studio'));
+                    currentLibMode = false; currentCastId = ''; searchQuery = '';
+                    currentSchedule = 'trending'; currentType = 'movie'; currentYear = '';
+                    if (isActive) {
+                        // Toggle off → kembali ke trending
+                        currentCountry = ''; currentGenre = ''; currentCompany = '';
+                        loadFeed(true);
+                        return;
+                    }
+                    pill.classList.add('active-studio');
+                    currentCountry = s.c || '';
+                    currentGenre = s.g || '';
+                    currentCompany = s.com || '';
+                    loadFeed(true);
+                };
+                row.appendChild(pill);
+            });
         }
 
         function initFilters() { 
