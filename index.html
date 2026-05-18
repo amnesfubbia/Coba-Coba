@@ -5488,8 +5488,8 @@
                 case 15: url = `https://vidsrc.ru/${type}/${currentImdbId || id}${type==='tv'?`?s=${s}&e=${e}`:''}`; break;
                 case 16: url = `https://vidsrc.cc/v2/embed/${type}/${id}${type==='tv'?`?s=${s}&e=${e}`:''}`; break;
                 case 17: url = `https://vidsrc.me/embed/${type}?tmdb=${id}${type==='tv'?`&s=${s}&e=${e}`:''}`; break;
-                case 18: url = `https://megaplay.buzz/stream/movie?id=${id}`; break;
-                case 19: url = `https://vid.fyi/embed/${type}${id}${seriesSuffix}`; break;
+                case 18: url = `https://megaplay.buzz/embed/movie?id=${id}`; break;
+                case 19: url = `https://vid.fyi/${type}${id}${seriesSuffix}`; break;
                 case 21: url = `https://www.dailymotion.com/embed/video/${currentDailymotionId}`; break;
                 default: url = `https://vidrock.net/embed/${type}/${id}${seriesSuffix}`;
             }
