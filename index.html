@@ -56,6 +56,66 @@
         @keyframes fadeIn { to { opacity: 1; } }
 
         .profile-header { padding: 15px 15px 0 15px; background: var(--bg); }
+
+        /* ===== YouTube "Anda" page styles ===== */
+        .yt-akun-chip { display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px 7px 14px; border: 1px solid var(--border2); border-radius: 18px; font-size: 14px; font-weight: 400; color: var(--text); cursor: pointer; background: transparent; font-family: 'Roboto', sans-serif; }
+        .yt-akun-chip i { font-size: 11px; }
+        .yt-topbar-icon { font-size: 22px; color: var(--text); cursor: pointer; padding: 4px 6px; }
+
+        /* Profile block YouTube style */
+        .yt-profile-row { display: flex; align-items: center; gap: 18px; padding: 18px 0 10px 0; }
+        .yt-profile-avatar { width: 78px; height: 78px; border-radius: 50%; background: var(--bg3); display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 10px; flex-shrink: 0; }
+        .yt-profile-avatar img { width: 100%; height: 100%; object-fit: contain; }
+        .yt-profile-meta { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+        .yt-profile-name { font-family: 'Roboto', sans-serif; font-size: 24px; font-weight: 700; color: var(--text); letter-spacing: -0.5px; line-height: 1.15; }
+        .yt-profile-sub { font-size: 13px; color: var(--text3); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+        .yt-profile-sub .yt-handle { color: var(--text3); }
+        .yt-profile-sub .yt-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--text3); display: inline-block; }
+        .yt-profile-sub .yt-channel-link { color: var(--text3); cursor: pointer; display: inline-flex; align-items: center; gap: 4px; }
+        .yt-profile-sub .yt-channel-link:hover { color: var(--text); }
+
+        /* Section header (Histori / Playlist) */
+        .yt-section { padding: 14px 15px 6px 15px; }
+        .yt-section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; padding: 0; }
+        .yt-section-title { display: inline-flex; align-items: center; gap: 6px; font-family: 'Roboto', sans-serif; font-size: 18px; font-weight: 700; color: var(--text); cursor: pointer; }
+        .yt-section-title i { font-size: 14px; color: var(--text); }
+        .yt-section-action { width: 36px; height: 36px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text); transition: background 0.2s; }
+        .yt-section-action:hover { background: var(--bg3); }
+
+        /* Horizontal scroll rows */
+        .yt-h-scroll { display: flex; gap: 12px; overflow-x: auto; -webkit-overflow-scrolling: touch; padding: 0 15px 8px 15px; scrollbar-width: none; }
+        .yt-h-scroll::-webkit-scrollbar { display: none; }
+
+        /* Video card (16:9 thumbnail) */
+        .yt-video-card { flex: 0 0 175px; cursor: pointer; }
+        .yt-thumb { width: 100%; aspect-ratio: 16/9; border-radius: 12px; background: var(--bg3); overflow: hidden; position: relative; }
+        .yt-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .yt-thumb-duration { position: absolute; bottom: 6px; right: 6px; background: rgba(0,0,0,0.85); color: #fff; font-size: 11px; font-weight: 500; padding: 2px 5px; border-radius: 4px; font-family: 'Roboto', sans-serif; }
+        .yt-thumb-progress { position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: rgba(255,255,255,0.25); }
+        .yt-thumb-progress > span { display: block; height: 100%; background: var(--accent); }
+        .yt-thumb-shorts-badge { position: absolute; bottom: 6px; right: 6px; background: rgba(0,0,0,0.75); border-radius: 6px; padding: 3px; display: inline-flex; align-items: center; justify-content: center; }
+        .yt-thumb-shorts-badge i { color: #fff; font-size: 11px; }
+        .yt-video-title { margin-top: 8px; font-size: 13px; font-weight: 500; line-height: 1.3; color: var(--text); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font-family: 'Roboto', sans-serif; }
+        .yt-video-channel { margin-top: 4px; font-size: 11px; color: var(--text3); font-family: 'Roboto', sans-serif; }
+
+        /* Playlist card (square with badge) */
+        .yt-playlist-card { flex: 0 0 175px; cursor: pointer; }
+        .yt-playlist-thumb { width: 100%; aspect-ratio: 16/9; border-radius: 12px; background: var(--bg3); overflow: hidden; position: relative; }
+        .yt-playlist-thumb img { width: 100%; height: 100%; object-fit: cover; }
+        .yt-playlist-count { position: absolute; bottom: 6px; right: 6px; background: rgba(0,0,0,0.85); color: #fff; font-size: 11px; font-weight: 500; padding: 3px 6px; border-radius: 4px; display: inline-flex; align-items: center; gap: 4px; font-family: 'Roboto', sans-serif; }
+        .yt-playlist-title { margin-top: 8px; font-size: 13px; font-weight: 500; color: var(--text); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font-family: 'Roboto', sans-serif; }
+        .yt-playlist-meta { margin-top: 4px; font-size: 11px; color: var(--text3); font-family: 'Roboto', sans-serif; }
+
+        /* Menu list items (Video Anda / Download / Film) */
+        .yt-menu-list { padding: 6px 0 90px 0; border-top: 1px solid var(--border); margin-top: 14px; }
+        .yt-menu-item { display: flex; align-items: center; gap: 22px; padding: 16px 18px; cursor: pointer; transition: background 0.2s; font-family: 'Roboto', sans-serif; }
+        .yt-menu-item:hover { background: var(--bg3); }
+        .yt-menu-item .yt-menu-icon { width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; color: var(--text); font-size: 18px; }
+        .yt-menu-item .yt-menu-label { font-size: 15px; font-weight: 400; color: var(--text); }
+
+        /* Empty state for history/playlist */
+        .yt-empty-state { padding: 24px 16px; text-align: center; color: var(--text3); font-size: 13px; }
+        .yt-empty-state i { font-size: 28px; margin-bottom: 8px; display: block; opacity: 0.5; }
         .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .ig-logo-wrapper { display: flex; align-items: center; gap: 6px; position: relative; cursor: pointer; }
         .ig-logo { font-family: 'Roboto', sans-serif; font-weight: 900; font-size: 20px; letter-spacing: -1.5px; color: var(--text); }
@@ -221,10 +281,25 @@
         .ig-hashtags { color: var(--link); display: block; margin-top: 4px; font-size: 13px; line-height: 1.4; }
         .ig-date { color: var(--text3); font-size: 11px; text-transform: uppercase; }
 
-        /* YouTube-style bottom nav */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: var(--bg); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 12px 0; z-index: 9000; }
-        .bottom-nav i { color: var(--text3); transition: color 0.3s; }
-        .bottom-nav i.active-nav { color: var(--text); }
+        /* YouTube-style bottom nav (5 items with labels) */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: var(--bg); border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: flex-start; padding: 6px 0 8px 0; z-index: 9000; }
+        .bn-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; cursor: pointer; color: var(--text3); font-family: 'Roboto', sans-serif; -webkit-tap-highlight-color: transparent; }
+        .bn-item i, .bn-item .bn-icon { font-size: 22px; line-height: 1; color: inherit; transition: color 0.2s; }
+        .bn-item .bn-label { font-size: 10px; font-weight: 500; line-height: 1.2; color: inherit; }
+        .bn-item.active, .bn-item.active i, .bn-item.active .bn-label { color: var(--text); }
+        .bn-item.active .bn-icon-fa { font-weight: 900; }
+        /* Center plus button (large circular) */
+        .bn-plus { width: 44px; height: 30px; background: var(--bg4); border-radius: 16px; display: inline-flex; align-items: center; justify-content: center; }
+        .bn-plus i { font-size: 18px; color: var(--text); }
+        body.light-theme .bn-plus { background: var(--bg3); }
+        /* Anda avatar (circular profile pic with red ring when active) */
+        .bn-avatar { width: 24px; height: 24px; border-radius: 50%; object-fit: cover; background: var(--bg3); }
+        .bn-item.active .bn-avatar { box-shadow: 0 0 0 2px var(--text); }
+        /* Red dot notification (subscription) */
+        .bn-dot { position: absolute; top: 0; right: -2px; width: 7px; height: 7px; background: var(--accent); border-radius: 50%; }
+        .bn-icon-wrap { position: relative; display: inline-flex; }
+        /* Keep legacy selectors compatible (so existing JS that targets .bottom-nav i still works) */
+        .bottom-nav i { transition: color 0.2s; }
 
         /* LOADING SPINNER FOR IFRAME */
         .iframe-loader { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: #000; z-index: 5; }
@@ -1813,22 +1888,76 @@
 
     <div id="mainProfile" style="display: none;">
         <div class="profile-header">
+            <!-- YouTube "Anda" top bar -->
             <div class="top-bar">
-                <div class="ig-logo-wrapper" onclick="backToHome()">
-                    <span class="yt-play-badge" aria-hidden="true"></span>
-                    <h1 class="ig-logo">amnesfubbia</h1>
-                    <i class="fa-solid fa-chevron-down text-[10px] ml-0.5" onclick="event.stopPropagation(); openNotif()" style="cursor:pointer" title="Film Baru Hari Ini"></i>
-                    <span class="dot-notify"></span>
-                </div>
+                <button class="yt-akun-chip" onclick="toggleSideMenu()" aria-label="Akun">
+                    Akun <i class="fa-solid fa-chevron-down"></i>
+                </button>
                 <div class="flex gap-4 items-center">
-                    <button class="theme-toggle-btn" id="themeToggleBtn" onclick="event.stopPropagation(); toggleTheme()" title="Ganti tema" aria-label="Ganti tema">
+                    <i class="fa-regular fa-bell yt-topbar-icon" onclick="openNotif()" title="Notifikasi"></i>
+                    <i class="fa-solid fa-magnifying-glass yt-topbar-icon" onclick="openSearch()" title="Cari"></i>
+                    <button class="theme-toggle-btn" id="themeToggleBtn" onclick="event.stopPropagation(); toggleTheme()" title="Ganti tema" aria-label="Ganti tema" style="padding:0 4px">
                         <i class="fa-solid fa-sun" id="themeToggleIcon"></i>
                     </button>
-                    <i class="fa-regular fa-calendar cursor-pointer" style="font-size:22px;color:var(--text)" onclick="openComingSoon()"></i>
-                    <i class="fa-solid fa-bars cursor-pointer" style="font-size:22px;color:var(--text)" onclick="toggleSideMenu()"></i>
+                    <i class="fa-solid fa-gear yt-topbar-icon" onclick="openComingSoon()" title="Setelan"></i>
                 </div>
             </div>
 
+            <!-- YouTube profile row: avatar + name + @handle · Lihat channel -->
+            <div class="yt-profile-row" onclick="backToHome()">
+                <div class="yt-profile-avatar"><img src="amnesfubbia.png" alt="Logo"></div>
+                <div class="yt-profile-meta">
+                    <div class="yt-profile-name">amnesfubbia</div>
+                    <div class="yt-profile-sub">
+                        <span class="yt-handle">@amnesfubbia</span>
+                        <span class="yt-dot"></span>
+                        <span class="yt-channel-link">Lihat channel <i class="fa-solid fa-chevron-right" style="font-size:9px"></i></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Histori section -->
+        <div class="yt-section">
+            <div class="yt-section-header">
+                <span class="yt-section-title" onclick="switchTab('grid', document.getElementById('tabGrid'))">
+                    Histori <i class="fa-solid fa-chevron-right"></i>
+                </span>
+            </div>
+        </div>
+        <div class="yt-h-scroll" id="ytHistoriScroll"></div>
+
+        <!-- Playlist section -->
+        <div class="yt-section">
+            <div class="yt-section-header">
+                <span class="yt-section-title" onclick="switchTab('bookmarks', document.getElementById('tabBookmark'))">
+                    Playlist <i class="fa-solid fa-chevron-right"></i>
+                </span>
+                <span class="yt-section-action" onclick="switchTab('bookmarks', document.getElementById('tabBookmark'))" title="Tambah playlist">
+                    <i class="fa-solid fa-plus"></i>
+                </span>
+            </div>
+        </div>
+        <div class="yt-h-scroll" id="ytPlaylistScroll"></div>
+
+        <!-- Menu items -->
+        <div class="yt-menu-list">
+            <div class="yt-menu-item" onclick="switchTab('grid', document.getElementById('tabGrid'))">
+                <span class="yt-menu-icon"><i class="fa-regular fa-square-caret-right"></i></span>
+                <span class="yt-menu-label">Video Anda</span>
+            </div>
+            <div class="yt-menu-item" onclick="switchTab('bookmarks', document.getElementById('tabBookmark'))">
+                <span class="yt-menu-icon"><i class="fa-solid fa-circle-down"></i></span>
+                <span class="yt-menu-label">Download</span>
+            </div>
+            <div class="yt-menu-item" onclick="setFilter('type', 'movie', document.getElementById('stat-movie') || document.body)">
+                <span class="yt-menu-icon"><i class="fa-solid fa-clapperboard"></i></span>
+                <span class="yt-menu-label">Film</span>
+            </div>
+        </div>
+
+        <!-- Hidden legacy elements (preserve functionality for other code paths) -->
+        <div style="display:none">
             <div class="profile-info">
                 <div class="profile-pic-container">
                     <div class="profile-pic-logo"><img src="amnesfubbia.png" alt="Logo"></div>
@@ -1840,19 +1969,11 @@
                     <div class="stat-item" id="stat-short" onclick="setFilter('type', 'short', this)"><span class="stat-val">1.5rb</span><span class="stat-label">short</span></div>
                 </div>
             </div>
-
-            <div class="bio">
-                <div class="bio-name-wrapper"><span class="bio-name">amnesfubbia</span><i class="fa-solid fa-circle-check text-[#ff0000] text-[13px]"></i></div>
-                <span><i class="ph ph-film-slate mr-1"></i> Discover. Watch. Archive.</span><br>
-                <span class="text-zinc-400">Jelajahi, simpan & tonton trailer movie favoritmu.</span>
-            </div>
-
             <div class="action-buttons">
                 <div class="btn-ig" id="btnNowPlaying" onclick="setSchedule('now_playing', this)">Sedang Tayang</div>
                 <div class="btn-ig" id="btnUpcoming" onclick="setSchedule('upcoming', this)">Segera Tayang</div>
                 <div class="btn-icon-sq" onclick="toggleFilterBar()"><i class="fa-solid fa-sliders text-sm"></i></div>
             </div>
-
             <div id="filterBar">
                 <div class="pill-grid grid-cols-4">
                     <button class="pill" id="btnCountry" onclick="toggleFilter(event, 'countryDropdown')">Negara <i class="fa-solid fa-caret-down"></i></button>
@@ -1861,25 +1982,21 @@
                     <button class="pill" id="btnRating" onclick="toggleFilter(event, 'ratingDropdown')">Rating <i class="fa-solid fa-caret-down"></i></button>
                 </div>
             </div>
-        </div>
-
-        <div class="highlights-wrapper no-scrollbar"><div class="highlights-container no-scrollbar" id="highlightList"></div></div>
-
-        <div id="recentlyViewedWrapper">
-            <div class="recently-header">
-                <span class="recently-label" style="margin-bottom:0">Terakhir Dilihat</span>
-                <span class="recently-clear-btn" onclick="clearAllRecentlyViewed()">Hapus Semua</span>
+            <div class="highlights-wrapper no-scrollbar"><div class="highlights-container no-scrollbar" id="highlightList"></div></div>
+            <div id="recentlyViewedWrapper">
+                <div class="recently-header">
+                    <span class="recently-label" style="margin-bottom:0">Terakhir Dilihat</span>
+                    <span class="recently-clear-btn" onclick="clearAllRecentlyViewed()">Hapus Semua</span>
+                </div>
+                <div class="recently-scroll" id="recentlyScroll"></div>
             </div>
-            <div class="recently-scroll" id="recentlyScroll"></div>
+            <div class="tab-nav">
+                <div class="tab-item active" id="tabGrid" onclick="switchTab('grid', this)"><i class="fa-solid fa-table-cells"></i></div>
+                <div class="tab-item" id="tabLikes" onclick="switchTab('likes', this)"><i class="fa-regular fa-heart"></i></div>
+                <div class="tab-item" id="tabBookmark" onclick="switchTab('bookmarks', this)"><i class="fa-regular fa-bookmark"></i></div>
+            </div>
+            <main id="feedGrid" class="movie-grid"></main>
         </div>
-
-        <div class="tab-nav">
-            <div class="tab-item active" id="tabGrid" onclick="switchTab('grid', this)"><i class="fa-solid fa-table-cells"></i></div>
-            <div class="tab-item" id="tabLikes" onclick="switchTab('likes', this)"><i class="fa-regular fa-heart"></i></div>
-            <div class="tab-item" id="tabBookmark" onclick="switchTab('bookmarks', this)"><i class="fa-regular fa-bookmark"></i></div>
-        </div>
-
-        <main id="feedGrid" class="movie-grid"></main>
     </div>
 
     <div id="searchOverlay">
@@ -2242,11 +2359,29 @@
 
 
     <nav class="bottom-nav">
-        <i class="fa-solid fa-house cursor-pointer text-xl active-nav" id="homeBtnNav" onclick="closeActorPhotos(); updateActiveNav(this); backToHome()"></i>
-        <i class="fa-solid fa-magnifying-glass cursor-pointer text-xl" id="searchBtnNav" onclick="closeActorPhotos(); updateActiveNav(this); openSearch()"></i>
-        <i class="fa-solid fa-clapperboard cursor-pointer text-xl" id="reelsBtnNav" onclick="closeActorPhotos(); updateActiveNav(this); openReels()"></i>
-        <i class="fa-solid fa-tv cursor-pointer text-xl" id="tvBtnNav" onclick="closeActorPhotos(); updateActiveNav(this); openTvModal()"></i>
-        <i class="fa-regular fa-bookmark cursor-pointer text-xl" id="bookmarkBtnNav" onclick="closeActorPhotos(); updateActiveNav(this); switchTab('bookmarks', document.getElementById('tabBookmark'))"></i>
+        <div class="bn-item active" id="homeBtnNav" onclick="closeActorPhotos(); updateActiveNav(this); backToHome()">
+            <i class="fa-solid fa-house bn-icon-fa"></i>
+            <span class="bn-label">Beranda</span>
+        </div>
+        <div class="bn-item" id="reelsBtnNav" onclick="closeActorPhotos(); updateActiveNav(this); openReels()">
+            <svg class="bn-icon" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 4a8 8 0 1 0 0 16 8 8 0 0 0 0-16Zm0-2a10 10 0 1 1 0 20 10 10 0 0 1 0-20Zm-1.5 6.5v7l6-3.5-6-3.5Z"/></svg>
+            <span class="bn-label">Shorts</span>
+        </div>
+        <div class="bn-item" id="searchBtnNav" onclick="closeActorPhotos(); updateActiveNav(this); openSearch()" aria-label="Tambah">
+            <span class="bn-plus"><i class="fa-solid fa-plus"></i></span>
+            <span class="bn-label" style="visibility:hidden">.</span>
+        </div>
+        <div class="bn-item" id="tvBtnNav" onclick="closeActorPhotos(); updateActiveNav(this); openTvModal()">
+            <span class="bn-icon-wrap">
+                <i class="fa-solid fa-clapperboard bn-icon-fa"></i>
+                <span class="bn-dot"></span>
+            </span>
+            <span class="bn-label">Subscription</span>
+        </div>
+        <div class="bn-item" id="bookmarkBtnNav" onclick="closeActorPhotos(); updateActiveNav(this); switchTab('bookmarks', document.getElementById('tabBookmark'))">
+            <img src="amnesfubbia.png" alt="Anda" class="bn-avatar">
+            <span class="bn-label">Anda</span>
+        </div>
     </nav>
 
     <script>
@@ -3978,23 +4113,15 @@
             }
         });
 
-        // Tambah reels ke popstate handler
+        // YouTube-style bottom nav active state (operates on .bn-item containers)
         function updateActiveNav(el) {
-            document.querySelectorAll('.bottom-nav i').forEach(i => {
-                i.classList.remove('active-nav');
-                // Bookmark: outline saat tidak aktif, solid saat aktif
-                if (i.id === 'bookmarkBtnNav') {
-                    i.className = i.className.replace('fa-solid', 'fa-regular').replace('active-nav', '');
-                    i.classList.add('fa-regular', 'fa-bookmark', 'cursor-pointer', 'text-xl');
-                }
+            document.querySelectorAll('.bottom-nav .bn-item').forEach(item => {
+                item.classList.remove('active', 'active-nav');
             });
             if (el) {
-                el.classList.add('active-nav');
-                // Jika bookmark aktif, ganti ke solid
-                if (el.id === 'bookmarkBtnNav') {
-                    el.classList.remove('fa-regular');
-                    el.classList.add('fa-solid');
-                }
+                // Support being called with the .bn-item container OR a child element
+                const item = el.classList && el.classList.contains('bn-item') ? el : el.closest('.bn-item');
+                if (item) item.classList.add('active', 'active-nav');
             }
         }
 
@@ -6040,17 +6167,112 @@
             const items = JSON.parse(localStorage.getItem(RV_KEY) || '[]');
             const wrapper = document.getElementById('recentlyViewedWrapper');
             const scroll = document.getElementById('recentlyScroll');
-            if (!wrapper || !scroll) return;
-            if (!items.length) { wrapper.style.display = 'none'; return; }
-            wrapper.style.display = 'block';
-            scroll.innerHTML = items.map((item, idx) => `
-                <div class="recently-item" onclick="openModal(${item.id}, '${item.type}')">
-                    <img class="recently-img" src="https://image.tmdb.org/t/p/w185${item.poster || ''}"
-                         onerror="this.style.background='#1a1a1a'" loading="lazy">
-                    <div class="recently-del" onclick="event.stopPropagation(); deleteRecentlyViewed(${idx})">
-                        <i class="fa-solid fa-xmark"></i>
+            if (wrapper && scroll) {
+                if (!items.length) { wrapper.style.display = 'none'; }
+                else {
+                    wrapper.style.display = 'block';
+                    scroll.innerHTML = items.map((item, idx) => `
+                        <div class="recently-item" onclick="openModal(${item.id}, '${item.type}')">
+                            <img class="recently-img" src="https://image.tmdb.org/t/p/w185${item.poster || ''}"
+                                 onerror="this.style.background='#1a1a1a'" loading="lazy">
+                            <div class="recently-del" onclick="event.stopPropagation(); deleteRecentlyViewed(${idx})">
+                                <i class="fa-solid fa-xmark"></i>
+                            </div>
+                        </div>`).join('');
+                }
+            }
+            // Also render YouTube "Anda" Histori
+            renderYtHistori(items);
+        }
+
+        // ===== YouTube "Anda" page renderers =====
+        function _fmtDuration(seconds) {
+            // Pseudo duration based on id (for visual consistency only)
+            const m = Math.floor((seconds % 60) + 2);
+            const s = Math.floor((seconds * 7) % 60);
+            return `${m}:${String(s).padStart(2,'0')}`;
+        }
+
+        function renderYtHistori(items) {
+            const el = document.getElementById('ytHistoriScroll');
+            if (!el) return;
+            items = items || JSON.parse(localStorage.getItem(RV_KEY) || '[]');
+            if (!items.length) {
+                el.innerHTML = `<div class="yt-empty-state" style="flex:1">
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                    Belum ada histori tontonan
+                </div>`;
+                return;
+            }
+            el.innerHTML = items.slice(0, 12).map((item, idx) => {
+                const typeLabel = item.type === 'tv' ? 'Serial' : (item.type === 'short' ? 'Shorts' : 'Film');
+                const duration = _fmtDuration((item.id || 1) % 300 + 60);
+                const progress = ((item.id || 1) % 80) + 10;
+                const isShort = item.type === 'short';
+                return `
+                <div class="yt-video-card" onclick="openModal(${item.id}, '${item.type}')">
+                    <div class="yt-thumb">
+                        <img src="https://image.tmdb.org/t/p/w342${item.poster || ''}"
+                             onerror="this.style.opacity=0" loading="lazy" alt="">
+                        ${isShort
+                            ? `<span class="yt-thumb-shorts-badge"><i class="fa-solid fa-bolt"></i></span>`
+                            : `<span class="yt-thumb-duration">${duration}</span>`}
+                        <div class="yt-thumb-progress"><span style="width:${progress}%"></span></div>
                     </div>
-                </div>`).join('');
+                    <div class="yt-video-title">${typeLabel} • TMDB #${item.id}</div>
+                    <div class="yt-video-channel">amnesfubbia · ditonton</div>
+                </div>`;
+            }).join('');
+        }
+
+        function renderYtPlaylist() {
+            const el = document.getElementById('ytPlaylistScroll');
+            if (!el) return;
+            const bookmarks = JSON.parse(localStorage.getItem('bookmarks') || '[]');
+            const likes = JSON.parse(localStorage.getItem('likes') || '[]');
+            const recent = JSON.parse(localStorage.getItem(RV_KEY) || '[]');
+
+            const playlists = [
+                {
+                    title: 'Video yang disukai',
+                    subtitle: 'Pribadi',
+                    count: likes.length,
+                    poster: (likes[0] && recent.find(r => r.id == likes[0].id) || {}).poster || (recent[0] || {}).poster || '',
+                    icon: 'fa-solid fa-thumbs-up',
+                    action: () => `switchTab('likes', document.getElementById('tabLikes'))`
+                },
+                {
+                    title: 'Tersimpan',
+                    subtitle: 'Pribadi · Playlist',
+                    count: bookmarks.length,
+                    poster: (bookmarks[0] && recent.find(r => r.id == bookmarks[0].id) || {}).poster || (recent[1] || recent[0] || {}).poster || '',
+                    icon: 'fa-solid fa-bookmark',
+                    action: () => `switchTab('bookmarks', document.getElementById('tabBookmark'))`
+                },
+                {
+                    title: 'Tonton nanti',
+                    subtitle: 'Pribadi',
+                    count: recent.length,
+                    poster: (recent[2] || recent[0] || {}).poster || '',
+                    icon: 'fa-solid fa-clock',
+                    action: () => `switchTab('grid', document.getElementById('tabGrid'))`
+                }
+            ];
+
+            el.innerHTML = playlists.map(p => `
+                <div class="yt-playlist-card" onclick="${p.action()}">
+                    <div class="yt-playlist-thumb">
+                        ${p.poster
+                            ? `<img src="https://image.tmdb.org/t/p/w342${p.poster}" onerror="this.style.opacity=0" loading="lazy" alt="">`
+                            : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--text3)"><i class="${p.icon}" style="font-size:32px"></i></div>`}
+                        <span class="yt-playlist-count">
+                            <i class="fa-solid fa-list" style="font-size:9px"></i> ${p.count}
+                        </span>
+                    </div>
+                    <div class="yt-playlist-title">${p.title}</div>
+                    <div class="yt-playlist-meta">${p.subtitle}</div>
+                </div>
+            `).join('');
         }
 
         function deleteRecentlyViewed(idx) {
@@ -6068,7 +6290,10 @@
         // ===== LIBRARY FILTER (removed) =====
 
 
-        window.addEventListener('DOMContentLoaded', () => { renderRecentlyViewed(); });
+        window.addEventListener('DOMContentLoaded', () => {
+            renderRecentlyViewed();
+            renderYtPlaylist();
+        });
 
         // ===== BADGE NEW helper =====
         function isNewRelease(releaseDate) {
