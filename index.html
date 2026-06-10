@@ -1535,7 +1535,14 @@
         .ep-card.active-ep { background: transparent; }
         .ep-thumb-wrap {
             position: relative; flex: 0 0 130px;
-            border-radius: 8px; overflow: hidden; background: #111;
+            border-radius: 8px; background: #111;
+            display: flex; flex-direction: column;
+            overflow: visible;
+        }
+        .ep-thumb-wrap > img,
+        .ep-thumb-wrap > .ep-thumb-placeholder {
+            border-radius: 8px;
+            overflow: hidden;
         }
         .ep-thumb {
             width: 130px; aspect-ratio: 16/9;
@@ -1577,10 +1584,11 @@
         }
         .ep-synopsis.expanded { -webkit-line-clamp: unset; display: block; }
         .ep-translate-btn {
-            display: inline-block; margin-top: 2px;
-            font-size: 10px; font-weight: 600; color: #aaa;
+            display: block; margin-top: 5px;
+            font-size: 10px; font-weight: 700; color: #fff;
             background: #1a1a1a; border: 1px solid #2a2a2a;
-            border-radius: 5px; padding: 3px 8px; cursor: pointer;
+            border-radius: 6px; padding: 5px 6px; cursor: pointer;
+            text-align: center; width: 100%;
             -webkit-tap-highlight-color: transparent;
         }
         .ep-translate-btn:active { background: #222; }
@@ -2146,50 +2154,20 @@
                 <i class="fa-solid fa-xmark text-zinc-500 text-xs cursor-pointer" id="searchClearBtn" style="display:none;padding-left:6px" onclick="clearSearch()"></i>
                 <div id="smartSearchDropdown" class="no-scrollbar"></div>
             </div>
+            <div id="searchFilterToggleBtn" onclick="toggleSearchFilterBar()" style="
+                width:36px;height:36px;border-radius:10px;background:#1a1a1a;
+                border:1px solid #2a2a2a;display:flex;align-items:center;justify-content:center;
+                cursor:pointer;flex-shrink:0;transition:all 0.2s;position:relative;
+                -webkit-tap-highlight-color:transparent;">
+                <i class="fa-solid fa-sliders" style="font-size:14px;color:#aaa"></i>
+                <div id="searchFilterDot" style="display:none;position:absolute;top:5px;right:5px;width:7px;height:7px;background:#fff;border-radius:50%;border:1.5px solid #000"></div>
+            </div>
         </div>
         <!-- Search type tabs (tampil saat ada hasil) -->
         <div id="searchTypeTabs" style="display:none; border-bottom:1px solid #1c1c1c; background:#000; position:sticky; top:54px; z-index:90; flex-direction:row;">
             <div class="search-tab active" id="stab-all" onclick="setSearchTab('multi',this)">All</div>
             <div class="search-tab" id="stab-movie" onclick="setSearchTab('movie',this)">Movie</div>
             <div class="search-tab" id="stab-tv" onclick="setSearchTab('tv',this)">Series</div>
-        </div>
-        <!-- Category filter buttons (tampil di idle state) -->
-        <div id="searchCategoryBar" style="padding:16px 15px 0;display:block">
-            <div style="font-size:10px;font-weight:800;color:#333;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;padding:0 1px">Jelajahi</div>
-            <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px">
-                <div onclick="quickCategorySearch('action')" style="background:#111;border:1px solid #1c1c1c;border-radius:12px;padding:13px 14px;display:flex;align-items:center;gap:10px;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background 0.15s" onmousedown="this.style.background='#1c1c1c'" ontouchstart="this.style.background='#1c1c1c'" ontouchend="this.style.background='#111'" onmouseleave="this.style.background='#111'">
-                    <div style="width:34px;height:34px;border-radius:9px;background:#2a1a1a;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fa-solid fa-explosion" style="color:#e57373;font-size:14px"></i></div>
-                    <div><div style="font-size:13px;font-weight:700;color:#fff">Action</div><div style="font-size:10px;color:#555">Film aksi seru</div></div>
-                </div>
-                <div onclick="quickCategorySearch('comedy')" style="background:#111;border:1px solid #1c1c1c;border-radius:12px;padding:13px 14px;display:flex;align-items:center;gap:10px;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background 0.15s" onmousedown="this.style.background='#1c1c1c'" ontouchstart="this.style.background='#1c1c1c'" ontouchend="this.style.background='#111'" onmouseleave="this.style.background='#111'">
-                    <div style="width:34px;height:34px;border-radius:9px;background:#1a2a1a;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fa-solid fa-face-laugh-beam" style="color:#4caf7d;font-size:14px"></i></div>
-                    <div><div style="font-size:13px;font-weight:700;color:#fff">Comedy</div><div style="font-size:10px;color:#555">Hiburan ringan</div></div>
-                </div>
-                <div onclick="quickCategorySearch('horror')" style="background:#111;border:1px solid #1c1c1c;border-radius:12px;padding:13px 14px;display:flex;align-items:center;gap:10px;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background 0.15s" onmousedown="this.style.background='#1c1c1c'" ontouchstart="this.style.background='#1c1c1c'" ontouchend="this.style.background='#111'" onmouseleave="this.style.background='#111'">
-                    <div style="width:34px;height:34px;border-radius:9px;background:#1a1a2e;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fa-solid fa-ghost" style="color:#a78bfa;font-size:14px"></i></div>
-                    <div><div style="font-size:13px;font-weight:700;color:#fff">Horror</div><div style="font-size:10px;color:#555">Bikin merinding</div></div>
-                </div>
-                <div onclick="quickCategorySearch('romance')" style="background:#111;border:1px solid #1c1c1c;border-radius:12px;padding:13px 14px;display:flex;align-items:center;gap:10px;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background 0.15s" onmousedown="this.style.background='#1c1c1c'" ontouchstart="this.style.background='#1c1c1c'" ontouchend="this.style.background='#111'" onmouseleave="this.style.background='#111'">
-                    <div style="width:34px;height:34px;border-radius:9px;background:#2a1a20;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fa-solid fa-heart" style="color:#f472b6;font-size:14px"></i></div>
-                    <div><div style="font-size:13px;font-weight:700;color:#fff">Romance</div><div style="font-size:10px;color:#555">Kisah cinta</div></div>
-                </div>
-                <div onclick="quickCategorySearch('animation')" style="background:#111;border:1px solid #1c1c1c;border-radius:12px;padding:13px 14px;display:flex;align-items:center;gap:10px;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background 0.15s" onmousedown="this.style.background='#1c1c1c'" ontouchstart="this.style.background='#1c1c1c'" ontouchend="this.style.background='#111'" onmouseleave="this.style.background='#111'">
-                    <div style="width:34px;height:34px;border-radius:9px;background:#1a201a;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fa-solid fa-wand-magic-sparkles" style="color:#34d399;font-size:14px"></i></div>
-                    <div><div style="font-size:13px;font-weight:700;color:#fff">Animation</div><div style="font-size:10px;color:#555">Animasi & kartun</div></div>
-                </div>
-                <div onclick="quickCategorySearch('thriller')" style="background:#111;border:1px solid #1c1c1c;border-radius:12px;padding:13px 14px;display:flex;align-items:center;gap:10px;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background 0.15s" onmousedown="this.style.background='#1c1c1c'" ontouchstart="this.style.background='#1c1c1c'" ontouchend="this.style.background='#111'" onmouseleave="this.style.background='#111'">
-                    <div style="width:34px;height:34px;border-radius:9px;background:#201a10;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fa-solid fa-eye" style="color:#ffca28;font-size:14px"></i></div>
-                    <div><div style="font-size:13px;font-weight:700;color:#fff">Thriller</div><div style="font-size:10px;color:#555">Penuh ketegangan</div></div>
-                </div>
-                <div onclick="quickCategorySearch('drama')" style="background:#111;border:1px solid #1c1c1c;border-radius:12px;padding:13px 14px;display:flex;align-items:center;gap:10px;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background 0.15s" onmousedown="this.style.background='#1c1c1c'" ontouchstart="this.style.background='#1c1c1c'" ontouchend="this.style.background='#111'" onmouseleave="this.style.background='#111'">
-                    <div style="width:34px;height:34px;border-radius:9px;background:#1a1a1a;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fa-solid fa-masks-theater" style="color:#60a5fa;font-size:14px"></i></div>
-                    <div><div style="font-size:13px;font-weight:700;color:#fff">Drama</div><div style="font-size:10px;color:#555">Cerita mendalam</div></div>
-                </div>
-                <div onclick="quickCategorySearch('science fiction')" style="background:#111;border:1px solid #1c1c1c;border-radius:12px;padding:13px 14px;display:flex;align-items:center;gap:10px;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background 0.15s" onmousedown="this.style.background='#1c1c1c'" ontouchstart="this.style.background='#1c1c1c'" ontouchend="this.style.background='#111'" onmouseleave="this.style.background='#111'">
-                    <div style="width:34px;height:34px;border-radius:9px;background:#0f1a2a;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fa-solid fa-rocket" style="color:#38bdf8;font-size:14px"></i></div>
-                    <div><div style="font-size:13px;font-weight:700;color:#fff">Sci-Fi</div><div style="font-size:10px;color:#555">Fiksi ilmiah</div></div>
-                </div>
-            </div>
         </div>
         <!-- Empty/idle state -->
         <div id="searchEmptyState" style="padding:40px 20px; text-align:center;">
@@ -2200,9 +2178,25 @@
                 <div style="font-size:10px;font-weight:800;color:#333;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;padding:0 4px">Popular Searches</div>
                 <div id="popularChips" style="display:flex;flex-wrap:wrap;gap:8px"></div>
             </div>
+            <!-- Awards section -->
+            <div style="margin-top:28px;text-align:left">
+                <!-- Award category tabs -->
+                <div style="display:flex;border-bottom:1px solid #1c1c1c;margin-bottom:16px">
+                    <div id="awardTab-oscar" class="search-tab active" style="flex:1;font-size:13px;font-weight:700" onclick="switchAwardTab('oscar',this)">Oscar</div>
+                    <div id="awardTab-emmy" class="search-tab" style="flex:1;font-size:13px;font-weight:700" onclick="switchAwardTab('emmy',this)">Emmy</div>
+                    <div id="awardTab-globe" class="search-tab" style="flex:1;font-size:13px;font-weight:700" onclick="switchAwardTab('globe',this)">Golden Globe</div>
+                </div>
+                <!-- Filters row -->
+                <div style="display:flex;gap:8px;margin-bottom:16px">
+                    <select id="awardYearSel" onchange="loadAwardNominees()" style="flex:1;background:#1a1a1a;border:1px solid #2a2a2a;color:#fff;font-size:12px;padding:8px 10px;border-radius:10px;outline:none;cursor:pointer"></select>
+                    <select id="awardCatSel" onchange="loadAwardNominees()" style="flex:1;background:#1a1a1a;border:1px solid #2a2a2a;color:#fff;font-size:12px;padding:8px 10px;border-radius:10px;outline:none;cursor:pointer"></select>
+                </div>
+                <!-- Award results grid -->
+                <div id="awardGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;border-radius:10px;overflow:hidden"></div>
+            </div>
         </div>
         <!-- Search filter pills -->
-        <div id="searchFilterBar" style="display:none;padding:6px 16px 0;gap:8px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch" class="flex">
+        <div id="searchFilterBar" style="display:none;padding:10px 16px;gap:8px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;background:#000;border-bottom:1px solid #1c1c1c;position:sticky;top:54px;z-index:89;" class="flex no-scrollbar">
             <select id="searchYearFilter" onchange="applySearchFilters()" style="flex:0 0 auto;background:#1a1a1a;border:1px solid #2a2a2a;color:#fff;font-size:11px;padding:6px 10px;border-radius:8px;outline:none;cursor:pointer">
                 <option value="">All Years</option>
             </select>
@@ -5335,7 +5329,26 @@
             loading = false;
         }
 
+        function toggleSearchFilterBar() {
+            const bar = document.getElementById('searchFilterBar');
+            const btn = document.getElementById('searchFilterToggleBtn');
+            const icon = btn ? btn.querySelector('i') : null;
+            const isVisible = bar && bar.style.display !== 'none';
+            if (bar) bar.style.display = isVisible ? 'none' : 'flex';
+            if (icon) { icon.style.color = isVisible ? '#aaa' : '#fff'; }
+            if (btn) { btn.style.background = isVisible ? '#1a1a1a' : '#2a2a2a'; btn.style.borderColor = isVisible ? '#2a2a2a' : '#555'; }
+        }
+
+        function updateSearchFilterDot() {
+            const yr = document.getElementById('searchYearFilter')?.value;
+            const gn = document.getElementById('searchGenreFilter')?.value;
+            const tp = document.getElementById('searchTypeFilter')?.value;
+            const dot = document.getElementById('searchFilterDot');
+            if (dot) dot.style.display = (yr || gn || tp) ? 'block' : 'none';
+        }
+
         function applySearchFilters() {
+            updateSearchFilterDot();
             if (!window._searchResults || !window._isSearchMode) return;
             let filtered = [...window._searchResults];
             const yr = document.getElementById('searchYearFilter')?.value;
@@ -5421,8 +5434,6 @@
             document.getElementById('searchEmptyState').style.display = 'block';
             document.getElementById('searchContent').style.display = 'none';
             document.getElementById('searchTypeTabs').style.display = 'none';
-            const catBar = document.getElementById('searchCategoryBar');
-            if (catBar) catBar.style.display = 'block';
             searchQuery = '';
         }
 
@@ -5430,18 +5441,6 @@
             document.getElementById('searchEmptyState').style.display = 'none';
             document.getElementById('searchContent').style.display = 'flex';
             document.getElementById('searchTypeTabs').style.display = 'flex';
-            const catBar = document.getElementById('searchCategoryBar');
-            if (catBar) catBar.style.display = 'none';
-        }
-
-        function quickCategorySearch(genre) {
-            document.getElementById('searchInp').value = genre;
-            document.getElementById('searchClearBtn').style.display = 'block';
-            document.getElementById('smartSearchDropdown').style.display = 'none';
-            searchQuery = genre;
-            currentType = 'multi';
-            showSearchResults();
-            loadFeed(true);
         }
 
         function quickSearch(term) {
@@ -5463,6 +5462,8 @@
             const sfBar2 = document.getElementById('searchFilterBar');
             if (sfBar2) sfBar2.style.display = 'none';
             showSearchEmptyState();
+            initAwardFilters();
+            loadAwardNominees();
             document.getElementById('searchInp').value = '';
             document.getElementById('searchClearBtn').style.display = 'none';
             document.getElementById('searchInp').focus();
@@ -5479,6 +5480,13 @@
             document.getElementById('searchInp').value = '';
             document.getElementById('searchClearBtn').style.display = 'none';
             document.getElementById('smartSearchDropdown').style.display = 'none';
+            // Reset filter bar
+            const filterBar = document.getElementById('searchFilterBar');
+            if (filterBar) filterBar.style.display = 'none';
+            const filterBtn = document.getElementById('searchFilterToggleBtn');
+            if (filterBtn) { filterBtn.style.background = '#1a1a1a'; filterBtn.style.borderColor = '#2a2a2a'; const ic = filterBtn.querySelector('i'); if(ic) ic.style.color = '#aaa'; }
+            const dot = document.getElementById('searchFilterDot');
+            if (dot) dot.style.display = 'none';
             updateActiveNav(document.getElementById('homeBtnNav'));
             history.replaceState({view: 'home'}, '');
         }
@@ -6309,18 +6317,16 @@
                     ? `<div class="ep-synopsis" id="syn-${epId}">${epOverview}</div>`
                     : `<div class="ep-synopsis" style="color:#333;font-style:italic">No synopsis available.</div>`;
 
-                // Tombol terjemahkan di bawah gambar (bukan di bawah sinopsis)
                 const translateBtnHTML = epOverview
-                    ? `<span class="ep-translate-btn" id="transbtn-${epId}" onclick="translateEpSynopsis('${epId}', this, event)" style="display:block;margin-top:5px;text-align:center">🌐 Terjemahkan</span>`
+                    ? `<span class="ep-translate-btn" id="transbtn-${epId}" onclick="translateEpSynopsis('${epId}', this, event)">Translate to Indonesian</span>`
                     : '';
 
                 return `<div class="ep-card" onclick="changeEpisode(${epNum}, this)">
                     <div class="ep-thumb-wrap">
                         ${thumbHTML}
                         <span class="ep-badge">EP ${epNum}</span>
+                        ${runtime ? `<span class="ep-duration">${runtime}</span>` : ''}
                     </div>
-                    ${translateBtnHTML}
-                    ${runtime ? `<div style="text-align:center;margin-top:3px"><span class="ep-duration" style="position:static;display:inline-block;border-radius:6px;font-size:9px;padding:2px 7px;background:rgba(255,255,255,0.08);color:#aaa;border:1px solid #2a2a2a">${runtime}</span></div>` : ''}
                     <div class="ep-info">
                         <div class="ep-title">${epTitle}</div>
                         <div class="ep-meta-row">
@@ -6328,6 +6334,7 @@
                             ${epDate ? `<span class="ep-date"><i class="fa-regular fa-calendar" style="font-size:9px"></i>${epDate}</span>` : ''}
                         </div>
                         ${synopsisHTML}
+                        ${translateBtnHTML}
                     </div>
                 </div>`;
             }).join('');
@@ -7113,6 +7120,153 @@
                     <i class="fa-solid fa-star"></i>~${imdbEst} IMDb
                 </span>`;
             bar.style.display = 'flex';
+        }
+
+        // ===== AWARDS SECTION (Search Empty State) =====
+        let _currentAwardTab = 'oscar';
+
+        const AWARD_CONFIG = {
+            oscar: {
+                years: [2024, 2023, 2022, 2021, 2020, 2019, 2018],
+                categories: [
+                    {label:'Best Picture', keyword:'Best Picture'},
+                    {label:'Best Director', keyword:'Best Director'},
+                    {label:'Best Actor', keyword:'Best Actor'},
+                    {label:'Best Actress', keyword:'Best Actress'},
+                    {label:'Best Animated', keyword:'Best Animated Feature'},
+                    {label:'Best Foreign', keyword:'Best International Feature'},
+                ]
+            },
+            emmy: {
+                years: [2024, 2023, 2022, 2021, 2020, 2019, 2018],
+                categories: [
+                    {label:'Drama Series', keyword:'Outstanding Drama Series'},
+                    {label:'Comedy Series', keyword:'Outstanding Comedy Series'},
+                    {label:'Limited Series', keyword:'Outstanding Limited Series'},
+                    {label:'Lead Drama Actor', keyword:'Outstanding Lead Actor Drama'},
+                    {label:'Lead Drama Actress', keyword:'Outstanding Lead Actress Drama'},
+                ]
+            },
+            globe: {
+                years: [2024, 2023, 2022, 2021, 2020, 2019, 2018],
+                categories: [
+                    {label:'Best Picture Drama', keyword:'Best Motion Picture Drama'},
+                    {label:'Best Picture Comedy', keyword:'Best Motion Picture Comedy'},
+                    {label:'Best TV Drama', keyword:'Best TV Series Drama'},
+                    {label:'Best TV Comedy', keyword:'Best TV Series Comedy'},
+                    {label:'Best Director', keyword:'Best Director Motion Picture'},
+                ]
+            }
+        };
+
+        // Map award year+category keyword → list of TMDB movie/tv IDs (curated)
+        const AWARD_DATA = {
+            // OSCAR 2024
+            'oscar|2024|Best Picture': [{id:792307,type:'movie'},{id:466420,type:'movie'},{id:872585,type:'movie'},{id:906126,type:'movie'},{id:508883,type:'movie'},{id:945961,type:'movie'}],
+            'oscar|2024|Best Director': [{id:872585,type:'movie'},{id:466420,type:'movie'},{id:792307,type:'movie'},{id:508883,type:'movie'},{id:324552,type:'movie'}],
+            'oscar|2024|Best Actor': [{id:792307,type:'movie'},{id:872585,type:'movie'},{id:466420,type:'movie'},{id:906126,type:'movie'},{id:1052590,type:'movie'}],
+            'oscar|2024|Best Actress': [{id:508883,type:'movie'},{id:792307,type:'movie'},{id:466420,type:'movie'},{id:906126,type:'movie'},{id:945961,type:'movie'}],
+            'oscar|2024|Best Animated Feature': [{id:1022789,type:'movie'},{id:894205,type:'movie'},{id:1099873,type:'movie'},{id:976573,type:'movie'}],
+            'oscar|2024|Best International Feature': [{id:985939,type:'movie'},{id:1105372,type:'movie'},{id:998484,type:'movie'},{id:840430,type:'movie'}],
+            // OSCAR 2023
+            'oscar|2023|Best Picture': [{id:545611,type:'movie'},{id:361743,type:'movie'},{id:674324,type:'movie'},{id:804150,type:'movie'},{id:817758,type:'movie'},{id:507089,type:'movie'}],
+            'oscar|2023|Best Director': [{id:545611,type:'movie'},{id:674324,type:'movie'},{id:361743,type:'movie'},{id:804150,type:'movie'}],
+            'oscar|2023|Best Actor': [{id:545611,type:'movie'},{id:361743,type:'movie'},{id:674324,type:'movie'},{id:804150,type:'movie'}],
+            'oscar|2023|Best Actress': [{id:674324,type:'movie'},{id:545611,type:'movie'},{id:804150,type:'movie'},{id:817758,type:'movie'}],
+            'oscar|2023|Best Animated Feature': [{id:508947,type:'movie'},{id:590706,type:'movie'},{id:529203,type:'movie'}],
+            'oscar|2023|Best International Feature': [{id:753342,type:'movie'},{id:804150,type:'movie'},{id:809194,type:'movie'}],
+            // OSCAR 2022
+            'oscar|2022|Best Picture': [{id:284053,type:'movie'},{id:370172,type:'movie'},{id:603,type:'movie'},{id:512195,type:'movie'},{id:522831,type:'movie'}],
+            'oscar|2022|Best Director': [{id:512195,type:'movie'},{id:370172,type:'movie'},{id:284053,type:'movie'},{id:522831,type:'movie'}],
+            'oscar|2022|Best Animated Feature': [{id:508947,type:'movie'},{id:438695,type:'movie'},{id:877703,type:'movie'}],
+            'oscar|2022|Best International Feature': [{id:522831,type:'movie'},{id:637649,type:'movie'},{id:628562,type:'movie'}],
+            // EMMY 2024
+            'emmy|2024|Outstanding Drama Series': [{id:1396,type:'tv'},{id:1399,type:'tv'},{id:60735,type:'tv'},{id:84958,type:'tv'},{id:95396,type:'tv'}],
+            'emmy|2024|Outstanding Comedy Series': [{id:2316,type:'tv'},{id:66732,type:'tv'},{id:76479,type:'tv'},{id:37854,type:'tv'}],
+            'emmy|2024|Outstanding Limited Series': [{id:119051,type:'tv'},{id:108978,type:'tv'},{id:83867,type:'tv'}],
+            'emmy|2024|Outstanding Lead Actor Drama': [{id:1396,type:'tv'},{id:1399,type:'tv'},{id:95396,type:'tv'}],
+            'emmy|2024|Outstanding Lead Actress Drama': [{id:84958,type:'tv'},{id:66732,type:'tv'},{id:1396,type:'tv'}],
+            'emmy|2023|Outstanding Drama Series': [{id:87108,type:'tv'},{id:1396,type:'tv'},{id:60735,type:'tv'},{id:95396,type:'tv'}],
+            'emmy|2023|Outstanding Comedy Series': [{id:2316,type:'tv'},{id:66732,type:'tv'},{id:1421,type:'tv'}],
+            'emmy|2023|Outstanding Limited Series': [{id:119051,type:'tv'},{id:108978,type:'tv'}],
+            // GOLDEN GLOBE 2024
+            'globe|2024|Best Motion Picture Drama': [{id:872585,type:'movie'},{id:945961,type:'movie'},{id:466420,type:'movie'},{id:792307,type:'movie'},{id:1022789,type:'movie'}],
+            'globe|2024|Best Motion Picture Comedy': [{id:792307,type:'movie'},{id:508883,type:'movie'},{id:840430,type:'movie'},{id:924023,type:'movie'}],
+            'globe|2024|Best TV Series Drama': [{id:87108,type:'tv'},{id:95396,type:'tv'},{id:84958,type:'tv'},{id:60625,type:'tv'}],
+            'globe|2024|Best TV Series Comedy': [{id:2316,type:'tv'},{id:66732,type:'tv'},{id:37854,type:'tv'},{id:76479,type:'tv'}],
+            'globe|2024|Best Director Motion Picture': [{id:872585,type:'movie'},{id:466420,type:'movie'},{id:792307,type:'movie'}],
+            'globe|2023|Best Motion Picture Drama': [{id:545611,type:'movie'},{id:674324,type:'movie'},{id:361743,type:'movie'},{id:804150,type:'movie'}],
+            'globe|2023|Best Motion Picture Comedy': [{id:545611,type:'movie'},{id:674324,type:'movie'},{id:507089,type:'movie'}],
+            'globe|2023|Best TV Series Drama': [{id:87108,type:'tv'},{id:1396,type:'tv'},{id:60735,type:'tv'}],
+            'globe|2023|Best TV Series Comedy': [{id:2316,type:'tv'},{id:66732,type:'tv'},{id:1421,type:'tv'}],
+        };
+
+        function switchAwardTab(tab, el) {
+            _currentAwardTab = tab;
+            document.querySelectorAll('[id^="awardTab-"]').forEach(t => t.classList.remove('active'));
+            el.classList.add('active');
+            initAwardFilters();
+            loadAwardNominees();
+        }
+
+        function initAwardFilters() {
+            const tab = _currentAwardTab;
+            const config = AWARD_CONFIG[tab];
+            const yearSel = document.getElementById('awardYearSel');
+            const catSel = document.getElementById('awardCatSel');
+            if (!yearSel || !catSel) return;
+            yearSel.innerHTML = config.years.map(y => `<option value="${y}">${y}</option>`).join('');
+            catSel.innerHTML = config.categories.map(c => `<option value="${c.keyword}">${c.label}</option>`).join('');
+        }
+
+        async function loadAwardNominees() {
+            const tab = _currentAwardTab;
+            const year = document.getElementById('awardYearSel')?.value;
+            const cat = document.getElementById('awardCatSel')?.value;
+            const grid = document.getElementById('awardGrid');
+            if (!grid || !year || !cat) return;
+
+            const key = `${tab}|${year}|${cat}`;
+            const nominees = AWARD_DATA[key];
+
+            if (!nominees || nominees.length === 0) {
+                grid.innerHTML = `<div style="grid-column:1/-1;padding:24px;text-align:center;color:#333;font-size:12px">No data for this selection.</div>`;
+                return;
+            }
+
+            grid.innerHTML = `<div style="grid-column:1/-1;padding:12px;text-align:center;color:#333;font-size:10px;animation:pulse 1s infinite">Loading...</div>`;
+
+            try {
+                const items = await Promise.all(nominees.map(n =>
+                    fetchWithCache(`https://api.themoviedb.org/3/${n.type}/${n.id}?api_key=${API_KEY}&language=en-US`)
+                        .then(d => ({...d, _type: n.type}))
+                        .catch(() => null)
+                ));
+
+                const valid = items.filter(m => m && m.poster_path);
+                if (!valid.length) {
+                    grid.innerHTML = `<div style="grid-column:1/-1;padding:24px;text-align:center;color:#333;font-size:12px">No data available.</div>`;
+                    return;
+                }
+
+                grid.innerHTML = valid.map(m => {
+                    const title = m.title || m.name || '';
+                    const year2 = (m.release_date || m.first_air_date || '').split('-')[0];
+                    const rating = m.vote_average ? m.vote_average.toFixed(1) : '';
+                    return `<div class="post-card" onclick="openModal(${m.id},'${m._type}'); closeSearch()">
+                        <img src="https://image.tmdb.org/t/p/w185${m.poster_path}" loading="lazy" onload="this.style.opacity=1" style="opacity:0;width:100%;height:100%;object-fit:cover">
+                        <div class="card-title-overlay">
+                            <div class="card-title-text">${title}</div>
+                            <div class="card-meta-row">
+                                ${rating ? `<span class="card-star">★ ${rating}</span>` : ''}
+                                ${year2 ? `<span class="card-year">${year2}</span>` : ''}
+                            </div>
+                        </div>
+                    </div>`;
+                }).join('');
+            } catch(e) {
+                grid.innerHTML = `<div style="grid-column:1/-1;padding:24px;text-align:center;color:#333;font-size:12px">Failed to load data.</div>`;
+            }
         }
 
         // ===== PULL TO REFRESH =====
