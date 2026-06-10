@@ -248,7 +248,7 @@
         .server-btn.active-link { border: 1.5px solid #fff !important; background: rgba(255,255,255,0.1); }
         
         /* DOWNLOAD & TRAILER GRID - DIPERKECIL */
-        .dl-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; margin-bottom: 2px; }
+        .dl-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-top: 8px; margin-bottom: 2px; }
         .dl-link-btn { width: 100%; padding: 10px; border-radius: 12px; background: #000; color: #fff; font-size: 11px; font-weight: 800; text-transform: uppercase; text-align: center; border: 1px solid #333; cursor: pointer; }
         
         /* PENYELARASAN WARNA TOMBOL TRAILER */
@@ -2291,9 +2291,9 @@
         <!-- Decade modal (triggered by filter btn when idle) -->
         <div id="decadeModal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.92);overflow-y:auto">
             <div style="max-width:520px;margin:0 auto;padding:20px 16px 60px">
-                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+                <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px">
+                    <i class="fa-solid fa-chevron-left" style="font-size:18px;color:#fff;cursor:pointer;padding:4px 8px 4px 0" onclick="closeDecadeModal()"></i>
                     <div style="font-size:17px;font-weight:800;color:#fff">Top Rated by Decade</div>
-                    <i class="fa-solid fa-xmark" style="font-size:20px;color:#888;cursor:pointer;padding:6px" onclick="closeDecadeModal()"></i>
                 </div>
                 <!-- Decade + type selector -->
                 <div style="display:flex;gap:8px;margin-bottom:16px;overflow-x:auto;scrollbar-width:none" class="no-scrollbar" id="decadeTabRow"></div>
@@ -2435,11 +2435,11 @@
                 <div id="serverList" class="server-scroll-wrapper mt-4 px-4"></div>
                 
                 <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-top:8px;margin-bottom:2px;">
-                    <button class="dl-link-btn" onclick="handleDownload()" style="padding:10px 4px;font-size:10px">Down1</button>
-                    <button class="dl-link-btn" onclick="handleDownload2()" style="padding:10px 4px;font-size:10px">Down2</button>
-                    <button class="dl-link-btn" onclick="handleDownload3()" style="padding:10px 4px;font-size:10px">Down3</button>
-                    <button class="dl-link-btn" onclick="handleDownload4()" style="padding:10px 4px;font-size:10px">Down4</button>
-                    <button class="dl-link-btn" onclick="handleDownload5()" style="padding:10px 4px;font-size:10px">Down5</button>
+                    <button class="dl-link-btn" onclick="handleDownload()">Down1</button>
+                    <button class="dl-link-btn" onclick="handleDownload2()">Down2</button>
+                    <button class="dl-link-btn" onclick="handleDownload3()">Down3</button>
+                    <button class="dl-link-btn" onclick="handleDownload4()">Down4</button>
+                    <button class="dl-link-btn" onclick="handleDownload5()">Down5</button>
                 </div>
                 <div id="mSimilarSection" class="similar-section" style="display:none">
                     <span class="similar-label">Similar Movies</span>
@@ -3509,8 +3509,11 @@
                 </div>
                 <div id="serverList" class="server-scroll-wrapper mt-4 px-4"></div>
                 <div class="dl-grid">
-                    <button id="btnDownload1" class="dl-link-btn" onclick="handleDownload()">Download</button>
-                    <button id="btnTrailerDailymotion" class="dl-link-btn btn-trailer-special" onclick="changeServer(99, this)">Trailer</button>
+                    <button class="dl-link-btn" onclick="handleDownload()">Down1</button>
+                    <button class="dl-link-btn" onclick="handleDownload2()">Down2</button>
+                    <button class="dl-link-btn" onclick="handleDownload3()">Down3</button>
+                    <button class="dl-link-btn" onclick="handleDownload4()">Down4</button>
+                    <button class="dl-link-btn" onclick="handleDownload5()">Down5</button>
                 </div>
                 <div id="mSimilarSection" class="similar-section" style="display:none">
                     <span class="similar-label">Similar Movies</span>
@@ -3589,6 +3592,12 @@
 
         window.addEventListener('popstate', function(event) {
             const state = event.state ? event.state.view : null;
+
+            // Decade modal (z-index tertinggi, cek paling awal)
+            if (document.getElementById('decadeModal') && document.getElementById('decadeModal').style.display === 'block') {
+                document.getElementById('decadeModal').style.display = 'none';
+                return;
+            }
 
             // Lightbox gambar
             if (document.getElementById('lightboxModal') && document.getElementById('lightboxModal').style.display === 'flex') {
@@ -6246,8 +6255,11 @@
                 </div>
                 <div id="serverList" class="server-scroll-wrapper mt-4 px-4"></div>
                 <div class="dl-grid">
-                    <button id="btnDownload1" class="dl-link-btn" onclick="handleDownload()">Download</button>
-                    <button id="btnTrailerDailymotion" class="dl-link-btn btn-trailer-special" onclick="changeServer(99, this)">Trailer</button>
+                    <button class="dl-link-btn" onclick="handleDownload()">Down1</button>
+                    <button class="dl-link-btn" onclick="handleDownload2()">Down2</button>
+                    <button class="dl-link-btn" onclick="handleDownload3()">Down3</button>
+                    <button class="dl-link-btn" onclick="handleDownload4()">Down4</button>
+                    <button class="dl-link-btn" onclick="handleDownload5()">Down5</button>
                 </div>
                 <div id="mSimilarSection" class="similar-section" style="display:none">
                     <span class="similar-label">Similar Movies</span>
@@ -7438,13 +7450,14 @@
         function openDecadeModal() {
             document.getElementById('decadeModal').style.display = 'block';
             document.body.style.overflow = 'hidden';
+            history.pushState({view: 'decade'}, '');
             buildDecadeTabRow();
             loadDecadeGrid();
         }
 
         function closeDecadeModal() {
             document.getElementById('decadeModal').style.display = 'none';
-            document.body.style.overflow = 'hidden'; // search overlay masih butuh hidden
+            // overflow tetap hidden karena search overlay masih terbuka
         }
 
         function buildDecadeTabRow() {
