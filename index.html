@@ -1583,15 +1583,25 @@
             -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 6px;
         }
         .ep-synopsis.expanded { -webkit-line-clamp: unset; display: block; }
-        .ep-translate-btn {
-            display: block; margin-top: 5px;
-            font-size: 10px; font-weight: 700; color: #fff;
-            background: #1a1a1a; border: 1px solid #2a2a2a;
-            border-radius: 6px; padding: 5px 6px; cursor: pointer;
-            text-align: center; width: 100%;
-            -webkit-tap-highlight-color: transparent;
+        .ep-action-row {
+            display: flex; gap: 6px;
+            padding: 0 0 10px 0;
+            margin-top: -2px;
+            width: 100%;
         }
-        .ep-translate-btn:active { background: #222; }
+        .ep-action-btn {
+            flex: 1; padding: 8px 4px;
+            border-radius: 8px; font-size: 10px; font-weight: 700;
+            text-align: center; cursor: pointer; border: 1px solid #2a2a2a;
+            background: #1a1a1a; color: #fff;
+            -webkit-tap-highlight-color: transparent;
+            transition: background 0.15s;
+            display: flex; align-items: center; justify-content: center; gap: 4px;
+        }
+        .ep-action-btn:active { background: #2a2a2a; }
+        .ep-btn-watch { background: #1a1a1a; border-color: #3a3a3a; }
+        .ep-btn-download { background: #1a1a1a; border-color: #3a3a3a; }
+        .ep-btn-translate { background: #1a1a1a; border-color: #3a3a3a; font-size: 9px; }
         .ep-date { font-size: 11px; color: #555; font-weight: 500; display: flex; align-items: center; gap: 4px; }
         .ep-card.active-ep .ep-title { color: #fff; }
         .ep-card.active-ep .ep-thumb-wrap { outline: 2px solid #fff; }
@@ -3058,6 +3068,11 @@
             // Tutup semua overlay yang mungkin aktif
             if (document.getElementById('reelsModal').style.display === 'block') {
                 _closeReelsSilent();
+            }
+            // Tutup actorModal jika sedang terbuka
+            const actorModal = document.getElementById('actorModal');
+            if (actorModal && actorModal.style.display === 'block') {
+                actorModal.style.display = 'none';
             }
             // Simpan state tvModal agar back bisa kembali ke sana
             const wasTvOpen = document.getElementById('tvModal').style.display === 'block';
@@ -5753,12 +5768,12 @@
                 const translateBtn = document.getElementById('mTranslateBtn');
                 if (!translateBtn) return;
                 if (globalEnDesc.trim() !== "" && originalIndoDesc.trim() !== "" && originalIndoDesc !== globalEnDesc) {
-                    translateBtn.innerText = "Translate to Indonesian";
+                    translateBtn.innerText = "See Translation";
                     translateBtn.style.display = 'inline-block';
                     translateBtn.classList.remove('hidden');
                 } else if (globalEnDesc.trim() !== "") {
                     // Hanya EN tersedia — tawarkan terjemahkan via Google
-                    translateBtn.innerText = "Translate to Indonesian";
+                    translateBtn.innerText = "See Translation";
                     translateBtn.style.display = 'inline-block';
                     translateBtn.classList.remove('hidden');
                 } else {
@@ -6011,10 +6026,10 @@
                 // Toggle antara EN dan ID (keduanya tersedia)
                 if (globalFullDesc === globalEnDesc) {
                     globalFullDesc = originalIndoDesc;
-                    btn.innerText = "View in English";
+                    btn.innerText = "See Original";
                 } else {
                     globalFullDesc = globalEnDesc;
-                    btn.innerText = "Translate to Indonesian";
+                    btn.innerText = "See Translation";
                 }
             } else if (globalEnDesc && !originalIndoDesc) {
                 // Hanya ada EN, terjemahkan ke ID via Google
@@ -6027,12 +6042,12 @@
                         originalIndoDesc = translated;
                         globalFullDesc = translated;
                         isTranslated = true;
-                        btn.innerText = "View in English";
+                        btn.innerText = "See Original";
                     } catch(e) { btn.innerText = "Translation failed"; setTimeout(()=>btn.innerText=oldText, 2000); }
                 } else {
                     globalFullDesc = globalEnDesc;
                     isTranslated = false;
-                    btn.innerText = "Translate to Indonesian";
+                    btn.innerText = "See Translation";
                 }
             }
             renderSynopsis();
@@ -6317,24 +6332,32 @@
                     ? `<div class="ep-synopsis" id="syn-${epId}">${epOverview}</div>`
                     : `<div class="ep-synopsis" style="color:#333;font-style:italic">No synopsis available.</div>`;
 
-                const translateBtnHTML = epOverview
-                    ? `<span class="ep-translate-btn" id="transbtn-${epId}" onclick="translateEpSynopsis('${epId}', this, event)">Translate to Indonesian</span>`
-                    : '';
+                const actionRowHTML = '';
 
-                return `<div class="ep-card" onclick="changeEpisode(${epNum}, this)">
-                    <div class="ep-thumb-wrap">
-                        ${thumbHTML}
-                        <span class="ep-badge">EP ${epNum}</span>
-                        ${runtime ? `<span class="ep-duration">${runtime}</span>` : ''}
-                    </div>
-                    <div class="ep-info">
-                        <div class="ep-title">${epTitle}</div>
-                        <div class="ep-meta-row">
-                            ${epRating ? `<span class="ep-rating">★ ${epRating}<span class="ep-rating-count">${epVotes ? ` (${epVotes})` : ''}</span></span>` : ''}
-                            ${epDate ? `<span class="ep-date"><i class="fa-regular fa-calendar" style="font-size:9px"></i>${epDate}</span>` : ''}
+                return `<div class="ep-card" style="flex-direction:column;padding-bottom:0" onclick="changeEpisode(${epNum}, this)">
+                    <div style="display:flex;align-items:flex-start;gap:12px;padding:10px 0 4px">
+                        <div class="ep-thumb-wrap">
+                            ${thumbHTML}
+                            <span class="ep-badge">EP ${epNum}</span>
+                            ${runtime ? `<span class="ep-duration">${runtime}</span>` : ''}
                         </div>
-                        ${synopsisHTML}
-                        ${translateBtnHTML}
+                        <div class="ep-info" style="padding:2px 0">
+                            <div class="ep-title">${epTitle}</div>
+                            <div class="ep-meta-row">
+                                ${epRating ? `<span class="ep-rating">★ ${epRating}<span class="ep-rating-count">${epVotes ? ` (${epVotes})` : ''}</span></span>` : ''}
+                                ${epDate ? `<span class="ep-date"><i class="fa-regular fa-calendar" style="font-size:9px"></i>${epDate}</span>` : ''}
+                            </div>
+                            ${synopsisHTML}
+                        </div>
+                    </div>
+                    <div class="ep-action-row" onclick="event.stopPropagation()">
+                        <button class="ep-action-btn ep-btn-watch" onclick="changeEpisode(${epNum}, this.closest('.ep-card')); document.getElementById('movieModal').scrollTo({top:0,behavior:'smooth'})">
+                            <i class="fa-solid fa-play" style="font-size:8px"></i> Watch
+                        </button>
+                        <button class="ep-action-btn ep-btn-download" onclick="(function(){const id=window.currentMediaId,s=document.getElementById('seasonSel').value||1;window.open('https://vidvault.ru/tv/'+id+'/'+s+'/${epNum}','_blank')})()">
+                            <i class="fa-solid fa-download" style="font-size:8px"></i> Download
+                        </button>
+                        ${epOverview ? `<button class="ep-action-btn ep-btn-translate" id="transbtn-${epId}" onclick="translateEpSynopsis('${epId}', this, event)">See Translation</button>` : ''}
                     </div>
                 </div>`;
             }).join('');
@@ -6370,7 +6393,7 @@
             // Toggle: jika sudah diterjemahkan, balik ke EN
             if (btn.getAttribute('data-translated') === '1') {
                 synEl.textContent = originalText;
-                btn.textContent = 'Translate to Indonesian';
+                btn.textContent = 'See Translation';
                 btn.setAttribute('data-translated', '0');
                 return;
             }
@@ -6379,7 +6402,7 @@
             // Cek cache
             if (_epTranslateCache[epId]) {
                 synEl.textContent = _epTranslateCache[epId];
-                btn.textContent = 'View in English';
+                btn.textContent = 'See Original';
                 btn.setAttribute('data-translated', '1');
                 return;
             }
@@ -6390,10 +6413,10 @@
                 const translated = data[0].map(x => x[0]).join('');
                 _epTranslateCache[epId] = translated;
                 synEl.textContent = translated;
-                btn.textContent = 'View in English';
+                btn.textContent = 'See Original';
                 btn.setAttribute('data-translated', '1');
             } catch(e) {
-                btn.textContent = 'Translate to Indonesian';
+                btn.textContent = 'See Translation';
             }
         }
 
