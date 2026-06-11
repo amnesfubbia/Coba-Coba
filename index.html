@@ -2441,15 +2441,14 @@
                     <button class="dl-link-btn" onclick="handleDownload4()">Down4</button>
                     <button class="dl-link-btn" onclick="handleDownload5()">Down5</button>
                 </div>
+                <div id="mCollectionSection" class="similar-section" style="display:none">
+                    <span class="similar-label" id="mCollectionLabel">Part of Collection</span>
+                    <div class="similar-scroll" id="mCollectionScroll"></div>
+                </div>
                 <div id="mSimilarSection" class="similar-section" style="display:none">
                     <span class="similar-label">Similar Movies</span>
                     <div class="similar-scroll" id="mSimilarScroll"></div>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="actorModal" class="actor-modal">
         <!-- Back to top button inside actor modal -->
         <div id="actorBackToTop" onclick="document.getElementById('actorModal').scrollTo({top:0,behavior:'smooth'})"
              style="display:none;position:fixed;bottom:90px;right:20px;z-index:8600;
@@ -2748,26 +2747,6 @@
             initFilters(); initHighlights(); loadFeed(); setupSwipe(); initSmartSearch(); initTvChannels();
             // Pre-load YouTube IFrame API agar sudah siap saat reels dibuka
             loadYTApi();
-            // Isi popular chips dari trending TMDb
-            const container = document.getElementById('popularChips');
-            if (container) {
-                // Tampilkan fallback dulu selagi fetch
-                const fallbackChips = ['Avengers','One Piece','Interstellar','Squid Game','Parasite','Dune','Breaking Bad','Inception'];
-                const renderChips = (list) => {
-                    container.innerHTML = list.map(t =>
-                        `<span onclick="quickSearch('${t.replace(/'/g,"\\\'")}')" style="background:#111;border:1px solid #1c1c1c;border-radius:20px;padding:6px 14px;font-size:12px;color:#ccc;cursor:pointer;-webkit-tap-highlight-color:transparent">${t}</span>`
-                    ).join('');
-                };
-                renderChips(fallbackChips);
-                // Fetch trending untuk chips yang selalu relevan
-                fetch(`https://api.themoviedb.org/3/trending/all/day?api_key=${API_KEY}&language=en-US`)
-                    .then(r => r.json())
-                    .then(data => {
-                        const trendChips = (data.results || []).slice(0, 8).map(m => m.title || m.name).filter(Boolean);
-                        if (trendChips.length >= 4) renderChips(trendChips);
-                    })
-                    .catch(() => {}); // fallback tetap tampil jika fetch gagal
-            }
             window.addEventListener('scroll', () => { 
                 document.getElementById('backToTop').style.display = window.scrollY > 500 ? 'flex' : 'none'; 
             }); 
@@ -3164,6 +3143,7 @@
         }
 
         function playTvChannel(name, url) {
+            haptic('light');
             // Tutup semua overlay yang mungkin aktif
             if (document.getElementById('reelsModal').style.display === 'block') {
                 _closeReelsSilent();
@@ -3415,7 +3395,23 @@
             }
         }
 
+        // ===== TOAST NOTIFICATION =====
+        function showToast(msg, duration = 2500) {
+            let toast = document.getElementById('_appToast');
+            if (!toast) {
+                toast = document.createElement('div');
+                toast.id = '_appToast';
+                toast.style.cssText = 'position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:#1a1a1a;color:#fff;font-size:12px;font-weight:600;padding:10px 20px;border-radius:20px;border:1px solid #2a2a2a;z-index:99999;pointer-events:none;opacity:0;transition:opacity 0.25s;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,0.5)';
+                document.body.appendChild(toast);
+            }
+            toast.textContent = msg;
+            toast.style.opacity = '1';
+            clearTimeout(toast._timer);
+            toast._timer = setTimeout(() => { toast.style.opacity = '0'; }, duration);
+        }
+
         function handleDownload() {
+            haptic('medium');
             if(window.currentMediaId && window.currentMediaType) {
                 const isTV = window.currentMediaType === 'tv';
                 const downloadUrl = isTV
@@ -3423,48 +3419,52 @@
                     : `https://vidvault.ru/movie/${window.currentMediaId}`;
                 window.open(downloadUrl, '_blank');
             } else {
-                alert("Media ID not found.");
+                showToast('Media tidak ditemukan.');
             }
         }
 
         function handleDownload2() {
+            haptic('medium');
             if(window.currentMediaId && window.currentMediaType) {
                 const isTV = window.currentMediaType === 'tv';
                 const downloadUrl = isTV
                     ? `https://02moviedownloader.site/api/download/tv/${window.currentMediaId}/${activeSeason || 1}/${activeEpisode || 1}`
                     : `https://02moviedownloader.site/api/download/movie/${window.currentMediaId}`;
                 window.open(downloadUrl, '_blank');
-            } else { alert("Media ID not found."); }
+            } else { showToast('Media tidak ditemukan.'); }
         }
 
         function handleDownload3() {
+            haptic('medium');
             if(window.currentMediaId && window.currentMediaType) {
                 const isTV = window.currentMediaType === 'tv';
                 const url = isTV
                     ? `https://rivestream.ru/download?type=tv&id=${window.currentMediaId}`
                     : `https://dl.peachify.top/movie/${window.currentMediaId}`;
                 window.open(url, '_blank');
-            } else { alert("Media ID not found."); }
+            } else { showToast('Media tidak ditemukan.'); }
         }
 
         function handleDownload4() {
+            haptic('medium');
             if(window.currentMediaId && window.currentMediaType) {
                 const isTV = window.currentMediaType === 'tv';
                 const url = isTV
                     ? `https://rivestream.ru/download?type=tv&id=${window.currentMediaId}`
                     : `https://rivestream.ru/download?type=movie&id=${window.currentMediaId}`;
                 window.open(url, '_blank');
-            } else { alert("Media ID not found."); }
+            } else { showToast('Media tidak ditemukan.'); }
         }
 
         function handleDownload5() {
+            haptic('medium');
             if(window.currentMediaId && window.currentMediaType) {
                 const isTV = window.currentMediaType === 'tv';
                 const url = isTV
                     ? `https://cinesrc.st/download/tv/${window.currentMediaId}`
                     : `https://cinesrc.st/download/movie/${window.currentMediaId}`;
                 window.open(url, '_blank');
-            } else { alert("Media ID not found."); }
+            } else { showToast('Media tidak ditemukan.'); }
         }
 
         // ===== BACK BUTTON LOGIC (diperbaiki) =====
@@ -3515,6 +3515,7 @@
                     <button class="dl-link-btn" onclick="handleDownload4()">Down4</button>
                     <button class="dl-link-btn" onclick="handleDownload5()">Down5</button>
                 </div>
+                <div id="mCollectionSection" class="similar-section" style="display:none"><span class="similar-label" id="mCollectionLabel">Part of Collection</span><div class="similar-scroll" id="mCollectionScroll"></div></div>
                 <div id="mSimilarSection" class="similar-section" style="display:none">
                     <span class="similar-label">Similar Movies</span>
                     <div class="similar-scroll" id="mSimilarScroll"></div>
@@ -5109,6 +5110,7 @@
         function initSmartSearch() { 
             const inp = document.getElementById('searchInp'); 
             const drop = document.getElementById('smartSearchDropdown'); 
+            if (!inp || !drop) return;
             let timeout = null; 
             inp.addEventListener('input', () => { 
                 clearTimeout(timeout); 
@@ -5585,6 +5587,7 @@
             document.getElementById('searchEmptyState').style.display = 'block';
             document.getElementById('searchContent').style.display = 'none';
             document.getElementById('searchTypeTabs').style.display = 'none';
+            window._isSearchMode = false;
             searchQuery = '';
         }
 
@@ -5592,6 +5595,7 @@
             document.getElementById('searchEmptyState').style.display = 'none';
             document.getElementById('searchContent').style.display = 'flex';
             document.getElementById('searchTypeTabs').style.display = 'flex';
+            window._isSearchMode = true;
         }
 
         function quickSearch(term) {
@@ -6150,6 +6154,11 @@
             const _genreIds = (dId.genres || []).map(g => g.id);
             loadSimilarMovies(id, type, _genreIds);
 
+            // Collection/Franchise (hanya untuk movie)
+            if (type === 'movie' && dId.belongs_to_collection) {
+                loadCollection(dId.belongs_to_collection.id, id);
+            }
+
             // Poster gallery (non-blocking)
             loadPosterGallery(id, type);
         }
@@ -6211,6 +6220,7 @@
                 track.innerHTML = ''; 
             } 
             const _rb = document.getElementById('mRatingBar'); if(_rb){ _rb.style.display='none'; _rb.innerHTML=''; }
+            const _cs = document.getElementById('mCollectionSection'); if(_cs) _cs.style.display='none';
             const _ss = document.getElementById('mSimilarSection'); if(_ss) _ss.style.display='none';
             const _pg = document.getElementById('mPosterGallery'); if(_pg){ _pg.style.display='none'; document.getElementById('mPosterScroll').innerHTML=''; }
             const _ig2 = document.getElementById('mInfoGrid'); if(_ig2){ _ig2.style.display='none'; _ig2.innerHTML=''; }
@@ -6261,6 +6271,7 @@
                     <button class="dl-link-btn" onclick="handleDownload4()">Down4</button>
                     <button class="dl-link-btn" onclick="handleDownload5()">Down5</button>
                 </div>
+                <div id="mCollectionSection" class="similar-section" style="display:none"><span class="similar-label" id="mCollectionLabel">Part of Collection</span><div class="similar-scroll" id="mCollectionScroll"></div></div>
                 <div id="mSimilarSection" class="similar-section" style="display:none">
                     <span class="similar-label">Similar Movies</span>
                     <div class="similar-scroll" id="mSimilarScroll"></div>
@@ -6367,6 +6378,7 @@
         }
         
         function changeServer(srvIdx, el) {
+            haptic('light');
             activeServerIdx = srvIdx;
             document.querySelectorAll('.server-btn').forEach(b => b.classList.remove('active-link'));
             if(srvIdx !== 21) el.classList.add('active-link');
@@ -6375,6 +6387,7 @@
         }
 
         function changeEpisode(epNum, el) {
+            haptic('light');
             activeEpisode = epNum;
             document.querySelectorAll('.ep-btn').forEach(b => b.classList.remove('active-pill'));
             el.classList.add('active-pill');
@@ -6594,6 +6607,7 @@
 
         function setupSwipe() { 
             const overlay = document.getElementById('swipeOverlay');
+            if (!overlay) return;
             let _swSx = 0;
             overlay.addEventListener('touchstart', e => { _swSx = e.touches[0].clientX; }, {passive:true}); 
             overlay.addEventListener('touchend', e => { 
@@ -6624,7 +6638,7 @@
 
 
         function updateLibButtons(id) { const isL = JSON.parse(localStorage.getItem('likes') || '[]').some(x=>x.id==id); const isB = JSON.parse(localStorage.getItem('bookmarks') || '[]').some(x=>x.id==id); document.getElementById('btnLikeModal').className = isL ? 'fa-solid fa-heart text-red-500 interaction-icon' : 'fa-regular fa-heart interaction-icon'; document.getElementById('btnBookModal').className = isB ? 'fa-solid fa-bookmark text-white interaction-icon' : 'fa-regular fa-bookmark interaction-icon'; document.getElementById('btnLikeModal').onclick = () => toggleLib('likes'); document.getElementById('btnBookModal').onclick = () => toggleLib('bookmarks'); }
-        function toggleLib(k) { let items = JSON.parse(localStorage.getItem(k) || '[]'); const idx = items.findIndex(x => x.id == window.currentMediaId); idx > -1 ? items.splice(idx,1) : items.push({id: window.currentMediaId, type: window.currentMediaType}); localStorage.setItem(k, JSON.stringify(items)); updateLibButtons(window.currentMediaId); }
+        function toggleLib(k) { haptic('medium'); let items = JSON.parse(localStorage.getItem(k) || '[]'); const idx = items.findIndex(x => x.id == window.currentMediaId); idx > -1 ? items.splice(idx,1) : items.push({id: window.currentMediaId, type: window.currentMediaType}); localStorage.setItem(k, JSON.stringify(items)); updateLibButtons(window.currentMediaId); }
         async function switchTab(mode, el) { 
             closeModal(); closeSearch(); closeActorModal(); closeTvModal(); 
             document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active')); 
@@ -6673,17 +6687,20 @@
             });
         }
         let _scrollTicking = false;
-        // Modal film scroll listener untuk back-to-top
-        document.getElementById('movieModal').addEventListener('scroll', () => {
-            const btn = document.getElementById('modalBackToTop');
-            if (btn) btn.style.display = document.getElementById('movieModal').scrollTop > 400 ? 'flex' : 'none';
-        }, { passive: true });
+        // Modal scroll listeners — dibungkus agar DOM pasti sudah siap
+        document.addEventListener('DOMContentLoaded', () => {
+            const movieModal = document.getElementById('movieModal');
+            if (movieModal) movieModal.addEventListener('scroll', () => {
+                const btn = document.getElementById('modalBackToTop');
+                if (btn) btn.style.display = movieModal.scrollTop > 400 ? 'flex' : 'none';
+            }, { passive: true });
 
-        // Actor modal scroll listener untuk back-to-top
-        document.getElementById('actorModal').addEventListener('scroll', () => {
-            const btn = document.getElementById('actorBackToTop');
-            if (btn) btn.style.display = document.getElementById('actorModal').scrollTop > 400 ? 'flex' : 'none';
-        }, { passive: true });
+            const actorModal = document.getElementById('actorModal');
+            if (actorModal) actorModal.addEventListener('scroll', () => {
+                const btn = document.getElementById('actorBackToTop');
+                if (btn) btn.style.display = actorModal.scrollTop > 400 ? 'flex' : 'none';
+            }, { passive: true });
+        });
 
         window.onscroll = () => {
             if (_scrollTicking) return;
@@ -7530,6 +7547,64 @@
         function switchAwardTab() {}
 
         const AWARD_CONFIG = {};
+
+        // ===== HAPTIC FEEDBACK =====
+        function haptic(pattern = 'light') {
+            if (!navigator.vibrate) return;
+            const patterns = {
+                light: [10],
+                medium: [20],
+                heavy: [30],
+                success: [10, 50, 10],
+                double: [10, 40, 10]
+            };
+            navigator.vibrate(patterns[pattern] || patterns.light);
+        }
+
+        // ===== COLLECTION / FRANCHISE =====
+        async function loadCollection(collectionId, currentMovieId) {
+            const section = document.getElementById('mCollectionSection');
+            const scroll = document.getElementById('mCollectionScroll');
+            const label = document.getElementById('mCollectionLabel');
+            if (!section || !scroll) return;
+            try {
+                const data = await fetchWithCache(`https://api.themoviedb.org/3/collection/${collectionId}?api_key=${API_KEY}&language=en-US`);
+                const parts = (data.parts || []).filter(m => m.backdrop_path || m.poster_path).sort((a, b) => {
+                    const da = a.release_date || '0', db = b.release_date || '0';
+                    return da.localeCompare(db);
+                });
+                if (!parts.length) return;
+                if (label) label.textContent = data.name || 'Part of Collection';
+                scroll.innerHTML = parts.map(m => {
+                    const isCurrent = m.id == currentMovieId;
+                    const img = m.backdrop_path || m.poster_path;
+                    const title = m.title || m.name || '';
+                    const year = (m.release_date || '').split('-')[0];
+                    const rating = m.vote_average ? m.vote_average.toFixed(1) : '';
+                    return `<div onclick="haptic('light'); openModal(${m.id},'movie')"
+                        style="flex-shrink:0;width:160px;border-radius:10px;overflow:hidden;cursor:pointer;
+                               position:relative;aspect-ratio:16/9;background:#111;
+                               ${isCurrent ? 'outline:2px solid #fff;outline-offset:1px' : ''}">
+                        <img src="https://image.tmdb.org/t/p/w300${img}" loading="lazy"
+                             onload="this.style.opacity=1"
+                             style="opacity:0;width:100%;height:100%;object-fit:cover;transition:opacity 0.3s">
+                        <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.88) 0%,transparent 60%)"></div>
+                        <div style="position:absolute;bottom:0;left:0;right:0;padding:6px 8px">
+                            <div style="font-size:10px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${title}</div>
+                            <div style="font-size:9px;color:#aaa;margin-top:1px;display:flex;gap:5px">
+                                ${rating ? `<span style="color:#f5c518;font-weight:700">★ ${rating}</span>` : ''}
+                                ${year ? `<span>${year}</span>` : ''}
+                            </div>
+                        </div>
+                        ${isCurrent ? `<div style="position:absolute;top:5px;left:5px;background:rgba(255,255,255,0.15);backdrop-filter:blur(4px);border-radius:4px;font-size:8px;font-weight:700;color:#fff;padding:2px 6px">Now</div>` : ''}
+                    </div>`;
+                }).join('');
+                section.style.display = 'block';
+            } catch(e) {
+                // Gagal load collection — sembunyikan section
+                if (section) section.style.display = 'none';
+            }
+        }
 
         // ===== PULL TO REFRESH =====
         (function initPullToRefresh() {
