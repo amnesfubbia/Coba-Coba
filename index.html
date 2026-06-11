@@ -2441,7 +2441,6 @@
                     <button class="dl-link-btn" onclick="handleDownload4()">Down4</button>
                     <button class="dl-link-btn" onclick="handleDownload5()">Down5</button>
                 </div>
-                </div>
                 <div id="mCollectionSection" class="similar-section" style="display:none">
                     <span class="similar-label" id="mCollectionLabel">Part of Collection</span>
                     <div class="similar-scroll" id="mCollectionScroll"></div>
@@ -2450,6 +2449,12 @@
                     <span class="similar-label">Similar Movies</span>
                     <div class="similar-scroll" id="mSimilarScroll"></div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="actorModal" class="actor-modal">
+        <!-- Back to top button inside actor modal -->
         <div id="actorBackToTop" onclick="document.getElementById('actorModal').scrollTo({top:0,behavior:'smooth'})"
              style="display:none;position:fixed;bottom:90px;right:20px;z-index:8600;
                     background:rgba(255,255,255,0.2);width:38px;height:38px;border-radius:50%;
@@ -5103,7 +5108,6 @@
         function initSmartSearch() { 
             const inp = document.getElementById('searchInp'); 
             const drop = document.getElementById('smartSearchDropdown'); 
-            if (!inp || !drop) return;
             let timeout = null; 
             inp.addEventListener('input', () => { 
                 clearTimeout(timeout); 
@@ -6213,7 +6217,7 @@
                 track.innerHTML = ''; 
             } 
             const _rb = document.getElementById('mRatingBar'); if(_rb){ _rb.style.display='none'; _rb.innerHTML=''; }
-            const _cs = document.getElementById('mCollectionSection'); if(_cs) _cs.style.display='none';
+            const _cs = document.getElementById('mCollectionSection'); if(_cs) { _cs.style.display='none'; document.getElementById('mCollectionScroll').innerHTML=''; }
             const _ss = document.getElementById('mSimilarSection'); if(_ss) _ss.style.display='none';
             const _pg = document.getElementById('mPosterGallery'); if(_pg){ _pg.style.display='none'; document.getElementById('mPosterScroll').innerHTML=''; }
             const _ig2 = document.getElementById('mInfoGrid'); if(_ig2){ _ig2.style.display='none'; _ig2.innerHTML=''; }
@@ -6597,7 +6601,6 @@
 
         function setupSwipe() { 
             const overlay = document.getElementById('swipeOverlay');
-            if (!overlay) return;
             let _swSx = 0;
             overlay.addEventListener('touchstart', e => { _swSx = e.touches[0].clientX; }, {passive:true}); 
             overlay.addEventListener('touchend', e => { 
@@ -6677,20 +6680,17 @@
             });
         }
         let _scrollTicking = false;
-        // Modal scroll listeners — dibungkus agar DOM pasti sudah siap
-        document.addEventListener('DOMContentLoaded', () => {
-            const movieModal = document.getElementById('movieModal');
-            if (movieModal) movieModal.addEventListener('scroll', () => {
-                const btn = document.getElementById('modalBackToTop');
-                if (btn) btn.style.display = movieModal.scrollTop > 400 ? 'flex' : 'none';
-            }, { passive: true });
+        // Modal film scroll listener untuk back-to-top
+        document.getElementById('movieModal').addEventListener('scroll', () => {
+            const btn = document.getElementById('modalBackToTop');
+            if (btn) btn.style.display = document.getElementById('movieModal').scrollTop > 400 ? 'flex' : 'none';
+        }, { passive: true });
 
-            const actorModal = document.getElementById('actorModal');
-            if (actorModal) actorModal.addEventListener('scroll', () => {
-                const btn = document.getElementById('actorBackToTop');
-                if (btn) btn.style.display = actorModal.scrollTop > 400 ? 'flex' : 'none';
-            }, { passive: true });
-        });
+        // Actor modal scroll listener untuk back-to-top
+        document.getElementById('actorModal').addEventListener('scroll', () => {
+            const btn = document.getElementById('actorBackToTop');
+            if (btn) btn.style.display = document.getElementById('actorModal').scrollTop > 400 ? 'flex' : 'none';
+        }, { passive: true });
 
         window.onscroll = () => {
             if (_scrollTicking) return;
@@ -7548,7 +7548,7 @@
                 const data = await fetchWithCache(`https://api.themoviedb.org/3/collection/${collectionId}?api_key=${API_KEY}&language=en-US`);
                 const parts = (data.parts || [])
                     .filter(m => m.backdrop_path || m.poster_path)
-                    .sort((a, b) => (a.release_date || '0').localeCompare(b.release_date || '0'));
+                    .sort((a, b) => (a.release_date || '').localeCompare(b.release_date || ''));
                 if (!parts.length) return;
                 if (label) label.textContent = data.name || 'Part of Collection';
                 scroll.innerHTML = parts.map(m => {
@@ -7560,7 +7560,7 @@
                     return `<div onclick="openModal(${m.id},'movie')"
                         style="flex-shrink:0;width:160px;border-radius:10px;overflow:hidden;cursor:pointer;
                                position:relative;aspect-ratio:16/9;background:#111;
-                               ${isCurrent ? 'outline:2px solid #fff;outline-offset:1px' : ''}">
+                               ${isCurrent ? 'outline:2px solid #fff;outline-offset:2px' : ''}">
                         <img src="https://image.tmdb.org/t/p/w300${img}" loading="lazy"
                              onload="this.style.opacity=1"
                              style="opacity:0;width:100%;height:100%;object-fit:cover;transition:opacity 0.3s">
