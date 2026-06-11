@@ -2441,6 +2441,7 @@
                     <button class="dl-link-btn" onclick="handleDownload4()">Down4</button>
                     <button class="dl-link-btn" onclick="handleDownload5()">Down5</button>
                 </div>
+                </div>
                 <div id="mCollectionSection" class="similar-section" style="display:none">
                     <span class="similar-label" id="mCollectionLabel">Part of Collection</span>
                     <div class="similar-scroll" id="mCollectionScroll"></div>
@@ -2449,7 +2450,6 @@
                     <span class="similar-label">Similar Movies</span>
                     <div class="similar-scroll" id="mSimilarScroll"></div>
                 </div>
-        <!-- Back to top button inside actor modal -->
         <div id="actorBackToTop" onclick="document.getElementById('actorModal').scrollTo({top:0,behavior:'smooth'})"
              style="display:none;position:fixed;bottom:90px;right:20px;z-index:8600;
                     background:rgba(255,255,255,0.2);width:38px;height:38px;border-radius:50%;
@@ -3143,7 +3143,6 @@
         }
 
         function playTvChannel(name, url) {
-            haptic('light');
             // Tutup semua overlay yang mungkin aktif
             if (document.getElementById('reelsModal').style.display === 'block') {
                 _closeReelsSilent();
@@ -3411,7 +3410,6 @@
         }
 
         function handleDownload() {
-            haptic('medium');
             if(window.currentMediaId && window.currentMediaType) {
                 const isTV = window.currentMediaType === 'tv';
                 const downloadUrl = isTV
@@ -3424,7 +3422,6 @@
         }
 
         function handleDownload2() {
-            haptic('medium');
             if(window.currentMediaId && window.currentMediaType) {
                 const isTV = window.currentMediaType === 'tv';
                 const downloadUrl = isTV
@@ -3435,7 +3432,6 @@
         }
 
         function handleDownload3() {
-            haptic('medium');
             if(window.currentMediaId && window.currentMediaType) {
                 const isTV = window.currentMediaType === 'tv';
                 const url = isTV
@@ -3446,7 +3442,6 @@
         }
 
         function handleDownload4() {
-            haptic('medium');
             if(window.currentMediaId && window.currentMediaType) {
                 const isTV = window.currentMediaType === 'tv';
                 const url = isTV
@@ -3457,7 +3452,6 @@
         }
 
         function handleDownload5() {
-            haptic('medium');
             if(window.currentMediaId && window.currentMediaType) {
                 const isTV = window.currentMediaType === 'tv';
                 const url = isTV
@@ -3515,7 +3509,6 @@
                     <button class="dl-link-btn" onclick="handleDownload4()">Down4</button>
                     <button class="dl-link-btn" onclick="handleDownload5()">Down5</button>
                 </div>
-                <div id="mCollectionSection" class="similar-section" style="display:none"><span class="similar-label" id="mCollectionLabel">Part of Collection</span><div class="similar-scroll" id="mCollectionScroll"></div></div>
                 <div id="mSimilarSection" class="similar-section" style="display:none">
                     <span class="similar-label">Similar Movies</span>
                     <div class="similar-scroll" id="mSimilarScroll"></div>
@@ -6154,7 +6147,7 @@
             const _genreIds = (dId.genres || []).map(g => g.id);
             loadSimilarMovies(id, type, _genreIds);
 
-            // Collection/Franchise (hanya untuk movie)
+            // Collection/Franchise (movie only)
             if (type === 'movie' && dId.belongs_to_collection) {
                 loadCollection(dId.belongs_to_collection.id, id);
             }
@@ -6271,7 +6264,6 @@
                     <button class="dl-link-btn" onclick="handleDownload4()">Down4</button>
                     <button class="dl-link-btn" onclick="handleDownload5()">Down5</button>
                 </div>
-                <div id="mCollectionSection" class="similar-section" style="display:none"><span class="similar-label" id="mCollectionLabel">Part of Collection</span><div class="similar-scroll" id="mCollectionScroll"></div></div>
                 <div id="mSimilarSection" class="similar-section" style="display:none">
                     <span class="similar-label">Similar Movies</span>
                     <div class="similar-scroll" id="mSimilarScroll"></div>
@@ -6378,7 +6370,6 @@
         }
         
         function changeServer(srvIdx, el) {
-            haptic('light');
             activeServerIdx = srvIdx;
             document.querySelectorAll('.server-btn').forEach(b => b.classList.remove('active-link'));
             if(srvIdx !== 21) el.classList.add('active-link');
@@ -6387,7 +6378,6 @@
         }
 
         function changeEpisode(epNum, el) {
-            haptic('light');
             activeEpisode = epNum;
             document.querySelectorAll('.ep-btn').forEach(b => b.classList.remove('active-pill'));
             el.classList.add('active-pill');
@@ -6638,7 +6628,7 @@
 
 
         function updateLibButtons(id) { const isL = JSON.parse(localStorage.getItem('likes') || '[]').some(x=>x.id==id); const isB = JSON.parse(localStorage.getItem('bookmarks') || '[]').some(x=>x.id==id); document.getElementById('btnLikeModal').className = isL ? 'fa-solid fa-heart text-red-500 interaction-icon' : 'fa-regular fa-heart interaction-icon'; document.getElementById('btnBookModal').className = isB ? 'fa-solid fa-bookmark text-white interaction-icon' : 'fa-regular fa-bookmark interaction-icon'; document.getElementById('btnLikeModal').onclick = () => toggleLib('likes'); document.getElementById('btnBookModal').onclick = () => toggleLib('bookmarks'); }
-        function toggleLib(k) { haptic('medium'); let items = JSON.parse(localStorage.getItem(k) || '[]'); const idx = items.findIndex(x => x.id == window.currentMediaId); idx > -1 ? items.splice(idx,1) : items.push({id: window.currentMediaId, type: window.currentMediaType}); localStorage.setItem(k, JSON.stringify(items)); updateLibButtons(window.currentMediaId); }
+        function toggleLib(k) { let items = JSON.parse(localStorage.getItem(k) || '[]'); const idx = items.findIndex(x => x.id == window.currentMediaId); idx > -1 ? items.splice(idx,1) : items.push({id: window.currentMediaId, type: window.currentMediaType}); localStorage.setItem(k, JSON.stringify(items)); updateLibButtons(window.currentMediaId); }
         async function switchTab(mode, el) { 
             closeModal(); closeSearch(); closeActorModal(); closeTvModal(); 
             document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active')); 
@@ -7548,19 +7538,6 @@
 
         const AWARD_CONFIG = {};
 
-        // ===== HAPTIC FEEDBACK =====
-        function haptic(pattern = 'light') {
-            if (!navigator.vibrate) return;
-            const patterns = {
-                light: [10],
-                medium: [20],
-                heavy: [30],
-                success: [10, 50, 10],
-                double: [10, 40, 10]
-            };
-            navigator.vibrate(patterns[pattern] || patterns.light);
-        }
-
         // ===== COLLECTION / FRANCHISE =====
         async function loadCollection(collectionId, currentMovieId) {
             const section = document.getElementById('mCollectionSection');
@@ -7569,10 +7546,9 @@
             if (!section || !scroll) return;
             try {
                 const data = await fetchWithCache(`https://api.themoviedb.org/3/collection/${collectionId}?api_key=${API_KEY}&language=en-US`);
-                const parts = (data.parts || []).filter(m => m.backdrop_path || m.poster_path).sort((a, b) => {
-                    const da = a.release_date || '0', db = b.release_date || '0';
-                    return da.localeCompare(db);
-                });
+                const parts = (data.parts || [])
+                    .filter(m => m.backdrop_path || m.poster_path)
+                    .sort((a, b) => (a.release_date || '0').localeCompare(b.release_date || '0'));
                 if (!parts.length) return;
                 if (label) label.textContent = data.name || 'Part of Collection';
                 scroll.innerHTML = parts.map(m => {
@@ -7581,7 +7557,7 @@
                     const title = m.title || m.name || '';
                     const year = (m.release_date || '').split('-')[0];
                     const rating = m.vote_average ? m.vote_average.toFixed(1) : '';
-                    return `<div onclick="haptic('light'); openModal(${m.id},'movie')"
+                    return `<div onclick="openModal(${m.id},'movie')"
                         style="flex-shrink:0;width:160px;border-radius:10px;overflow:hidden;cursor:pointer;
                                position:relative;aspect-ratio:16/9;background:#111;
                                ${isCurrent ? 'outline:2px solid #fff;outline-offset:1px' : ''}">
@@ -7601,7 +7577,6 @@
                 }).join('');
                 section.style.display = 'block';
             } catch(e) {
-                // Gagal load collection — sembunyikan section
                 if (section) section.style.display = 'none';
             }
         }
