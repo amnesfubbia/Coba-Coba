@@ -4114,12 +4114,21 @@
                             </div>`;
 
                         if (isNonLatin(_fTitle)) {
-                            fetchWithCache(`https://api.themoviedb.org/3/movie/${m.id}?api_key=${API_KEY}&language=en-US`)
+                            fetchWithCache(`https://api.themoviedb.org/3/movie/${m.id}?api_key=${API_KEY}&language=en-US&append_to_response=translations`)
                                 .then(d => {
                                     const enT = d.title || d.name || '';
-                                    if (enT && !isNonLatin(enT)) {
+                                    const origT = d.original_title || d.original_name || '';
+                                    let resolved = '';
+                                    if (enT && !isNonLatin(enT)) resolved = enT;
+                                    else if (origT && !isNonLatin(origT)) resolved = origT;
+                                    else if (d.translations && d.translations.translations) {
+                                        const en = d.translations.translations.find(t => t.iso_639_1 === 'en');
+                                        const enName = en && (en.data.title || en.data.name);
+                                        if (enName && !isNonLatin(enName)) resolved = enName;
+                                    }
+                                    if (resolved) {
                                         const el = card.querySelector(`#aft-${m.id}-movie`);
-                                        if (el) el.textContent = enT;
+                                        if (el) el.textContent = resolved;
                                     }
                                 }).catch(()=>{});
                         }
@@ -4165,12 +4174,21 @@
                             </div>`;
 
                         if (isNonLatin(_tTitle)) {
-                            fetchWithCache(`https://api.themoviedb.org/3/tv/${m.id}?api_key=${API_KEY}&language=en-US`)
+                            fetchWithCache(`https://api.themoviedb.org/3/tv/${m.id}?api_key=${API_KEY}&language=en-US&append_to_response=translations`)
                                 .then(d => {
                                     const enT = d.name || d.title || '';
-                                    if (enT && !isNonLatin(enT)) {
+                                    const origT = d.original_name || d.original_title || '';
+                                    let resolved = '';
+                                    if (enT && !isNonLatin(enT)) resolved = enT;
+                                    else if (origT && !isNonLatin(origT)) resolved = origT;
+                                    else if (d.translations && d.translations.translations) {
+                                        const en = d.translations.translations.find(t => t.iso_639_1 === 'en');
+                                        const enName = en && (en.data.name || en.data.title);
+                                        if (enName && !isNonLatin(enName)) resolved = enName;
+                                    }
+                                    if (resolved) {
                                         const el = card.querySelector(`#aft-${m.id}-tv`);
-                                        if (el) el.textContent = enT;
+                                        if (el) el.textContent = resolved;
                                     }
                                 }).catch(()=>{});
                         }
@@ -7588,7 +7606,8 @@
         async function loadDecadeGrid() {
             const grid = document.getElementById('decadeGrid');
             if (!grid) return;
-            grid.innerHTML = skeletonLandscape2(6);
+            // skeleton inline tanpa padding extra
+            grid.innerHTML = Array(6).fill(`<div class="sk" style="width:100%;aspect-ratio:16/9;border-radius:10px"></div>`).join('');
             const decade = DECADES.find(d => d.label === _decadeSelected);
             if (!decade) return;
             const dateParam = _decadeType === 'movie'
@@ -7686,7 +7705,7 @@
                 </div>`).join('')}</div>`;
         }
         function skeletonLandscape2(count = 6) {
-            return `<div class="skeleton-grid-2">${Array(count).fill(`<div class="sk sk-landscape"></div>`).join('')}</div>`;
+            return Array(count).fill(`<div class="sk sk-landscape"></div>`).join('');
         }
         function skeletonListCard(count = 4) {
             return Array(count).fill(`
