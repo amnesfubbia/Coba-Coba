@@ -2268,14 +2268,7 @@
                 <i class="fa-solid fa-xmark text-zinc-500 text-xs cursor-pointer" id="searchClearBtn" style="display:none;padding-left:6px" onclick="clearSearch()"></i>
                 <div id="smartSearchDropdown" class="no-scrollbar"></div>
             </div>
-            <div id="searchFilterToggleBtn" onclick="handleSearchFilterBtn()" style="
-                width:36px;height:36px;border-radius:10px;background:#1a1a1a;
-                border:1px solid #2a2a2a;display:flex;align-items:center;justify-content:center;
-                cursor:pointer;flex-shrink:0;transition:all 0.2s;position:relative;
-                -webkit-tap-highlight-color:transparent;">
-                <i class="fa-solid fa-sliders" style="font-size:14px;color:#aaa"></i>
-                <div id="searchFilterDot" style="display:none;position:absolute;top:5px;right:5px;width:7px;height:7px;background:#fff;border-radius:50%;border:1.5px solid #000"></div>
-            </div>
+            <div id="searchFilterToggleBtn" style="display:none"></div>
         </div>
         <!-- Search type tabs (tampil saat ada hasil) -->
         <div id="searchTypeTabs" style="display:none; border-bottom:1px solid #1c1c1c; background:#000; position:sticky; top:54px; z-index:90; flex-direction:row;">
@@ -2315,7 +2308,12 @@
                 <div id="decadeGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:8px"></div>
             </div>
         </div>
-        <!-- Search filter pills -->
+        <!-- Search filter pills (hidden) -->
+        <div id="searchFilterBar" style="display:none">
+            <select id="searchYearFilter" onchange="applySearchFilters()"></select>
+            <select id="searchGenreFilter" onchange="applySearchFilters()"><option value="">All Genres</option></select>
+            <select id="searchTypeFilter" onchange="applySearchFilters()"><option value="">All Types</option></select>
+        </div>
         <div id="searchContent" style="display:none; flex-direction:column;">
             <div id="calendarHeader" class="hidden sticky-wrapper"></div>
             <div id="searchGrid" class="movie-grid"></div>
@@ -3644,6 +3642,9 @@
             // Landscape overlay
             if (document.getElementById('landscapeOverlay').style.display === 'block') {
                 closeLandscapeSilently();
+                // Pastikan modal film tetap tampil setelah keluar landscape
+                const mm = document.getElementById('movieModal');
+                if (mm) { mm.style.display = 'block'; document.body.style.overflow = 'hidden'; }
                 return;
             }
 
@@ -4077,11 +4078,8 @@
                         card.className = 'actor-film-card';
                         card.onclick = () => openModalFromActor(m.id, 'movie');
                         const _fBackdrop = m.backdrop_path || m.poster_path;
-                        const _fThumb = _fBackdrop
-                            ? `<img class="actor-film-thumb" src="https://image.tmdb.org/t/p/w500${_fBackdrop}" loading="lazy" onload="this.classList.add('loaded')" onerror="this.style.display='none'">`
-                            : `<div class="actor-film-thumb loaded" style="background:#1a1a1a;display:flex;align-items:center;justify-content:center"><i class="fa-solid fa-film" style="color:#2a2a2a;font-size:20px"></i></div>`;
                         card.innerHTML = `
-                            ${_fThumb}
+                            <img class="actor-film-thumb" src="https://image.tmdb.org/t/p/w500${_fBackdrop}" loading="lazy" onload="this.classList.add('loaded')">
                             <div class="actor-film-overlay"></div>
                             <div class="actor-film-info">
                                 <div class="actor-film-title" id="aft-${m.id}-movie">${_fTitle}</div>
@@ -4131,11 +4129,8 @@
                         card.className = 'actor-film-card';
                         card.onclick = () => openModalFromActor(m.id, 'tv');
                         const _tBackdrop = m.backdrop_path || m.poster_path;
-                        const _tThumb = _tBackdrop
-                            ? `<img class="actor-film-thumb" src="https://image.tmdb.org/t/p/w500${_tBackdrop}" loading="lazy" onload="this.classList.add('loaded')" onerror="this.style.display='none'">`
-                            : `<div class="actor-film-thumb loaded" style="background:#1a1a1a;display:flex;align-items:center;justify-content:center"><i class="fa-solid fa-tv" style="color:#2a2a2a;font-size:20px"></i></div>`;
                         card.innerHTML = `
-                            ${_tThumb}
+                            <img class="actor-film-thumb" src="https://image.tmdb.org/t/p/w500${_tBackdrop}" loading="lazy" onload="this.classList.add('loaded')">
                             <div class="actor-film-overlay"></div>
                             <div class="actor-film-info">
                                 <div class="actor-film-title" id="aft-${m.id}-tv">${_tTitle}</div>
@@ -5244,19 +5239,15 @@
                 // Untuk setiap item, pastikan judul Latin
                 const renderItems = data.results.map(async m => {
                     let title = m.title || m.name || '';
-                    const origTitle = m.original_title || m.original_name || '';
                     if (isNonLatin(title)) {
-                        if (origTitle && !isNonLatin(origTitle)) {
-                            title = origTitle;
-                        } else {
-                            try {
-                                const enM = await fetchWithCache(`https://api.themoviedb.org/3/${mediaType}/${m.id}?api_key=${API_KEY}&language=en-US`);
-                                const enT = enM.title || enM.name || '';
-                                const enOrig = enM.original_title || enM.original_name || '';
-                                if (enT && !isNonLatin(enT)) title = enT;
-                                else if (enOrig && !isNonLatin(enOrig)) title = enOrig;
-                            } catch {}
-                        }
+                        try {
+                            const enM = await fetchWithCache(`https://api.themoviedb.org/3/${mediaType}/${m.id}?api_key=${API_KEY}&language=en-US`);
+                            const enT = enM.title || enM.name || '';
+                            const origT = enM.original_title || enM.original_name || '';
+                            if (enT && !isNonLatin(enT)) title = enT;
+                            else if (origT && !isNonLatin(origT)) title = origT;
+                            else title = enT || origT || title;
+                        } catch {}
                     }
                     const releaseDate = m.release_date || m.first_air_date || '';
                     const year = releaseDate.split('-')[0];
@@ -6735,20 +6726,17 @@
             });
         }
         let _scrollTicking = false;
-        // Modal scroll listeners — wrapped in DOMContentLoaded to ensure elements exist
-        document.addEventListener('DOMContentLoaded', () => {
-            const movieModalEl = document.getElementById('movieModal');
-            if (movieModalEl) movieModalEl.addEventListener('scroll', () => {
-                const btn = document.getElementById('modalBackToTop');
-                if (btn) btn.style.display = movieModalEl.scrollTop > 400 ? 'flex' : 'none';
-            }, { passive: true });
+        // Modal film scroll listener untuk back-to-top
+        document.getElementById('movieModal').addEventListener('scroll', () => {
+            const btn = document.getElementById('modalBackToTop');
+            if (btn) btn.style.display = document.getElementById('movieModal').scrollTop > 400 ? 'flex' : 'none';
+        }, { passive: true });
 
-            const actorModalEl = document.getElementById('actorModal');
-            if (actorModalEl) actorModalEl.addEventListener('scroll', () => {
-                const btn = document.getElementById('actorBackToTop');
-                if (btn) btn.style.display = actorModalEl.scrollTop > 400 ? 'flex' : 'none';
-            }, { passive: true });
-        });
+        // Actor modal scroll listener untuk back-to-top
+        document.getElementById('actorModal').addEventListener('scroll', () => {
+            const btn = document.getElementById('actorBackToTop');
+            if (btn) btn.style.display = document.getElementById('actorModal').scrollTop > 400 ? 'flex' : 'none';
+        }, { passive: true });
 
         window.onscroll = () => {
             if (_scrollTicking) return;
@@ -6994,19 +6982,14 @@
                 // Resolve latin titles async
                 const resolveTitle = async (m) => {
                     let title = m.title || m.name || '';
-                    const origTitle = m.original_title || m.original_name || '';
                     if (isNonLatin(title)) {
-                        if (origTitle && !isNonLatin(origTitle)) {
-                            title = origTitle;
-                        } else {
-                            try {
-                                const en = await fetchWithCache(`https://api.themoviedb.org/3/${m._mtype}/${m.id}?api_key=${API_KEY}&language=en-US`);
-                                const enT = en.title || en.name || '';
-                                const enOrig = en.original_title || en.original_name || '';
-                                if (enT && !isNonLatin(enT)) title = enT;
-                                else if (enOrig && !isNonLatin(enOrig)) title = enOrig;
-                            } catch {}
-                        }
+                        try {
+                            const en = await fetchWithCache(`https://api.themoviedb.org/3/${m._mtype}/${m.id}?api_key=${API_KEY}&language=en-US`);
+                            const enT = en.title || en.name || '';
+                            const origT = en.original_title || en.original_name || '';
+                            if (enT && !isNonLatin(enT)) title = enT;
+                            else if (origT && !isNonLatin(origT)) title = origT;
+                        } catch {}
                     }
                     return { ...m, _resolvedTitle: title };
                 };
@@ -7019,7 +7002,7 @@
                     html2 += movieResolved.map(m => {
                         const rating = (m.vote_average||0).toFixed(1);
                         return `<div class="notif-item" onclick="closeNotif(); openModal(${m.id},'${m._mtype}')">
-                            <img class="notif-poster" src="https://image.tmdb.org/t/p/w185${m.poster_path}" loading="lazy" onload="this.style.opacity=1" onerror="this.style.display='none'">
+                            <img class="notif-poster" src="https://image.tmdb.org/t/p/w185${m.poster_path}" loading="lazy" onload="this.style.opacity=1">
                             <div class="notif-info">
                                 <div class="notif-title">${m._resolvedTitle}</div>
                                 <div class="notif-meta">Movie · Released today</div>
@@ -7032,7 +7015,7 @@
                     html2 += tvResolved.map(m => {
                         const rating = (m.vote_average||0).toFixed(1);
                         return `<div class="notif-item" onclick="closeNotif(); openModal(${m.id},'tv')">
-                            <img class="notif-poster" src="https://image.tmdb.org/t/p/w185${m.poster_path}" loading="lazy" onload="this.style.opacity=1" onerror="this.style.display='none'">
+                            <img class="notif-poster" src="https://image.tmdb.org/t/p/w185${m.poster_path}" loading="lazy" onload="this.style.opacity=1">
                             <div class="notif-info">
                                 <div class="notif-title">${m._resolvedTitle}</div>
                                 <div class="notif-meta">Series · Airing today</div>
@@ -7283,7 +7266,7 @@
                     const badge = m._src === 'director'
                         ? `<div style="position:absolute;top:4px;left:4px;background:rgba(0,0,0,0.85);color:#ccc;font-size:7px;font-weight:700;padding:2px 5px;border-radius:3px;line-height:1.3;max-width:70px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">By ${m._dirName}</div>` : '';
                     return `<div class="similar-card" onclick="openModal(${m.id}, '${type}')">
-                        <img class="similar-poster" src="https://image.tmdb.org/t/p/w342${m.poster_path}" loading="lazy" onload="this.classList.add('loaded')" onerror="this.style.display='none'">
+                        <img class="similar-poster" src="https://image.tmdb.org/t/p/w342${m.poster_path}" loading="lazy" onload="this.classList.add('loaded')">
                         ${badge}
                         <div class="similar-card-overlay">
                             <div class="similar-card-title">${title}</div>
@@ -7524,6 +7507,12 @@
         ];
 
         function handleSearchFilterBtn() {
+            // Jika sedang mode search hasil → toggle filter bar biasa
+            if (window._isSearchMode) {
+                toggleSearchFilterBar();
+                return;
+            }
+            // Jika idle → buka decade modal
             openDecadeModal();
         }
 
