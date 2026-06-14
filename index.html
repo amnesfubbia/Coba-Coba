@@ -2793,50 +2793,59 @@
         }
 
         function initModalSwipeGestures() {
-            // ── 1. CALENDAR: swipe kiri/kanan → Movie/Series tab ─────────
-            const calContent = document.getElementById('searchContent');
-            addSwipe(calContent,
-                () => { const tv = document.getElementById('calTabTv'); if (tv && !tv.classList.contains('active')) tv.click(); },
-                () => { const mv = document.getElementById('calTabMovie'); if (mv && !mv.classList.contains('active')) mv.click(); }
-            );
+            // Calendar swipe di-attach langsung setelah render (lihat openCalendarModal)
 
-            // ── 2. DECADE MODAL: swipe kiri/kanan → Movies/Series tab ────
-            const decadeModal = document.getElementById('decadeModal');
-            addSwipe(decadeModal,
+            // ── 2. DECADE MODAL ──────────────────────────────────────────
+            // Area TAB (Movies/Series pill) → swipe ganti tab
+            // Area DECADE CHIP ROW → scroll dekade saja (tidak di-intercept)
+            // Area GRID → swipe ganti tab
+            const dcTabPills = document.getElementById('dcTypeMovie')?.parentElement;
+            addSwipe(dcTabPills,
+                () => { const btn = document.getElementById('dcTypeTV'); if (btn && !btn.classList.contains('active')) btn.click(); },
+                () => { const btn = document.getElementById('dcTypeMovie'); if (btn && !btn.classList.contains('active')) btn.click(); }
+            );
+            // Juga attach ke grid area (bukan decade chip row)
+            const decadeGridEl = document.getElementById('decadeGrid');
+            addSwipe(decadeGridEl,
                 () => { const btn = document.getElementById('dcTypeTV'); if (btn && !btn.classList.contains('active')) btn.click(); },
                 () => { const btn = document.getElementById('dcTypeMovie'); if (btn && !btn.classList.contains('active')) btn.click(); }
             );
 
             // ── 3. SEARCH EXPLORE: swipe kiri/kanan → Trending/Genres/New ─
-            const exploreEmpty = document.getElementById('searchEmptyState');
+            const exploreTabBar = document.querySelector('#searchEmptyState .search-tabs');
+            const exploreContent = document.getElementById('exploreGrid');
             const EXPLORE_TABS = ['trending', 'genres', 'new'];
-            addSwipe(exploreEmpty,
-                () => {
-                    const cur = EXPLORE_TABS.indexOf(_currentExploreTab || 'trending');
-                    if (cur < EXPLORE_TABS.length - 1) {
-                        const next = EXPLORE_TABS[cur + 1];
-                        const el2 = document.getElementById('exploreTab-' + next);
-                        if (el2) switchExploreTab(next, el2);
-                    }
-                },
-                () => {
-                    const cur = EXPLORE_TABS.indexOf(_currentExploreTab || 'trending');
-                    if (cur > 0) {
-                        const prev = EXPLORE_TABS[cur - 1];
-                        const el2 = document.getElementById('exploreTab-' + prev);
-                        if (el2) switchExploreTab(prev, el2);
-                    }
-                }
-            );
+            function swipeExploreLeft() {
+                const cur = EXPLORE_TABS.indexOf(_currentExploreTab || 'trending');
+                if (cur < EXPLORE_TABS.length - 1) { const n = EXPLORE_TABS[cur+1]; switchExploreTab(n, document.getElementById('exploreTab-'+n)); }
+            }
+            function swipeExploreRight() {
+                const cur = EXPLORE_TABS.indexOf(_currentExploreTab || 'trending');
+                if (cur > 0) { const p = EXPLORE_TABS[cur-1]; switchExploreTab(p, document.getElementById('exploreTab-'+p)); }
+            }
+            addSwipe(exploreTabBar, swipeExploreLeft, swipeExploreRight);
+            addSwipe(exploreContent, swipeExploreLeft, swipeExploreRight);
 
-            // ── 4. ACTOR MODAL: swipe kiri/kanan → grid/TV tab ───────────
-            const actorModal = document.getElementById('actorModal');
-            addSwipe(actorModal,
+            // ── 4. ACTOR MODAL ───────────────────────────────────────────
+            // Tab nav bar → swipe ganti tab
+            // Known For strip → scroll bebas (tidak di-intercept)
+            // Film grid area → swipe ganti tab
+            const actorTabNav = document.querySelector('.actor-tab-nav');
+            addSwipe(actorTabNav,
                 () => { if (!document.getElementById('actorTabReels').classList.contains('active')) switchActorTab('tv'); },
                 () => { if (!document.getElementById('actorTabGrid').classList.contains('active')) switchActorTab('grid'); }
             );
+            addSwipe(document.getElementById('actorMovieGrid'),
+                () => { if (!document.getElementById('actorTabReels').classList.contains('active')) switchActorTab('tv'); },
+                () => { if (!document.getElementById('actorTabGrid').classList.contains('active')) switchActorTab('grid'); }
+            );
+            addSwipe(document.getElementById('actorTvGrid'),
+                () => { if (!document.getElementById('actorTabGrid').classList.contains('active')) switchActorTab('grid'); },
+                () => { if (!document.getElementById('actorTabReels').classList.contains('active')) switchActorTab('tv'); }
+            );
 
             // ── 5. HOME: swipe kiri/kanan → Grid/Likes/Bookmarks ─────────
+            // Attach ke mainProfile tapi EXCLUDE modal & search & horizontal scroll areas
             const mainProfile = document.getElementById('mainProfile');
             const HOME_TABS = ['grid', 'likes', 'bookmarks'];
             const HOME_IDS  = ['tabGrid', 'tabLikes', 'tabBookmark'];
@@ -2845,22 +2854,18 @@
                 () => {
                     if (document.getElementById('movieModal').style.display === 'block') return;
                     if (document.getElementById('searchOverlay').style.display === 'block') return;
+                    if (document.getElementById('actorModal').classList.contains('open')) return;
                     const cur = HOME_TABS.indexOf(_currentHomeTab);
-                    if (cur < HOME_TABS.length - 1) {
-                        _currentHomeTab = HOME_TABS[cur + 1];
-                        document.getElementById(HOME_IDS[cur + 1]).click();
-                    }
+                    if (cur < HOME_TABS.length - 1) { _currentHomeTab = HOME_TABS[cur+1]; document.getElementById(HOME_IDS[cur+1]).click(); }
                 },
                 () => {
                     if (document.getElementById('movieModal').style.display === 'block') return;
                     if (document.getElementById('searchOverlay').style.display === 'block') return;
+                    if (document.getElementById('actorModal').classList.contains('open')) return;
                     const cur = HOME_TABS.indexOf(_currentHomeTab);
-                    if (cur > 0) {
-                        _currentHomeTab = HOME_TABS[cur - 1];
-                        document.getElementById(HOME_IDS[cur - 1]).click();
-                    }
+                    if (cur > 0) { _currentHomeTab = HOME_TABS[cur-1]; document.getElementById(HOME_IDS[cur-1]).click(); }
                 },
-                null, null, 60, 60
+                null, null, 40, 50
             );
             const _origSwitchTab = window.switchTab;
             window.switchTab = async function(mode, el) {
@@ -5336,6 +5341,12 @@
             headerHTML += '</div>';
             calendarHeader.innerHTML = headerHTML;
             filterByDate(new Date().toISOString().split('T')[0]);
+            // Attach swipe ke tab bar (Movie/Series) — bukan date strip
+            const _calTabParent = document.getElementById('calTabMovie')?.parentElement;
+            addSwipe(_calTabParent,
+                () => { const tv = document.getElementById('calTabTv'); if (tv && !tv.classList.contains('active')) tv.click(); },
+                () => { const mv = document.getElementById('calTabMovie'); if (mv && !mv.classList.contains('active')) mv.click(); }
+            );
         }
 
         function switchCalTab(type, el) {
