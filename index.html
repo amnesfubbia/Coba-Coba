@@ -2759,12 +2759,115 @@
 
         window.onload = () => {
             initFilters(); initHighlights(); loadFeed(); setupSwipe(); initSmartSearch(); initTvChannels();
-            // Pre-load YouTube IFrame API agar sudah siap saat reels dibuka
             loadYTApi();
             window.addEventListener('scroll', () => { 
                 document.getElementById('backToTop').style.display = window.scrollY > 500 ? 'flex' : 'none'; 
-            }); 
+            });
+            initModalSwipeGestures();
         };
+
+        // ===== SWIPE GESTURES FOR MODALS =====
+        function addSwipe(el, onLeft, onRight, onUp, onDown, minDist = 45, maxPerp = 80) {
+            if (!el) return;
+            let sx = 0, sy = 0, active = false;
+            el.addEventListener('touchstart', e => {
+                if (e.touches.length !== 1) return;
+                sx = e.touches[0].clientX;
+                sy = e.touches[0].clientY;
+                active = true;
+            }, { passive: true });
+            el.addEventListener('touchend', e => {
+                if (!active) return;
+                active = false;
+                const dx = e.changedTouches[0].clientX - sx;
+                const dy = e.changedTouches[0].clientY - sy;
+                const adx = Math.abs(dx), ady = Math.abs(dy);
+                if (adx > ady && adx >= minDist && ady <= maxPerp) {
+                    if (dx < 0 && onLeft) onLeft();
+                    else if (dx > 0 && onRight) onRight();
+                } else if (ady > adx && ady >= minDist && adx <= maxPerp) {
+                    if (dy < 0 && onUp) onUp();
+                    else if (dy > 0 && onDown) onDown();
+                }
+            }, { passive: true });
+        }
+
+        function initModalSwipeGestures() {
+            // ── 1. CALENDAR: swipe kiri/kanan → Movie/Series tab ─────────
+            const calContent = document.getElementById('searchContent');
+            addSwipe(calContent,
+                () => { const tv = document.getElementById('calTabTv'); if (tv && !tv.classList.contains('active')) tv.click(); },
+                () => { const mv = document.getElementById('calTabMovie'); if (mv && !mv.classList.contains('active')) mv.click(); }
+            );
+
+            // ── 2. DECADE MODAL: swipe kiri/kanan → Movies/Series tab ────
+            const decadeModal = document.getElementById('decadeModal');
+            addSwipe(decadeModal,
+                () => { const btn = document.getElementById('dcTypeTV'); if (btn && !btn.classList.contains('active')) btn.click(); },
+                () => { const btn = document.getElementById('dcTypeMovie'); if (btn && !btn.classList.contains('active')) btn.click(); }
+            );
+
+            // ── 3. SEARCH EXPLORE: swipe kiri/kanan → Trending/Genres/New ─
+            const exploreEmpty = document.getElementById('searchEmptyState');
+            const EXPLORE_TABS = ['trending', 'genres', 'new'];
+            addSwipe(exploreEmpty,
+                () => {
+                    const cur = EXPLORE_TABS.indexOf(_currentExploreTab || 'trending');
+                    if (cur < EXPLORE_TABS.length - 1) {
+                        const next = EXPLORE_TABS[cur + 1];
+                        const el2 = document.getElementById('exploreTab-' + next);
+                        if (el2) switchExploreTab(next, el2);
+                    }
+                },
+                () => {
+                    const cur = EXPLORE_TABS.indexOf(_currentExploreTab || 'trending');
+                    if (cur > 0) {
+                        const prev = EXPLORE_TABS[cur - 1];
+                        const el2 = document.getElementById('exploreTab-' + prev);
+                        if (el2) switchExploreTab(prev, el2);
+                    }
+                }
+            );
+
+            // ── 4. ACTOR MODAL: swipe kiri/kanan → grid/TV tab ───────────
+            const actorModal = document.getElementById('actorModal');
+            addSwipe(actorModal,
+                () => { if (!document.getElementById('actorTabReels').classList.contains('active')) switchActorTab('tv'); },
+                () => { if (!document.getElementById('actorTabGrid').classList.contains('active')) switchActorTab('grid'); }
+            );
+
+            // ── 5. HOME: swipe kiri/kanan → Grid/Likes/Bookmarks ─────────
+            const mainProfile = document.getElementById('mainProfile');
+            const HOME_TABS = ['grid', 'likes', 'bookmarks'];
+            const HOME_IDS  = ['tabGrid', 'tabLikes', 'tabBookmark'];
+            let _currentHomeTab = 'grid';
+            addSwipe(mainProfile,
+                () => {
+                    if (document.getElementById('movieModal').style.display === 'block') return;
+                    if (document.getElementById('searchOverlay').style.display === 'block') return;
+                    const cur = HOME_TABS.indexOf(_currentHomeTab);
+                    if (cur < HOME_TABS.length - 1) {
+                        _currentHomeTab = HOME_TABS[cur + 1];
+                        document.getElementById(HOME_IDS[cur + 1]).click();
+                    }
+                },
+                () => {
+                    if (document.getElementById('movieModal').style.display === 'block') return;
+                    if (document.getElementById('searchOverlay').style.display === 'block') return;
+                    const cur = HOME_TABS.indexOf(_currentHomeTab);
+                    if (cur > 0) {
+                        _currentHomeTab = HOME_TABS[cur - 1];
+                        document.getElementById(HOME_IDS[cur - 1]).click();
+                    }
+                },
+                null, null, 60, 60
+            );
+            const _origSwitchTab = window.switchTab;
+            window.switchTab = async function(mode, el) {
+                if (HOME_TABS.includes(mode)) _currentHomeTab = mode;
+                return _origSwitchTab(mode, el);
+            };
+        }
 
         // --- TV MODAL LOGIC ---
         const tvCategories = [
