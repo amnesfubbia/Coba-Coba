@@ -2767,8 +2767,8 @@
         };
 
         // ===== SWIPE GESTURES FOR MODALS =====
-        // Swipe helper — threshold lebih rendah, ratio ketat agar tidak konflik scroll
-        function addSwipe(el, onLeft, onRight, onUp, onDown, minDist = 30, maxRatio = 2.5) {
+        // Swipe helper — threshold 25px, ratio 2.0
+        function addSwipe(el, onLeft, onRight, onUp, onDown, minDist = 25, maxRatio = 2.0) {
             if (!el) return;
             let sx = 0, sy = 0;
             el.addEventListener('touchstart', e => {
@@ -2790,30 +2790,45 @@
             }, { passive: true });
         }
 
+        // ── HOME TAB STATE ────────────────────────────────────────────────
+        const HOME_TABS = ['grid','likes','bookmarks'];
+        const HOME_IDS  = ['tabGrid','tabLikes','tabBookmark'];
+        let _curHomeTab = 'grid';
+
+        function setHomeTab(mode) {
+            if (!HOME_TABS.includes(mode)) return;
+            _curHomeTab = mode;
+            // update tab indicator
+            HOME_IDS.forEach((id, i) => {
+                const el = document.getElementById(id);
+                if (el) el.classList.toggle('active', HOME_TABS[i] === mode);
+            });
+            // selalu matikan semua highlight border
+            document.querySelectorAll('.highlight-item').forEach(i => i.classList.remove('active-hl'));
+        }
+
         function initModalSwipeGestures() {
             // Calendar: di-attach setelah render — lihat openCalendarModal()
 
-            // ── DECADE: tab pills + grid ──────────────────────────────────
+            // ── DECADE ────────────────────────────────────────────────────
             const dcSwL = () => { const b = document.getElementById('dcTypeTV');    if (b && !b.classList.contains('active')) b.click(); };
             const dcSwR = () => { const b = document.getElementById('dcTypeMovie'); if (b && !b.classList.contains('active')) b.click(); };
             addSwipe(document.getElementById('dcTypeMovie')?.parentElement, dcSwL, dcSwR);
             addSwipe(document.getElementById('decadeGrid'), dcSwL, dcSwR);
 
-            // ── SEARCH EXPLORE: tab bar + grid ────────────────────────────
+            // ── SEARCH EXPLORE ────────────────────────────────────────────
             const ETABS = ['trending','genres','new'];
             const exL = () => { const c=ETABS.indexOf(_currentExploreTab||'trending'); if(c<ETABS.length-1){const n=ETABS[c+1];switchExploreTab(n,document.getElementById('exploreTab-'+n));} };
             const exR = () => { const c=ETABS.indexOf(_currentExploreTab||'trending'); if(c>0){const p=ETABS[c-1];switchExploreTab(p,document.getElementById('exploreTab-'+p));} };
             addSwipe(document.getElementById('exploreGrid'), exL, exR);
             addSwipe(document.querySelector('#searchEmptyState .search-tabs'), exL, exR);
 
-            // ── ACTOR: seluruh modal body kecuali known-for strip ─────────
+            // ── ACTOR ─────────────────────────────────────────────────────
             const acSwL = () => { if (!document.getElementById('actorTabReels').classList.contains('active')) switchActorTab('tv'); };
             const acSwR = () => { if (!document.getElementById('actorTabGrid').classList.contains('active'))  switchActorTab('grid'); };
-            // Attach ke actor modal tapi intercept di touchstart untuk exclude known-for
             const actorModal = document.getElementById('actorModal');
             let _acExclude = false;
             actorModal.addEventListener('touchstart', e => {
-                // cek apakah touch di dalam known-for wrapper
                 _acExclude = !!e.target.closest('#actorKnownForWrapper');
             }, { passive: true });
             addSwipe(actorModal,
@@ -2821,52 +2836,50 @@
                 () => { if (!_acExclude) acSwR(); }
             );
 
-            // ── HOME: feedGrid, sensitif, aware tab/highlight ─────────────
-            const HOME_TABS = ['grid','likes','bookmarks'];
-            const HOME_IDS  = ['tabGrid','tabLikes','tabBookmark'];
-            let _curHomeTab = 'grid';
-            let _hlActive = false;
+            // ── HOME ──────────────────────────────────────────────────────
+            // Satu touchstart listener, satu touchend listener, di mainProfile
+            const mainProfile = document.getElementById('mainProfile');
+            let _hsx = 0, _hsy = 0, _hSkip = false;
 
-            // highlight dipilih → matikan tab glow, set flag
+            mainProfile.addEventListener('touchstart', e => {
+                if (e.touches.length !== 1) { _hSkip = true; return; }
+                _hsx = e.touches[0].clientX;
+                _hsy = e.touches[0].clientY;
+                // skip jika touch di area yang tidak relevan
+                _hSkip =
+                    !!e.target.closest('#highlightList') ||
+                    !!e.target.closest('#recentlyViewedWrapper') ||
+                    !!e.target.closest('#filterBar') ||
+                    document.getElementById('movieModal').style.display === 'block' ||
+                    document.getElementById('searchOverlay').style.display === 'block' ||
+                    document.getElementById('actorModal').classList.contains('open');
+            }, { passive: true });
+
+            mainProfile.addEventListener('touchend', e => {
+                if (_hSkip) return;
+                const dx = e.changedTouches[0].clientX - _hsx;
+                const dy = e.changedTouches[0].clientY - _hsy;
+                const adx = Math.abs(dx), ady = Math.abs(dy);
+                if (adx >= 25 && adx >= ady * 2.0) {
+                    const c = HOME_TABS.indexOf(_curHomeTab);
+                    if (dx < 0 && c < HOME_TABS.length - 1) {
+                        document.getElementById(HOME_IDS[c + 1]).click();
+                    } else if (dx > 0 && c > 0) {
+                        document.getElementById(HOME_IDS[c - 1]).click();
+                    }
+                }
+            }, { passive: true });
+
+            // highlight diklik → matikan tab indicator saja, swipe TETAP aktif
             document.getElementById('highlightList').addEventListener('click', e => {
                 if (!e.target.closest('.highlight-item')) return;
-                _hlActive = true;
-                document.querySelectorAll('#mainProfile .tab-item').forEach(t => t.classList.remove('active'));
+                HOME_IDS.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.classList.remove('active');
+                });
+                // reset _curHomeTab ke grid agar swipe berikutnya mulai dari awal
+                _curHomeTab = 'grid';
             });
-            // tab diklik → aktifkan kembali
-            document.querySelectorAll('#mainProfile .tab-item').forEach(t => {
-                t.addEventListener('click', () => { _hlActive = false; });
-            });
-
-            const homeSwL = () => {
-                if (_hlActive) return;
-                if (document.getElementById('movieModal').style.display==='block') return;
-                if (document.getElementById('searchOverlay').style.display==='block') return;
-                if (document.getElementById('actorModal').classList.contains('open')) return;
-                const c = HOME_TABS.indexOf(_curHomeTab);
-                if (c < HOME_TABS.length-1) { _curHomeTab=HOME_TABS[c+1]; document.getElementById(HOME_IDS[c+1]).click(); }
-            };
-            const homeSwR = () => {
-                if (_hlActive) return;
-                if (document.getElementById('movieModal').style.display==='block') return;
-                if (document.getElementById('searchOverlay').style.display==='block') return;
-                if (document.getElementById('actorModal').classList.contains('open')) return;
-                const c = HOME_TABS.indexOf(_curHomeTab);
-                if (c > 0) { _curHomeTab=HOME_TABS[c-1]; document.getElementById(HOME_IDS[c-1]).click(); }
-            };
-            // Attach ke feedGrid + tab nav bar — exclude highlight & recently viewed area
-            let _homeExclude = false;
-            document.getElementById('mainProfile').addEventListener('touchstart', e => {
-                _homeExclude = !!e.target.closest('#highlightList') || !!e.target.closest('#recentlyViewedWrapper');
-            }, { passive: true });
-            addSwipe(document.getElementById('feedGrid'), homeSwL, homeSwR, null, null, 28);
-            addSwipe(document.querySelector('#mainProfile .tab-nav'), homeSwL, homeSwR, null, null, 28);
-
-            const _orig = window.switchTab;
-            window.switchTab = async function(mode, el) {
-                if (HOME_TABS.includes(mode)) { _curHomeTab = mode; _hlActive = false; }
-                return _orig(mode, el);
-            };
         }
 
         // --- TV MODAL LOGIC ---
@@ -6863,8 +6876,13 @@
         function toggleLib(k) { let items = JSON.parse(localStorage.getItem(k) || '[]'); const idx = items.findIndex(x => x.id == window.currentMediaId); idx > -1 ? items.splice(idx,1) : items.push({id: window.currentMediaId, type: window.currentMediaType}); localStorage.setItem(k, JSON.stringify(items)); updateLibButtons(window.currentMediaId); }
         async function switchTab(mode, el) { 
             closeModal(); closeSearch(); closeActorModal(); closeTvModal(); 
-            document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active')); 
-            if(el) el.classList.add('active'); 
+            // setHomeTab handles tab indicator + highlight border clear
+            if (typeof setHomeTab === 'function' && HOME_TABS.includes(mode)) {
+                setHomeTab(mode);
+            } else {
+                document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+                if (el) el.classList.add('active');
+            }
             if(mode === 'bookmarks') updateActiveNav(document.getElementById('bookmarkBtnNav')); 
             else updateActiveNav(document.getElementById('homeBtnNav'));
             const grid = document.getElementById('feedGrid'); grid.innerHTML = ''; 
