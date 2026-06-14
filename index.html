@@ -2845,13 +2845,26 @@
             );
 
             // ── 5. HOME: swipe kiri/kanan → Grid/Likes/Bookmarks ─────────
-            // Attach ke mainProfile tapi EXCLUDE modal & search & horizontal scroll areas
+            // EXCLUDE: area highlight & recently viewed
             const mainProfile = document.getElementById('mainProfile');
             const HOME_TABS = ['grid', 'likes', 'bookmarks'];
             const HOME_IDS  = ['tabGrid', 'tabLikes', 'tabBookmark'];
             let _currentHomeTab = 'grid';
-            addSwipe(mainProfile,
+            let _homeSwipeEnabled = true; // dinonaktifkan saat highlight aktif
+
+            // Saat highlight diklik → nonaktifkan swipe home & sembunyikan tab indicator
+            document.getElementById('highlightList').addEventListener('click', () => {
+                _homeSwipeEnabled = false;
+                document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+            });
+            // Saat tab nav diklik → aktifkan kembali swipe home
+            document.querySelectorAll('.tab-item').forEach(t => {
+                t.addEventListener('click', () => { _homeSwipeEnabled = true; });
+            });
+
+            addSwipe(document.getElementById('feedGrid'),
                 () => {
+                    if (!_homeSwipeEnabled) return;
                     if (document.getElementById('movieModal').style.display === 'block') return;
                     if (document.getElementById('searchOverlay').style.display === 'block') return;
                     if (document.getElementById('actorModal').classList.contains('open')) return;
@@ -2859,6 +2872,7 @@
                     if (cur < HOME_TABS.length - 1) { _currentHomeTab = HOME_TABS[cur+1]; document.getElementById(HOME_IDS[cur+1]).click(); }
                 },
                 () => {
+                    if (!_homeSwipeEnabled) return;
                     if (document.getElementById('movieModal').style.display === 'block') return;
                     if (document.getElementById('searchOverlay').style.display === 'block') return;
                     if (document.getElementById('actorModal').classList.contains('open')) return;
@@ -2869,7 +2883,7 @@
             );
             const _origSwitchTab = window.switchTab;
             window.switchTab = async function(mode, el) {
-                if (HOME_TABS.includes(mode)) _currentHomeTab = mode;
+                if (HOME_TABS.includes(mode)) { _currentHomeTab = mode; _homeSwipeEnabled = true; }
                 return _origSwitchTab(mode, el);
             };
         }
@@ -5341,11 +5355,31 @@
             headerHTML += '</div>';
             calendarHeader.innerHTML = headerHTML;
             filterByDate(new Date().toISOString().split('T')[0]);
-            // Attach swipe ke tab bar (Movie/Series) — bukan date strip
+            // Swipe pada TAB BAR (Movie/Series) → ganti tab
             const _calTabParent = document.getElementById('calTabMovie')?.parentElement;
             addSwipe(_calTabParent,
                 () => { const tv = document.getElementById('calTabTv'); if (tv && !tv.classList.contains('active')) tv.click(); },
                 () => { const mv = document.getElementById('calTabMovie'); if (mv && !mv.classList.contains('active')) mv.click(); }
+            );
+            // Swipe pada AREA KONTEN (bawah date strip) → ganti tab juga
+            const _calList = document.getElementById('calendarList');
+            addSwipe(_calList,
+                () => { const tv = document.getElementById('calTabTv'); if (tv && !tv.classList.contains('active')) tv.click(); },
+                () => { const mv = document.getElementById('calTabMovie'); if (mv && !mv.classList.contains('active')) mv.click(); }
+            );
+            // Swipe pada DATE STRIP → ganti tanggal (bukan tab)
+            const _calDateStrip = document.getElementById('calDateStrip');
+            addSwipe(_calDateStrip,
+                () => { // kiri → tanggal berikutnya
+                    const chips = [...document.querySelectorAll('.date-chip')];
+                    const cur = chips.findIndex(c => c.classList.contains('active-date'));
+                    if (cur < chips.length - 1) chips[cur + 1].click();
+                },
+                () => { // kanan → tanggal sebelumnya
+                    const chips = [...document.querySelectorAll('.date-chip')];
+                    const cur = chips.findIndex(c => c.classList.contains('active-date'));
+                    if (cur > 0) chips[cur - 1].click();
+                }
             );
         }
 
