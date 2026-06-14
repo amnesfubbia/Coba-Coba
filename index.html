@@ -2767,25 +2767,23 @@
         };
 
         // ===== SWIPE GESTURES FOR MODALS =====
-        function addSwipe(el, onLeft, onRight, onUp, onDown, minDist = 45, maxPerp = 80) {
+        // Swipe helper — threshold lebih rendah, ratio ketat agar tidak konflik scroll
+        function addSwipe(el, onLeft, onRight, onUp, onDown, minDist = 30, maxRatio = 2.5) {
             if (!el) return;
-            let sx = 0, sy = 0, active = false;
+            let sx = 0, sy = 0;
             el.addEventListener('touchstart', e => {
                 if (e.touches.length !== 1) return;
                 sx = e.touches[0].clientX;
                 sy = e.touches[0].clientY;
-                active = true;
             }, { passive: true });
             el.addEventListener('touchend', e => {
-                if (!active) return;
-                active = false;
                 const dx = e.changedTouches[0].clientX - sx;
                 const dy = e.changedTouches[0].clientY - sy;
                 const adx = Math.abs(dx), ady = Math.abs(dy);
-                if (adx > ady && adx >= minDist && ady <= maxPerp) {
+                if (adx >= minDist && adx >= ady * maxRatio) {
                     if (dx < 0 && onLeft) onLeft();
                     else if (dx > 0 && onRight) onRight();
-                } else if (ady > adx && ady >= minDist && adx <= maxPerp) {
+                } else if (ady >= minDist && ady >= adx * maxRatio) {
                     if (dy < 0 && onUp) onUp();
                     else if (dy > 0 && onDown) onDown();
                 }
@@ -2793,98 +2791,81 @@
         }
 
         function initModalSwipeGestures() {
-            // Calendar swipe di-attach langsung setelah render (lihat openCalendarModal)
+            // Calendar: di-attach setelah render — lihat openCalendarModal()
 
-            // ── 2. DECADE MODAL ──────────────────────────────────────────
-            // Area TAB (Movies/Series pill) → swipe ganti tab
-            // Area DECADE CHIP ROW → scroll dekade saja (tidak di-intercept)
-            // Area GRID → swipe ganti tab
-            const dcTabPills = document.getElementById('dcTypeMovie')?.parentElement;
-            addSwipe(dcTabPills,
-                () => { const btn = document.getElementById('dcTypeTV'); if (btn && !btn.classList.contains('active')) btn.click(); },
-                () => { const btn = document.getElementById('dcTypeMovie'); if (btn && !btn.classList.contains('active')) btn.click(); }
-            );
-            // Juga attach ke grid area (bukan decade chip row)
-            const decadeGridEl = document.getElementById('decadeGrid');
-            addSwipe(decadeGridEl,
-                () => { const btn = document.getElementById('dcTypeTV'); if (btn && !btn.classList.contains('active')) btn.click(); },
-                () => { const btn = document.getElementById('dcTypeMovie'); if (btn && !btn.classList.contains('active')) btn.click(); }
-            );
+            // ── DECADE: tab pills + grid ──────────────────────────────────
+            const dcSwL = () => { const b = document.getElementById('dcTypeTV');    if (b && !b.classList.contains('active')) b.click(); };
+            const dcSwR = () => { const b = document.getElementById('dcTypeMovie'); if (b && !b.classList.contains('active')) b.click(); };
+            addSwipe(document.getElementById('dcTypeMovie')?.parentElement, dcSwL, dcSwR);
+            addSwipe(document.getElementById('decadeGrid'), dcSwL, dcSwR);
 
-            // ── 3. SEARCH EXPLORE: swipe kiri/kanan → Trending/Genres/New ─
-            const exploreTabBar = document.querySelector('#searchEmptyState .search-tabs');
-            const exploreContent = document.getElementById('exploreGrid');
-            const EXPLORE_TABS = ['trending', 'genres', 'new'];
-            function swipeExploreLeft() {
-                const cur = EXPLORE_TABS.indexOf(_currentExploreTab || 'trending');
-                if (cur < EXPLORE_TABS.length - 1) { const n = EXPLORE_TABS[cur+1]; switchExploreTab(n, document.getElementById('exploreTab-'+n)); }
-            }
-            function swipeExploreRight() {
-                const cur = EXPLORE_TABS.indexOf(_currentExploreTab || 'trending');
-                if (cur > 0) { const p = EXPLORE_TABS[cur-1]; switchExploreTab(p, document.getElementById('exploreTab-'+p)); }
-            }
-            addSwipe(exploreTabBar, swipeExploreLeft, swipeExploreRight);
-            addSwipe(exploreContent, swipeExploreLeft, swipeExploreRight);
+            // ── SEARCH EXPLORE: tab bar + grid ────────────────────────────
+            const ETABS = ['trending','genres','new'];
+            const exL = () => { const c=ETABS.indexOf(_currentExploreTab||'trending'); if(c<ETABS.length-1){const n=ETABS[c+1];switchExploreTab(n,document.getElementById('exploreTab-'+n));} };
+            const exR = () => { const c=ETABS.indexOf(_currentExploreTab||'trending'); if(c>0){const p=ETABS[c-1];switchExploreTab(p,document.getElementById('exploreTab-'+p));} };
+            addSwipe(document.getElementById('exploreGrid'), exL, exR);
+            addSwipe(document.querySelector('#searchEmptyState .search-tabs'), exL, exR);
 
-            // ── 4. ACTOR MODAL ───────────────────────────────────────────
-            // Tab nav bar → swipe ganti tab
-            // Known For strip → scroll bebas (tidak di-intercept)
-            // Film grid area → swipe ganti tab
-            const actorTabNav = document.querySelector('.actor-tab-nav');
-            addSwipe(actorTabNav,
-                () => { if (!document.getElementById('actorTabReels').classList.contains('active')) switchActorTab('tv'); },
-                () => { if (!document.getElementById('actorTabGrid').classList.contains('active')) switchActorTab('grid'); }
-            );
-            addSwipe(document.getElementById('actorMovieGrid'),
-                () => { if (!document.getElementById('actorTabReels').classList.contains('active')) switchActorTab('tv'); },
-                () => { if (!document.getElementById('actorTabGrid').classList.contains('active')) switchActorTab('grid'); }
-            );
-            addSwipe(document.getElementById('actorTvGrid'),
-                () => { if (!document.getElementById('actorTabGrid').classList.contains('active')) switchActorTab('grid'); },
-                () => { if (!document.getElementById('actorTabReels').classList.contains('active')) switchActorTab('tv'); }
+            // ── ACTOR: seluruh modal body kecuali known-for strip ─────────
+            const acSwL = () => { if (!document.getElementById('actorTabReels').classList.contains('active')) switchActorTab('tv'); };
+            const acSwR = () => { if (!document.getElementById('actorTabGrid').classList.contains('active'))  switchActorTab('grid'); };
+            // Attach ke actor modal tapi intercept di touchstart untuk exclude known-for
+            const actorModal = document.getElementById('actorModal');
+            let _acExclude = false;
+            actorModal.addEventListener('touchstart', e => {
+                // cek apakah touch di dalam known-for wrapper
+                _acExclude = !!e.target.closest('#actorKnownForWrapper');
+            }, { passive: true });
+            addSwipe(actorModal,
+                () => { if (!_acExclude) acSwL(); },
+                () => { if (!_acExclude) acSwR(); }
             );
 
-            // ── 5. HOME: swipe kiri/kanan → Grid/Likes/Bookmarks ─────────
-            // EXCLUDE: area highlight & recently viewed
-            const mainProfile = document.getElementById('mainProfile');
-            const HOME_TABS = ['grid', 'likes', 'bookmarks'];
-            const HOME_IDS  = ['tabGrid', 'tabLikes', 'tabBookmark'];
-            let _currentHomeTab = 'grid';
-            let _homeSwipeEnabled = true; // dinonaktifkan saat highlight aktif
+            // ── HOME: feedGrid, sensitif, aware tab/highlight ─────────────
+            const HOME_TABS = ['grid','likes','bookmarks'];
+            const HOME_IDS  = ['tabGrid','tabLikes','tabBookmark'];
+            let _curHomeTab = 'grid';
+            let _hlActive = false;
 
-            // Saat highlight diklik → nonaktifkan swipe home & sembunyikan tab indicator
-            document.getElementById('highlightList').addEventListener('click', () => {
-                _homeSwipeEnabled = false;
-                document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+            // highlight dipilih → matikan tab glow, set flag
+            document.getElementById('highlightList').addEventListener('click', e => {
+                if (!e.target.closest('.highlight-item')) return;
+                _hlActive = true;
+                document.querySelectorAll('#mainProfile .tab-item').forEach(t => t.classList.remove('active'));
             });
-            // Saat tab nav diklik → aktifkan kembali swipe home
-            document.querySelectorAll('.tab-item').forEach(t => {
-                t.addEventListener('click', () => { _homeSwipeEnabled = true; });
+            // tab diklik → aktifkan kembali
+            document.querySelectorAll('#mainProfile .tab-item').forEach(t => {
+                t.addEventListener('click', () => { _hlActive = false; });
             });
 
-            addSwipe(document.getElementById('feedGrid'),
-                () => {
-                    if (!_homeSwipeEnabled) return;
-                    if (document.getElementById('movieModal').style.display === 'block') return;
-                    if (document.getElementById('searchOverlay').style.display === 'block') return;
-                    if (document.getElementById('actorModal').classList.contains('open')) return;
-                    const cur = HOME_TABS.indexOf(_currentHomeTab);
-                    if (cur < HOME_TABS.length - 1) { _currentHomeTab = HOME_TABS[cur+1]; document.getElementById(HOME_IDS[cur+1]).click(); }
-                },
-                () => {
-                    if (!_homeSwipeEnabled) return;
-                    if (document.getElementById('movieModal').style.display === 'block') return;
-                    if (document.getElementById('searchOverlay').style.display === 'block') return;
-                    if (document.getElementById('actorModal').classList.contains('open')) return;
-                    const cur = HOME_TABS.indexOf(_currentHomeTab);
-                    if (cur > 0) { _currentHomeTab = HOME_TABS[cur-1]; document.getElementById(HOME_IDS[cur-1]).click(); }
-                },
-                null, null, 40, 50
-            );
-            const _origSwitchTab = window.switchTab;
+            const homeSwL = () => {
+                if (_hlActive) return;
+                if (document.getElementById('movieModal').style.display==='block') return;
+                if (document.getElementById('searchOverlay').style.display==='block') return;
+                if (document.getElementById('actorModal').classList.contains('open')) return;
+                const c = HOME_TABS.indexOf(_curHomeTab);
+                if (c < HOME_TABS.length-1) { _curHomeTab=HOME_TABS[c+1]; document.getElementById(HOME_IDS[c+1]).click(); }
+            };
+            const homeSwR = () => {
+                if (_hlActive) return;
+                if (document.getElementById('movieModal').style.display==='block') return;
+                if (document.getElementById('searchOverlay').style.display==='block') return;
+                if (document.getElementById('actorModal').classList.contains('open')) return;
+                const c = HOME_TABS.indexOf(_curHomeTab);
+                if (c > 0) { _curHomeTab=HOME_TABS[c-1]; document.getElementById(HOME_IDS[c-1]).click(); }
+            };
+            // Attach ke feedGrid + tab nav bar — exclude highlight & recently viewed area
+            let _homeExclude = false;
+            document.getElementById('mainProfile').addEventListener('touchstart', e => {
+                _homeExclude = !!e.target.closest('#highlightList') || !!e.target.closest('#recentlyViewedWrapper');
+            }, { passive: true });
+            addSwipe(document.getElementById('feedGrid'), homeSwL, homeSwR, null, null, 28);
+            addSwipe(document.querySelector('#mainProfile .tab-nav'), homeSwL, homeSwR, null, null, 28);
+
+            const _orig = window.switchTab;
             window.switchTab = async function(mode, el) {
-                if (HOME_TABS.includes(mode)) { _currentHomeTab = mode; _homeSwipeEnabled = true; }
-                return _origSwitchTab(mode, el);
+                if (HOME_TABS.includes(mode)) { _curHomeTab = mode; _hlActive = false; }
+                return _orig(mode, el);
             };
         }
 
@@ -5367,18 +5348,27 @@
                 () => { const tv = document.getElementById('calTabTv'); if (tv && !tv.classList.contains('active')) tv.click(); },
                 () => { const mv = document.getElementById('calTabMovie'); if (mv && !mv.classList.contains('active')) mv.click(); }
             );
-            // Swipe pada DATE STRIP → ganti tanggal (bukan tab)
+            // Swipe pada DATE STRIP → hanya geser highlight chip, TIDAK load konten
+            // Konten baru load saat chip di-TAP
             const _calDateStrip = document.getElementById('calDateStrip');
             addSwipe(_calDateStrip,
-                () => { // kiri → tanggal berikutnya
+                () => { // kiri → highlight chip berikutnya (tanpa load)
                     const chips = [...document.querySelectorAll('.date-chip')];
                     const cur = chips.findIndex(c => c.classList.contains('active-date'));
-                    if (cur < chips.length - 1) chips[cur + 1].click();
+                    if (cur < chips.length - 1) {
+                        chips.forEach(c => c.classList.remove('active-date'));
+                        chips[cur + 1].classList.add('active-date');
+                        chips[cur + 1].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                    }
                 },
-                () => { // kanan → tanggal sebelumnya
+                () => { // kanan → highlight chip sebelumnya (tanpa load)
                     const chips = [...document.querySelectorAll('.date-chip')];
                     const cur = chips.findIndex(c => c.classList.contains('active-date'));
-                    if (cur > 0) chips[cur - 1].click();
+                    if (cur > 0) {
+                        chips.forEach(c => c.classList.remove('active-date'));
+                        chips[cur - 1].classList.add('active-date');
+                        chips[cur - 1].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                    }
                 }
             );
         }
