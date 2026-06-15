@@ -6452,9 +6452,10 @@
             const _genreIds = (dId.genres || []).map(g => g.id);
             loadSimilarMovies(id, type, _genreIds);
 
-            // Collection/Franchise (movie only)
-            if (type === 'movie' && dId.belongs_to_collection) {
-                loadCollection(dId.belongs_to_collection.id, id);
+            // Collection/Franchise (movie only) — gunakan dEn karena belongs_to_collection hanya ada di en-US
+            if (type === 'movie' && (dEn.belongs_to_collection || dId.belongs_to_collection)) {
+                const collData = dEn.belongs_to_collection || dId.belongs_to_collection;
+                loadCollection(collData.id, id);
             }
 
             // Poster gallery (non-blocking)
