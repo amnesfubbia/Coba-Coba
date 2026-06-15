@@ -5360,9 +5360,24 @@
         }
 
         let calendarMediaType = 'movie';
+        // Cache genre map agar tidak fetch ulang setiap ganti tanggal/tab
+        const _calGenreCache = { movie: null, tv: null };
+        async function getGenreMap(type) {
+            if (_calGenreCache[type]) return _calGenreCache[type];
+            try {
+                const res = await fetch(`https://api.themoviedb.org/3/genre/${type}/list?api_key=${API_KEY}&language=en-US`);
+                const data = await res.json();
+                const map = {};
+                data.genres.forEach(g => map[g.id] = g.name);
+                _calGenreCache[type] = map;
+                return map;
+            } catch (_) { return {}; }
+        }
 
         async function openComingSoon() {
             calendarMediaType = 'movie'; // reset tiap buka
+            // prefetch genre map movie+tv sekaligus agar tidak fetch saat ganti tab
+            getGenreMap('movie'); getGenreMap('tv');
             const overlay = document.getElementById('searchOverlay');
             const calendarHeader = document.getElementById('calendarHeader');
             overlay.style.display = 'block';
@@ -5465,14 +5480,9 @@
                     return;
                 }
 
-                // genre map — non-fatal jika gagal
+                // genre map — dari cache, tidak fetch ulang jika sudah ada
                 const gEndpoint = mediaType === 'tv' ? 'tv' : 'movie';
-                let genreMap = {};
-                try {
-                    const gRes = await fetch(`https://api.themoviedb.org/3/genre/${gEndpoint}/list?api_key=${API_KEY}&language=en-US`);
-                    const gData = await gRes.json();
-                    gData.genres.forEach(g => genreMap[g.id] = g.name);
-                } catch (_) {}
+                const genreMap = await getGenreMap(gEndpoint);
 
                 list.innerHTML = '';
                 const renderItems = data.results.map(async m => {
