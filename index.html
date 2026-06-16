@@ -7310,7 +7310,8 @@
             else updateActiveNav(document.getElementById('homeBtnNav'));
             const grid = document.getElementById('feedGrid'); grid.innerHTML = ''; 
             if(mode === 'likes' || mode === 'bookmarks') { 
-                currentLibMode = true; 
+                currentLibMode = true;
+                _resetFilterPills();
                 history.pushState({view: mode}, '');
                 showLibrary(mode); 
             } else { 
