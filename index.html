@@ -4040,14 +4040,6 @@
             }
 
             // Actor modal
-            if (window._actorManualClose) {
-                window._actorManualClose = false;
-                // Restore movieModal jika actor dibuka dari film
-                if (document.getElementById('movieModal').style.display === 'block') {
-                    document.body.style.overflow = 'hidden';
-                }
-                return;
-            }
             if (document.getElementById('actorModal').style.display === 'block') {
                 _closeActorModalSilent();
                 return;
@@ -4063,24 +4055,6 @@
                 document.getElementById('tvModal').style.display = 'block';
                 document.getElementById('tvModal').scrollTop = 0;
                 document.body.style.overflow = 'hidden';
-                return;
-            }
-
-            // closeModal() tombol ← layar sudah handle — skip agar tidak double
-            if (window._modalManualClose) {
-                window._modalManualClose = false;
-                // Restore actor/movieografi jika perlu
-                if (window._fromMovieografi) {
-                    window._fromMovieografi = false;
-                    document.getElementById('movieografiModal').style.display = 'block';
-                    document.getElementById('movieografiModal').scrollTop = 0;
-                    document.body.style.overflow = 'hidden';
-                } else if (window._actorModalPendingReopen) {
-                    window._actorModalPendingReopen = null;
-                    document.getElementById('actorModal').style.display = 'block';
-                    document.getElementById('actorModal').scrollTop = 0;
-                    document.body.style.overflow = 'hidden';
-                }
                 return;
             }
 
@@ -4636,7 +4610,6 @@
         }
 
         function closeActorModal() {
-            window._actorManualClose = true; // flag agar popstate tidak double-handle
             document.getElementById('actorModal').style.display = 'none';
             if (document.getElementById('movieModal').style.display === 'block') {
                 const track = document.getElementById('carouselTrack');
@@ -4650,10 +4623,11 @@
                     }
                 });
                 document.body.style.overflow = 'hidden';
+                history.replaceState({view: 'modal'}, '');
             } else {
                 document.body.style.overflow = 'auto';
+                history.replaceState({view: 'home'}, '');
             }
-            history.back(); // pop state 'actor' agar stack bersih
         }
 
         // Buka modal film dari dalam actorModal (poster diklik)
@@ -6953,12 +6927,27 @@
                 document.body.style.overflow = 'hidden';
                 history.replaceState({view: 'tv'}, '');
             } else {
-                closeModal();
+                // Tombol ← layar: sembunyikan modal dulu, lalu pop state
+                _closeModalSilent();
+                // Restore actor/movieografi jika film dibuka dari sana
+                if (window._fromMovieografi) {
+                    window._fromMovieografi = false;
+                    document.getElementById('movieografiModal').style.display = 'block';
+                    document.getElementById('movieografiModal').scrollTop = 0;
+                    document.body.style.overflow = 'hidden';
+                } else if (window._actorModalPendingReopen) {
+                    window._actorModalPendingReopen = null;
+                    document.getElementById('actorModal').style.display = 'block';
+                    document.getElementById('actorModal').scrollTop = 0;
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    document.body.style.overflow = 'auto';
+                }
+                history.back(); // pop state 'modal' — AMAN, hanya dari tombol ←
             }
         }
 
         function closeModal() {
-            window._modalManualClose = true; // flag agar popstate tidak double-handle
             const track = document.getElementById('carouselTrack'); 
             if(track) { 
                 track.querySelectorAll('iframe').forEach(f => { f.src = ""; f.remove(); }); 
@@ -6973,7 +6962,6 @@
             modal.classList.remove('tv-mode');
             modal.style.display = 'none';
             document.body.style.overflow = 'auto';
-            history.back(); // pop state 'modal' agar stack bersih
             // Restore ig-post-content ke struktur asli jika sebelumnya TV mode
             const postContent = document.querySelector('#movieModal .ig-post-content');
             if (postContent && document.getElementById('tvChannelSwitcher')) {
