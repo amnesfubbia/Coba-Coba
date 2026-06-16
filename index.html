@@ -6857,7 +6857,11 @@
             const _genreIds = (dId.genres || []).map(g => g.id);
             loadSimilarMovies(id, type, _genreIds);
 
-            // Collection/Franchise (movie only) — gunakan dEn karena belongs_to_collection hanya ada di en-US
+            // Collection/Franchise (movie only) — clear dulu sebelum load baru
+            const _csSec = document.getElementById('mCollectionSection');
+            const _csScr = document.getElementById('mCollectionScroll');
+            if (_csSec) { _csSec.style.display = 'none'; }
+            if (_csScr) { _csScr.innerHTML = ''; }
             if (type === 'movie' && (dEn.belongs_to_collection || dId.belongs_to_collection)) {
                 const collData = dEn.belongs_to_collection || dId.belongs_to_collection;
                 loadCollection(collData.id, id);
