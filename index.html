@@ -272,7 +272,7 @@
         .ig-caption { font-size: 13px; line-height: 1.4; color: #efefef; }
         
         .toggle-btn { display: block; color: #a8a8a8; cursor: pointer; font-size: 13px; margin-top: 4px; font-weight: 500; }
-        #mTranslateBtn { font-size: 11px; color: #fff; font-weight: 700; cursor: pointer; display: inline-block; }
+        #mTranslateBtn { font-size: 11px; color: #fff; font-weight: 700; cursor: pointer; }
         
         .ig-hashtags { color: #e0f1ff; display: block; margin-top: 4px; font-size: 13px; line-height: 1.4; }
         .ig-date { color: #a8a8a8; font-size: 11px; text-transform: uppercase; }
@@ -703,6 +703,76 @@
             transition: background 0.2s;
         }
         .actor-btn-follow:active { background: #363636; }
+
+        /* Modal Movieografi */
+        #movieografiModal {
+            display: none; position: fixed; inset: 0; z-index: 8500;
+            background: #000; overflow-y: auto; -webkit-overflow-scrolling: touch;
+        }
+        .mvg-header {
+            position: sticky; top: 0; background: #000; z-index: 10;
+            border-bottom: 1px solid #1a1a1a;
+            display: flex; align-items: center; padding: 0 16px; height: 54px; gap: 14px;
+        }
+        .mvg-title { font-size: 14px; font-weight: 800; color: #fff; flex: 1; }
+        .mvg-actor-name { font-size: 11px; color: #555; font-weight: 600; }
+        .mvg-tabs {
+            display: flex; border-bottom: 1px solid #1a1a1a;
+            background: #000; position: sticky; top: 54px; z-index: 9;
+        }
+        .mvg-tab {
+            flex: 1; text-align: center; padding: 10px 0;
+            font-size: 12px; font-weight: 700; color: #555;
+            cursor: pointer; border-bottom: 2px solid transparent;
+            transition: color 0.2s, border-color 0.2s;
+        }
+        .mvg-tab.active { color: #fff; border-bottom-color: #fff; }
+        .mvg-sort-row {
+            display: flex; gap: 8px; padding: 10px 16px 6px;
+            overflow-x: auto; -webkit-overflow-scrolling: touch;
+        }
+        .mvg-sort-btn {
+            padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700;
+            background: #1a1a1a; border: 1px solid #2a2a2a; color: #666;
+            cursor: pointer; white-space: nowrap; flex-shrink: 0;
+            transition: all 0.15s; -webkit-tap-highlight-color: transparent;
+        }
+        .mvg-sort-btn.active { background: #fff; color: #000; border-color: #fff; }
+        .mvg-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 2px; padding: 2px;
+        }
+        .mvg-card {
+            position: relative; aspect-ratio: 2/3; background: #111; overflow: hidden;
+            cursor: pointer;
+        }
+        .mvg-card img {
+            width: 100%; height: 100%; object-fit: cover;
+            opacity: 0; transition: opacity 0.3s;
+        }
+        .mvg-card-overlay {
+            position: absolute; bottom: 0; left: 0; right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.85));
+            padding: 18px 6px 6px;
+        }
+        .mvg-card-title {
+            font-size: 10px; font-weight: 700; color: #fff;
+            line-height: 1.3; overflow: hidden; display: -webkit-box;
+            -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+        }
+        .mvg-card-year {
+            font-size: 9px; color: #aaa; margin-top: 2px;
+        }
+        .mvg-card-rating {
+            font-size: 9px; color: #f5c518; font-weight: 700;
+        }
+        .mvg-empty {
+            text-align: center; padding: 60px 20px; color: #444; font-size: 13px;
+        }
+        .mvg-count-badge {
+            font-size: 10px; color: #555; font-weight: 600;
+            padding: 4px 16px 8px; display: block;
+        }
         .actor-btn-msg {
             flex: 1; background: #262626; color: #fff;
             font-size: 13px; font-weight: 600;
@@ -757,15 +827,16 @@
 
         /* Tab nav (posts / reels style) */
         .actor-tab-nav {
-            display: flex; border-top: 1px solid #1a1a1a;
+            display: flex; border-bottom: 1px solid #1a1a1a;
             position: sticky; top: 54px; z-index: 100;
             background: #000;
         }
         .actor-tab-item {
-            flex: 1; text-align: center; padding: 12px 0;
-            color: #8e8e8e; cursor: pointer; font-size: 18px;
-            border-bottom: 1.5px solid transparent;
+            flex: 1; text-align: center; padding: 10px 0;
+            font-size: 12px; font-weight: 700; color: #555;
+            cursor: pointer; border-bottom: 2px solid transparent;
             transition: color 0.2s, border-color 0.2s;
+            -webkit-tap-highlight-color: transparent;
         }
         .actor-tab-item.active { color: #fff; border-bottom-color: #fff; }
 
@@ -1291,6 +1362,12 @@
             text-shadow: 0 1px 3px rgba(0,0,0,0.7);
         }
         .reel-action-btn.liked i { color: #ff3b30; }
+        @keyframes heartPop {
+            0%   { transform: scale(0.3); opacity: 1; }
+            50%  { transform: scale(1.3); opacity: 1; }
+            100% { transform: scale(1.0); opacity: 0; }
+        }
+        .heart-pop-anim { animation: heartPop 0.7s ease-out forwards; }
         .reel-action-btn.bookmarked i { color: #fff; }
 
         /* Topbar reels */
@@ -2356,6 +2433,32 @@
         </div>
     </div>
 
+    <!-- Modal Movieografi -->
+    <div id="movieografiModal">
+        <div class="mvg-header">
+            <i class="fa-solid fa-chevron-left" style="font-size:18px;color:#fff;cursor:pointer" onclick="closeMovieografi()"></i>
+            <div>
+                <div class="mvg-title">Movieografi</div>
+                <div class="mvg-actor-name" id="mvgActorName"></div>
+            </div>
+            <span id="mvgCountBadge" style="font-size:10px;color:#555;font-weight:600;margin-left:auto"></span>
+        </div>
+        <div class="mvg-tabs">
+            <div class="mvg-tab active" id="mvgTabMovie" onclick="switchMvgTab('movie',this)">Movies</div>
+            <div class="mvg-tab" id="mvgTabTV" onclick="switchMvgTab('tv',this)">Series</div>
+        </div>
+        <div class="mvg-sort-row" id="mvgSortRow">
+            <div class="mvg-sort-btn active" onclick="sortMvg('popularity',this)">Populer</div>
+            <div class="mvg-sort-btn" onclick="sortMvg('year',this)">Terbaru</div>
+            <div class="mvg-sort-btn" onclick="sortMvg('rating',this)">Rating</div>
+            <div class="mvg-sort-btn" onclick="sortMvg('title',this)">A–Z</div>
+        </div>
+        <span class="mvg-count-badge" id="mvgCountLabel"></span>
+        <div class="mvg-grid" id="mvgGrid"></div>
+    </div>
+
+    <!-- Heart pop untuk double tap like -->
+    <div id="modalHeartPop" style="display:none;position:fixed;z-index:9999;pointer-events:none;font-size:72px;color:#ff3b30;filter:drop-shadow(0 0 16px #ff3b30aa)">❤️</div>
     <div id="movieModal" class="modal-player">
         <!-- Back to top button inside modal -->
         <div id="modalBackToTop" onclick="document.getElementById('movieModal').scrollTo({top:0,behavior:'smooth'})"
@@ -2406,7 +2509,7 @@
                     <span id="mDesc" class="ig-caption"></span>
                     <div class="mt-1">
                         <span id="mToggleBtn" class="toggle-btn hidden" onclick="handleToggleDesc()">more</span>
-                        <p id="mTranslateBtn" class="hidden" onclick="handleTranslate()" style="margin-top:2px;font-size:11px;color:#fff;font-weight:700;cursor:pointer;display:inline-block"></p>
+                        <p id="mTranslateBtn" onclick="handleTranslate()" style="display:none;margin-top:2px;font-size:11px;color:#fff;font-weight:700;cursor:pointer"></p>
                     </div>
                 </div>
 
@@ -2462,7 +2565,7 @@
         </div>
     </div>
 
-    <div id="actorModal" class="actor-modal">
+    <div id="actorModal" class="actor-modal" style="display:none">
         <!-- Back to top button inside actor modal -->
         <div id="actorBackToTop" onclick="document.getElementById('actorModal').scrollTo({top:0,behavior:'smooth'})"
              style="display:none;position:fixed;bottom:90px;right:20px;z-index:8600;
@@ -2518,7 +2621,7 @@
 
         <!-- Action buttons (IG style) -->
         <div class="actor-action-row">
-            <div class="actor-btn-follow" onclick="searchByCast(window._currentActorId)">Movieografi</div>
+            <div class="actor-btn-follow" onclick="openMovieografi(window._currentActorId)">Movieografi</div>
             <div class="actor-btn-msg" id="actorImdbBtn" onclick="openActorImdb()">IMDb</div>
             <div class="actor-btn-sq" onclick="openActorPhotos()" title="Foto"><i class="fa-regular fa-images"></i></div>
         </div>
@@ -2538,12 +2641,8 @@
 
         <!-- Tab nav -->
         <div class="actor-tab-nav">
-            <div class="actor-tab-item active" id="actorTabGrid" onclick="switchActorTab('grid')">
-                <i class="fa-solid fa-table-cells"></i>
-            </div>
-            <div class="actor-tab-item" id="actorTabReels" onclick="switchActorTab('tv')">
-                <i class="fa-solid fa-tv"></i>
-            </div>
+            <div class="actor-tab-item active" id="actorTabGrid" onclick="switchActorTab('grid')">Movies</div>
+            <div class="actor-tab-item" id="actorTabReels" onclick="switchActorTab('tv')">Series</div>
         </div>
 
         <!-- Movie grids -->
@@ -2911,6 +3010,44 @@
                 () => _tvSwipeChange(1),
                 () => _tvSwipeChange(-1)
             );
+
+            // ── DOUBLE TAP LIKE di movie modal ───────────────────────────
+            let _dtTimer = null, _dtLocked = false;
+            const _heartPop = document.getElementById('modalHeartPop');
+            movieModal.addEventListener('touchend', e => {
+                // Jangan trigger jika touch di area kontrol (iframe, btn, server row, episode)
+                if (e.target.closest('iframe, button, a, .server-btn, .ep-card, .ep-btn, .interaction-icon, .cast-wrapper, #tvChannelSwitcher, #actorModal')) return;
+                if (movieModal.classList.contains('tv-mode')) return;
+                if (_dtTimer) {
+                    clearTimeout(_dtTimer);
+                    _dtTimer = null;
+                    if (_dtLocked) return;
+                    _dtLocked = true;
+                    // Double tap — toggle like
+                    const likeBtn = document.getElementById('btnLikeModal');
+                    if (likeBtn) {
+                        const alreadyLiked = likeBtn.classList.contains('fa-solid');
+                        if (!alreadyLiked) {
+                            likeBtn.click();
+                            // Tampilkan heart pop animasi
+                            if (_heartPop) {
+                                const t = e.changedTouches[0];
+                                const rect = movieModal.getBoundingClientRect();
+                                _heartPop.style.left = (t.clientX - rect.left - 30) + 'px';
+                                _heartPop.style.top  = (t.clientY - rect.top  - 30) + 'px';
+                                _heartPop.style.display = 'block';
+                                _heartPop.classList.remove('heart-pop-anim');
+                                void _heartPop.offsetWidth;
+                                _heartPop.classList.add('heart-pop-anim');
+                                setTimeout(() => { _heartPop.style.display = 'none'; }, 800);
+                            }
+                        }
+                    }
+                    setTimeout(() => { _dtLocked = false; }, 600);
+                } else {
+                    _dtTimer = setTimeout(() => { _dtTimer = null; }, 300);
+                }
+            }, { passive: true });
 
             // highlight diklik → matikan tab indicator saja, swipe TETAP aktif
             document.getElementById('highlightList').addEventListener('click', e => {
@@ -3342,7 +3479,7 @@
             document.getElementById('seriesControl').classList.add('hidden');
             document.getElementById('mHashtags').innerHTML = '';
             document.getElementById('mToggleBtn').classList.add('hidden');
-            document.getElementById('mTranslateBtn').classList.add('hidden');
+            document.getElementById('mTranslateBtn').style.display = 'none';
             document.body.style.overflow = 'hidden';
             // Push 2 state: tvModal sebagai "previous", lalu modal TV channel
             if (wasTvOpen) history.pushState({view: 'tv'}, '');
@@ -3653,7 +3790,7 @@
             if (postContent && document.getElementById('tvChannelSwitcher')) {
                 postContent.innerHTML = `
                 <div class="mb-1"><span class="ig-username" id="mModalTitle"></span><span id="mDesc" class="ig-caption"></span>
-                <div class="mt-1"><span id="mToggleBtn" class="toggle-btn hidden" onclick="handleToggleDesc()">more</span><p id="mTranslateBtn" class="hidden" onclick="handleTranslate()" style="margin-top:2px;font-size:11px;color:#fff;font-weight:700;cursor:pointer;display:inline-block"></p></div></div>
+                <div class="mt-1"><span id="mToggleBtn" class="toggle-btn hidden" onclick="handleToggleDesc()">more</span><p id="mTranslateBtn" onclick="handleTranslate()" style="display:none;margin-top:2px;font-size:11px;color:#fff;font-weight:700;cursor:pointer"></p></div></div>
                 <div id="mInfoGrid" class="minfo-grid" style="display:none"></div>
                 <div id="mPosterGallery" class="poster-gallery-section" style="display:none">
                     <span class="poster-gallery-label">Poster & Images</span>
@@ -4534,8 +4671,8 @@
             try {
                 // Ambil film trending — gabung movie + tv untuk variasi konten
                 const [movRes, tvRes] = await Promise.allSettled([
-                    fetch(`https://api.themoviedb.org/3/trending/movie/week?api_key=${API_KEY}&language=en-US&page=${_reelsPage}`).then(r => r.json()),
-                    fetch(`https://api.themoviedb.org/3/trending/tv/week?api_key=${API_KEY}&language=en-US&page=${_reelsPage}`).then(r => r.json())
+                    fetchWithCache(`https://api.themoviedb.org/3/trending/movie/week?api_key=${API_KEY}&language=en-US&page=${_reelsPage}`),
+                    fetchWithCache(`https://api.themoviedb.org/3/trending/tv/week?api_key=${API_KEY}&language=en-US&page=${_reelsPage}`)
                 ]);
 
                 const movies = (movRes.status === 'fulfilled' ? movRes.value.results || [] : []).map(m => ({...m, _mtype: 'movie'}));
@@ -5332,8 +5469,8 @@
                 if(q.length < 2) { drop.style.display = 'none'; return; } 
                 timeout = setTimeout(async () => { 
                     try { 
-                        const res = await fetch(`https://api.themoviedb.org/3/search/multi?query=${encodeURIComponent(q)}&api_key=${API_KEY}`); 
-                        const data = await res.json(); 
+                        const data = await fetchWithCache(`https://api.themoviedb.org/3/search/multi?query=${encodeURIComponent(q)}&api_key=${API_KEY}`); 
+                        
                         const results = (data.results || []).slice(0, 5); 
                         if(results.length) { 
                             drop.innerHTML = results.map(m => {
@@ -5365,8 +5502,7 @@
         async function getGenreMap(type) {
             if (_calGenreCache[type]) return _calGenreCache[type];
             try {
-                const res = await fetch(`https://api.themoviedb.org/3/genre/${type}/list?api_key=${API_KEY}&language=en-US`);
-                const data = await res.json();
+                const data = await fetchWithCache(`https://api.themoviedb.org/3/genre/${type}/list?api_key=${API_KEY}&language=en-US`);
                 const map = {};
                 data.genres.forEach(g => map[g.id] = g.name);
                 _calGenreCache[type] = map;
@@ -5467,8 +5603,7 @@
                 } else {
                     apiUrl = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&language=en-US&sort_by=popularity.desc&primary_release_date.gte=${dateStr}&primary_release_date.lte=${dateStr}&include_adult=false`;
                 }
-                const res = await fetch(apiUrl);
-                const data = await res.json();
+                const data = await fetchWithCache(apiUrl);
 
                 if (!data.results || data.results.length === 0) {
                     const typeLabel = mediaType === 'tv' ? 'serial' : 'film';
@@ -5547,7 +5682,127 @@
             showSearchResults();
             document.body.style.overflow='hidden'; 
             history.pushState({view: 'search'}, "");
-            loadFeed(true); 
+            loadFeed(true);
+        }
+
+        // ── MOVIEOGRAFI MODAL ─────────────────────────────────────────────
+        let _mvgMovies = [], _mvgTVs = [], _mvgCurrentTab = 'movie', _mvgCurrentSort = 'popularity';
+
+        async function openMovieografi(actorId) {
+            if (!actorId) return;
+            const modal = document.getElementById('movieografiModal');
+            modal.style.display = 'block';
+            modal.scrollTop = 0;
+            document.body.style.overflow = 'hidden';
+            history.pushState({view: 'movieografi'}, "");
+
+            // Reset UI
+            document.getElementById('mvgGrid').innerHTML = skeletonGrid(9);
+            document.getElementById('mvgActorName').innerText = '';
+            document.getElementById('mvgCountLabel').innerText = '';
+            document.getElementById('mvgCountBadge').innerText = '';
+            _mvgCurrentTab = 'movie'; _mvgCurrentSort = 'popularity';
+            document.querySelectorAll('.mvg-tab').forEach(t => t.classList.remove('active'));
+            document.getElementById('mvgTabMovie').classList.add('active');
+            document.querySelectorAll('.mvg-sort-btn').forEach(b => b.classList.remove('active'));
+            document.querySelector('.mvg-sort-btn').classList.add('active');
+
+            try {
+                const [details, credits] = await Promise.all([
+                    fetchWithCache(`https://api.themoviedb.org/3/person/${actorId}?api_key=${API_KEY}&language=id-ID`),
+                    fetchWithCache(`https://api.themoviedb.org/3/person/${actorId}/combined_credits?api_key=${API_KEY}&language=en-US`)
+                ]);
+
+                // Nama aktor
+                let name = details.name;
+                if (isNonLatin(name)) {
+                    const aka = details.also_known_as || [];
+                    const latin = aka.find(n => n && !isNonLatin(n));
+                    if (latin) name = latin;
+                }
+                document.getElementById('mvgActorName').innerText = name;
+
+                // Filter unique credits with poster
+                const seen = new Set();
+                const all = (credits.cast || []).filter(c => {
+                    if (!c.poster_path || seen.has(c.id)) return false;
+                    seen.add(c.id); return true;
+                });
+                _mvgMovies = all.filter(c => c.media_type === 'movie');
+                _mvgTVs    = all.filter(c => c.media_type === 'tv');
+
+                renderMvgGrid();
+            } catch(e) {
+                document.getElementById('mvgGrid').innerHTML = `<div class="mvg-empty"><i class="fa-solid fa-circle-xmark" style="font-size:28px;margin-bottom:10px;display:block"></i>Gagal memuat data</div>`;
+            }
+        }
+
+        function skeletonGrid(n) {
+            return Array(n).fill(0).map(() =>
+                `<div class="mvg-card" style="background:#111;animation:pulse 1.5s infinite"></div>`
+            ).join('');
+        }
+
+        function closeMovieografi() {
+            document.getElementById('movieografiModal').style.display = 'none';
+            document.body.style.overflow = 'hidden'; // actor modal masih open
+        }
+
+        function switchMvgTab(tab, el) {
+            _mvgCurrentTab = tab;
+            document.querySelectorAll('.mvg-tab').forEach(t => t.classList.remove('active'));
+            el.classList.add('active');
+            renderMvgGrid();
+        }
+
+        function sortMvg(sort, el) {
+            _mvgCurrentSort = sort;
+            document.querySelectorAll('.mvg-sort-btn').forEach(b => b.classList.remove('active'));
+            el.classList.add('active');
+            renderMvgGrid();
+        }
+
+        function renderMvgGrid() {
+            const items = _mvgCurrentTab === 'movie' ? [..._mvgMovies] : [..._mvgTVs];
+            const label = _mvgCurrentTab === 'movie' ? 'Movie' : 'Series';
+            document.getElementById('mvgCountLabel').innerText = `${items.length} ${label}`;
+            document.getElementById('mvgCountBadge').innerText = items.length ? `${items.length}` : '';
+
+            // Sort
+            if (_mvgCurrentSort === 'popularity') items.sort((a,b) => b.popularity - a.popularity);
+            else if (_mvgCurrentSort === 'year') {
+                items.sort((a,b) => {
+                    const ay = (a.release_date || a.first_air_date || '').slice(0,4);
+                    const by = (b.release_date || b.first_air_date || '').slice(0,4);
+                    return by.localeCompare(ay);
+                });
+            }
+            else if (_mvgCurrentSort === 'rating') items.sort((a,b) => b.vote_average - a.vote_average);
+            else if (_mvgCurrentSort === 'title') {
+                items.sort((a,b) => (a.title||a.name||'').localeCompare(b.title||b.name||''));
+            }
+
+            if (!items.length) {
+                document.getElementById('mvgGrid').innerHTML = `<div class="mvg-empty" style="grid-column:1/-1"><i class="fa-solid fa-film" style="font-size:28px;margin-bottom:10px;display:block;color:#333"></i>Tidak ada ${label.toLowerCase()} ditemukan</div>`;
+                return;
+            }
+
+            document.getElementById('mvgGrid').innerHTML = items.map(c => {
+                const title = c.title || c.name || '';
+                const year  = (c.release_date || c.first_air_date || '').slice(0, 4);
+                const rating = c.vote_average > 0 ? `★ ${c.vote_average.toFixed(1)}` : '';
+                const type  = c.media_type;
+                return `<div class="mvg-card" onclick="closeMovieografi(); openModal(${c.id},'${type}')">
+                    <img src="https://image.tmdb.org/t/p/w342${c.poster_path}" loading="lazy" onload="this.style.opacity=1" alt="${title}">
+                    <div class="mvg-card-overlay">
+                        <div class="mvg-card-title">${title}</div>
+                        <div style="display:flex;justify-content:space-between;align-items:center">
+                            <div class="mvg-card-year">${year}</div>
+                            <div class="mvg-card-rating">${rating}</div>
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
         }
 
         function initHighlights() { 
@@ -5900,7 +6155,7 @@
             initExploreSection();
             document.getElementById('searchInp').value = '';
             document.getElementById('searchClearBtn').style.display = 'none';
-            document.getElementById('searchInp').focus();
+            // Tidak auto-focus agar keyboard tidak langsung muncul
             document.body.style.overflow = 'hidden';
             updateActiveNav(document.getElementById('searchBtnNav'));
             history.pushState({view: 'search'}, "");
@@ -6155,7 +6410,7 @@
             document.getElementById('carouselDots').innerHTML = "";
             document.getElementById('serverList').innerHTML = "";
             document.getElementById('mToggleBtn').classList.add('hidden');
-            document.getElementById('mTranslateBtn').classList.add('hidden');
+            document.getElementById('mTranslateBtn').style.display = 'none';
             document.getElementById('seriesControl').classList.add('hidden');
             document.getElementById('movieModal').style.display = 'block'; 
             document.getElementById('movieModal').scrollTop = 0;
@@ -6189,15 +6444,15 @@
                 if (globalEnDesc.trim() !== "" && originalIndoDesc.trim() !== "" && originalIndoDesc !== globalEnDesc) {
                     translateBtn.innerText = "See Translation";
                     translateBtn.style.display = 'inline-block';
-                    translateBtn.classList.remove('hidden');
+                    translateBtn.style.display = 'inline-block';
                 } else if (globalEnDesc.trim() !== "") {
                     // Hanya EN tersedia — tawarkan terjemahkan via Google
                     translateBtn.innerText = "See Translation";
                     translateBtn.style.display = 'inline-block';
-                    translateBtn.classList.remove('hidden');
+                    translateBtn.style.display = 'inline-block';
                 } else {
                     translateBtn.style.display = 'none';
-                    translateBtn.classList.add('hidden');
+                    translateBtn.style.display = 'none';
                 }
             };
             
@@ -6533,7 +6788,7 @@
                 <div class="mb-1">
                     <span class="ig-username" id="mModalTitle"></span>
                     <span id="mDesc" class="ig-caption"></span>
-                    <div class="mt-1"><span id="mToggleBtn" class="toggle-btn hidden" onclick="handleToggleDesc()">more</span><p id="mTranslateBtn" class="hidden" onclick="handleTranslate()" style="margin-top:2px;font-size:11px;color:#fff;font-weight:700;cursor:pointer;display:inline-block"></p></div>
+                    <div class="mt-1"><span id="mToggleBtn" class="toggle-btn hidden" onclick="handleToggleDesc()">more</span><p id="mTranslateBtn" onclick="handleTranslate()" style="display:none;margin-top:2px;font-size:11px;color:#fff;font-weight:700;cursor:pointer"></p></div>
                 </div>
                 <div id="mInfoGrid" class="minfo-grid" style="display:none"></div>
                 <div id="mPosterGallery" class="poster-gallery-section" style="display:none">
@@ -6734,7 +6989,7 @@
 
         let _allEpisodes = [];
         let _epPage = 0;
-        const EP_PER_PAGE = 10;
+        const EP_PER_PAGE = 15;
 
         async function loadEpisodes() { 
             activeSeason = document.getElementById('seasonSel').value;
@@ -6824,7 +7079,7 @@
             // Episode search
             const searchWrap = document.getElementById('episodeSearchWrap');
             if (searchWrap) {
-                searchWrap.style.display = episodes.length > 10 ? 'block' : 'none';
+                searchWrap.style.display = episodes.length > 15 ? 'block' : 'none';
                 const si = document.getElementById('episodeSearchInp');
                 if (si) si.value = '';
             }
@@ -6877,13 +7132,21 @@
         
         let _epSearchTimer = null;
         function filterEpisodes(val) {
-            // Debounce: tunggu user selesai mengetik (500ms)
+            // Debounce: tunggu user selesai mengetik (400ms)
             clearTimeout(_epSearchTimer);
             if (!val || val === '') { renderEpisodePage(); return; }
             _epSearchTimer = setTimeout(() => {
+                const q = val.trim().toLowerCase();
                 const num = parseInt(val);
-                if (isNaN(num)) return;
-                const ep = _allEpisodes.find(e => e.episode_number === num);
+
+                // Cari by nomor episode terlebih dahulu
+                let ep = !isNaN(num) ? _allEpisodes.find(e => e.episode_number === num) : null;
+
+                // Fallback: cari by nama episode (case-insensitive)
+                if (!ep) {
+                    ep = _allEpisodes.find(e => (e.name || '').toLowerCase().includes(q));
+                }
+
                 if (ep) {
                     const pageIdx = Math.floor(_allEpisodes.indexOf(ep) / EP_PER_PAGE);
                     _epPage = pageIdx;
@@ -6891,14 +7154,27 @@
                     setTimeout(() => {
                         const cards = document.querySelectorAll('#episodeGrid .ep-card');
                         cards.forEach(c => {
+                            const epNum = ep.episode_number;
                             const badge = c.querySelector('.ep-badge');
-                            if (badge && badge.innerText === `EP ${num}`) {
+                            if (badge && badge.innerText === `EP ${epNum}`) {
+                                c.style.outline = '1.5px solid #fff';
+                                c.style.borderRadius = '10px';
                                 c.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                                setTimeout(() => { c.style.outline = ''; }, 1800);
                             }
                         });
                     }, 150);
+                } else {
+                    // Tidak ada hasil — tampilkan pesan di grid
+                    const grid = document.getElementById('episodeGrid');
+                    if (grid) {
+                        grid.innerHTML = `<div style="padding:30px;text-align:center;color:#555;font-size:12px">
+                            <i class="fa-solid fa-magnifying-glass" style="font-size:20px;margin-bottom:8px;display:block;color:#333"></i>
+                            No episode found for "<span style="color:#888">${val}</span>"
+                        </div>`;
+                    }
                 }
-            }, 500);
+            }, 400);
         }
 
         function setupSwipe() { 
@@ -6951,8 +7227,18 @@
                 history.pushState({view: mode}, '');
                 showLibrary(mode); 
             } else { 
-                currentLibMode = false; currentCastId = ''; searchQuery = ''; currentType='multi'; currentSchedule='trending'; currentCompany=''; currentRating='';
-                const _btnRt = document.getElementById('btnRating'); if(_btnRt){ _btnRt.innerHTML='Rating <i class="fa-solid fa-caret-down"></i>'; _btnRt.classList.remove('active-pill'); } loadFeed(true); 
+                currentLibMode = false; currentCastId = ''; searchQuery = ''; currentType='multi'; currentSchedule='trending'; currentCompany=''; currentRating=''; currentGenre=''; currentYear=''; currentCountry='';
+                // Reset semua filter pill border
+                ['btnCountry','btnGenre','yearBtn','btnRating'].forEach(id => {
+                    const b = document.getElementById(id);
+                    if (!b) return;
+                    b.classList.remove('active-pill');
+                });
+                const _btnRt = document.getElementById('btnRating'); if(_btnRt) _btnRt.innerHTML='Rating <i class="fa-solid fa-caret-down"></i>';
+                const _btnC = document.getElementById('btnCountry'); if(_btnC) _btnC.innerHTML='Country <i class="fa-solid fa-caret-down"></i>';
+                const _btnG = document.getElementById('btnGenre'); if(_btnG) _btnG.innerHTML='Genre <i class="fa-solid fa-caret-down"></i>';
+                const _btnY = document.getElementById('yearBtn'); if(_btnY) _btnY.innerHTML='Year <i class="fa-solid fa-caret-down"></i>';
+                loadFeed(true); 
             } 
         }
         async function showLibrary(k) { 
@@ -7206,10 +7492,11 @@
             content.innerHTML = '<div class="notif-empty"><i class="fa-solid fa-spinner fa-spin"></i>Loading new releases...</div>';
 
             try {
-                // Fetch film rilis hari ini (movie + tv)
+                // Fetch film rilis hari ini (movie + tv) — pakai fetchWithCache agar tidak re-fetch
+                let usedFallback = false;
                 const [movRes, tvRes] = await Promise.allSettled([
-                    fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&language=en-US&sort_by=popularity.desc&primary_release_date.gte=${todayStr}&primary_release_date.lte=${todayStr}&include_adult=false`).then(r=>r.json()),
-                    fetch(`https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}&language=en-US&sort_by=popularity.desc&first_air_date.gte=${todayStr}&first_air_date.lte=${todayStr}&include_adult=false`).then(r=>r.json()),
+                    fetchWithCache(`https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&language=en-US&sort_by=popularity.desc&primary_release_date.gte=${todayStr}&primary_release_date.lte=${todayStr}&include_adult=false`),
+                    fetchWithCache(`https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}&language=en-US&sort_by=popularity.desc&first_air_date.gte=${todayStr}&first_air_date.lte=${todayStr}&include_adult=false`),
                 ]);
 
                 const movies = (movRes.status==='fulfilled' ? movRes.value.results||[] : []).map(m=>({...m,_mtype:'movie'}));
@@ -7218,15 +7505,19 @@
                 // Jika hari ini kosong, coba 3 hari ke belakang
                 let allItems = [...movies, ...tvs];
                 if (allItems.length === 0) {
+                    usedFallback = true;
                     const prev = new Date(Date.now() - 3*24*60*60*1000).toISOString().split('T')[0];
                     const [m2, t2] = await Promise.allSettled([
-                        fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&language=en-US&sort_by=popularity.desc&primary_release_date.gte=${prev}&primary_release_date.lte=${todayStr}&include_adult=false`).then(r=>r.json()),
-                        fetch(`https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}&language=en-US&sort_by=popularity.desc&first_air_date.gte=${prev}&first_air_date.lte=${todayStr}&include_adult=false`).then(r=>r.json()),
+                        fetchWithCache(`https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&language=en-US&sort_by=popularity.desc&primary_release_date.gte=${prev}&primary_release_date.lte=${todayStr}&include_adult=false`),
+                        fetchWithCache(`https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}&language=en-US&sort_by=popularity.desc&first_air_date.gte=${prev}&first_air_date.lte=${todayStr}&include_adult=false`),
                     ]);
                     allItems = [
                         ...(m2.status==='fulfilled'?m2.value.results||[]:[]).map(m=>({...m,_mtype:'movie'})),
                         ...(t2.status==='fulfilled'?t2.value.results||[]:[]).map(m=>({...m,_mtype:'tv'})),
                     ];
+                    // Update label badge jika pakai fallback
+                    const dateBadge = document.getElementById('notifDateBadge');
+                    if (dateBadge) dateBadge.innerText = 'Recent Releases (last 3 days)';
                 }
 
                 allItems = allItems.filter(m=>m.poster_path).sort((a,b)=>b.popularity-a.popularity);
@@ -7235,9 +7526,6 @@
                     content.innerHTML = '<div class="notif-empty"><i class="fa-regular fa-bell-slash"></i>No new releases today</div>';
                     return;
                 }
-
-                const movieItems = allItems.filter(m=>m._mtype==='movie');
-                const tvItems = allItems.filter(m=>m._mtype==='tv');
 
                 let html2 = '';
                 // Resolve latin titles async
@@ -7263,6 +7551,8 @@
                 const allResolved = await Promise.all(allItems.map(resolveTitle));
                 const movieResolved = allResolved.filter(m => m._mtype === 'movie');
                 const tvResolved = allResolved.filter(m => m._mtype === 'tv');
+                const relLabel = usedFallback ? 'Recent' : 'Released today';
+                const airLabel = usedFallback ? 'Recent' : 'Airing today';
 
                 if (movieResolved.length) {
                     html2 += `<div class="notif-section-label">🎬 Movies (${movieResolved.length})</div>`;
@@ -7272,7 +7562,7 @@
                             <img class="notif-poster" src="https://image.tmdb.org/t/p/w185${m.poster_path}" loading="lazy" onload="this.style.opacity=1">
                             <div class="notif-info">
                                 <div class="notif-title">${m._resolvedTitle}</div>
-                                <div class="notif-meta">Movie · Released today</div>
+                                <div class="notif-meta">Movie · ${relLabel}${rating > 0 ? ' · <span style="color:#f5c518;font-weight:700">★ ' + rating + '</span>' : ''}</div>
                             </div>
                             </div>`;
                     }).join('');
@@ -7285,7 +7575,7 @@
                             <img class="notif-poster" src="https://image.tmdb.org/t/p/w185${m.poster_path}" loading="lazy" onload="this.style.opacity=1">
                             <div class="notif-info">
                                 <div class="notif-title">${m._resolvedTitle}</div>
-                                <div class="notif-meta">Series · Airing today</div>
+                                <div class="notif-meta">Series · ${airLabel}${rating > 0 ? ' · <span style="color:#f5c518;font-weight:700">★ ' + rating + '</span>' : ''}</div>
                             </div>
                             </div>`;
                     }).join('');
@@ -7886,13 +8176,6 @@
                 grid.innerHTML = `<div style="grid-column:1/-1;padding:20px;text-align:center;color:#666;font-size:11px">Failed to load.</div>`;
             }
         }
-
-        // ===== DUMMY stubs — keep for safety =====
-        function initAwardFilters() {}
-        function loadAwardNominees() {}
-        function switchAwardTab() {}
-
-        const AWARD_CONFIG = {};
 
         // ===== COLLECTION / FRANCHISE =====
         async function loadCollection(collectionId, currentMovieId) {
