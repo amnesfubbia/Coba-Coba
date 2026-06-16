@@ -2355,6 +2355,7 @@
             <div class="search-tab active" id="stab-all" onclick="setSearchTab('multi',this)">All</div>
             <div class="search-tab" id="stab-movie" onclick="setSearchTab('movie',this)">Movie</div>
             <div class="search-tab" id="stab-tv" onclick="setSearchTab('tv',this)">Series</div>
+            <div class="search-tab" id="stab-person" onclick="setSearchTab('person',this)">Actor</div>
         </div>
         <!-- Empty/idle state -->
         <div id="searchEmptyState" style="padding:0 0 40px;">
@@ -2933,6 +2934,30 @@
             const exR = () => { const c=ETABS.indexOf(_currentExploreTab||'trending'); if(c>0){const p=ETABS[c-1];switchExploreTab(p,document.getElementById('exploreTab-'+p));} };
             addSwipe(document.getElementById('exploreGrid'), exL, exR);
             addSwipe(document.querySelector('#searchEmptyState .search-tabs'), exL, exR);
+
+            // ── SEARCH TYPE TABS swipe (All/Movie/Series/Actor) ──────────────
+            const STAB_IDS    = ['stab-all','stab-movie','stab-tv','stab-person'];
+            const STAB_TYPES  = ['multi','movie','tv','person'];
+            let _stabSx = 0, _stabSy = 0;
+            const searchTypeTabs = document.getElementById('searchTypeTabs');
+            const searchOverlay  = document.getElementById('searchOverlay');
+            searchOverlay.addEventListener('touchstart', e => {
+                if (!window._isSearchMode) return;
+                _stabSx = e.touches[0].clientX;
+                _stabSy = e.touches[0].clientY;
+            }, { passive: true });
+            searchOverlay.addEventListener('touchend', e => {
+                if (!window._isSearchMode) return;
+                if (e.target.closest('#searchGrid') === null && e.target.closest('#searchTypeTabs') === null) return;
+                const dx = e.changedTouches[0].clientX - _stabSx;
+                const dy = e.changedTouches[0].clientY - _stabSy;
+                if (Math.abs(dx) < 30 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+                const cur = STAB_TYPES.indexOf(searchTabType);
+                let next = dx < 0 ? cur + 1 : cur - 1;
+                if (next < 0 || next >= STAB_TYPES.length) return;
+                const el = document.getElementById(STAB_IDS[next]);
+                if (el) setSearchTab(STAB_TYPES[next], el);
+            }, { passive: true });
 
             // ── ACTOR ─────────────────────────────────────────────────────
             const acSwL = () => { if (!document.getElementById('actorTabReels').classList.contains('active')) switchActorTab('tv'); };
@@ -6050,7 +6075,9 @@
             let url;
             if(currentCastId) { url = `https://api.themoviedb.org/3/person/${currentCastId}/combined_credits?api_key=${API_KEY}&language=en-US`; }
             else if(searchQuery) { 
-                if (searchTabType === 'multi' || searchTabType === 'person') {
+                if (searchTabType === 'person') {
+                    url = `https://api.themoviedb.org/3/search/person?query=${encodeURIComponent(searchQuery)}&api_key=${API_KEY}&page=${page}&include_adult=false`;
+                } else if (searchTabType === 'multi') {
                     url = `https://api.themoviedb.org/3/search/multi?query=${encodeURIComponent(searchQuery)}&api_key=${API_KEY}&page=${page}&include_adult=false`;
                 } else {
                     url = `https://api.themoviedb.org/3/search/${searchTabType}?query=${encodeURIComponent(searchQuery)}&api_key=${API_KEY}&page=${page}&include_adult=false`;
@@ -6139,7 +6166,34 @@
             // Dedup: kumpulkan ID yang sudah ada di grid
             const existingIds = new Set();
             grid.querySelectorAll('.post-card[data-id]').forEach(c => existingIds.add(c.dataset.id));
-            items.forEach(m => { 
+            items.forEach(m => {
+                // Tab Actor: render aktor card
+                if (searchTabType === 'person' || m.media_type === 'person') {
+                    if (searchTabType !== 'person') return; // di tab All/Movie/Series skip person
+                    if (!m.profile_path && !m.poster_path) return;
+                    if (existingIds.has(String(m.id))) return;
+                    existingIds.add(String(m.id));
+                    const card = document.createElement('div');
+                    card.className = 'post-card';
+                    card.dataset.id = m.id;
+                    card.onclick = function() { openActorProfile(m.id); };
+                    const imgSrc = m.profile_path
+                        ? `https://image.tmdb.org/t/p/w185${m.profile_path}`
+                        : `https://image.tmdb.org/t/p/w185${m.poster_path}`;
+                    const dept = m.known_for_department || 'Acting';
+                    let knownFor = '';
+                    if (m.known_for && m.known_for.length) {
+                        knownFor = m.known_for.map(k => k.title || k.name || '').filter(Boolean).slice(0,2).join(', ');
+                    }
+                    card.innerHTML = `<img src="${imgSrc}" loading="lazy" onload="this.style.opacity=1" style="opacity:0">
+                        <div class="card-title-overlay">
+                            <div class="card-title-text">${m.name || ''}</div>
+                            <div class="card-meta-row"><span class="card-type-label">${dept}</span></div>
+                            ${knownFor ? `<div style="font-size:9px;color:#aaa;margin-top:2px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">${knownFor}</div>` : ''}
+                        </div>`;
+                    fragment.appendChild(card);
+                    return;
+                }
                 if(!m.poster_path || m.media_type === 'person') return;
                 if(existingIds.has(String(m.id))) return; // skip duplikat
                 existingIds.add(String(m.id));
@@ -6285,6 +6339,11 @@
             if(isActive) { currentSchedule = 'trending'; } 
             else { el.classList.add('active'); currentSchedule = v; }
             if(currentType === 'multi') currentType = 'movie';
+            // Sync stat-item agar konsisten dengan currentType
+            document.querySelectorAll('.stat-item').forEach(s => s.classList.remove('active-stat'));
+            const statMap = { movie: 'stat-movie', tv: 'stat-tv', short: 'stat-short' };
+            const statEl = document.getElementById(statMap[currentType]);
+            if (statEl) statEl.classList.add('active-stat');
             loadFeed(true); 
         }
 
@@ -7761,33 +7820,7 @@
         }
 
         // ===== THEME TOGGLE (disabled - UI removed) =====
-        function toggleTheme() {
-            const isLight = document.body.classList.toggle('light-theme');
-            localStorage.setItem('amnesTheme', isLight ? 'light' : 'dark');
-            _applyThemeUI(isLight);
-        }
 
-        function _applyThemeUI(isLight) {
-            const lbl = document.getElementById('themeLabel');
-            const thumb = document.getElementById('themeToggleThumb');
-            const sw = document.getElementById('themeToggleSwitch');
-            const icon = document.getElementById('themeIcon');
-            if (lbl) lbl.innerText = isLight ? 'Terang' : 'Gelap';
-            if (thumb) { thumb.style.left = isLight ? '22px' : '4px'; thumb.style.background = isLight ? '#fff' : '#555'; }
-            if (sw) sw.style.background = isLight ? '#4caf7d' : '#1a1a1a';
-            if (icon) { icon.className = isLight ? 'fa-solid fa-sun' : 'fa-solid fa-moon'; icon.style.color = isLight ? '#ffca28' : '#aaa'; }
-            // Update meta theme-color
-            const metaTheme = document.querySelector('meta[name="theme-color"]');
-            if (metaTheme) metaTheme.content = isLight ? '#f0f0f0' : '#000000';
-        }
-
-        // Apply saved theme on load
-        (function() {
-            const saved = localStorage.getItem('amnesTheme');
-            const isLight = saved === 'light';
-            if (isLight) document.body.classList.add('light-theme');
-            _applyThemeUI(isLight);
-        })();
 
 
         // ===== RECENTLY VIEWED =====
@@ -8169,12 +8202,7 @@
         ];
 
         function handleSearchFilterBtn() {
-            // Jika sedang mode search hasil → toggle filter bar biasa
-            if (window._isSearchMode) {
-                toggleSearchFilterBar();
-                return;
-            }
-            // Jika idle → buka decade modal
+            // Selalu buka decade modal (baik saat idle maupun saat ada hasil search)
             openDecadeModal();
         }
 
