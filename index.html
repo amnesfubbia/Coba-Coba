@@ -6293,6 +6293,7 @@
             currentType = v; 
             document.querySelectorAll('.stat-item').forEach(s => s.classList.remove('active-stat'));
             el.classList.add('active-stat');
+            _resetFilterPills();
             loadFeed(true); 
         }
 
