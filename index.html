@@ -2948,10 +2948,10 @@
             }, { passive: true });
             searchOverlay.addEventListener('touchend', e => {
                 if (!window._isSearchMode) return;
-                if (e.target.closest('#searchGrid') === null && e.target.closest('#searchTypeTabs') === null) return;
                 const dx = e.changedTouches[0].clientX - _stabSx;
                 const dy = e.changedTouches[0].clientY - _stabSy;
-                if (Math.abs(dx) < 30 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+                const adx = Math.abs(dx), ady = Math.abs(dy);
+                if (adx < 20 || adx < ady * 1.2) return;
                 const cur = STAB_TYPES.indexOf(searchTabType);
                 let next = dx < 0 ? cur + 1 : cur - 1;
                 if (next < 0 || next >= STAB_TYPES.length) return;
