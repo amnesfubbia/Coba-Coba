@@ -3047,10 +3047,20 @@
                             likeBtn.click();
                             // Tampilkan heart pop animasi
                             if (_heartPop) {
-                                const t = e.changedTouches[0];
-                                const rect = movieModal.getBoundingClientRect();
-                                _heartPop.style.left = (t.clientX - rect.left - 30) + 'px';
-                                _heartPop.style.top  = (t.clientY - rect.top  - 30) + 'px';
+                                // Posisikan di tengah area video (mainVideoArea)
+                                const videoArea = document.getElementById('mainVideoArea');
+                                let cx, cy;
+                                if (videoArea) {
+                                    const vr = videoArea.getBoundingClientRect();
+                                    cx = vr.left + vr.width  / 2;
+                                    cy = vr.top  + vr.height / 2;
+                                } else {
+                                    cx = window.innerWidth  / 2;
+                                    cy = window.innerHeight / 2;
+                                }
+                                _heartPop.style.position = 'fixed';
+                                _heartPop.style.left = (cx - 40) + 'px';
+                                _heartPop.style.top  = (cy - 40) + 'px';
                                 _heartPop.style.display = 'block';
                                 _heartPop.classList.remove('heart-pop-anim');
                                 void _heartPop.offsetWidth;
@@ -3986,6 +3996,11 @@
             if (document.getElementById('movieografiModal') && document.getElementById('movieografiModal').style.display === 'block') {
                 _closeMvgSilent();
                 window._mvgFromActorId = null;
+                return;
+            }
+            // Tombol ← di layar sudah handle close mvg — skip popstate agar tidak loncat
+            if (window._mvgManualClose) {
+                window._mvgManualClose = false;
                 return;
             }
 
@@ -5784,15 +5799,18 @@
         }
 
         function closeMovieografi() {
+            // Tombol ← di layar: restore UI dulu, lalu pop history satu kali
+            // Pakai flag agar popstate handler TAHU ini sudah di-handle, tidak double-close
+            window._mvgManualClose = true;
             document.getElementById('movieografiModal').style.display = 'none';
             if (window._mvgFromActorId) {
-                const am = document.getElementById('actorModal');
-                am.style.display = 'block';
+                document.getElementById('actorModal').style.display = 'block';
                 document.body.style.overflow = 'hidden';
+                window._mvgFromActorId = null;
             } else {
                 document.body.style.overflow = 'auto';
             }
-            history.back(); // pop state 'movieografi' agar stack bersih
+            history.back();
         }
         function _closeMvgSilent() {
             document.getElementById('movieografiModal').style.display = 'none';
