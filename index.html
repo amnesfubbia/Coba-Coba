@@ -2936,6 +2936,21 @@
                 () => { if (!_acExclude) acSwR(); }
             );
 
+            // ── MOVIEOGRAFI ──────────────────────────────────────────────
+            const mvgModal = document.getElementById('movieografiModal');
+            if (mvgModal) {
+                addSwipe(mvgModal,
+                    () => { // swipe kiri → Series
+                        if (!document.getElementById('mvgTabTV').classList.contains('active'))
+                            switchMvgTab('tv', document.getElementById('mvgTabTV'));
+                    },
+                    () => { // swipe kanan → Movies
+                        if (!document.getElementById('mvgTabMovie').classList.contains('active'))
+                            switchMvgTab('movie', document.getElementById('mvgTabMovie'));
+                    }
+                );
+            }
+
             // ── HOME ──────────────────────────────────────────────────────
             // Satu touchstart listener, satu touchend listener, di mainProfile
             const mainProfile = document.getElementById('mainProfile');
@@ -3970,6 +3985,7 @@
             // Movieografi modal (di atas actor modal)
             if (document.getElementById('movieografiModal') && document.getElementById('movieografiModal').style.display === 'block') {
                 _closeMvgSilent();
+                window._mvgFromActorId = null;
                 return;
             }
 
@@ -4003,13 +4019,10 @@
                     document.body.style.overflow = 'hidden';
                 // Jika film dibuka dari actor modal → kembalikan ke actor modal
                 } else if (window._actorModalPendingReopen) {
-                    const aid = window._actorModalPendingReopen;
                     window._actorModalPendingReopen = null;
                     document.getElementById('actorModal').style.display = 'block';
                     document.getElementById('actorModal').scrollTop = 0;
                     document.body.style.overflow = 'hidden';
-                } else {
-                    window._actorModalPendingReopen = null;
                 }
                 return;
             }
@@ -5029,9 +5042,15 @@
                     el.classList.add('fa-solid');
                 }
             }
-            // Tutup movieografi jika nav bawah diklik
+            // Tutup movieografi + actor modal jika nav bawah diklik (loncat langsung)
             const mvg = document.getElementById('movieografiModal');
-            if (mvg && mvg.style.display === 'block') { mvg.style.display = 'none'; }
+            if (mvg && mvg.style.display === 'block') {
+                mvg.style.display = 'none';
+                window._mvgFromActorId = null;
+                // Tutup juga actor modal agar tidak muncul di belakang
+                document.getElementById('actorModal').style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
         }
 
         // ===== REEL DETAIL BOTTOM SHEET =====
@@ -5705,6 +5724,10 @@
 
         async function openMovieografi(actorId) {
             if (!actorId) return;
+            // Sembunyikan actor modal secara SILENT (tidak pop/push history actor)
+            // agar back dari movieografi bisa kembali ke actor modal
+            window._mvgFromActorId = actorId;
+            document.getElementById('actorModal').style.display = 'none';
             // Stop trailer agar tidak terdengar saat modal terbuka
             document.querySelectorAll('#carouselTrack iframe').forEach(f => { f.src = ''; });
             const modal = document.getElementById('movieografiModal');
@@ -5762,12 +5785,25 @@
 
         function closeMovieografi() {
             document.getElementById('movieografiModal').style.display = 'none';
-            document.body.style.overflow = 'hidden'; // actor modal masih open
-            // Jangan push history saat close — sudah handle via popstate
+            if (window._mvgFromActorId) {
+                const am = document.getElementById('actorModal');
+                am.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = 'auto';
+            }
+            history.back(); // pop state 'movieografi' agar stack bersih
         }
         function _closeMvgSilent() {
             document.getElementById('movieografiModal').style.display = 'none';
-            document.body.style.overflow = 'hidden';
+            // Kembalikan actor modal yang disembunyikan saat buka movieografi
+            if (window._mvgFromActorId) {
+                const am = document.getElementById('actorModal');
+                am.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = 'auto';
+            }
         }
 
         function switchMvgTab(tab, el) {
