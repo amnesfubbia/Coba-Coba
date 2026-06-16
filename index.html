@@ -2944,16 +2944,15 @@
                 if (e.touches.length !== 1) { _acExclude = true; return; }
                 _acSx = e.touches[0].clientX;
                 _acSy = e.touches[0].clientY;
-                _acExclude = !!e.target.closest('#actorKnownForWrapper') ||
-                             !!e.target.closest('.actor-film-grid') ||
-                             !!e.target.closest('.actor-film-grid-alt');
+                // Hanya exclude area horizontal scroll (known for)
+                _acExclude = !!e.target.closest('#actorKnownForWrapper');
             }, { passive: true });
             actorModal.addEventListener('touchend', e => {
                 if (_acExclude) return;
                 const dx = e.changedTouches[0].clientX - _acSx;
                 const dy = e.changedTouches[0].clientY - _acSy;
                 const adx = Math.abs(dx), ady = Math.abs(dy);
-                if (adx >= 20 && adx >= ady * 1.4) {
+                if (adx >= 30 && adx >= ady * 1.5) {
                     if (dx < 0) acSwL();
                     else acSwR();
                 }
@@ -3001,8 +3000,11 @@
                 if (adx >= 25 && adx >= ady * 2.0) {
                     const c = HOME_TABS.indexOf(_curHomeTab);
                     if (dx < 0 && c < HOME_TABS.length - 1) {
+                        // Reset pills LANGSUNG sebelum tab berubah
+                        if (HOME_TABS[c + 1] === 'grid') _resetFilterPills();
                         document.getElementById(HOME_IDS[c + 1]).click();
                     } else if (dx > 0 && c > 0) {
+                        if (HOME_TABS[c - 1] === 'grid') _resetFilterPills();
                         document.getElementById(HOME_IDS[c - 1]).click();
                     }
                 }
