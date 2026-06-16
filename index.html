@@ -4040,6 +4040,14 @@
             }
 
             // Actor modal
+            if (window._actorManualClose) {
+                window._actorManualClose = false;
+                // Restore movieModal jika actor dibuka dari film
+                if (document.getElementById('movieModal').style.display === 'block') {
+                    document.body.style.overflow = 'hidden';
+                }
+                return;
+            }
             if (document.getElementById('actorModal').style.display === 'block') {
                 _closeActorModalSilent();
                 return;
@@ -4058,7 +4066,25 @@
                 return;
             }
 
-            // Movie modal biasa
+            // closeModal() tombol ← layar sudah handle — skip agar tidak double
+            if (window._modalManualClose) {
+                window._modalManualClose = false;
+                // Restore actor/movieografi jika perlu
+                if (window._fromMovieografi) {
+                    window._fromMovieografi = false;
+                    document.getElementById('movieografiModal').style.display = 'block';
+                    document.getElementById('movieografiModal').scrollTop = 0;
+                    document.body.style.overflow = 'hidden';
+                } else if (window._actorModalPendingReopen) {
+                    window._actorModalPendingReopen = null;
+                    document.getElementById('actorModal').style.display = 'block';
+                    document.getElementById('actorModal').scrollTop = 0;
+                    document.body.style.overflow = 'hidden';
+                }
+                return;
+            }
+
+            // Movie modal biasa (hardware back)
             if (document.getElementById('movieModal').style.display === 'block') {
                 _closeModalSilent();
                 // Jika film dibuka dari movieografi → kembalikan ke movieografi
@@ -4610,6 +4636,7 @@
         }
 
         function closeActorModal() {
+            window._actorManualClose = true; // flag agar popstate tidak double-handle
             document.getElementById('actorModal').style.display = 'none';
             if (document.getElementById('movieModal').style.display === 'block') {
                 const track = document.getElementById('carouselTrack');
@@ -4622,12 +4649,11 @@
                         track.appendChild(slide);
                     }
                 });
-                // body tetap hidden karena movieModal masih buka
-                history.replaceState({view: 'modal'}, '');
+                document.body.style.overflow = 'hidden';
             } else {
                 document.body.style.overflow = 'auto';
-                history.replaceState({view: 'home'}, '');
             }
+            history.back(); // pop state 'actor' agar stack bersih
         }
 
         // Buka modal film dari dalam actorModal (poster diklik)
@@ -6562,6 +6588,16 @@
             document.getElementById('mToggleBtn').classList.add('hidden');
             document.getElementById('mTranslateBtn').style.display = 'none';
             document.getElementById('seriesControl').classList.add('hidden');
+
+            // ── Clear semua section async agar tidak tampil data film sebelumnya ──
+            const _cs2 = document.getElementById('mCollectionSection'); if (_cs2) { _cs2.style.display='none'; const _csc=document.getElementById('mCollectionScroll'); if(_csc) _csc.innerHTML=''; }
+            const _ss2 = document.getElementById('mSimilarSection');    if (_ss2) _ss2.style.display='none';
+            const _pg2 = document.getElementById('mPosterGallery');     if (_pg2) { _pg2.style.display='none'; const _ps=document.getElementById('mPosterScroll'); if(_ps) _ps.innerHTML=''; }
+            const _rb2 = document.getElementById('mRatingBar');         if (_rb2) { _rb2.style.display='none'; _rb2.innerHTML=''; }
+            const _ig2 = document.getElementById('mInfoGrid');          if (_ig2) { _ig2.style.display='none'; _ig2.innerHTML=''; }
+            const _eg2 = document.getElementById('episodeGrid');        if (_eg2) _eg2.innerHTML='';
+            const _ep2 = document.getElementById('episodePagination'); if (_ep2) _ep2.innerHTML='';
+
             document.getElementById('movieModal').style.display = 'block'; 
             document.getElementById('movieModal').scrollTop = 0;
             document.getElementById('smartSearchDropdown').style.display = 'none'; 
@@ -6921,7 +6957,8 @@
             }
         }
 
-        function closeModal() { 
+        function closeModal() {
+            window._modalManualClose = true; // flag agar popstate tidak double-handle
             const track = document.getElementById('carouselTrack'); 
             if(track) { 
                 track.querySelectorAll('iframe').forEach(f => { f.src = ""; f.remove(); }); 
@@ -6934,7 +6971,9 @@
             const _ig2 = document.getElementById('mInfoGrid'); if(_ig2){ _ig2.style.display='none'; _ig2.innerHTML=''; }
             const modal = document.getElementById('movieModal');
             modal.classList.remove('tv-mode');
-            modal.style.display = 'none'; 
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+            history.back(); // pop state 'modal' agar stack bersih
             // Restore ig-post-content ke struktur asli jika sebelumnya TV mode
             const postContent = document.querySelector('#movieModal .ig-post-content');
             if (postContent && document.getElementById('tvChannelSwitcher')) {
