@@ -1363,12 +1363,7 @@
             text-shadow: 0 1px 3px rgba(0,0,0,0.7);
         }
         .reel-action-btn.liked i { color: #ff3b30; }
-        @keyframes heartPop {
-            0%   { transform: scale(0.3); opacity: 1; }
-            50%  { transform: scale(1.3); opacity: 1; }
-            100% { transform: scale(1.0); opacity: 0; }
-        }
-        .heart-pop-anim { animation: heartPop 0.7s ease-out forwards; }
+
         .reel-action-btn.bookmarked i { color: #fff; }
 
         /* Topbar reels */
@@ -2459,7 +2454,7 @@
     </div>
 
     <!-- Heart pop untuk double tap like -->
-    <div id="modalHeartPop" style="display:none;position:fixed;z-index:9999;pointer-events:none;font-size:72px;color:#ff3b30;filter:drop-shadow(0 0 16px #ff3b30aa)">❤️</div>
+
     <div id="movieModal" class="modal-player">
         <!-- Back to top button inside modal -->
         <div id="modalBackToTop" onclick="document.getElementById('movieModal').scrollTo({top:0,behavior:'smooth'})"
@@ -2480,6 +2475,7 @@
                 
                 <div class="relative overflow-hidden" id="mainVideoArea">
                     <div id="videoLoader" class="iframe-loader hidden"><div class="spinner"></div></div>
+                    <div class="reel-heart-pop" id="modalHeartPop"><i class="fa-solid fa-heart"></i></div>
                     <div class="swipe-overlay" id="swipeOverlay"></div>
                     <div class="carousel-track" id="carouselTrack"></div>
                     <div id="carouselDots" class="flex justify-center gap-2 py-2"></div>
@@ -2895,6 +2891,19 @@
         const HOME_IDS  = ['tabGrid','tabLikes','tabBookmark'];
         let _curHomeTab = 'grid';
 
+        function _resetFilterPills() {
+            currentRating = ''; currentGenre = ''; currentYear = ''; currentCountry = '';
+            ['btnCountry','btnGenre','yearBtn','btnRating'].forEach(id => {
+                const b = document.getElementById(id);
+                if (!b) return;
+                b.classList.remove('active-pill');
+            });
+            const r = document.getElementById('btnRating'); if (r) r.innerHTML = 'Rating <i class="fa-solid fa-caret-down"></i>';
+            const c = document.getElementById('btnCountry'); if (c) c.innerHTML = 'Country <i class="fa-solid fa-caret-down"></i>';
+            const g = document.getElementById('btnGenre');   if (g) g.innerHTML = 'Genre <i class="fa-solid fa-caret-down"></i>';
+            const y = document.getElementById('yearBtn');    if (y) y.innerHTML = 'Year <i class="fa-solid fa-caret-down"></i>';
+        }
+
         function setHomeTab(mode) {
             if (!HOME_TABS.includes(mode)) return;
             _curHomeTab = mode;
@@ -2905,6 +2914,8 @@
             });
             // selalu matikan semua highlight border
             document.querySelectorAll('.highlight-item').forEach(i => i.classList.remove('active-hl'));
+            // reset filter pills setiap kali tab berubah ke grid
+            if (mode === 'grid') _resetFilterPills();
         }
 
         function initModalSwipeGestures() {
@@ -2928,13 +2939,25 @@
             const acSwR = () => { if (!document.getElementById('actorTabGrid').classList.contains('active'))  switchActorTab('grid'); };
             const actorModal = document.getElementById('actorModal');
             let _acExclude = false;
+            let _acSx = 0, _acSy = 0;
             actorModal.addEventListener('touchstart', e => {
-                _acExclude = !!e.target.closest('#actorKnownForWrapper');
+                if (e.touches.length !== 1) { _acExclude = true; return; }
+                _acSx = e.touches[0].clientX;
+                _acSy = e.touches[0].clientY;
+                _acExclude = !!e.target.closest('#actorKnownForWrapper') ||
+                             !!e.target.closest('.actor-film-grid') ||
+                             !!e.target.closest('.actor-film-grid-alt');
             }, { passive: true });
-            addSwipe(actorModal,
-                () => { if (!_acExclude) acSwL(); },
-                () => { if (!_acExclude) acSwR(); }
-            );
+            actorModal.addEventListener('touchend', e => {
+                if (_acExclude) return;
+                const dx = e.changedTouches[0].clientX - _acSx;
+                const dy = e.changedTouches[0].clientY - _acSy;
+                const adx = Math.abs(dx), ady = Math.abs(dy);
+                if (adx >= 20 && adx >= ady * 1.4) {
+                    if (dx < 0) acSwL();
+                    else acSwR();
+                }
+            }, { passive: true });
 
             // ── MOVIEOGRAFI ──────────────────────────────────────────────
             const mvgModal = document.getElementById('movieografiModal');
@@ -3045,27 +3068,12 @@
                         const alreadyLiked = likeBtn.classList.contains('fa-solid');
                         if (!alreadyLiked) {
                             likeBtn.click();
-                            // Tampilkan heart pop animasi
+                            // Tampilkan heart pop animasi (sama persis style reels)
                             if (_heartPop) {
-                                // Posisikan di tengah area video (mainVideoArea)
-                                const videoArea = document.getElementById('mainVideoArea');
-                                let cx, cy;
-                                if (videoArea) {
-                                    const vr = videoArea.getBoundingClientRect();
-                                    cx = vr.left + vr.width  / 2;
-                                    cy = vr.top  + vr.height / 2;
-                                } else {
-                                    cx = window.innerWidth  / 2;
-                                    cy = window.innerHeight / 2;
-                                }
-                                _heartPop.style.position = 'fixed';
-                                _heartPop.style.left = (cx - 40) + 'px';
-                                _heartPop.style.top  = (cy - 40) + 'px';
-                                _heartPop.style.display = 'block';
-                                _heartPop.classList.remove('heart-pop-anim');
+                                _heartPop.classList.remove('pop');
                                 void _heartPop.offsetWidth;
-                                _heartPop.classList.add('heart-pop-anim');
-                                setTimeout(() => { _heartPop.style.display = 'none'; }, 800);
+                                _heartPop.classList.add('pop');
+                                setTimeout(() => _heartPop.classList.remove('pop'), 750);
                             }
                         }
                     }
@@ -7303,17 +7311,8 @@
                 history.pushState({view: mode}, '');
                 showLibrary(mode); 
             } else { 
-                currentLibMode = false; currentCastId = ''; searchQuery = ''; currentType='multi'; currentSchedule='trending'; currentCompany=''; currentRating=''; currentGenre=''; currentYear=''; currentCountry='';
-                // Reset semua filter pill border
-                ['btnCountry','btnGenre','yearBtn','btnRating'].forEach(id => {
-                    const b = document.getElementById(id);
-                    if (!b) return;
-                    b.classList.remove('active-pill');
-                });
-                const _btnRt = document.getElementById('btnRating'); if(_btnRt) _btnRt.innerHTML='Rating <i class="fa-solid fa-caret-down"></i>';
-                const _btnC = document.getElementById('btnCountry'); if(_btnC) _btnC.innerHTML='Country <i class="fa-solid fa-caret-down"></i>';
-                const _btnG = document.getElementById('btnGenre'); if(_btnG) _btnG.innerHTML='Genre <i class="fa-solid fa-caret-down"></i>';
-                const _btnY = document.getElementById('yearBtn'); if(_btnY) _btnY.innerHTML='Year <i class="fa-solid fa-caret-down"></i>';
+                currentLibMode = false; currentCastId = ''; searchQuery = ''; currentType='multi'; currentSchedule='trending'; currentCompany='';
+                _resetFilterPills();
                 loadFeed(true); 
             } 
         }
