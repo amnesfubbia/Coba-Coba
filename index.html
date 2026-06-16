@@ -6167,9 +6167,8 @@
             const existingIds = new Set();
             grid.querySelectorAll('.post-card[data-id]').forEach(c => existingIds.add(c.dataset.id));
             items.forEach(m => {
-                // Tab Actor: render aktor card
-                if (searchTabType === 'person' || m.media_type === 'person') {
-                    if (searchTabType !== 'person') return; // di tab All/Movie/Series skip person
+                // Tab Actor (HANYA saat search mode aktif & tab person)
+                if (window._isSearchMode && searchTabType === 'person') {
                     if (!m.profile_path && !m.poster_path) return;
                     if (existingIds.has(String(m.id))) return;
                     existingIds.add(String(m.id));
@@ -6264,6 +6263,11 @@
             document.getElementById('searchTypeTabs').style.display = 'none';
             window._isSearchMode = false;
             searchQuery = '';
+            // Reset tab ke All agar tidak persist ke home
+            searchTabType = 'multi';
+            document.querySelectorAll('#searchTypeTabs .search-tab').forEach(t => t.classList.remove('active'));
+            const stabAll = document.getElementById('stab-all');
+            if (stabAll) stabAll.classList.add('active');
         }
 
         function showSearchResults() {
