@@ -4844,18 +4844,15 @@
                 _reelsData.push(...newReels);
                 _reelsLoaded = true;
 
-                newReels.forEach(reel => {
+                newReels.forEach((reel, reelIdx) => {
                     const lib = getReelLibStatus(reel.movieId);
                     const slide = document.createElement('div');
                     slide.className = 'reel-slide';
                     slide.dataset.movieId = reel.movieId;
                     slide.dataset.type = reel.type;
 
-                    // autoplay=1 agar langsung main saat slide pertama dimuat
-                    // js_api diaktifkan agar bisa pause via postMessage
-                    // enablejsapi=1 wajib agar YT.Player onStateChange bekerja
-                    // controls=1 dibiarkan agar event state change tidak diblokir
-                    const isFirstReel = isNew && _reelsData.length === 1;
+                    // autoplay=1 hanya untuk reel pertama saat load awal
+                    const isFirstReel = isNew && reelIdx === 0;
                     const embedUrl = `https://www.youtube.com/embed/${reel.videoKey}?enablejsapi=1&autoplay=${isFirstReel?1:0}&rel=0&modestbranding=1&showinfo=0&playsinline=1&iv_load_policy=3&mute=0&controls=0&origin=${encodeURIComponent(location.origin || location.href.split('/').slice(0,3).join('/'))}`;
                     const typeLabel = reel.type === 'movie' ? 'Movie' : 'Series';
                     const ratingStr = reel.rating ? `· ★${reel.rating}` : '';
@@ -6167,8 +6164,8 @@
             const existingIds = new Set();
             grid.querySelectorAll('.post-card[data-id]').forEach(c => existingIds.add(c.dataset.id));
             items.forEach(m => {
-                // Tab Actor (HANYA saat search mode aktif & tab person)
-                if (window._isSearchMode && searchTabType === 'person') {
+                // Tab Actor (HANYA saat search mode aktif & tab person & ada query)
+                if (window._isSearchMode && searchTabType === 'person' && searchQuery) {
                     if (!m.profile_path && !m.poster_path) return;
                     if (existingIds.has(String(m.id))) return;
                     existingIds.add(String(m.id));
@@ -6225,8 +6222,13 @@
                 }
                 const _year = (m.release_date || m.first_air_date || '').split('-')[0];
                 const _rating = m.vote_average ? m.vote_average.toFixed(1) : '';
-                const _typeLabel = currentType==='short' ? 'SHORT' : (mType==='tv' ? 'TV' : 'MOVIE');
-                card.innerHTML = `${_nb ? _nb.replace('badge-new', 'badge-new" style="position:absolute;top:6px;right:6px;bottom:auto;left:auto') : ''}<img src="https://image.tmdb.org/t/p/w185${m.poster_path}" loading="lazy" onload="this.style.opacity=1" style="opacity:0"><div class="card-title-overlay"><div class="card-title-text">${_title}</div><div class="card-meta-row">${_rating ? `<span class="card-star">★ ${_rating}</span>` : ''}<span class="card-type-label">${_typeLabel}</span>${_year ? `<span class="card-year">${_year}</span>` : ''}</div></div>`;
+                // Type label: pakai searchTabType saat search agar Series/Movie akurat
+                let _typeLabel;
+                if (currentType === 'short') _typeLabel = 'SHORT';
+                else if (window._isSearchMode && searchTabType === 'tv') _typeLabel = 'SERIES';
+                else if (window._isSearchMode && searchTabType === 'movie') _typeLabel = 'MOVIE';
+                else _typeLabel = mType === 'tv' ? 'SERIES' : 'MOVIE';
+                card.innerHTML = `${_nb ? `<div class="badge-new" style="position:absolute;top:6px;right:6px;z-index:2">NEW</div>` : ''}<img src="https://image.tmdb.org/t/p/w185${m.poster_path}" loading="lazy" onload="this.style.opacity=1" style="opacity:0"><div class="card-title-overlay"><div class="card-title-text">${_title}</div><div class="card-meta-row">${_rating ? `<span class="card-star">★ ${_rating}</span>` : ''}<span class="card-type-label">${_typeLabel}</span>${_year ? `<span class="card-year">${_year}</span>` : ''}</div></div>`;
                 fragment.appendChild(card); 
             });
             grid.appendChild(fragment);
@@ -6310,9 +6312,16 @@
             document.getElementById('calendarHeader').classList.add('hidden');
             document.body.style.overflow = 'auto'; 
             searchQuery = ''; currentCastId = '';
+            window._isSearchMode = false;
+            searchTabType = 'multi';
             document.getElementById('searchInp').value = '';
             document.getElementById('searchClearBtn').style.display = 'none';
             document.getElementById('smartSearchDropdown').style.display = 'none';
+            // Reset tab pencarian ke All
+            document.querySelectorAll('#searchTypeTabs .search-tab').forEach(t => t.classList.remove('active'));
+            const stabAll = document.getElementById('stab-all');
+            if (stabAll) stabAll.classList.add('active');
+            document.getElementById('searchTypeTabs').style.display = 'none';
             // Reset filter bar
             const filterBar = document.getElementById('searchFilterBar');
             if (filterBar) filterBar.style.display = 'none';
@@ -7138,31 +7147,31 @@
                 case 4:  url = `https://vidrock.net/embed/${type}/${id}${seriesSuffix}`; break;
                 case 5:  url = `https://vidup.to/${type}/${id}${type==='tv'?`/${s}/${e}`:''}?autoPlay=true`; break;
                 case 6:  url = `https://vidcore.net/${type}/${id}${type==='tv'?`/${s}/${e}`:''}?autoPlay=true`; break;
-                case 7:  url = `https://player.vidzee.wtf/embed/${type}/${id}${seriesSuffix}`; break;
-                case 8:  url = `https://vidstorm.ru/embed/${type}/${id}${seriesSuffix}`; break;
-                case 9:  url = `https://vidsync.xyz/embed/${type}/${id}${type==='tv'?`/${s}/${e}`:''}?autoPlay=true${type==='tv'?'&autoNext=true':''}`; break;
-                case 10: url = `https://vixsrc.to/${type}/${id}${type==='tv'?`/${s}/${e}`:''}/`; break;
-                case 11: url = `https://vidking.net/embed/${type}/${id}${seriesSuffix}`; break;
-                case 12: url = `https://vidlux.xyz/embed/${type}/${id}${type==='tv'?`/${s}/${e}`:''}`; break;
-                case 13: url = `https://111movies.com/${type}/${id}${type==='tv'?`/${s}/${e}`:''}`; break;
-                case 14: url = `https://vidnest.fun/${type}/${id}${type==='tv'?`/${s}/${e}`:''}`; break;
-                case 15: url = `https://vidsrc.wtf/1/${type}/${id}${seriesSuffix}`; break;
-                case 16: url = `https://nontongo.win/embed/${type}/${id}${seriesSuffix}`; break;
-                case 17: url = `https://cinesrc.st/embed/${type}/${id}${type==='tv'?`/${s}/${e}`:''}`; break;
-                case 18: url = `https://111movies.net/${type}/${id}${type==='tv'?`/${s}/${e}`:''}`; break;
-                case 19: url = `https://vidfast.net/${type}/${id}${type==='tv'?`/${s}/${e}`:''}`; break;
-                case 20: url = `https://vidsrcme.ru/embed/${type}/${id}${seriesSuffix}`; break;
-                case 21: url = `https://multiembed.mov/?video_id=${id}&tmdb=1${type==='tv'?`&s=${s}&e=${e}`:''}`; break;
-                case 22: url = `https://2embed.cc/embed/${type}/${id}${seriesSuffix}`; break;
-                case 23: url = `https://vidsrc.ru/${type}/${currentImdbId || id}${type==='tv'?`?s=${s}&e=${e}`:''}`; break;
-                case 24: url = `https://player.vidify.top/embed/${type}/${id}${type==='tv'?`?s=${s}&e=${e}`:''}`; break;
-                case 25: url = `https://warezcdn.site/${type==='tv'?'serie':'filme'}/${id}${type==='tv'?`/${s}/${e}`:''}`; break;
-                case 26: url = `https://player.cinezo.live/embed/${type}/${id}${type==='tv'?`/${s}/${e}`:''}`; break;
-                case 27: url = `https://mgeb.top/embed/${id}${type==='tv'?`/${s}/${e}`:''}`; break;
-                case 28: url = `https://vidsrc.cc/v2/embed/${type}/${id}${type==='tv'?`?s=${s}&e=${e}`:''}`; break;
+                case 7:  url = `https://vidstorm.ru/embed/${type}/${id}${seriesSuffix}`; break;
+                case 8:  url = `https://vidsync.xyz/embed/${type}/${id}${type==='tv'?`/${s}/${e}`:''}?autoPlay=true${type==='tv'?'&autoNext=true':''}`; break;
+                case 9:  url = `https://vixsrc.to/${type}/${id}${type==='tv'?`/${s}/${e}`:''}/`; break;
+                case 10: url = `https://vidfast.net/${type}/${id}${type==='tv'?`/${s}/${e}`:''}`; break;
+                case 11: url = `https://mgeb.top/embed/${id}${type==='tv'?`/${s}/${e}`:''}`; break;
+                case 12: url = `https://embed.smashystream.com/playere.php?tmdb=${id}${type==='tv'?`&season=${s}&episode=${e}`:''}`; break;
+                case 13: url = `https://streamrip.fun/embed/${type}/${id}${type==='tv'?`/${s}/${e}`:''}`; break;
+                case 14: url = `https://vidsrcme.ru/embed/${type}/${id}${seriesSuffix}`; break;
+                case 15: url = `https://2embed.cc/embed/${type}/${id}${seriesSuffix}`; break;
+                case 16: url = `https://vidsrc.ru/embed/${type}/${currentImdbId || id}${type==='tv'?`/${s}/${e}`:''}`; break;
+                case 17: url = `https://player.vidzee.wtf/embed/${type}/${id}${seriesSuffix}`; break;
+                case 18: url = `https://vidking.net/embed/${type}/${id}${type==='tv'?`/${s}/${e}`:''}`; break;
+                case 19: url = `https://vidlux.xyz/embed/${type}/${id}${type==='tv'?`/${s}/${e}`:''}`; break;
+                case 20: url = `https://111movies.com/${type}/${id}${type==='tv'?`/${s}/${e}`:''}`; break;
+                case 21: url = `https://multiembed.mov/directstream.php?video_id=${id}&tmdb=1${type==='tv'?`&s=${s}&e=${e}`:''}`; break;
+                case 22: url = `https://vidnest.fun/${type}/${id}${type==='tv'?`/${s}/${e}`:''}`; break;
+                case 23: url = `https://vidsrc.wtf/1/${type}/${id}${seriesSuffix}`; break;
+                case 24: url = `https://nontongo.win/embed/${type}/${id}${seriesSuffix}`; break;
+                case 25: url = `https://cinesrc.st/embed/${type}/${id}${type==='tv'?`/${s}/${e}`:''}`; break;
+                case 26: url = `https://111movies.net/${type}/${id}${type==='tv'?`/${s}/${e}`:''}`; break;
+                case 27: url = `https://warezcdn.site/${type==='tv'?'serie':'filme'}/${id}${type==='tv'?`/${s}/${e}`:''}`; break;
+                case 28: url = `https://player.cinezo.live/embed/${type}/${id}${type==='tv'?`/${s}/${e}`:''}`; break;
                 case 29: url = `https://vidsrc.me/embed/${type}?tmdb=${id}${type==='tv'?`&s=${s}&e=${e}`:''}`; break;
-                case 30: url = `https://embed.smashystream.com/playere.php?tmdb=${id}${type==='tv'?`&season=${s}&episode=${e}`:''}`; break;
-                case 31: url = `https://anyembed.xyz/embed/${type}/${id}${type==='tv'?`/${s}/${e}`:''}`; break;
+                case 30: url = `https://player.vidify.top/embed/${type}/${id}${type==='tv'?`?s=${s}&e=${e}`:''}`; break;
+                case 31: url = `https://vidsrc.cc/v2/embed/${type}/${id}${type==='tv'?`/${s}/${e}`:''}`; break;
                 case 99: url = `https://www.dailymotion.com/embed/video/${currentDailymotionId}`; break;     default: url = `https://player.videasy.net/${type}/${id}${type==='tv'?`/${s}/${e}`:''}`;
             }
             return url.replace("http://", "https://");
@@ -7441,7 +7450,14 @@
                 card.className = 'post-card';
                 const mType = m._savedType || m.media_type || 'movie';
                 card.onclick = function() { openModal(m.id, mType); };
-                card.innerHTML = `<div class="badge-rating">${(m.vote_average||0).toFixed(1)}</div><div class="badge-type">${mType === 'tv' ? 'tv' : 'movie'}</div><img src="https://image.tmdb.org/t/p/w342${m.poster_path}" loading="lazy" onload="this.style.opacity=1" style="opacity:0">`;
+                let _libTitle = m.title || m.name || '';
+                const _libOrigT = m.original_title || m.original_name || '';
+                if (isNonLatin(_libTitle) && _libOrigT && !isNonLatin(_libOrigT)) _libTitle = _libOrigT;
+                const _libYear   = (m.release_date || m.first_air_date || '').split('-')[0];
+                const _libRating = m.vote_average ? m.vote_average.toFixed(1) : '';
+                const _libType   = mType === 'tv' ? 'SERIES' : 'MOVIE';
+                const _libNb     = isNewRelease(m.release_date || m.first_air_date || '') ? `<div class="badge-new" style="position:absolute;top:6px;right:6px;z-index:2">NEW</div>` : '';
+                card.innerHTML = `${_libNb}<img src="https://image.tmdb.org/t/p/w342${m.poster_path}" loading="lazy" onload="this.style.opacity=1" style="opacity:0"><div class="card-title-overlay"><div class="card-title-text">${_libTitle}</div><div class="card-meta-row">${_libRating ? `<span class="card-star">★ ${_libRating}</span>` : ''}<span class="card-type-label">${_libType}</span>${_libYear ? `<span class="card-year">${_libYear}</span>` : ''}</div></div>`;
                 grid.appendChild(card);
             });
         }
@@ -8300,7 +8316,7 @@
                     const title = m.title || m.name || '';
                     const rating = m.vote_average ? m.vote_average.toFixed(1) : '';
                     const year = (m.release_date || m.first_air_date || '').split('-')[0];
-                    return `<div onclick="closeDecadeModal(); openModal(${m.id},'${_decadeType}'); closeSearch()" style="position:relative;border-radius:10px;overflow:hidden;cursor:pointer;background:#111;aspect-ratio:16/9">
+                    return `<div onclick="closeDecadeModal(); openModal(${m.id},'${_decadeType}')" style="position:relative;border-radius:10px;overflow:hidden;cursor:pointer;background:#111;aspect-ratio:16/9">
                         <img src="https://image.tmdb.org/t/p/w300${m.backdrop_path}" loading="lazy"
                              onload="this.style.opacity=1"
                              style="opacity:0;width:100%;height:100%;object-fit:cover;transition:opacity 0.3s">
