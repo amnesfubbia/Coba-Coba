@@ -2522,6 +2522,18 @@
                     <div class="swipe-overlay" id="swipeOverlay"></div>
                     <div class="carousel-track" id="carouselTrack"></div>
                     <div id="carouselDots" class="flex justify-center gap-2 py-2"></div>
+                    <!-- Video controls overlay -->
+                    <div id="modalVideoControls" style="position:absolute;bottom:36px;left:0;right:0;display:flex;justify-content:center;gap:20px;z-index:50;pointer-events:none">
+                        <button onclick="event.stopPropagation();modalVideoCmd('play')" style="pointer-events:auto;background:rgba(0,0,0,0.55);border:none;color:#fff;width:40px;height:40px;border-radius:50%;font-size:15px;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px);cursor:pointer" title="Play">
+                            <i class="fa-solid fa-play"></i>
+                        </button>
+                        <button onclick="event.stopPropagation();modalVideoCmd('pause')" style="pointer-events:auto;background:rgba(0,0,0,0.55);border:none;color:#fff;width:40px;height:40px;border-radius:50%;font-size:15px;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px);cursor:pointer" title="Pause">
+                            <i class="fa-solid fa-pause"></i>
+                        </button>
+                        <button id="modalMuteBtn" onclick="event.stopPropagation();modalVideoCmd('mute')" style="pointer-events:auto;background:rgba(0,0,0,0.55);border:none;color:#fff;width:40px;height:40px;border-radius:50%;font-size:15px;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px);cursor:pointer" title="Mute/Unmute">
+                            <i class="fa-solid fa-volume-high"></i>
+                        </button>
+                    </div>
                 </div>
 
                 <div class="px-4 py-3 flex justify-between items-center bg-black">
@@ -2707,9 +2719,9 @@
             <div class="tv-tab-item" id="tvTabBerita" onclick="switchTvTab('berita')">Berita</div>
         </div>
 
-        <!-- LiveSport full embed pane -->
+        <!-- LiveSport full embed pane - iframe kosong dulu, diisi saat tab dibuka -->
         <div id="tvLiveSportPane">
-            <iframe src="https://tv.filmu.in/en/sports#main" allowfullscreen allow="autoplay; encrypted-media; fullscreen" scrolling="no" referrerpolicy="no-referrer"></iframe>
+            <iframe id="tvSportIframe" src="" allowfullscreen allow="autoplay; encrypted-media; fullscreen" scrolling="no" referrerpolicy="no-referrer"></iframe>
         </div>
 
         <!-- Search box (hanya untuk tab channel) -->
@@ -2927,9 +2939,30 @@
                 document.getElementById('backToTop').style.display = window.scrollY > 500 ? 'flex' : 'none'; 
             });
             initModalSwipeGestures();
+            initTvModalSwipe();
         };
 
-        // ===== SWIPE GESTURES FOR MODALS =====
+        // Video controls untuk trailer di modal film
+        let _modalMuted = false;
+        function modalVideoCmd(cmd) {
+            const iframe = document.querySelector('#carouselTrack iframe');
+            if (!iframe) return;
+            if (cmd === 'play') {
+                try { iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*'); } catch(e) {}
+            } else if (cmd === 'pause') {
+                try { iframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*'); } catch(e) {}
+            } else if (cmd === 'mute') {
+                _modalMuted = !_modalMuted;
+                const icon = document.querySelector('#modalMuteBtn i');
+                if (_modalMuted) {
+                    try { iframe.contentWindow.postMessage('{"event":"command","func":"mute","args":""}', '*'); } catch(e) {}
+                    if (icon) { icon.className = 'fa-solid fa-volume-xmark'; }
+                } else {
+                    try { iframe.contentWindow.postMessage('{"event":"command","func":"unMute","args":""}', '*'); } catch(e) {}
+                    if (icon) { icon.className = 'fa-solid fa-volume-high'; }
+                }
+            }
+        }
         // Swipe helper — threshold 25px, ratio 2.0
         function addSwipe(el, onLeft, onRight, onUp, onDown, minDist = 25, maxRatio = 2.0) {
             if (!el) return;
@@ -3517,6 +3550,7 @@
         }
 
         let _currentTvTab = 'sport';
+        let _tvMuted = false;
 
         function switchTvTab(tab) {
             _currentTvTab = tab;
@@ -3534,14 +3568,20 @@
                 searchIcon.style.display = 'none';
                 tvTitle.textContent = 'Live Sport';
                 document.getElementById('tvSearchBox').style.display = 'none';
+                // load iframe baru setiap kali tab sport dibuka → skip splash
+                const iframe = document.getElementById('tvSportIframe');
+                iframe.src = '';
+                setTimeout(() => { iframe.src = 'https://tv.filmu.in/en/sports'; }, 80);
             } else {
                 sportPane.style.display = 'none';
+                // pause sport iframe saat pindah tab lain
+                document.getElementById('tvSportIframe').src = '';
                 channelPane.style.display = 'block';
                 searchIcon.style.display = 'block';
                 const labels = { nasional: 'Nasional', lokal: 'Lokal & Regional', berita: 'Berita' };
                 tvTitle.textContent = labels[tab] || 'Live TV';
                 renderTvList('', tab);
-                // auto-play channel pertama di tab ini
+                // auto-play channel pertama
                 const tabMap = { nasional: 'Nasional', lokal: 'Lokal & Regional', berita: 'Berita' };
                 const cat = tvCategories.find(c => c.label === tabMap[tab]);
                 if (cat && cat.channels.length > 0) {
@@ -3549,6 +3589,22 @@
                     playTvChannelInPane(first.name, first.url);
                 }
             }
+        }
+
+        // Swipe gesture untuk tab TV modal
+        function initTvModalSwipe() {
+            const tvModal = document.getElementById('tvModal');
+            const TV_TABS = ['sport','nasional','lokal','berita'];
+            addSwipe(tvModal,
+                () => { // kiri → tab berikutnya
+                    const c = TV_TABS.indexOf(_currentTvTab);
+                    if (c < TV_TABS.length - 1) switchTvTab(TV_TABS[c + 1]);
+                },
+                () => { // kanan → tab sebelumnya
+                    const c = TV_TABS.indexOf(_currentTvTab);
+                    if (c > 0) switchTvTab(TV_TABS[c - 1]);
+                }
+            );
         }
 
         function renderTvList(filter, tab) {
