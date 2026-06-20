@@ -2067,16 +2067,35 @@
                 </div>
             </div>
 
-            <!-- BOTTOM: controls + server -->
+            <!-- BOTTOM: progress + controls -->
             <div class="ls-bottom-area">
-                <div class="ls-controls-row">
-                    <div class="ls-controls-left">
-                        <i class="fa-solid fa-rotate-right ls-btn ls-btn-sm" onclick="event.stopPropagation(); replayTrailerLs()" title="Replay"></i>
-                        <span class="ls-server-pill" id="lsServerPill" onclick="event.stopPropagation(); toggleLsServerPanel()">Server 1</span>
+                <!-- progress bar -->
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+                    <span id="lsTime" style="font-size:11px;color:#fff;min-width:40px">0:00</span>
+                    <div style="flex:1;height:3px;background:rgba(255,255,255,0.25);border-radius:2px;cursor:pointer" onclick="event.stopPropagation()">
+                        <div id="lsProgress" style="width:0%;height:100%;background:#fff;border-radius:2px;transition:width 0.5s linear"></div>
                     </div>
-                    <div class="ls-controls-right">
-                        <i class="fa-solid fa-expand ls-btn ls-btn-sm" onclick="event.stopPropagation(); tryFullscreen()" title="Fullscreen"></i>
+                    <span id="lsDuration" style="font-size:11px;color:#aaa;min-width:40px;text-align:right">0:00</span>
+                </div>
+                <!-- controls row -->
+                <div class="ls-controls-row" style="justify-content:space-around;align-items:center">
+                    <i class="fa-solid fa-lock-open ls-btn ls-btn-sm" onclick="event.stopPropagation(); lockScreen()" title="Lock"></i>
+                    <i class="fa-solid fa-backward-step ls-btn ls-btn-sm" onclick="event.stopPropagation(); lsCarouselNav(-1)" title="Prev"></i>
+                    <div style="position:relative;display:inline-flex;align-items:center">
+                        <i class="fa-solid fa-rotate-left ls-btn ls-btn-sm" onclick="event.stopPropagation(); lsSeek(-10)" title="-10s"></i>
+                        <span style="font-size:8px;color:#fff;font-weight:700;position:absolute;bottom:2px;right:-2px">10</span>
                     </div>
+                    <i id="lsPlayBtn" class="fa-solid fa-pause ls-btn" style="font-size:26px;border:2px solid #fff;border-radius:50%;padding:10px;width:48px;height:48px;display:flex;align-items:center;justify-content:center;box-sizing:border-box" onclick="event.stopPropagation(); lsPlayPause()" title="Play/Pause"></i>
+                    <div style="position:relative;display:inline-flex;align-items:center">
+                        <i class="fa-solid fa-rotate-right ls-btn ls-btn-sm" onclick="event.stopPropagation(); lsSeek(10)" title="+10s"></i>
+                        <span style="font-size:8px;color:#fff;font-weight:700;position:absolute;bottom:2px;right:-2px">10</span>
+                    </div>
+                    <i class="fa-solid fa-forward-step ls-btn ls-btn-sm" onclick="event.stopPropagation(); lsCarouselNav(1)" title="Next"></i>
+                    <i class="fa-solid fa-expand ls-btn ls-btn-sm" onclick="event.stopPropagation(); tryFullscreen()" title="Fullscreen"></i>
+                </div>
+                <!-- server pill -->
+                <div style="display:flex;justify-content:center;margin-top:8px">
+                    <span class="ls-server-pill" id="lsServerPill" onclick="event.stopPropagation(); toggleLsServerPanel()">Server 1</span>
                 </div>
                 <div class="ls-hint">Tap screen to hide controls</div>
             </div>
@@ -2522,17 +2541,50 @@
                     <div class="swipe-overlay" id="swipeOverlay"></div>
                     <div class="carousel-track" id="carouselTrack"></div>
                     <div id="carouselDots" class="flex justify-center gap-2 py-2"></div>
-                    <!-- Video controls overlay -->
-                    <div id="modalVideoControls" style="position:absolute;bottom:36px;left:0;right:0;display:flex;justify-content:center;gap:20px;z-index:50;pointer-events:none">
-                        <button onclick="event.stopPropagation();modalVideoCmd('play')" style="pointer-events:auto;background:rgba(0,0,0,0.55);border:none;color:#fff;width:40px;height:40px;border-radius:50%;font-size:15px;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px);cursor:pointer" title="Play">
-                            <i class="fa-solid fa-play"></i>
-                        </button>
-                        <button onclick="event.stopPropagation();modalVideoCmd('pause')" style="pointer-events:auto;background:rgba(0,0,0,0.55);border:none;color:#fff;width:40px;height:40px;border-radius:50%;font-size:15px;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px);cursor:pointer" title="Pause">
-                            <i class="fa-solid fa-pause"></i>
-                        </button>
-                        <button id="modalMuteBtn" onclick="event.stopPropagation();modalVideoCmd('mute')" style="pointer-events:auto;background:rgba(0,0,0,0.55);border:none;color:#fff;width:40px;height:40px;border-radius:50%;font-size:15px;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px);cursor:pointer" title="Mute/Unmute">
-                            <i class="fa-solid fa-volume-high"></i>
-                        </button>
+                    <!-- Video controls overlay - style seperti screenshot -->
+                    <div id="modalVideoControls" onclick="event.stopPropagation()" style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.9));padding:6px 0 8px;z-index:50">
+                        <!-- progress bar -->
+                        <div style="display:flex;align-items:center;gap:8px;padding:0 14px;margin-bottom:10px">
+                            <span id="mvcTime" style="font-size:11px;color:#fff;min-width:38px;font-weight:600">0:00</span>
+                            <div id="mvcTrack" style="flex:1;height:3px;background:rgba(255,255,255,0.25);border-radius:2px;cursor:pointer;position:relative">
+                                <div id="mvcProgress" style="width:0%;height:100%;background:#fff;border-radius:2px;transition:width 0.5s linear"></div>
+                                <div id="mvcThumb" style="position:absolute;top:50%;left:0%;transform:translate(-50%,-50%);width:12px;height:12px;background:#3cdd3c;border-radius:50%;transition:left 0.5s linear"></div>
+                            </div>
+                            <span id="mvcDuration" style="font-size:11px;color:#aaa;min-width:38px;text-align:right">0:00</span>
+                        </div>
+                        <!-- controls row -->
+                        <div style="display:flex;align-items:center;justify-content:space-around;padding:0 6px">
+                            <!-- lock -->
+                            <button onclick="lockScreen()" style="background:none;border:none;color:#fff;font-size:18px;padding:4px 8px;cursor:pointer" title="Lock">
+                                <i class="fa-solid fa-lock-open"></i>
+                            </button>
+                            <!-- prev slide -->
+                            <button onclick="modalVideoCmd('prev')" style="background:none;border:none;color:#fff;font-size:20px;padding:4px 8px;cursor:pointer" title="Prev">
+                                <i class="fa-solid fa-backward-step"></i>
+                            </button>
+                            <!-- rewind 10s -->
+                            <button onclick="modalVideoCmd('back10')" style="background:none;border:none;color:#fff;font-size:20px;padding:4px 8px;cursor:pointer;position:relative" title="-10s">
+                                <i class="fa-solid fa-rotate-left"></i>
+                                <span style="font-size:8px;font-weight:800;position:absolute;bottom:2px;right:4px">10</span>
+                            </button>
+                            <!-- play/pause utama -->
+                            <button id="mvPlayBtn" onclick="modalVideoCmd('playpause')" style="background:none;border:2px solid #fff;border-radius:50%;color:#fff;font-size:22px;width:52px;height:52px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0" title="Play/Pause">
+                                <i class="fa-solid fa-pause"></i>
+                            </button>
+                            <!-- forward 10s -->
+                            <button onclick="modalVideoCmd('fwd10')" style="background:none;border:none;color:#fff;font-size:20px;padding:4px 8px;cursor:pointer;position:relative" title="+10s">
+                                <i class="fa-solid fa-rotate-right"></i>
+                                <span style="font-size:8px;font-weight:800;position:absolute;bottom:2px;right:4px">10</span>
+                            </button>
+                            <!-- next slide -->
+                            <button onclick="modalVideoCmd('next')" style="background:none;border:none;color:#fff;font-size:20px;padding:4px 8px;cursor:pointer" title="Next">
+                                <i class="fa-solid fa-forward-step"></i>
+                            </button>
+                            <!-- fullscreen / landscape -->
+                            <button onclick="enterLandscape()" style="background:none;border:none;color:#fff;font-size:18px;padding:4px 8px;cursor:pointer" title="Fullscreen">
+                                <i class="fa-solid fa-expand"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -2942,27 +2994,66 @@
             initTvModalSwipe();
         };
 
-        // Video controls untuk trailer di modal film
+        // Video controls modal film
+        let _modalPlaying = true;
         let _modalMuted = false;
         function modalVideoCmd(cmd) {
-            const iframe = document.querySelector('#carouselTrack iframe');
-            if (!iframe) return;
-            if (cmd === 'play') {
-                try { iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*'); } catch(e) {}
-            } else if (cmd === 'pause') {
-                try { iframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*'); } catch(e) {}
-            } else if (cmd === 'mute') {
-                _modalMuted = !_modalMuted;
-                const icon = document.querySelector('#modalMuteBtn i');
-                if (_modalMuted) {
-                    try { iframe.contentWindow.postMessage('{"event":"command","func":"mute","args":""}', '*'); } catch(e) {}
-                    if (icon) { icon.className = 'fa-solid fa-volume-xmark'; }
+            const slides = document.querySelectorAll('.carousel-slide');
+            const iframe = document.getElementById(`vid-${currentIdx}`);
+            function postMsg(fn, args) {
+                try { iframe && iframe.contentWindow.postMessage(JSON.stringify({event:'command',func:fn,args:args||''}), '*'); } catch(e) {}
+            }
+            if (cmd === 'playpause') {
+                if (_modalPlaying) {
+                    postMsg('pauseVideo');
+                    _modalPlaying = false;
+                    document.querySelector('#mvPlayBtn i').className = 'fa-solid fa-play';
+                    document.getElementById('lsPlayBtn').className = 'fa-solid fa-play ls-btn';
                 } else {
-                    try { iframe.contentWindow.postMessage('{"event":"command","func":"unMute","args":""}', '*'); } catch(e) {}
-                    if (icon) { icon.className = 'fa-solid fa-volume-high'; }
+                    postMsg('playVideo');
+                    _modalPlaying = true;
+                    document.querySelector('#mvPlayBtn i').className = 'fa-solid fa-pause';
+                    document.getElementById('lsPlayBtn').className = 'fa-solid fa-pause ls-btn';
                 }
+            } else if (cmd === 'back10') {
+                postMsg('seekBy', [-10]);
+            } else if (cmd === 'fwd10') {
+                postMsg('seekBy', [10]);
+            } else if (cmd === 'prev' || cmd === 'next') {
+                const dir = cmd === 'next' ? 1 : -1;
+                const newIdx = currentIdx + dir;
+                if (newIdx < 0 || newIdx >= slides.length) return;
+                // pause current
+                slides.forEach(s => {
+                    const f = s.querySelector('iframe');
+                    if (f) try { f.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*'); } catch(e) {}
+                    s.classList.remove('playing');
+                });
+                currentIdx = newIdx;
+                document.getElementById('carouselTrack').style.transform = `translateX(-${currentIdx * 100}%)`;
+                document.querySelectorAll('.dot').forEach((d,i) => { d.className = `dot w-1.5 h-1.5 rounded-full ${i===currentIdx?'bg-blue-500':'bg-zinc-700'}`; });
+                const newVid = document.getElementById(`vid-${currentIdx}`);
+                if (newVid) {
+                    try { newVid.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*'); } catch(e) {}
+                    newVid.closest('.carousel-slide')?.classList.add('playing');
+                }
+                _modalPlaying = true;
+                document.querySelector('#mvPlayBtn i').className = 'fa-solid fa-pause';
             }
         }
+
+        // Landscape play/pause
+        function lsPlayPause() {
+            modalVideoCmd('playpause');
+            const icon = document.getElementById('lsPlayBtn');
+            icon.className = _modalPlaying ? 'fa-solid fa-pause ls-btn' : 'fa-solid fa-play ls-btn';
+            icon.style.cssText = 'font-size:26px;border:2px solid #fff;border-radius:50%;padding:10px;width:48px;height:48px;display:flex;align-items:center;justify-content:center;box-sizing:border-box';
+        }
+        function lsSeek(sec) {
+            const iframe = document.getElementById(`vid-${currentIdx}`);
+            try { iframe && iframe.contentWindow.postMessage(JSON.stringify({event:'command',func:'seekBy',args:[sec]}), '*'); } catch(e) {}
+        }
+        function lsCarouselNav(dir) { modalVideoCmd(dir > 0 ? 'next' : 'prev'); }
         // Swipe helper — threshold 25px, ratio 2.0
         function addSwipe(el, onLeft, onRight, onUp, onDown, minDist = 25, maxRatio = 2.0) {
             if (!el) return;
@@ -3281,7 +3372,7 @@
             {
                 label: 'Sports',
                 channels: [
-                    { name: 'Sports Live', url: 'https://tv.filmu.in/en/sports', logo: '⚽' },
+                    { name: 'Sports Live', url: 'https://timstreams.net/', logo: '⚽' },
                 ]
             }
         ];
@@ -3571,7 +3662,7 @@
                 // load iframe baru setiap kali tab sport dibuka → skip splash
                 const iframe = document.getElementById('tvSportIframe');
                 iframe.src = '';
-                setTimeout(() => { iframe.src = 'https://tv.filmu.in/en/sports'; }, 80);
+                setTimeout(() => { iframe.src = 'https://timstreams.net/'; }, 80);
             } else {
                 sportPane.style.display = 'none';
                 // pause sport iframe saat pindah tab lain
@@ -3591,20 +3682,31 @@
             }
         }
 
-        // Swipe gesture untuk tab TV modal
+        // Swipe gesture untuk tab TV modal - sensitif, aktif di semua area termasuk sport
         function initTvModalSwipe() {
             const tvModal = document.getElementById('tvModal');
             const TV_TABS = ['sport','nasional','lokal','berita'];
-            addSwipe(tvModal,
-                () => { // kiri → tab berikutnya
+            let _tvsx = 0, _tvsy = 0, _tvSkip = false;
+
+            tvModal.addEventListener('touchstart', e => {
+                if (e.touches.length !== 1) return;
+                _tvsx = e.touches[0].clientX;
+                _tvsy = e.touches[0].clientY;
+                // skip hanya jika touch di search box atau channel list scroll area
+                _tvSkip = !!e.target.closest('#tvSearchBox') || !!e.target.closest('#tvChannelList');
+            }, { passive: true });
+
+            tvModal.addEventListener('touchend', e => {
+                if (_tvSkip) return;
+                const dx = e.changedTouches[0].clientX - _tvsx;
+                const dy = e.changedTouches[0].clientY - _tvsy;
+                const adx = Math.abs(dx), ady = Math.abs(dy);
+                if (adx >= 30 && adx >= ady * 1.5) {
                     const c = TV_TABS.indexOf(_currentTvTab);
-                    if (c < TV_TABS.length - 1) switchTvTab(TV_TABS[c + 1]);
-                },
-                () => { // kanan → tab sebelumnya
-                    const c = TV_TABS.indexOf(_currentTvTab);
-                    if (c > 0) switchTvTab(TV_TABS[c - 1]);
+                    if (dx < 0 && c < TV_TABS.length - 1) switchTvTab(TV_TABS[c + 1]);
+                    else if (dx > 0 && c > 0) switchTvTab(TV_TABS[c - 1]);
                 }
-            );
+            }, { passive: true });
         }
 
         function renderTvList(filter, tab) {
@@ -5238,7 +5340,33 @@
             }
         }
 
-        // Stop semua video saat tab/app ditutup atau disembunyikan
+        // YouTube postMessage → update progress bar modal & landscape
+        window.addEventListener('message', e => {
+            try {
+                const d = JSON.parse(e.data);
+                if (d.event !== 'infoDelivery' || !d.info) return;
+                const cur = d.info.currentTime, dur = d.info.duration;
+                if (!dur || dur <= 0) return;
+                const pct = (cur / dur * 100).toFixed(2);
+                const fmt = t => { const m=Math.floor(t/60),s=Math.floor(t%60); return `${m}:${s<10?'0':''}${s}`; };
+                // modal controls
+                const mp = document.getElementById('mvcProgress');
+                const mt = document.getElementById('mvcThumb');
+                const mTime = document.getElementById('mvcTime');
+                const mDur = document.getElementById('mvcDuration');
+                if (mp) mp.style.width = pct + '%';
+                if (mt) mt.style.left = pct + '%';
+                if (mTime) mTime.textContent = fmt(cur);
+                if (mDur) mDur.textContent = fmt(dur);
+                // landscape controls
+                const lp = document.getElementById('lsProgress');
+                const lTime = document.getElementById('lsTime');
+                const lDur = document.getElementById('lsDuration');
+                if (lp) lp.style.width = pct + '%';
+                if (lTime) lTime.textContent = fmt(cur);
+                if (lDur) lDur.textContent = fmt(dur);
+            } catch(e2) {}
+        });
         document.addEventListener('visibilitychange', () => {
             if (document.hidden) {
                 // Pause semua iframe YouTube yang aktif
