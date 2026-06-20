@@ -996,11 +996,53 @@
         }
         .tv-ch-card.active-ch .tv-ch-live-badge { display: block; }
 
-        /* TV Player - full fit iframe, no clip hack */
-        .tv-mode #mainVideoArea { 
-            overflow: hidden; background: #000; 
-            aspect-ratio: 16/9; 
-            position: relative;
+        /* TV Modal Tab Bar */
+        .tv-tab-bar {
+            display: flex; background: #000;
+            border-bottom: 1px solid #1a1a1a;
+            position: sticky; top: 54px; z-index: 199;
+        }
+        .tv-tab-item {
+            flex: 1; text-align: center; padding: 10px 4px;
+            font-size: 11px; font-weight: 700; color: #555;
+            cursor: pointer; border-bottom: 2px solid transparent;
+            transition: all 0.2s; letter-spacing: 0.2px;
+        }
+        .tv-tab-item.active-tv-tab {
+            color: #fff; border-bottom-color: #fff;
+        }
+        /* LiveSport full embed */
+        #tvLiveSportPane {
+            display: none;
+            position: fixed;
+            top: 108px; /* topbar 54px + tabbar 54px */
+            left: 0; right: 0;
+            bottom: 64px;
+            background: #000;
+        }
+        #tvLiveSportPane iframe {
+            width: 100%; height: 100%; border: none; display: block;
+        }
+        /* Channel pane wrapper */
+        #tvChannelPane {
+            display: none;
+        }
+        /* Sticky video player */
+        #tvPlayerArea {
+            display: none;
+            position: sticky;
+            top: 108px; /* topbar + tabbar */
+            z-index: 150;
+            background: #000;
+            width: 100%;
+            aspect-ratio: 16/9;
+        }
+        #tvPlayerArea iframe {
+            width: 100%; height: 100%; border: none; display: block;
+        }
+        /* Channel list scrolls independently below player */
+        #tvChannelList {
+            padding-bottom: 80px;
         }
         .tv-mode .carousel-slide { 
             overflow: hidden; position: relative; 
@@ -2653,15 +2695,39 @@
         <div class="tv-topbar">
             <i class="fa-solid fa-chevron-left" style="font-size:20px;color:#fff;cursor:pointer;padding:6px" onclick="closeTvModal()"></i>
             <div class="tv-live-dot"></div>
-            <div class="tv-topbar-title">Live TV Indonesia</div>
-            <i class="fa-solid fa-magnifying-glass" style="font-size:16px;color:#8e8e8e;cursor:pointer;padding:6px" onclick="focusTvSearch()"></i>
+            <div class="tv-topbar-title" id="tvTopbarTitle">Live Sport</div>
+            <i class="fa-solid fa-magnifying-glass" style="font-size:16px;color:#8e8e8e;cursor:pointer;padding:6px" id="tvSearchIcon" onclick="focusTvSearch()"></i>
         </div>
+
+        <!-- Tab bar -->
+        <div class="tv-tab-bar" id="tvTabBar">
+            <div class="tv-tab-item active-tv-tab" id="tvTabSport" onclick="switchTvTab('sport')">LiveSport</div>
+            <div class="tv-tab-item" id="tvTabNasional" onclick="switchTvTab('nasional')">Nasional</div>
+            <div class="tv-tab-item" id="tvTabLokal" onclick="switchTvTab('lokal')">Lokal</div>
+            <div class="tv-tab-item" id="tvTabBerita" onclick="switchTvTab('berita')">Berita</div>
+        </div>
+
+        <!-- LiveSport full embed pane -->
+        <div id="tvLiveSportPane">
+            <iframe src="https://tv.filmu.in/en/sports#main" allowfullscreen allow="autoplay; encrypted-media; fullscreen" scrolling="no" referrerpolicy="no-referrer"></iframe>
+        </div>
+
+        <!-- Search box (hanya untuk tab channel) -->
         <div class="tv-search-box" id="tvSearchBox" style="display:none">
             <i class="fa-solid fa-magnifying-glass text-zinc-500 text-xs"></i>
             <input type="text" id="tvSearchInp" placeholder="Search TV channels..." autocomplete="off" oninput="filterTvChannels(this.value)">
             <i class="fa-solid fa-xmark" style="color:#8e8e8e;font-size:14px;cursor:pointer;padding:2px 0 2px 4px" onclick="closeTvSearch()"></i>
         </div>
-        <div id="tvChannelList" style="padding-bottom:70px"></div>
+
+        <!-- Channel pane (Nasional / Lokal / Berita) -->
+        <div id="tvChannelPane">
+            <!-- sticky video player -->
+            <div id="tvPlayerArea">
+                <iframe id="tvPlayerFrame" src="" allowfullscreen allow="autoplay; encrypted-media"></iframe>
+            </div>
+            <!-- scrollable channel list -->
+            <div id="tvChannelList"></div>
+        </div>
 
         <!-- Bottom nav khusus TV - selaras ukuran & posisi dengan nav utama -->
         <nav class="tv-bottom-nav">
@@ -3178,6 +3244,12 @@
                     { name: 'TVRI SUMUT', url: 'https://m.vidio.com/live/6447-tvri-sumatera-utara', logo: 'SMU' },
                     { name: 'TVRI KALTIM', url: 'https://m.vidio.com/live/6457-tvri-kalimantan-timur', logo: 'KLT' },
                 ]
+            },
+            {
+                label: 'Sports',
+                channels: [
+                    { name: 'Sports Live', url: 'https://tv.filmu.in/en/sports', logo: '⚽' },
+                ]
             }
         ];
 
@@ -3444,16 +3516,56 @@
             return nowBarHTML + schedHTML;
         }
 
-        function renderTvList(filter) {
+        let _currentTvTab = 'sport';
+
+        function switchTvTab(tab) {
+            _currentTvTab = tab;
+            document.querySelectorAll('.tv-tab-item').forEach(t => t.classList.remove('active-tv-tab'));
+            document.getElementById('tvTab' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active-tv-tab');
+
+            const sportPane = document.getElementById('tvLiveSportPane');
+            const channelPane = document.getElementById('tvChannelPane');
+            const searchIcon = document.getElementById('tvSearchIcon');
+            const tvTitle = document.getElementById('tvTopbarTitle');
+
+            if (tab === 'sport') {
+                sportPane.style.display = 'block';
+                channelPane.style.display = 'none';
+                searchIcon.style.display = 'none';
+                tvTitle.textContent = 'Live Sport';
+                document.getElementById('tvSearchBox').style.display = 'none';
+            } else {
+                sportPane.style.display = 'none';
+                channelPane.style.display = 'block';
+                searchIcon.style.display = 'block';
+                const labels = { nasional: 'Nasional', lokal: 'Lokal & Regional', berita: 'Berita' };
+                tvTitle.textContent = labels[tab] || 'Live TV';
+                renderTvList('', tab);
+                // auto-play channel pertama di tab ini
+                const tabMap = { nasional: 'Nasional', lokal: 'Lokal & Regional', berita: 'Berita' };
+                const cat = tvCategories.find(c => c.label === tabMap[tab]);
+                if (cat && cat.channels.length > 0) {
+                    const first = cat.channels[0];
+                    playTvChannelInPane(first.name, first.url);
+                }
+            }
+        }
+
+        function renderTvList(filter, tab) {
             const cont = document.getElementById('tvChannelList');
             const q = (filter || '').toLowerCase();
+            const activeTab = tab || _currentTvTab;
+            const tabMap = { nasional: 'Nasional', lokal: 'Lokal & Regional', berita: 'Berita' };
+            const catLabel = tabMap[activeTab];
             let html = '';
             tvCategories.forEach(cat => {
+                if (catLabel && cat.label !== catLabel) return;
+                if (cat.label === 'Sports') return; // Sports hanya di tab LiveSport
                 const filtered = cat.channels.filter(ch => ch.name.toLowerCase().includes(q));
                 if (filtered.length === 0) return;
                 html += `<div class="tv-category-label">${cat.label}</div><div class="tv-channel-grid">`;
                 filtered.forEach(ch => {
-                    html += `<div class="tv-ch-card" onclick="playTvChannel('${ch.name}', '${ch.url}')">
+                    html += `<div class="tv-ch-card" id="tvch-${ch.name.replace(/\s/g,'_')}" onclick="playTvChannelInPane('${ch.name}', '${ch.url}')">
                         <div class="tv-ch-live-badge">LIVE</div>
                         <div class="tv-ch-logo-box">${ch.logo}</div>
                         <div class="tv-ch-name">${ch.name}</div>
@@ -3465,51 +3577,64 @@
             cont.innerHTML = html;
         }
 
-        function initTvChannels() { renderTvList(''); }
-        function filterTvChannels(q) { renderTvList(q); }
+        function playTvChannelInPane(name, url) {
+            // highlight active channel card
+            document.querySelectorAll('.tv-ch-card').forEach(c => c.classList.remove('active-ch'));
+            const card = document.getElementById('tvch-' + name.replace(/\s/g,'_'));
+            if (card) {
+                card.classList.add('active-ch');
+                card.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+            }
+            // load player — sticky di atas, tidak perlu scroll
+            const playerArea = document.getElementById('tvPlayerArea');
+            const frame = document.getElementById('tvPlayerFrame');
+            playerArea.style.display = 'block';
+            frame.src = url;
+        }
+
+        function initTvChannels() { /* channels di-render saat switchTvTab dipanggil */ }
+        function filterTvChannels(q) { renderTvList(q, _currentTvTab); }
 
         function focusTvSearch() {
+            if (_currentTvTab === 'sport') return;
             const box = document.getElementById('tvSearchBox');
-            const inp = document.getElementById('tvSearchInp');
             box.style.display = 'flex';
-            inp.focus();
-            // highlight search icon in bottom nav
-            document.querySelectorAll('.tv-bottom-item').forEach(el => el.classList.remove('tv-bottom-active'));
-            document.querySelector('.tv-bottom-search').classList.add('tv-bottom-active');
+            document.getElementById('tvSearchInp').focus();
         }
 
         function closeTvSearch() {
             const box = document.getElementById('tvSearchBox');
-            const inp = document.getElementById('tvSearchInp');
             box.style.display = 'none';
-            inp.value = '';
-            renderTvList('');
-            // restore TV active
-            document.querySelectorAll('.tv-bottom-item').forEach(el => el.classList.remove('tv-bottom-active'));
-            document.querySelector('.tv-bottom-item:nth-child(3)').classList.add('tv-bottom-active');
+            document.getElementById('tvSearchInp').value = '';
+            renderTvList('', _currentTvTab);
         }
 
         function openTvModal() {
             closeModal(); closeSearch();
-            // Tutup reels jika aktif
             if (document.getElementById('reelsModal').style.display === 'block') {
                 _closeReelsSilent();
             }
             document.getElementById('tvSearchInp').value = '';
             document.getElementById('tvSearchBox').style.display = 'none';
-            renderTvList('');
+            document.getElementById('tvPlayerArea').style.display = 'none';
+            document.getElementById('tvPlayerFrame').src = '';
             document.getElementById('tvModal').style.display = 'block';
             document.getElementById('tvModal').scrollTop = 0;
             document.body.style.overflow = 'hidden';
             history.pushState({view: 'tv'}, "");
+            // langsung buka tab LiveSport
+            switchTvTab('sport');
         }
 
         function closeTvModal() {
+            // reset player
+            document.getElementById('tvPlayerFrame').src = '';
+            document.getElementById('tvLiveSportPane').querySelector('iframe').src = '';
             document.getElementById('tvModal').style.display = 'none';
             document.body.style.overflow = 'auto';
             updateActiveNav(document.getElementById('homeBtnNav'));
-            // Ganti state ke home tanpa push (agar back tidak loop)
             history.replaceState({view: 'home'}, '');
+            // reload sport iframe saat dibuka lagi nanti via openTvModal
         }
 
         function playTvChannel(name, url) {
@@ -4140,7 +4265,7 @@
         function buildLsServerList() {
             const scroll = document.getElementById('lsServerScroll');
             let html = '';
-            for (let i = 1; i <= 31; i++) {
+            for (let i = 1; i <= 28; i++) {
                 const active = (i === activeServerIdx) ? 'active-link' : '';
                 html += `<div class="ls-srv-btn ${active}" onclick="event.stopPropagation(); lsChangeServer(${i}, this)">Server ${i}</div>`;
             }
@@ -6858,7 +6983,7 @@
             // tanggal dihapus dari modal (sudah ada di info grid)
             
             let serverButtonsHTML = '';
-            for(let i=1; i<=31; i++) {
+            for(let i=1; i<=28; i++) {
                 serverButtonsHTML += `<button class="server-btn" onclick="changeServer(${i}, this)">Server ${i}</button>`;
             }
             document.getElementById('serverList').innerHTML = serverButtonsHTML;
