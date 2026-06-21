@@ -2543,8 +2543,7 @@
                     <div class="reel-heart-pop" id="modalHeartPop"><i class="fa-solid fa-heart"></i></div>
                     <div class="swipe-overlay" id="swipeOverlay"></div>
                     <div class="carousel-track" id="carouselTrack"></div>
-                    <div id="carouselDots" class="flex justify-center gap-2 py-2"></div>
-                    <!-- Video controls overlay - style seperti screenshot -->
+                    <!-- Video controls overlay -->
                     <div id="modalVideoControls" onclick="event.stopPropagation()" style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.9));padding:6px 0 8px;z-index:50">
                         <!-- progress bar -->
                         <div style="display:flex;align-items:center;gap:8px;padding:0 14px;margin-bottom:10px">
@@ -2590,6 +2589,8 @@
                         </div>
                     </div>
                 </div>
+                <!-- Dots indicator slide trailer — di luar mainVideoArea agar tidak tertutup controls -->
+                <div id="carouselDots" style="display:flex;justify-content:center;gap:6px;padding:6px 0 2px;background:#000"></div>
 
                 <div class="px-4 py-3 flex justify-between items-center bg-black">
                     <div class="flex gap-4 items-center">
@@ -3662,35 +3663,38 @@
             const tabEl = document.getElementById('tvTab' + tab.charAt(0).toUpperCase() + tab.slice(1));
             if (tabEl) tabEl.classList.add('active-tv-tab');
 
-            const sportPane  = document.getElementById('tvLiveSportPane');
+            const sportPane   = document.getElementById('tvLiveSportPane');
             const channelPane = document.getElementById('tvChannelPane');
-            const searchIcon = document.getElementById('tvSearchIcon');
-            const tvTitle    = document.getElementById('tvTopbarTitle');
-            const tvModal    = document.getElementById('tvModal');
+            const searchIcon  = document.getElementById('tvSearchIcon');
+            const tvTitle     = document.getElementById('tvTopbarTitle');
+            const tvModal     = document.getElementById('tvModal');
+            const frame       = document.getElementById('tvPlayerFrame');
+
+            // Stop audio dari player channel sebelumnya
+            if (frame && frame.src) { frame.src = ''; }
+            document.getElementById('tvPlayerArea').style.display = 'none';
 
             if (tab === 'sport') {
-                sportPane.style.display  = 'flex';
+                sportPane.style.display   = 'flex';
                 channelPane.style.display = 'none';
                 if (searchIcon) searchIcon.style.display = 'none';
                 tvTitle.textContent = 'Live Sport';
                 document.getElementById('tvSearchBox').style.display = 'none';
+                // Langsung buka timstreams di tab baru
+                window.open('https://timstreams.net/', '_blank');
             } else {
-                sportPane.style.display  = 'none';
+                sportPane.style.display   = 'none';
                 channelPane.style.display = 'block';
                 if (searchIcon) searchIcon.style.display = 'block';
                 const labels = { nasional: 'Nasional', lokal: 'Lokal & Regional', berita: 'Berita' };
                 tvTitle.textContent = labels[tab] || 'Live TV';
-                // reset scroll modal & player
                 tvModal.scrollTop = 0;
-                document.getElementById('tvPlayerArea').style.display = 'none';
-                document.getElementById('tvPlayerFrame').src = '';
-                // render channel list
                 renderTvList('', tab);
-                // auto-play channel pertama
+                // auto-play channel pertama setelah list ter-render
                 const tabMap = { nasional: 'Nasional', lokal: 'Lokal & Regional', berita: 'Berita' };
                 const cat = tvCategories.find(c => c.label === tabMap[tab]);
                 if (cat && cat.channels.length > 0) {
-                    setTimeout(() => playTvChannelInPane(cat.channels[0].name, cat.channels[0].url), 100);
+                    setTimeout(() => playTvChannelInPane(cat.channels[0].name, cat.channels[0].url), 150);
                 }
             }
         }
