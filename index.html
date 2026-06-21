@@ -2544,13 +2544,13 @@
                     <div class="swipe-overlay" id="swipeOverlay"></div>
                     <div class="carousel-track" id="carouselTrack"></div>
                     <!-- Video controls overlay -->
-                    <div id="modalVideoControls" onclick="event.stopPropagation()" style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.9));padding:6px 0 8px;z-index:50">
+                    <div id="modalVideoControls" onclick="event.stopPropagation()" style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.9));padding:6px 0 8px;z-index:50;opacity:0;pointer-events:none;transition:opacity 0.3s">
                         <!-- progress bar -->
                         <div style="display:flex;align-items:center;gap:8px;padding:0 14px;margin-bottom:10px">
                             <span id="mvcTime" style="font-size:11px;color:#fff;min-width:38px;font-weight:600">0:00</span>
                             <div id="mvcTrack" style="flex:1;height:3px;background:rgba(255,255,255,0.25);border-radius:2px;cursor:pointer;position:relative">
                                 <div id="mvcProgress" style="width:0%;height:100%;background:#fff;border-radius:2px;transition:width 0.5s linear"></div>
-                                <div id="mvcThumb" style="position:absolute;top:50%;left:0%;transform:translate(-50%,-50%);width:12px;height:12px;background:#3cdd3c;border-radius:50%;transition:left 0.5s linear"></div>
+                                <div id="mvcThumb" style="position:absolute;top:50%;left:0%;transform:translate(-50%,-50%);width:12px;height:12px;background:#1a73e8;border-radius:50%;transition:left 0.5s linear"></div>
                             </div>
                             <span id="mvcDuration" style="font-size:11px;color:#aaa;min-width:38px;text-align:right">0:00</span>
                         </div>
@@ -2776,17 +2776,16 @@
         </div>
 
         <!-- LiveSport full embed pane -->
-        <div id="tvLiveSportPane">
-            <div style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;background:#0a0a0a;padding:20px;box-sizing:border-box">
-                <div style="font-size:48px">⚽</div>
+        <div id="tvLiveSportPane" onclick="void(0)">
+            <div style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;padding:20px;box-sizing:border-box">
+                <div style="font-size:56px">⚽</div>
                 <div style="text-align:center">
-                    <div style="font-size:18px;font-weight:800;color:#fff;margin-bottom:8px">Live Sports Streaming</div>
-                    <div style="font-size:13px;color:#555;line-height:1.6">Layanan live sport tidak dapat<br>ditampilkan langsung di sini.</div>
+                    <div style="font-size:20px;font-weight:800;color:#fff;margin-bottom:8px">Live Sports</div>
+                    <div style="font-size:13px;color:#666;line-height:1.7">Geser kiri untuk Nasional<br>atau tap tombol di bawah</div>
                 </div>
-                <button onclick="window.open('https://timstreams.net/','_blank')" style="background:linear-gradient(135deg,#1a73e8,#0d47a1);border:none;color:#fff;font-size:14px;font-weight:700;padding:14px 32px;border-radius:30px;cursor:pointer;letter-spacing:0.5px">
-                    ▶ Tonton Live Sport
+                <button onclick="window.open('https://timstreams.net/','_blank')" style="background:linear-gradient(135deg,#1a73e8,#0d47a1);border:none;color:#fff;font-size:14px;font-weight:700;padding:14px 32px;border-radius:30px;cursor:pointer;letter-spacing:0.5px;box-shadow:0 4px 15px rgba(26,115,232,0.4)">
+                    ▶ Buka TimStreams
                 </button>
-                <div style="font-size:11px;color:#333">Akan terbuka di tab baru</div>
             </div>
         </div>
 
@@ -3699,25 +3698,56 @@
             }
         }
 
-        // Swipe gesture untuk tab TV modal - sensitif, aktif di semua area termasuk sport
-        function initTvModalSwipe() {
-            const TV_TABS = ['sport','nasional','lokal','berita'];
+        // ── VIDEO CONTROLS AUTO-HIDE ──────────────────────────────────────
+        let _ctrlHideTimer = null;
+        function showVideoControls() {
+            const ctrl = document.getElementById('modalVideoControls');
+            if (!ctrl) return;
+            ctrl.style.opacity = '1';
+            ctrl.style.pointerEvents = 'auto';
+            clearTimeout(_ctrlHideTimer);
+            _ctrlHideTimer = setTimeout(() => {
+                ctrl.style.opacity = '0';
+                ctrl.style.pointerEvents = 'none';
+            }, 3000);
+        }
+        // tap di mainVideoArea → toggle controls
+        document.addEventListener('DOMContentLoaded', () => {
+            const area = document.getElementById('mainVideoArea');
+            if (area) {
+                area.addEventListener('click', e => {
+                    if (e.target.closest('#modalVideoControls')) return;
+                    const ctrl = document.getElementById('modalVideoControls');
+                    if (!ctrl) return;
+                    if (ctrl.style.opacity === '0' || ctrl.style.opacity === '') {
+                        showVideoControls();
+                    } else {
+                        ctrl.style.opacity = '0';
+                        ctrl.style.pointerEvents = 'none';
+                        clearTimeout(_ctrlHideTimer);
+                    }
+                });
+            }
+        });
 
-            function attachTvSwipe(el, skipSelector) {
+        // ── TV MODAL SWIPE — reliable, attach ke tvModal + sportPane ─────────
+        function initTvModalSwipe() {
+            const TV_TABS = ['sport', 'nasional', 'lokal', 'berita'];
+
+            function makeSwipeHandler(el, getSkip) {
                 if (!el) return;
-                let sx = 0, sy = 0, skip = false;
+                let sx = 0, sy = 0;
                 el.addEventListener('touchstart', e => {
                     if (e.touches.length !== 1) return;
                     sx = e.touches[0].clientX;
                     sy = e.touches[0].clientY;
-                    skip = skipSelector ? !!e.target.closest(skipSelector) : false;
                 }, { passive: true });
                 el.addEventListener('touchend', e => {
-                    if (skip) return;
+                    if (getSkip && getSkip(e)) return;
                     const dx = e.changedTouches[0].clientX - sx;
                     const dy = e.changedTouches[0].clientY - sy;
                     const adx = Math.abs(dx), ady = Math.abs(dy);
-                    if (adx >= 28 && adx >= ady * 1.4) {
+                    if (adx >= 25 && adx >= ady * 1.2) {
                         const c = TV_TABS.indexOf(_currentTvTab);
                         if (dx < 0 && c < TV_TABS.length - 1) switchTvTab(TV_TABS[c + 1]);
                         else if (dx > 0 && c > 0) switchTvTab(TV_TABS[c - 1]);
@@ -3725,10 +3755,13 @@
                 }, { passive: true });
             }
 
-            // attach ke modal utama (untuk semua tab)
-            attachTvSwipe(document.getElementById('tvModal'), '#tvSearchBox,#tvChannelList');
-            // attach langsung ke sport pane (position:fixed, z-index tinggi — event tidak bubble ke tvModal)
-            attachTvSwipe(document.getElementById('tvLiveSportPane'), null);
+            // tvModal — skip saat touch di search atau channel list
+            makeSwipeHandler(
+                document.getElementById('tvModal'),
+                e => !!e.target.closest('#tvSearchBox') || !!e.target.closest('#tvChannelList')
+            );
+            // tvLiveSportPane — tidak ada yang di-skip, seluruh area swipe aktif
+            makeSwipeHandler(document.getElementById('tvLiveSportPane'), null);
         }
 
         function renderTvList(filter, tab) {
@@ -6914,6 +6947,8 @@
             document.getElementById('smartSearchDropdown').style.display = 'none'; 
             document.body.style.overflow = 'hidden'; 
             currentIdx = 0; isTranslated = false;
+            // tampilkan controls sebentar lalu auto-hide
+            setTimeout(() => showVideoControls(), 500);
             
             history.pushState({view: 'modal'}, "");
 
