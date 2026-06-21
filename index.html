@@ -2781,11 +2781,8 @@
                 <div style="font-size:56px">⚽</div>
                 <div style="text-align:center">
                     <div style="font-size:20px;font-weight:800;color:#fff;margin-bottom:8px">Live Sports</div>
-                    <div style="font-size:13px;color:#666;line-height:1.7">Geser kiri untuk Nasional<br>atau tap tombol di bawah</div>
+                    <div style="font-size:13px;color:#666;line-height:1.7">Geser kiri untuk ke tab Nasional</div>
                 </div>
-                <button onclick="window.open('https://timstreams.net/','_blank')" style="background:linear-gradient(135deg,#1a73e8,#0d47a1);border:none;color:#fff;font-size:14px;font-weight:700;padding:14px 32px;border-radius:30px;cursor:pointer;letter-spacing:0.5px;box-shadow:0 4px 15px rgba(26,115,232,0.4)">
-                    ▶ Buka TimStreams
-                </button>
             </div>
         </div>
 
@@ -3679,8 +3676,6 @@
                 if (searchIcon) searchIcon.style.display = 'none';
                 tvTitle.textContent = 'Live Sport';
                 document.getElementById('tvSearchBox').style.display = 'none';
-                // Langsung buka timstreams di tab baru
-                window.open('https://timstreams.net/', '_blank');
             } else {
                 sportPane.style.display   = 'none';
                 channelPane.style.display = 'block';
