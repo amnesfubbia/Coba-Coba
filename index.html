@@ -2776,14 +2776,8 @@
         </div>
 
         <!-- LiveSport full embed pane -->
-        <div id="tvLiveSportPane" onclick="void(0)">
-            <div style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;padding:20px;box-sizing:border-box">
-                <div style="font-size:56px">⚽</div>
-                <div style="text-align:center">
-                    <div style="font-size:20px;font-weight:800;color:#fff;margin-bottom:8px">Live Sports</div>
-                    <div style="font-size:13px;color:#666;line-height:1.7">Geser kiri untuk ke tab Nasional</div>
-                </div>
-            </div>
+        <div id="tvLiveSportPane">
+            <iframe id="tvSportIframe" src="" allowfullscreen allow="autoplay; encrypted-media; fullscreen" style="width:100%;height:100%;border:none;display:block" referrerpolicy="no-referrer"></iframe>
         </div>
 
         <!-- Search box (hanya untuk tab channel) -->
@@ -3669,6 +3663,11 @@
             // Stop audio dari player channel sebelumnya
             if (frame && frame.src) { frame.src = ''; }
             document.getElementById('tvPlayerArea').style.display = 'none';
+            // Kosongkan sport iframe saat meninggalkan tab sport
+            if (_currentTvTab === 'sport' && tab !== 'sport') {
+                const sif = document.getElementById('tvSportIframe');
+                if (sif) sif.src = '';
+            }
 
             if (tab === 'sport') {
                 sportPane.style.display   = 'flex';
@@ -3676,6 +3675,9 @@
                 if (searchIcon) searchIcon.style.display = 'none';
                 tvTitle.textContent = 'Live Sport';
                 document.getElementById('tvSearchBox').style.display = 'none';
+                // load iframe
+                const sif = document.getElementById('tvSportIframe');
+                if (sif && !sif.src) sif.src = 'https://timstreams.net/';
             } else {
                 sportPane.style.display   = 'none';
                 channelPane.style.display = 'block';
@@ -3755,7 +3757,9 @@
                 document.getElementById('tvModal'),
                 e => !!e.target.closest('#tvSearchBox') || !!e.target.closest('#tvChannelList')
             );
-            // tvLiveSportPane — tidak ada yang di-skip, seluruh area swipe aktif
+            // Tab bar — selalu aktif, tidak ada yang di-skip
+            makeSwipeHandler(document.getElementById('tvTabBar'), null);
+            // tvLiveSportPane — untuk area di luar iframe
             makeSwipeHandler(document.getElementById('tvLiveSportPane'), null);
         }
 
@@ -3836,6 +3840,8 @@
 
         function closeTvModal() {
             document.getElementById('tvPlayerFrame').src = '';
+            const sif = document.getElementById('tvSportIframe');
+            if (sif) sif.src = '';
             document.getElementById('tvModal').style.display = 'none';
             document.body.style.overflow = 'auto';
             updateActiveNav(document.getElementById('homeBtnNav'));
