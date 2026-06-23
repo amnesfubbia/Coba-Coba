@@ -2560,7 +2560,7 @@
                     <div class="swipe-overlay" id="swipeOverlay"></div>
                     <div class="carousel-track" id="carouselTrack"></div>
                     <!-- Video controls overlay -->
-                    <div id="modalVideoControls" onclick="event.stopPropagation()" style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.9));padding:6px 0 8px;z-index:50;opacity:0;pointer-events:none;transition:opacity 0.3s">
+                    <div id="modalVideoControls" onclick="event.stopPropagation()" style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.9));padding:6px 0 8px;z-index:50;opacity:1;transition:opacity 0.3s">
                         <!-- progress bar -->
                         <div style="display:flex;align-items:center;gap:8px;padding:0 14px;margin-bottom:10px">
                             <span id="mvcTime" style="font-size:11px;color:#fff;min-width:38px;font-weight:600">0:00</span>
@@ -3085,7 +3085,6 @@
         let _lsPausedSrc = '';
 
         function lsPlayPause() {
-            const iframe = document.querySelector('#mainVideoArea iframe');
             const icon = document.getElementById('lsPlayBtn');
             if (activeServerIdx === 99) {
                 // Trailer (YouTube) — pakai postMessage
@@ -3095,19 +3094,23 @@
                 icon.style.cssText = 'font-size:26px;border:2px solid #fff;border-radius:50%;padding:10px;width:48px;height:48px;display:flex;align-items:center;justify-content:center;box-sizing:border-box';
             } else {
                 // Streaming — pause = kosongkan src, play = kembalikan src
+                const iframe = document.querySelector('#carouselTrack iframe') || document.querySelector('#mainVideoArea iframe');
                 if (!iframe) return;
                 if (!_lsPaused) {
-                    _lsPausedSrc = iframe.src;
-                    iframe.src = '';
+                    _lsPausedSrc = iframe.src || _lsPausedSrc;
+                    if (!_lsPausedSrc) {
+                        // Fallback: rebuild URL
+                        _lsPausedSrc = buildEmbedUrl(window.currentMediaType, window.currentMediaId, activeSeason, activeEpisode, activeServerIdx);
+                    }
+                    iframe.src = 'about:blank';
                     _lsPaused = true;
                     icon.className = 'fa-solid fa-play ls-btn';
-                    icon.style.cssText = 'font-size:26px;border:2px solid #fff;border-radius:50%;padding:10px;width:48px;height:48px;display:flex;align-items:center;justify-content:center;box-sizing:border-box';
                 } else {
                     iframe.src = _lsPausedSrc;
                     _lsPaused = false;
                     icon.className = 'fa-solid fa-pause ls-btn';
-                    icon.style.cssText = 'font-size:26px;border:2px solid #fff;border-radius:50%;padding:10px;width:48px;height:48px;display:flex;align-items:center;justify-content:center;box-sizing:border-box';
                 }
+                icon.style.cssText = 'font-size:26px;border:2px solid #fff;border-radius:50%;padding:10px;width:48px;height:48px;display:flex;align-items:center;justify-content:center;box-sizing:border-box';
             }
         }
 
@@ -3736,7 +3739,7 @@
             }
         }
 
-        // ── VIDEO CONTROLS AUTO-HIDE ──────────────────────────────────────
+        // Video controls auto-hide — portrait mode
         let _ctrlHideTimer = null;
         function showVideoControls() {
             const ctrl = document.getElementById('modalVideoControls');
@@ -3744,28 +3747,25 @@
             ctrl.style.opacity = '1';
             ctrl.style.pointerEvents = 'auto';
             clearTimeout(_ctrlHideTimer);
-            _ctrlHideTimer = setTimeout(() => {
-                ctrl.style.opacity = '0';
-                ctrl.style.pointerEvents = 'none';
-            }, 3000);
+            _ctrlHideTimer = setTimeout(() => hideVideoControls(), 4000);
         }
-        // tap di mainVideoArea → toggle controls
+        function hideVideoControls() {
+            const ctrl = document.getElementById('modalVideoControls');
+            if (!ctrl) return;
+            ctrl.style.opacity = '0';
+            ctrl.style.pointerEvents = 'none';
+        }
+        // Tap area video → toggle controls
         document.addEventListener('DOMContentLoaded', () => {
             const area = document.getElementById('mainVideoArea');
-            if (area) {
-                area.addEventListener('click', e => {
-                    if (e.target.closest('#modalVideoControls')) return;
-                    const ctrl = document.getElementById('modalVideoControls');
-                    if (!ctrl) return;
-                    if (ctrl.style.opacity === '0' || ctrl.style.opacity === '') {
-                        showVideoControls();
-                    } else {
-                        ctrl.style.opacity = '0';
-                        ctrl.style.pointerEvents = 'none';
-                        clearTimeout(_ctrlHideTimer);
-                    }
-                });
-            }
+            if (!area) return;
+            area.addEventListener('click', e => {
+                if (e.target.closest('#modalVideoControls')) return;
+                const ctrl = document.getElementById('modalVideoControls');
+                if (!ctrl) return;
+                if (ctrl.style.opacity === '0' || ctrl.style.opacity === '') showVideoControls();
+                else hideVideoControls();
+            });
         });
 
         // ── TV MODAL SWIPE — reliable, attach ke tvModal + sportPane ─────────
