@@ -997,15 +997,6 @@
         }
         .tv-ch-card.active-ch .tv-ch-live-badge { display: block; }
 
-        /* Blokir klik ke iframe di landscape agar kontrol bawaan tidak muncul */
-        .landscape-active #mainVideoArea::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            z-index: 10;
-            background: transparent;
-            pointer-events: auto;
-        }
         /* Sembunyikan modal controls saat landscape aktif — landscape punya controls sendiri */
         .landscape-active #modalVideoControls { display: none !important; }
         .tv-tab-bar {
@@ -2089,7 +2080,7 @@
             <!-- BOTTOM: progress + controls -->
             <div class="ls-bottom-area">
                 <!-- progress bar -->
-                <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+                <div id="lsProgressRow" style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
                     <span id="lsTime" style="font-size:11px;color:#fff;min-width:40px">0:00</span>
                     <div style="flex:1;height:3px;background:rgba(255,255,255,0.25);border-radius:2px;cursor:pointer" onclick="event.stopPropagation()">
                         <div id="lsProgress" style="width:0%;height:100%;background:#fff;border-radius:2px;transition:width 0.5s linear"></div>
@@ -2097,8 +2088,7 @@
                     <span id="lsDuration" style="font-size:11px;color:#aaa;min-width:40px;text-align:right">0:00</span>
                 </div>
                 <!-- controls row -->
-                <div class="ls-controls-row" style="justify-content:space-around;align-items:center">
-                    <i class="fa-solid fa-lock-open ls-btn ls-btn-sm" onclick="event.stopPropagation(); lockScreen()" title="Lock"></i>
+                <div id="lsControlsRow" style="display:flex;justify-content:space-around;align-items:center">
                     <i class="fa-solid fa-backward-step ls-btn ls-btn-sm" onclick="event.stopPropagation(); lsCarouselNav(-1)" title="Prev"></i>
                     <div class="ls-seek-btn" style="position:relative;display:inline-flex;align-items:center">
                         <i class="fa-solid fa-rotate-left ls-btn ls-btn-sm" onclick="event.stopPropagation(); lsSeek(-10)" title="-10s"></i>
@@ -4481,8 +4471,8 @@
             buildLsServerList();
 
             // Tampilkan semua kontrol kita untuk semua server
-            const lsControlsRow = document.querySelector('.ls-controls-row');
-            const lsProgressArea = document.querySelector('.ls-bottom-area > div:first-child');
+            const lsControlsRow = document.getElementById('lsControlsRow');
+            const lsProgressArea = document.getElementById('lsProgressRow');
             if (lsControlsRow) lsControlsRow.style.display = 'flex';
             if (lsProgressArea) lsProgressArea.style.display = 'flex';
             // Seek hanya untuk trailer
@@ -4549,8 +4539,8 @@
             const url = buildEmbedUrl(window.currentMediaType, window.currentMediaId, activeSeason, activeEpisode, activeServerIdx);
             playVid(url);
             // Selalu tampilkan kontrol kita untuk semua server
-            const lsControlsRow = document.querySelector('.ls-controls-row');
-            const lsProgressArea = document.querySelector('.ls-bottom-area > div:first-child');
+            const lsControlsRow = document.getElementById('lsControlsRow');
+            const lsProgressArea = document.getElementById('lsProgressRow');
             if (lsControlsRow) lsControlsRow.style.display = 'flex';
             if (lsProgressArea) lsProgressArea.style.display = 'flex';
             // Reset pause state saat ganti server
