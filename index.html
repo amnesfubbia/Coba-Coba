@@ -2795,8 +2795,8 @@
             </div>
             <!-- tombol LiveSport di antara video dan channel list -->
             <div style="padding:10px 16px 4px">
-                <button onclick="window.open('https://dami-tv.pro/','_blank')" style="width:100%;background:linear-gradient(135deg,#1a73e8,#0d47a1);border:none;color:#fff;font-size:13px;font-weight:700;padding:11px 0;border-radius:12px;cursor:pointer;letter-spacing:0.3px;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 3px 12px rgba(26,115,232,0.35)">
-                    <i class="fa-solid fa-signal-stream"></i> Live Sport — TimStreams
+                <button onclick="openLivesportModal()" style="width:100%;background:linear-gradient(135deg,#1a73e8,#0d47a1);border:none;color:#fff;font-size:13px;font-weight:700;padding:11px 0;border-radius:12px;cursor:pointer;letter-spacing:0.3px;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 3px 12px rgba(26,115,232,0.35)">
+                    <i class="fa-solid fa-signal-stream"></i> Live Sport — Dami TV
                 </button>
             </div>
             <!-- scrollable channel list -->
@@ -2921,6 +2921,26 @@
     </div>
 
 
+    <!-- ===== MUSIC MODAL ===== -->
+    <div id="musicModal" style="display:none;position:fixed;inset:0;z-index:9500;background:#0a0a0a;flex-direction:column">
+        <div style="display:flex;align-items:center;gap:12px;padding:14px 16px;background:#000;position:sticky;top:0;z-index:10">
+            <i class="fa-solid fa-chevron-left" style="font-size:20px;color:#fff;cursor:pointer" onclick="closeMusicModal()"></i>
+            <span style="font-size:17px;font-weight:800;color:#fff">Music</span>
+        </div>
+        <iframe id="musicIframe" src="" style="flex:1;width:100%;border:none;display:block" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        <nav class="bottom-nav" id="musicBottomNav" style="position:sticky;bottom:0"></nav>
+    </div>
+
+    <!-- ===== LIVESPORT MODAL ===== -->
+    <div id="livesportModal" style="display:none;position:fixed;inset:0;z-index:9500;background:#0a0a0a;flex-direction:column">
+        <div style="display:flex;align-items:center;gap:12px;padding:14px 16px;background:#000;position:sticky;top:0;z-index:10">
+            <i class="fa-solid fa-chevron-left" style="font-size:20px;color:#fff;cursor:pointer" onclick="closeLivesportModal()"></i>
+            <span style="font-size:17px;font-weight:800;color:#fff">Live Sport</span>
+        </div>
+        <iframe id="livesportIframe" src="" style="flex:1;width:100%;border:none;display:block" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        <nav class="bottom-nav" id="livesportBottomNav" style="position:sticky;bottom:0"></nav>
+    </div>
+
     <!-- ===== UNIVERSAL BOTTOM NAV ===== -->
     <nav class="bottom-nav" id="globalBottomNav"></nav>
 
@@ -2972,7 +2992,35 @@
 
         // Video controls modal film
         let _modalPlaying = true;
-        // ===== CENTRAL NAV RENDERER =====
+        // ===== MUSIC MODAL =====
+        function openMusicModal() {
+            document.getElementById('musicModal').style.display = 'flex';
+            document.getElementById('musicIframe').src = 'https://hayasaka.8man.in/';
+            document.body.style.overflow = 'hidden';
+            history.pushState({view:'music'}, '');
+            renderBottomNav('musicBottomNav', 'music', null);
+        }
+        function closeMusicModal() {
+            document.getElementById('musicIframe').src = '';
+            document.getElementById('musicModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+            history.replaceState({view:'home'}, '');
+        }
+
+        // ===== LIVESPORT MODAL =====
+        function openLivesportModal() {
+            document.getElementById('livesportModal').style.display = 'flex';
+            document.getElementById('livesportIframe').src = 'https://dami-tv.pro/';
+            document.body.style.overflow = 'hidden';
+            history.pushState({view:'livesport'}, '');
+            renderBottomNav('livesportBottomNav', 'sport', null);
+        }
+        function closeLivesportModal() {
+            document.getElementById('livesportIframe').src = '';
+            document.getElementById('livesportModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+            history.replaceState({view:'home'}, '');
+        }
         // Edit di sini saja untuk ubah semua nav sekaligus
         const NAV_ITEMS = [
             { id: 'homeBtnNav',   icon: 'fa-solid fa-house',          action: 'home'   },
@@ -2997,14 +3045,12 @@
         }
 
         function renderAllNavs() {
-            // Main nav
             renderBottomNav('globalBottomNav', 'home', null);
-            // TV nav
             renderBottomNav('tvBottomNav', 'tv', 'closeTvModal');
-            // Reels nav
             renderBottomNav('reelsBottomNavInner', 'reels', 'closeReelDetail(); closeReels');
-            // Movies Today nav
             renderBottomNav('notifBottomNav', 'home', 'closeNotif');
+            renderBottomNav('musicBottomNav', 'music', null);
+            renderBottomNav('livesportBottomNav', 'sport', null);
         }
         function _navAction(target) {
             // Tutup semua modal yang mungkin terbuka
@@ -3020,7 +3066,7 @@
                 case 'search': updateActiveNav(document.getElementById('searchBtnNav')); openSearch();    break;
                 case 'reels':  updateActiveNav(document.getElementById('reelsBtnNav'));  openReels();     break;
                 case 'tv':     updateActiveNav(document.getElementById('tvBtnNav'));     openTvModal();   break;
-                case 'music':  window.open('https://hayasaka.8man.in/','_blank');           break;
+                case 'music':  updateActiveNav(document.getElementById('musicBtnNav')); openMusicModal(); break;
             }
         }
 
@@ -4334,6 +4380,15 @@
             if (document.getElementById('actorPhotosModal') && document.getElementById('actorPhotosModal').style.display === 'block') {
                 closeActorPhotos();
                 return;
+            }
+
+            // Music modal
+            if (document.getElementById('musicModal').style.display === 'flex') {
+                closeMusicModal(); return;
+            }
+            // LiveSport modal
+            if (document.getElementById('livesportModal').style.display === 'flex') {
+                closeLivesportModal(); return;
             }
 
             // Notifikasi
