@@ -3025,11 +3025,12 @@
             renderBottomNav('tvBottomNav', 'tv', 'closeTvModal');
             renderBottomNav('reelsBottomNavInner', 'reels', 'closeReelDetail(); closeReels');
             renderBottomNav('notifBottomNav', 'home', 'closeNotif');
-            renderBottomNav('livesportBottomNav', 'sport', 'closeLivesportModal');
+            renderBottomNav('livesportBottomNav', 'sport', null);
         }
         function _navAction(target) {
             // Tutup semua modal yang mungkin terbuka
             try { if(document.getElementById('tvModal').style.display==='block'){ document.getElementById('tvPlayerFrame').src=''; document.getElementById('tvModal').style.display='none'; document.body.style.overflow='auto'; }} catch(e){}
+            try { if(document.getElementById('livesportModal')&&document.getElementById('livesportModal').style.display==='flex') closeLivesportModal(); } catch(e){}
             try { if(document.getElementById('reelsModal')&&document.getElementById('reelsModal').style.display==='block') _closeReelsSilent(); } catch(e){}
             try { if(document.getElementById('movieModal').style.display==='block') _closeModalSilent(); } catch(e){}
             try { if(document.getElementById('actorModal').classList.contains('open')) _closeActorModalSilent(); } catch(e){}
