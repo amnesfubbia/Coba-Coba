@@ -3030,45 +3030,43 @@
         let _musicAudio = null;
         let _musicCurrentId = null;
         let _musicPlaying = false;
-        let _musicProgressTimer = null;
 
         function openMusicModal() {
             document.getElementById('musicModal').style.display = 'flex';
             document.body.style.overflow = 'hidden';
             history.pushState({view:'music'}, '');
             renderBottomNav('musicBottomNav', 'music', null);
-            if (!document.getElementById('musicList').innerHTML) musicSearch('');
+            const list = document.getElementById('musicList');
+            if (!list.children.length) musicSearch('a');
         }
         function closeMusicModal() {
             document.getElementById('musicModal').style.display = 'none';
             document.body.style.overflow = 'auto';
             history.replaceState({view:'home'}, '');
-            // audio tetap jalan
         }
 
         async function musicSearch(q) {
             const list = document.getElementById('musicList');
-            list.innerHTML = '<div style="padding:40px;text-align:center;color:#333;font-size:13px"><i class="fa-solid fa-compact-disc fa-spin" style="font-size:24px;margin-bottom:10px;display:block"></i>Loading...</div>';
+            list.innerHTML = '<div style="padding:40px;text-align:center;color:#444"><i class="fa-solid fa-compact-disc fa-spin" style="font-size:28px;color:#1a73e8;margin-bottom:12px;display:block"></i>Loading...</div>';
             try {
-                const url = q ? `${MUSIC_API}/search?q=${encodeURIComponent(q)}` : `${MUSIC_API}/search?q=top hits`;
-                const r = await fetch(url);
+                const r = await fetch(`${MUSIC_API}/search?q=${encodeURIComponent(q||'trending')}`);
                 const d = await r.json();
-                if (!d.response || !d.response.length) {
-                    list.innerHTML = '<div style="padding:40px;text-align:center;color:#444;font-size:13px">Tidak ada hasil</div>';
-                    return;
-                }
-                list.innerHTML = d.response.map(s => `
-                    <div onclick="musicPlay('${s.id}','${s.title.replace(/'/g,"\\'")}','${s.img}')"
-                        style="display:flex;align-items:center;gap:12px;padding:10px 16px;cursor:pointer;border-bottom:1px solid #111;${_musicCurrentId===s.id?'background:#111':''}">
-                        <img src="${s.img}" style="width:48px;height:48px;border-radius:8px;object-fit:cover;flex-shrink:0" onerror="this.src=''">
+                const songs = d.response || [];
+                if (!songs.length) { list.innerHTML = '<div style="padding:40px;text-align:center;color:#444">Tidak ada hasil</div>'; return; }
+                list.innerHTML = songs.map(s => {
+                    const active = _musicCurrentId === s.id;
+                    return `<div onclick="musicPlay('${s.id}','${(s.title||'').replace(/'/g,"\\'")}','${s.img||''}')"
+                        style="display:flex;align-items:center;gap:12px;padding:12px 16px;cursor:pointer;border-bottom:1px solid #111;${active?'background:#111':''}">
+                        <img src="${s.img||''}" style="width:50px;height:50px;border-radius:8px;object-fit:cover;flex-shrink:0;background:#1a1a1a">
                         <div style="flex:1;overflow:hidden">
-                            <div style="font-size:13px;font-weight:600;color:${_musicCurrentId===s.id?'#1a73e8':'#fff'};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${s.title}</div>
-                            ${_musicCurrentId===s.id?'<div style="font-size:10px;color:#1a73e8;margin-top:2px">▶ Playing</div>':''}
+                            <div style="font-size:13px;font-weight:600;color:${active?'#1a73e8':'#fff'};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${s.title||''}</div>
+                            <div style="font-size:10px;color:${active?'#1a73e8':'#555'};margin-top:3px">${active?'▶ Now Playing':'Tap to play'}</div>
                         </div>
-                        <i class="fa-solid ${_musicCurrentId===s.id&&_musicPlaying?'fa-pause':'fa-play'}" style="color:${_musicCurrentId===s.id?'#1a73e8':'#333'};font-size:14px"></i>
-                    </div>`).join('');
+                        <i class="fa-solid ${active&&_musicPlaying?'fa-pause':'fa-play'}" style="color:${active?'#1a73e8':'#444'};font-size:15px;flex-shrink:0"></i>
+                    </div>`;
+                }).join('');
             } catch(e) {
-                list.innerHTML = '<div style="padding:40px;text-align:center;color:#444;font-size:13px">Gagal memuat</div>';
+                list.innerHTML = `<div style="padding:40px;text-align:center;color:#444">Gagal memuat: ${e.message}</div>`;
             }
         }
 
@@ -3076,50 +3074,47 @@
             try {
                 const r = await fetch(`${MUSIC_API}/fetch?id=${id}`);
                 const d = await r.json();
-                const streamUrl = d.url || d.stream || d.response;
-                if (!streamUrl) return;
-
-                if (_musicAudio) { _musicAudio.pause(); clearInterval(_musicProgressTimer); }
+                const streamUrl = d.url || d.stream || d.audio || d.src ||
+                    (typeof d.response === 'string' ? d.response : null) ||
+                    (Array.isArray(d.response) ? d.response[0] : null);
+                if (!streamUrl) { console.warn('No stream URL:', d); return; }
+                if (_musicAudio) { _musicAudio.pause(); _musicAudio.src = ''; }
                 _musicAudio = new Audio(streamUrl);
-                _musicAudio.play();
-                _musicCurrentId = id;
-                _musicPlaying = true;
-
-                // Update now playing bar
+                _musicAudio.play().catch(e => console.warn(e));
+                _musicCurrentId = id; _musicPlaying = true;
                 document.getElementById('musicNowPlaying').style.display = 'block';
                 document.getElementById('musicNpTitle').textContent = title;
                 document.getElementById('musicNpImg').src = img;
                 document.getElementById('musicPlayBtn').className = 'fa-solid fa-pause';
-
                 _musicAudio.addEventListener('timeupdate', () => {
-                    const cur = _musicAudio.currentTime, dur = _musicAudio.duration || 0;
-                    if (dur > 0) document.getElementById('musicProgress').style.width = (cur/dur*100).toFixed(1)+'%';
+                    const cur = _musicAudio.currentTime, dur = _musicAudio.duration||0;
+                    if (dur>0) document.getElementById('musicProgress').style.width=(cur/dur*100).toFixed(1)+'%';
                     const fmt = t => `${Math.floor(t/60)}:${String(Math.floor(t%60)).padStart(2,'0')}`;
                     document.getElementById('musicCurTime').textContent = fmt(cur);
                     document.getElementById('musicDurTime').textContent = fmt(dur);
                 });
-                _musicAudio.addEventListener('ended', () => { _musicPlaying = false; document.getElementById('musicPlayBtn').className = 'fa-solid fa-play'; });
-                // Refresh list highlight
-                musicSearch(document.getElementById('musicSearchInp').value || '');
-            } catch(e) {}
+                _musicAudio.addEventListener('ended', () => { _musicPlaying=false; document.getElementById('musicPlayBtn').className='fa-solid fa-play'; });
+                musicSearch(document.getElementById('musicSearchInp').value||'');
+            } catch(e) { console.warn('musicPlay error:', e); }
         }
 
         function musicTogglePlay() {
             if (!_musicAudio) return;
-            if (_musicPlaying) { _musicAudio.pause(); _musicPlaying = false; document.getElementById('musicPlayBtn').className = 'fa-solid fa-play'; }
-            else { _musicAudio.play(); _musicPlaying = true; document.getElementById('musicPlayBtn').className = 'fa-solid fa-pause'; }
+            if (_musicPlaying) { _musicAudio.pause(); _musicPlaying=false; document.getElementById('musicPlayBtn').className='fa-solid fa-play'; }
+            else { _musicAudio.play(); _musicPlaying=true; document.getElementById('musicPlayBtn').className='fa-solid fa-pause'; }
         }
         function musicStop() {
-            if (_musicAudio) { _musicAudio.pause(); _musicAudio = null; }
-            _musicCurrentId = null; _musicPlaying = false;
-            document.getElementById('musicNowPlaying').style.display = 'none';
-            musicSearch(document.getElementById('musicSearchInp').value || '');
+            if (_musicAudio) { _musicAudio.pause(); _musicAudio.src=''; _musicAudio=null; }
+            _musicCurrentId=null; _musicPlaying=false;
+            document.getElementById('musicNowPlaying').style.display='none';
+            document.getElementById('musicProgress').style.width='0%';
+            musicSearch(document.getElementById('musicSearchInp').value||'');
         }
         function musicSeek(e) {
-            if (!_musicAudio || !_musicAudio.duration) return;
-            const bar = document.getElementById('musicProgressBar');
-            const pct = (e.clientX - bar.getBoundingClientRect().left) / bar.offsetWidth;
-            _musicAudio.currentTime = pct * _musicAudio.duration;
+            if (!_musicAudio||!_musicAudio.duration) return;
+            const bar=document.getElementById('musicProgressBar');
+            const pct=Math.max(0,Math.min(1,(e.clientX-bar.getBoundingClientRect().left)/bar.offsetWidth));
+            _musicAudio.currentTime=pct*_musicAudio.duration;
         }
         function openLivesportModal() {
             document.getElementById('livesportModal').style.display = 'flex';
