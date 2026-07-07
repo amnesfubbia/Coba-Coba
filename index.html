@@ -925,15 +925,26 @@
         .music-card:active { background: #000000; transform: scale(0.98); }
 
         /* Music modal — labeled bottom nav (Home/Cari/Koleksi/Playlist) */
-        .music-bottom-nav { height: 62px !important; padding-top:4px; }
+        .music-bottom-nav { height: 62px !important; padding-top:4px; position:absolute !important; bottom:0; left:0; right:0; z-index:40 !important; }
         .music-nav-item { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; cursor:pointer; color:#666; }
         .music-nav-item i { font-size:19px; color:#666; transition:color 0.2s; }
         .music-nav-item span { font-size:10px; font-weight:600; color:#666; transition:color 0.2s; }
-        .music-nav-item.music-nav-active i, .music-nav-item.music-nav-active span { color:#1a73e8; }
+        .music-nav-item.music-nav-active i, .music-nav-item.music-nav-active span { color:#fff; }
         .music-pill { flex-shrink:0; padding:8px 18px; border-radius:20px; background:#1a1a1a; color:#888; font-size:12px; font-weight:700; cursor:pointer; border:1px solid #1e1e1e; }
-        .music-pill.music-pill-active { background:#1a73e8; color:#fff; border-color:#1a73e8; }
+        .music-pill.music-pill-active { background:#fff; color:#000; border-color:#fff; }
         .music-koleksi-row { display:flex; align-items:center; gap:14px; padding:13px 0; border-bottom:1px solid #1a1a1a; cursor:pointer; }
-        .music-koleksi-row i { width:20px; text-align:center; color:#1a73e8; font-size:17px; }
+        .music-koleksi-row i { width:20px; text-align:center; color:#ccc; font-size:17px; }
+        /* ---- gaya dipinjam dari bagian film (avatar gradient ring, tab underline, dll) ---- */
+        .music-avatar-ring { padding:2px; border-radius:50%; background:linear-gradient(135deg,#e5527c,#f2994a,#9b59d0); }
+        .music-avatar-ring-inner { width:100%; height:100%; border-radius:50%; overflow:hidden; background:#161616; display:flex; align-items:center; justify-content:center; }
+        .music-tabswitch { display:flex; gap:28px; border-bottom:1px solid #1a1a1a; padding:0 20px; }
+        .music-tabswitch-item { padding:12px 0; font-size:15px; font-weight:700; color:#666; cursor:pointer; position:relative; }
+        .music-tabswitch-item.active { color:#fff; }
+        .music-tabswitch-item.active::after { content:''; position:absolute; left:0; right:0; bottom:-1px; height:2px; background:#fff; border-radius:2px; }
+        .music-section-label { font-size:11px; font-weight:800; letter-spacing:0.6px; color:#888; text-transform:uppercase; }
+        .music-stat-num { font-size:22px; font-weight:800; color:#fff; display:block; text-align:center; }
+        .music-stat-lbl { font-size:12px; color:#888; text-align:center; margin-top:2px; }
+        .music-row-chevron { color:#333; font-size:13px; flex-shrink:0; }
 
         /* --- TV MODAL (Professional) --- */
         #tvModal {
@@ -952,7 +963,7 @@
             flex: 1; font-size: 14px; font-weight: 800; color: #fff; letter-spacing: -0.3px;
         }
         .tv-live-dot {
-            width: 7px; height: 7px; border-radius: 50%; background: #1a73e8;
+            width: 7px; height: 7px; border-radius: 50%; background: #ff3b30;
             animation: livePulse 1.5s ease-in-out infinite; flex-shrink: 0;
         }
         @keyframes livePulse {
@@ -975,32 +986,38 @@
         }
         /* Channel grid — bigger cards with live indicator */
         .tv-channel-grid {
-            display: grid; grid-template-columns: repeat(4, 1fr);
-            gap: 8px; padding: 0 15px 6px;
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 10px; padding: 0 15px 6px;
         }
         .tv-ch-card {
-            background: #111; border: 1px solid #1c1c1c; border-radius: 12px;
-            padding: 10px 6px; text-align: center; cursor: pointer;
+            background: #111; border: 1px solid #1c1c1c; border-radius: 14px;
+            padding: 14px 8px; text-align: center; cursor: pointer;
             transition: all 0.18s; position: relative; overflow: hidden;
         }
         .tv-ch-card:active { transform: scale(0.93); background: #1a1a1a; }
         .tv-ch-card.active-ch { border-color: #fff; background: #1a1a1a; }
         .tv-ch-logo-box {
-            width: 42px; height: 42px; border-radius: 10px;
-            background: #222; margin: 0 auto 6px;
+            width: 56px; height: 56px; border-radius: 12px;
+            background: #222; margin: 0 auto 8px;
             display: flex; align-items: center; justify-content: center;
-            font-size: 9px; font-weight: 900; color: #fff; letter-spacing: -0.5px;
+            font-size: 11px; font-weight: 900; color: #fff; letter-spacing: -0.3px;
             overflow: hidden;
         }
         .tv-ch-logo-box img { width: 100%; height: 100%; object-fit: contain; }
         .tv-ch-name {
-            font-size: 8px; font-weight: 700; color: #ccc;
+            font-size: 11px; font-weight: 700; color: #ddd;
             white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         }
+        .tv-ch-fav-btn {
+            position: absolute; top: 6px; left: 6px; z-index: 2;
+            width: 22px; height: 22px; display: flex; align-items: center; justify-content: center;
+            color: #666; font-size: 12px;
+        }
+        .tv-ch-fav-btn.is-fav { color: #ff3b30; }
         /* LIVE badge on active channel */
         .tv-ch-live-badge {
             position: absolute; top: 5px; right: 5px;
-            background: linear-gradient(135deg, #1a73e8, #0d47a1);
+            background: #ff3b30;
             color: #fff;
             font-size: 6px; font-weight: 900; letter-spacing: 0.5px;
             padding: 1px 4px; border-radius: 3px;
@@ -2789,6 +2806,7 @@
             <div class="tv-tab-item active-tv-tab" id="tvTabNasional" onclick="switchTvTab('nasional')">Nasional</div>
             <div class="tv-tab-item" id="tvTabLokal" onclick="switchTvTab('lokal')">Lokal</div>
             <div class="tv-tab-item" id="tvTabBerita" onclick="switchTvTab('berita')">Berita</div>
+            <div class="tv-tab-item" id="tvTabFavorit" onclick="switchTvTab('favorit')">Favorit</div>
         </div>
 
         <!-- Search box -->
@@ -2804,9 +2822,11 @@
             <div id="tvPlayerArea">
                 <iframe id="tvPlayerFrame" src="" allowfullscreen allow="autoplay; encrypted-media"></iframe>
             </div>
+            <!-- jadwal acara channel yang sedang tayang -->
+            <div id="tvScheduleArea"></div>
             <!-- tombol LiveSport di antara video dan channel list -->
             <div style="padding:10px 16px 4px">
-                <button onclick="openLivesportModal()" style="width:100%;background:linear-gradient(135deg,#1a73e8,#0d47a1);border:none;color:#fff;font-size:13px;font-weight:700;padding:11px 0;border-radius:12px;cursor:pointer;letter-spacing:0.3px;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 3px 12px rgba(26,115,232,0.35)">
+                <button onclick="openLivesportModal()" style="width:100%;background:linear-gradient(135deg,#d32f2f,#8b0000);border:none;color:#fff;font-size:13px;font-weight:700;padding:11px 0;border-radius:12px;cursor:pointer;letter-spacing:0.3px;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 3px 12px rgba(211,47,47,0.35)">
                     <i class="fa-solid fa-signal-stream"></i> Live Sport — Dami TV
                 </button>
             </div>
@@ -2933,105 +2953,60 @@
 
 
     <!-- ===== MUSIC MODAL ===== -->
-    <div id="musicModal" style="display:none;position:fixed;inset:0;z-index:9700;background:#111;flex-direction:column;overflow:hidden">
+    <div id="musicModal" style="display:none;position:fixed;inset:0;z-index:9700;background:#000;flex-direction:column;overflow:hidden">
 
         <!-- ===== HOME TAB ===== -->
         <div id="musicHomeTab" style="flex:1;display:flex;flex-direction:column;overflow:hidden">
-            <!-- Top bar -->
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px 8px;flex-shrink:0">
-                <div>
-                    <div id="musicGreeting" style="font-size:22px;font-weight:800;color:#fff">Good Morning</div>
+            <!-- Search bar -->
+            <div style="padding:16px 20px 14px;flex-shrink:0">
+                <div onclick="musicShowTab('search')" style="display:flex;align-items:center;gap:12px;background:#1c1c1c;border-radius:26px;padding:13px 18px;cursor:pointer">
+                    <i class="fa-solid fa-magnifying-glass" style="color:#888;font-size:15px"></i>
+                    <span style="color:#888;font-size:14px">Cari</span>
                 </div>
-                <div style="display:flex;align-items:center;gap:14px">
-                    <i class="fa-solid fa-magnifying-glass" style="font-size:18px;color:#fff;cursor:pointer" onclick="musicShowTab('search')"></i>
-                    <div onclick="musicShowTab('profile')" style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#1a73e8,#0d47a1);display:flex;align-items:center;justify-content:center;cursor:pointer">
-                        <i class="fa-solid fa-user" style="font-size:15px;color:#fff"></i>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Filter kategori — Semua/Mood/Workout/Santai/Fokus -->
-            <div style="display:flex;gap:8px;padding:2px 20px 14px;overflow-x:auto;scrollbar-width:none;flex-shrink:0" id="musicHomePills">
-                <div class="music-pill music-pill-active" data-cat="semua" onclick="musicHomeFilter('semua')">Semua</div>
-                <div class="music-pill" data-cat="mood" onclick="musicHomeFilter('mood')">Mood</div>
-                <div class="music-pill" data-cat="workout" onclick="musicHomeFilter('workout')">Workout</div>
-                <div class="music-pill" data-cat="santai" onclick="musicHomeFilter('santai')">Santai</div>
-                <div class="music-pill" data-cat="fokus" onclick="musicHomeFilter('fokus')">Fokus</div>
             </div>
 
             <div id="musicHomeScroll" style="flex:1;overflow-y:auto;padding-bottom:160px">
-                <!-- Featured Hero Banner -->
-                <div id="musicFeaturedBanner" style="margin:10px 20px 24px;border-radius:18px;overflow:hidden;position:relative;height:200px;background:#1a1a2e;cursor:pointer" onclick="musicPlayFeatured()">
-                    <div id="musicFeaturedBg" style="position:absolute;inset:0;background-size:cover;background-position:center;filter:brightness(0.5)"></div>
-                    <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.8) 0%,transparent 60%)"></div>
-                    <div style="position:absolute;bottom:0;left:0;right:0;padding:16px 18px">
-                        <div id="musicFeaturedTitle" style="font-size:22px;font-weight:900;color:#fff;line-height:1.2">Trending</div>
-                        <div id="musicFeaturedSub" style="font-size:12px;color:rgba(255,255,255,0.7);margin-top:4px">Indonesia</div>
-                        <div style="display:flex;gap:8px;margin-top:10px">
-                            <div style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px)">
-                                <i class="fa-solid fa-play" style="color:#fff;font-size:13px;margin-left:2px"></i>
+                <!-- Rekomendasi -->
+                <div style="margin-bottom:28px">
+                    <div style="padding:0 20px 12px"><span class="music-section-label"><i class="fa-solid fa-tower-broadcast" style="margin-right:6px"></i>Rekomendasi</span></div>
+                    <div id="musicRecoList"></div>
+                </div>
+
+                <!-- Playlist (2 kartu) -->
+                <div style="margin-bottom:28px">
+                    <div style="padding:0 20px 14px"><span style="font-size:20px;font-weight:800;color:#fff">Playlist</span></div>
+                    <div style="display:flex;gap:14px;padding:0 20px">
+                        <div onclick="musicOpenPlaylistDetail('galau')" style="flex:1;cursor:pointer">
+                            <div id="musicHomePlCard1" style="width:100%;aspect-ratio:1;border-radius:14px;background:#1a1a1a;overflow:hidden;display:flex;align-items:center;justify-content:center">
+                                <i class="fa-solid fa-record-vinyl" style="font-size:26px;color:#333"></i>
                             </div>
+                            <div style="margin-top:8px;font-size:13px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Galau Itu Indah</div>
+                        </div>
+                        <div onclick="musicShowTab('library');musicLibSwitch('download')" style="flex:1;cursor:pointer">
+                            <div style="width:100%;aspect-ratio:1;border-radius:14px;background:#1e1e1e;display:flex;align-items:center;justify-content:center">
+                                <i class="fa-solid fa-download" style="font-size:34px;color:#888"></i>
+                            </div>
+                            <div style="margin-top:8px;font-size:13px;font-weight:700;color:#fff">Lagu Offline</div>
                         </div>
                     </div>
-                    <!-- Album row overlaid -->
-                    <div id="musicFeaturedAlbums" style="position:absolute;bottom:72px;right:10px;display:flex;gap:6px"></div>
                 </div>
 
-                <!-- Recently Played -->
-                <div id="musicRecentSection" style="display:none;margin-bottom:26px">
-                    <div style="display:flex;justify-content:space-between;align-items:center;padding:0 20px 12px">
-                        <span style="font-size:16px;font-weight:800;color:#fff">Recently Played</span>
-                    </div>
-                    <div id="musicRecentScroll" style="display:flex;gap:14px;overflow-x:auto;padding:0 20px;scrollbar-width:none"></div>
+                <!-- Playlist trending komunitas -->
+                <div style="margin-bottom:28px">
+                    <div style="padding:0 20px 14px"><span style="font-size:18px;font-weight:800;color:#fff">Playlist trending komunitas</span></div>
+                    <div id="musicCommunityScroll" style="display:flex;gap:14px;overflow-x:auto;padding:0 20px;scrollbar-width:none"></div>
                 </div>
 
-                <!-- Untuk Kamu -->
-                <div style="margin-bottom:26px">
-                    <div style="padding:0 20px 12px"><span id="musicMadeForYouTitle" style="font-size:16px;font-weight:800;color:#fff">Untuk kamu</span></div>
-                    <div id="musicMadeForYouScroll" style="display:flex;gap:14px;overflow-x:auto;padding:0 20px;scrollbar-width:none"></div>
-                </div>
-
-                <!-- Mood Playlist — grid kategori seperti Spotify Search -->
-                <div style="margin-bottom:26px">
-                    <div style="padding:0 20px 12px"><span style="font-size:16px;font-weight:800;color:#fff">Browse Categories</span></div>
-                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 20px">
-                        <div onclick="musicLoadMood('Happy');musicShowTab('search')" style="height:80px;border-radius:14px;background:#1a1a1a;border:1px solid #222;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;overflow:hidden">
-                            <span style="font-size:24px;position:absolute;right:12px;bottom:8px;opacity:0.6">😊</span>
-                            <span style="font-size:13px;font-weight:800;color:#fff;padding:14px">Happy</span>
-                        </div>
-                        <div onclick="musicLoadMood('Chill');musicShowTab('search')" style="height:80px;border-radius:14px;background:#1a1a1a;border:1px solid #222;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;overflow:hidden">
-                            <span style="font-size:24px;position:absolute;right:12px;bottom:8px;opacity:0.6">😌</span>
-                            <span style="font-size:13px;font-weight:800;color:#fff;padding:14px">Chill</span>
-                        </div>
-                        <div onclick="musicLoadMood('K-Pop');musicShowTab('search')" style="height:80px;border-radius:14px;background:#1a1a1a;border:1px solid #1a73e8;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;overflow:hidden">
-                            <span style="font-size:24px;position:absolute;right:12px;bottom:8px;opacity:0.6">🎤</span>
-                            <span style="font-size:13px;font-weight:800;color:#fff;padding:14px">K-Pop</span>
-                        </div>
-                        <div onclick="musicLoadMood('Indie');musicShowTab('search')" style="height:80px;border-radius:14px;background:#1a1a1a;border:1px solid #222;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;overflow:hidden">
-                            <span style="font-size:24px;position:absolute;right:12px;bottom:8px;opacity:0.6">🎸</span>
-                            <span style="font-size:13px;font-weight:800;color:#fff;padding:14px">Indie</span>
-                        </div>
-                        <div onclick="musicLoadMood('Rock');musicShowTab('search')" style="height:80px;border-radius:14px;background:#1a1a1a;border:1px solid #222;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;overflow:hidden">
-                            <span style="font-size:24px;position:absolute;right:12px;bottom:8px;opacity:0.6">🤘</span>
-                            <span style="font-size:13px;font-weight:800;color:#fff;padding:14px">Rock</span>
-                        </div>
-                        <div onclick="musicLoadMood('R&B');musicShowTab('search')" style="height:80px;border-radius:14px;background:#1a1a1a;border:1px solid #222;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;overflow:hidden">
-                            <span style="font-size:24px;position:absolute;right:12px;bottom:8px;opacity:0.6">🎵</span>
-                            <span style="font-size:13px;font-weight:800;color:#fff;padding:14px">R&B</span>
-                        </div>
-                    </div>
+                <!-- Rilis baru -->
+                <div style="margin-bottom:28px">
+                    <div style="padding:0 20px 12px"><span class="music-section-label"><i class="fa-solid fa-compact-disc" style="margin-right:6px"></i>Rilis Baru</span></div>
+                    <div id="musicNewReleaseList"></div>
                 </div>
 
                 <!-- Album Populer -->
                 <div style="margin-bottom:26px">
                     <div style="padding:0 20px 12px"><span style="font-size:16px;font-weight:800;color:#fff">Album Populer</span></div>
                     <div id="musicAlbumScroll" style="display:flex;gap:14px;overflow-x:auto;padding:0 20px;scrollbar-width:none"></div>
-                </div>
-
-                <!-- Trending Indonesia -->
-                <div style="margin-bottom:26px">
-                    <div style="padding:0 20px 12px"><span style="font-size:16px;font-weight:800;color:#fff">Trending Indonesia</span></div>
-                    <div id="musicTrendingIDScroll" style="display:flex;gap:14px;overflow-x:auto;padding:0 20px;scrollbar-width:none"></div>
                 </div>
 
                 <!-- Artis Populer -->
@@ -3045,13 +3020,18 @@
         <!-- ===== SEARCH TAB ===== -->
         <div id="musicSearchTab" style="display:none;flex:1;flex-direction:column;overflow:hidden">
             <div style="padding:16px 20px 10px;flex-shrink:0">
-                <div style="font-size:22px;font-weight:800;color:#fff;margin-bottom:14px">Cari</div>
-                <div style="display:flex;align-items:center;gap:10px;background:#1e1e1e;border-radius:12px;padding:11px 14px">
-                    <i class="fa-solid fa-magnifying-glass" style="color:#666;font-size:14px"></i>
-                    <input id="musicSearchInp" type="text" placeholder="Cari lagu, album, artis, podcast" autocomplete="off"
-                        style="flex:1;background:none;border:none;outline:none;color:#fff;font-size:14px"
-                        oninput="musicDebounceSearch(this.value)" onkeydown="if(event.key='Enter'){event.preventDefault();musicSearch(this.value)}">
-                    <i class="fa-solid fa-xmark" style="color:#666;cursor:pointer;font-size:14px" onclick="document.getElementById('musicSearchInp').value='';musicRenderSearchLanding()"></i>
+                <div style="font-size:28px;font-weight:800;color:#fff;margin-bottom:14px">Cari</div>
+                <div style="display:flex;align-items:center;gap:10px">
+                    <div style="flex:1;display:flex;align-items:center;gap:10px;background:#1e1e1e;border-radius:24px;padding:12px 16px">
+                        <i class="fa-solid fa-magnifying-glass" style="color:#777;font-size:14px"></i>
+                        <input id="musicSearchInp" type="text" placeholder="Cari lagu, album, artis, podcast" autocomplete="off"
+                            style="flex:1;background:none;border:none;outline:none;color:#fff;font-size:14px"
+                            oninput="musicDebounceSearch(this.value)" onkeydown="if(event.key==='Enter'){event.preventDefault();musicSearch(this.value)}">
+                        <i class="fa-solid fa-xmark" style="color:#666;cursor:pointer;font-size:14px" onclick="document.getElementById('musicSearchInp').value='';musicRenderSearchLanding()"></i>
+                    </div>
+                    <div onclick="musicShowPanel('genrefilter')" style="flex-shrink:0;width:46px;height:46px;border-radius:14px;background:#1e1e1e;display:flex;align-items:center;justify-content:center;cursor:pointer">
+                        <i class="fa-solid fa-sliders" style="color:#ccc;font-size:15px"></i>
+                    </div>
                 </div>
             </div>
             <div id="musicSearchResults" style="flex:1;overflow-y:auto;padding:4px 0 160px"></div>
@@ -3075,55 +3055,12 @@
         </div>
 
         <!-- ===== PROFILE TAB ===== -->
-        <div id="musicProfileTab" style="display:none;flex:1;flex-direction:column;overflow:hidden">
-            <div style="padding:16px 20px 10px;flex-shrink:0">
-                <div style="font-size:22px;font-weight:800;color:#fff">Profile</div>
-            </div>
-            <div style="flex:1;overflow-y:auto;padding:10px 20px 160px">
-                <div style="text-align:center;margin-bottom:28px">
-                    <div style="width:88px;height:88px;border-radius:50%;background:#1e1e1e;border:2px solid #1a73e8;display:flex;align-items:center;justify-content:center;margin:0 auto 14px">
-                        <i class="fa-solid fa-user" style="font-size:34px;color:#1a73e8"></i>
-                    </div>
-                    <div style="font-size:18px;font-weight:800;color:#fff">Music Lover</div>
-                    <div style="font-size:12px;color:#555;margin-top:4px" id="musicStatLiked">0 songs liked</div>
-                </div>
-                <div onclick="musicLibSwitch('liked');musicShowTab('library')" style="display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid #1e1e1e;cursor:pointer">
-                    <div style="width:44px;height:44px;border-radius:12px;background:#1e1e1e;display:flex;align-items:center;justify-content:center">
-                        <i class="fa-solid fa-heart" style="color:#1a73e8;font-size:18px"></i>
-                    </div>
-                    <div style="flex:1">
-                        <div style="font-size:14px;font-weight:700;color:#fff">Liked Songs</div>
-                        <div style="font-size:11px;color:#555;margin-top:2px">Your favorites</div>
-                    </div>
-                    <i class="fa-solid fa-chevron-right" style="color:#333;font-size:12px"></i>
-                </div>
-                <div onclick="musicLibSwitch('history');musicShowTab('library')" style="display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid #1e1e1e;cursor:pointer">
-                    <div style="width:44px;height:44px;border-radius:12px;background:#1e1e1e;display:flex;align-items:center;justify-content:center">
-                        <i class="fa-solid fa-clock-rotate-left" style="color:#1a73e8;font-size:18px"></i>
-                    </div>
-                    <div style="flex:1">
-                        <div style="font-size:14px;font-weight:700;color:#fff">Recently Played</div>
-                        <div style="font-size:11px;color:#555;margin-top:2px">Your history</div>
-                    </div>
-                    <i class="fa-solid fa-chevron-right" style="color:#333;font-size:12px"></i>
-                </div>
-                <div onclick="musicClearAllData()" style="display:flex;align-items:center;gap:14px;padding:14px 0;cursor:pointer">
-                    <div style="width:44px;height:44px;border-radius:12px;background:#1e1e1e;display:flex;align-items:center;justify-content:center">
-                        <i class="fa-solid fa-trash" style="color:#ff4444;font-size:18px"></i>
-                    </div>
-                    <div style="flex:1">
-                        <div style="font-size:14px;font-weight:700;color:#ff4444">Clear All Data</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <!-- ===== PLAYLIST DETAIL SCREEN ===== -->
-        <div id="musicPlaylistDetail" style="display:none;position:absolute;inset:0;z-index:55;background:#111;flex-direction:column;overflow:hidden">
+        <div id="musicPlaylistDetail" style="display:none;position:absolute;top:0;left:0;right:0;bottom:62px;z-index:30;background:#000;flex-direction:column;overflow:hidden">
             <div style="flex:1;overflow-y:auto;padding-bottom:160px">
-                <div style="position:relative;height:220px;background:#1a1a2e">
+                <div style="position:relative;height:220px;background:#141414">
                     <div id="musicPlDetailArt" style="position:absolute;inset:0;background-size:cover;background-position:center;filter:brightness(0.55)"></div>
-                    <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,0.3),#111 95%)"></div>
+                    <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,0.3),#000 95%)"></div>
                     <div style="position:absolute;top:16px;left:16px;right:16px;display:flex;justify-content:space-between">
                         <i class="fa-solid fa-chevron-left" style="font-size:20px;color:#fff;cursor:pointer;padding:6px" onclick="musicClosePlaylistDetail()"></i>
                         <i class="fa-solid fa-ellipsis" style="font-size:18px;color:#fff;cursor:pointer;padding:6px"></i>
@@ -3134,7 +3071,7 @@
                     <div style="font-size:12px;color:#666;margin-top:4px">oleh Nash</div>
                     <div id="musicPlDetailMeta" style="font-size:11px;color:#555;margin-top:2px"></div>
                     <div style="display:flex;align-items:center;gap:12px;margin-top:16px">
-                        <div onclick="musicPlayPlaylistDetail()" style="width:48px;height:48px;border-radius:50%;background:#1a73e8;display:flex;align-items:center;justify-content:center;cursor:pointer">
+                        <div onclick="musicPlayPlaylistDetail()" style="width:48px;height:48px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer">
                             <i class="fa-solid fa-play" style="color:#fff;font-size:18px;margin-left:2px"></i>
                         </div>
                         <i class="fa-solid fa-shuffle" style="color:#666;font-size:18px;cursor:pointer;padding:8px" onclick="musicToggleShuffle()"></i>
@@ -3146,19 +3083,19 @@
         </div>
 
         <!-- ===== ALBUM DETAIL SCREEN ===== -->
-        <div id="musicAlbumDetail" style="display:none;position:absolute;inset:0;z-index:55;background:#111;flex-direction:column;overflow:hidden">
+        <div id="musicAlbumDetail" style="display:none;position:absolute;top:0;left:0;right:0;bottom:62px;z-index:30;background:#000;flex-direction:column;overflow:hidden">
             <div style="flex:1;overflow-y:auto;padding-bottom:160px">
                 <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px 0">
                     <i class="fa-solid fa-chevron-left" style="font-size:20px;color:#fff;cursor:pointer;padding:6px" onclick="musicCloseAlbumDetail()"></i>
                     <i id="musicAlbumLikeBtn" class="fa-regular fa-heart" style="font-size:19px;color:#666;cursor:pointer;padding:6px" onclick="musicToggleAlbumLike()"></i>
                 </div>
                 <div style="text-align:center;padding:6px 20px 0">
-                    <img id="musicAlbumArt" src="" style="width:170px;height:170px;border-radius:14px;object-fit:cover;background:#1a1a1a;box-shadow:0 20px 50px rgba(0,0,0,0.5)">
+                    <img id="musicAlbumArt" src="" onerror="musicImgFallback(this)" style="width:170px;height:170px;border-radius:14px;object-fit:cover;background:#1a1a1a;box-shadow:0 20px 50px rgba(0,0,0,0.5)">
                     <div id="musicAlbumTitle" style="font-size:19px;font-weight:900;color:#fff;margin-top:16px"></div>
                     <div id="musicAlbumArtist" style="font-size:13px;color:#666;margin-top:4px"></div>
                     <div id="musicAlbumMeta" style="font-size:11px;color:#555;margin-top:2px"></div>
                     <div style="display:flex;align-items:center;justify-content:center;gap:14px;margin-top:16px">
-                        <div onclick="musicPlayAlbumDetail()" style="width:48px;height:48px;border-radius:50%;background:#1a73e8;display:flex;align-items:center;justify-content:center;cursor:pointer">
+                        <div onclick="musicPlayAlbumDetail()" style="width:48px;height:48px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer">
                             <i class="fa-solid fa-play" style="color:#fff;font-size:18px;margin-left:2px"></i>
                         </div>
                         <i class="fa-solid fa-shuffle" style="color:#666;font-size:18px;cursor:pointer;padding:8px" onclick="musicToggleShuffle()"></i>
@@ -3170,8 +3107,40 @@
             </div>
         </div>
 
+        <!-- ===== ARTIST PROFILE SCREEN ===== -->
+        <div id="musicArtistProfile" style="display:none;position:absolute;top:0;left:0;right:0;bottom:62px;z-index:30;background:#000;flex-direction:column;overflow:hidden">
+            <div style="flex:1;overflow-y:auto;padding-bottom:160px">
+                <div style="position:relative;height:230px;background:#141414">
+                    <div id="musicArtistBg" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#222,#111)">
+                        <i class="fa-solid fa-user-music" style="font-size:56px;color:#333"></i>
+                    </div>
+                    <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,0.15),#000 95%)"></div>
+                    <div style="position:absolute;top:16px;left:16px">
+                        <i class="fa-solid fa-chevron-left" style="font-size:20px;color:#fff;cursor:pointer;padding:6px" onclick="musicCloseArtistProfile()"></i>
+                    </div>
+                    <div style="position:absolute;bottom:14px;left:20px;right:20px">
+                        <div id="musicArtistName" style="font-size:22px;font-weight:900;color:#fff"></div>
+                        <div style="font-size:11px;color:#999;margin-top:2px">Artis</div>
+                    </div>
+                </div>
+                <div style="padding:14px 20px 0">
+                    <div onclick="musicPlayArtistTop()" style="width:48px;height:48px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer">
+                        <i class="fa-solid fa-play" style="color:#fff;font-size:18px;margin-left:2px"></i>
+                    </div>
+                </div>
+                <div style="padding:24px 0 0">
+                    <div style="padding:0 20px 12px"><span style="font-size:15px;font-weight:800;color:#fff">Lagu Populer</span></div>
+                    <div id="musicArtistSongs"></div>
+                </div>
+                <div style="padding:22px 0 0">
+                    <div style="padding:0 20px 12px"><span style="font-size:15px;font-weight:800;color:#fff">Album</span></div>
+                    <div id="musicArtistAlbums" style="display:flex;gap:14px;overflow-x:auto;padding:0 20px;scrollbar-width:none"></div>
+                </div>
+            </div>
+        </div>
+
         <!-- ===== EQUALIZER SCREEN ===== -->
-        <div id="musicEqScreen" style="display:none;position:absolute;inset:0;z-index:65;background:#111;flex-direction:column;overflow:hidden">
+        <div id="musicEqScreen" style="display:none;position:absolute;top:0;left:0;right:0;bottom:62px;z-index:30;background:#000;flex-direction:column;overflow:hidden">
             <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px 4px;flex-shrink:0">
                 <div style="display:flex;align-items:center;gap:14px">
                     <i class="fa-solid fa-chevron-left" style="font-size:20px;color:#fff;cursor:pointer;padding:6px" onclick="musicCloseEqScreen()"></i>
@@ -3179,7 +3148,7 @@
                 </div>
                 <label style="position:relative;display:inline-block;width:44px;height:26px">
                     <input type="checkbox" id="musicEqToggle" checked onchange="musicEqToggle(this.checked)" style="opacity:0;width:0;height:0">
-                    <span id="musicEqToggleTrack" style="position:absolute;inset:0;background:#1a73e8;border-radius:14px;transition:0.2s;cursor:pointer" onclick="document.getElementById('musicEqToggle').click()"></span>
+                    <span id="musicEqToggleTrack" style="position:absolute;inset:0;background:#fff;border-radius:14px;transition:0.2s;cursor:pointer" onclick="document.getElementById('musicEqToggle').click()"></span>
                     <span id="musicEqToggleDot" style="position:absolute;top:3px;left:21px;width:20px;height:20px;background:#fff;border-radius:50%;transition:0.2s"></span>
                 </label>
             </div>
@@ -3202,9 +3171,9 @@
 
         <!-- ===== MINI PLAYER (sticky, above nav) ===== -->
         <div id="musicMiniPlayer" onclick="musicOpenFullPlayer()" style="display:none;position:absolute;bottom:64px;left:0;right:0;background:#1e1e1e;cursor:pointer;z-index:50;border-top:1px solid #2a2a2a">
-            <div id="musicMiniProgress" style="height:2px;background:#1a73e8;width:0%;transition:width 0.3s linear"></div>
+            <div id="musicMiniProgress" style="height:2px;background:#ccc;width:0%;transition:width 0.3s linear"></div>
             <div style="display:flex;align-items:center;gap:12px;padding:10px 16px">
-                <img id="musicMiniArt" src="" style="width:42px;height:42px;border-radius:8px;object-fit:cover;background:#2a2a2a;flex-shrink:0">
+                <img id="musicMiniArt" src="" onerror="musicImgFallback(this)" style="width:42px;height:42px;border-radius:8px;object-fit:cover;background:#2a2a2a;flex-shrink:0">
                 <div style="flex:1;overflow:hidden">
                     <div id="musicMiniTitle" style="font-size:13px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></div>
                     <div id="musicMiniArtist" style="font-size:11px;color:#666;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px"></div>
@@ -3218,7 +3187,7 @@
         </div>
 
         <!-- ===== FULL PLAYER MODAL ===== -->
-        <div id="musicFullPlayer" style="display:none;position:absolute;inset:0;z-index:60;background:#111;flex-direction:column;overflow:hidden">
+        <div id="musicFullPlayer" style="display:none;position:absolute;top:0;left:0;right:0;bottom:62px;z-index:30;background:#000;flex-direction:column;overflow:hidden">
             <div id="musicFullPlayerBg" style="position:absolute;inset:0;background-size:cover;background-position:center;filter:blur(60px) brightness(0.25);transform:scale(1.3);transition:background-image 0.8s ease"></div>
             <div style="position:relative;z-index:2;display:flex;flex-direction:column;height:100%;padding:0 0 10px">
                 <!-- Top bar -->
@@ -3233,7 +3202,7 @@
 
                 <!-- Artwork -->
                 <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:20px 40px 10px">
-                    <img id="musicFullArt" src="" style="width:100%;max-width:300px;aspect-ratio:1;border-radius:18px;object-fit:cover;box-shadow:0 30px 70px rgba(0,0,0,0.6);background:#1e1e1e">
+                    <img id="musicFullArt" src="" onerror="musicImgFallback(this)" style="width:100%;max-width:300px;aspect-ratio:1;border-radius:18px;object-fit:cover;box-shadow:0 30px 70px rgba(0,0,0,0.6);background:#1e1e1e">
                 </div>
 
                 <!-- Track info -->
@@ -3248,8 +3217,8 @@
                 <!-- Progress bar -->
                 <div style="padding:4px 24px">
                     <div id="musicFullProgressBar" onclick="musicSeek(event)" style="height:4px;background:rgba(255,255,255,0.15);border-radius:2px;cursor:pointer;position:relative;margin-bottom:6px">
-                        <div id="musicFullProgress" style="height:100%;background:#1a73e8;border-radius:2px;width:0%"></div>
-                        <div id="musicFullThumb" style="position:absolute;top:50%;left:0%;transform:translate(-50%,-50%);width:14px;height:14px;background:#1a73e8;border-radius:50%"></div>
+                        <div id="musicFullProgress" style="height:100%;background:#fff;border-radius:2px;width:0%"></div>
+                        <div id="musicFullThumb" style="position:absolute;top:50%;left:0%;transform:translate(-50%,-50%);width:14px;height:14px;background:#fff;border-radius:50%"></div>
                     </div>
                     <div style="display:flex;justify-content:space-between">
                         <span id="musicFullCurTime" style="font-size:11px;color:#666">0:00</span>
@@ -3261,7 +3230,7 @@
                 <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 28px">
                     <i id="musicShuffleBtn" class="fa-solid fa-shuffle" onclick="musicToggleShuffle()" style="color:#555;font-size:20px;cursor:pointer;padding:8px"></i>
                     <i class="fa-solid fa-backward-step" onclick="musicPrev()" style="color:#fff;font-size:28px;cursor:pointer;padding:8px"></i>
-                    <div id="musicFullPlayBtn" onclick="musicTogglePlay()" style="width:66px;height:66px;border-radius:50%;background:#1a73e8;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 20px rgba(26,115,232,0.4)">
+                    <div id="musicFullPlayBtn" onclick="musicTogglePlay()" style="width:66px;height:66px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 20px rgba(255,255,255,0.15)">
                         <i class="fa-solid fa-pause" style="color:#111;font-size:26px"></i>
                     </div>
                     <i class="fa-solid fa-forward-step" onclick="musicNext()" style="color:#fff;font-size:28px;cursor:pointer;padding:8px"></i>
@@ -3366,6 +3335,8 @@
         // MUSIC MODULE — iTunes Search API
         // ============================================================
         const ITUNES_API = 'https://itunes.apple.com';
+        const MUSIC_PLACEHOLDER_IMG = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><rect width="200" height="200" fill="#181818"/><text x="100" y="128" font-size="86" text-anchor="middle" fill="#3a3a3a" font-family="sans-serif">&#9834;</text></svg>');
+        function musicImgFallback(el) { el.onerror = null; el.src = MUSIC_PLACEHOLDER_IMG; }
         let _musicQueue = [];           // antrian lagu aktif (array of track objects)
         let _musicQueueIdx = -1;        // index lagu yang sedang main
         let _musicAudio = null;
@@ -3383,7 +3354,6 @@
             document.body.style.overflow = 'hidden';
             history.pushState({view:'music'}, '');
             musicRenderNav('home');
-            musicSetGreeting();
             musicShowTab('home');
             musicLoadHomeContent();
             musicRestoreMiniPlayer();
@@ -3395,26 +3365,17 @@
             // audio TETAP lanjut — sesuai requirement
         }
 
-        // ---------- GREETING DINAMIS ----------
-        function musicSetGreeting() {
-            const h = new Date().getHours();
-            let g = 'Selamat Malam';
-            if (h >= 4 && h < 11) g = 'Selamat Pagi';
-            else if (h >= 11 && h < 15) g = 'Selamat Siang';
-            else if (h >= 15 && h < 18) g = 'Selamat Sore';
-            document.getElementById('musicGreeting').textContent = g;
-        }
+        // (greeting dinamis dihapus — Home sekarang pakai search bar seperti referensi baru)
 
         // ---------- TAB SWITCHING ----------
         function musicShowTab(tab) {
-            ['home','search','library','profile','playlist'].forEach(t => {
+            ['home','search','library','playlist'].forEach(t => {
                 const el = document.getElementById('music' + t.charAt(0).toUpperCase() + t.slice(1) + 'Tab');
                 if (el) el.style.display = (t === tab) ? 'flex' : 'none';
             });
             musicRenderNav(tab);
             if (tab === 'search') { setTimeout(() => document.getElementById('musicSearchInp').focus(), 100); musicRenderSearchLanding(); }
             if (tab === 'library') musicRenderKoleksi();
-            if (tab === 'profile') musicUpdateProfileStats();
             if (tab === 'playlist') musicRenderPlaylistTab();
             // pushState saat masuk tab baru (kecuali ke home, itu sudah ditangani popstate via replaceState)
             if (tab !== 'home' && !(history.state && history.state.tab === tab)) {
@@ -3443,25 +3404,101 @@
 
         // ---------- HOME CONTENT ----------
         async function musicLoadHomeContent() {
-            // Recently played
-            const hist = JSON.parse(localStorage.getItem(_musicHistoryKey) || '[]');
-            const recentSection = document.getElementById('musicRecentSection');
-            const recentScroll = document.getElementById('musicRecentScroll');
-            if (hist.length > 0) {
-                recentSection.style.display = 'block';
-                recentScroll.innerHTML = hist.slice(0, 10).map(t => musicCardHTML(t)).join('');
-            } else {
-                recentSection.style.display = 'none';
-            }
-
-            // Made For You — pakai genre acak dari riwayat atau default
-            musicFetchAndRenderScroll('top hits indonesia', 'musicMadeForYouScroll');
-            // Trending Indonesia
-            musicFetchAndRenderScroll('lagu indonesia trending 2025', 'musicTrendingIDScroll');
+            musicRenderRecoList();
+            musicLoadHomePlaylistCard();
+            musicRenderCommunityPlaylists();
+            musicRenderNewReleases();
             // Album populer
             musicFetchAlbums();
             // Artis populer
             musicFetchArtists();
+        }
+
+        // Rekomendasi — daftar gaya "radio" (riwayat jika ada, kalau belum ada pakai top hits)
+        let _musicHomeQueues = { reco: [], newrelease: [] };
+        function musicRadioRowHTML(t, i, section) {
+            return `<div style="display:flex;align-items:center;gap:14px;padding:11px 20px;cursor:pointer;border-bottom:1px solid #161616" onclick="musicPlayHomeRow('${section}',${i})">
+                <img src="${t.artworkSmall}" onerror="musicImgFallback(this)" style="width:52px;height:52px;border-radius:10px;object-fit:cover;background:#1a1a1a;flex-shrink:0">
+                <div style="flex:1;overflow:hidden">
+                    <div style="display:flex;align-items:center;gap:6px">
+                        <i class="fa-solid fa-tower-broadcast" style="font-size:11px;color:#888;flex-shrink:0"></i>
+                        <span style="font-size:14px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${t.title}</span>
+                    </div>
+                    <div style="font-size:12px;color:#777;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${t.artist}</div>
+                </div>
+                <i class="fa-solid fa-arrow-down" onclick="event.stopPropagation()" style="color:#777;font-size:14px;padding:8px;flex-shrink:0"></i>
+                <i class="fa-solid fa-ellipsis-vertical" onclick="event.stopPropagation()" style="color:#777;font-size:14px;padding:8px;flex-shrink:0"></i>
+            </div>`;
+        }
+        function musicPlayHomeRow(section, i) {
+            const arr = _musicHomeQueues[section];
+            if (!arr || !arr.length) return;
+            _musicQueue = arr; _musicQueueIdx = i;
+            musicPlayCurrentQueueItem();
+        }
+        async function musicRenderRecoList() {
+            const el = document.getElementById('musicRecoList');
+            const hist = JSON.parse(localStorage.getItem(_musicHistoryKey) || '[]');
+            if (hist.length >= 3) {
+                _musicHomeQueues.reco = hist.slice(0, 8);
+                el.innerHTML = _musicHomeQueues.reco.map((t,i) => musicRadioRowHTML(t, i, 'reco')).join('');
+                return;
+            }
+            el.innerHTML = musicSkeletonListRows(4);
+            try {
+                const r = await fetch(`${ITUNES_API}/search?term=${encodeURIComponent('top hits indonesia')}&media=music&limit=8`);
+                const d = await r.json();
+                const tracks = (d.results || []).filter(t => t.trackId && t.previewUrl).map(musicNormalize);
+                _musicHomeQueues.reco = tracks;
+                el.innerHTML = tracks.length ? tracks.map((t,i) => musicRadioRowHTML(t, i, 'reco')).join('') : '<div style="color:#444;font-size:12px;padding:10px 20px">Tidak ada data</div>';
+            } catch(e) {
+                el.innerHTML = '<div style="color:#444;font-size:12px;padding:10px 20px">Gagal memuat</div>';
+            }
+        }
+        async function musicRenderNewReleases() {
+            const el = document.getElementById('musicNewReleaseList');
+            el.innerHTML = musicSkeletonListRows(4);
+            try {
+                const r = await fetch(`${ITUNES_API}/search?term=${encodeURIComponent('lagu indonesia terbaru 2026')}&media=music&limit=8`);
+                const d = await r.json();
+                const tracks = (d.results || []).filter(t => t.trackId && t.previewUrl).map(musicNormalize);
+                _musicHomeQueues.newrelease = tracks;
+                el.innerHTML = tracks.length ? tracks.map((t,i) => musicRadioRowHTML(t, i, 'newrelease')).join('') : '<div style="color:#444;font-size:12px;padding:10px 20px">Tidak ada data</div>';
+            } catch(e) {
+                el.innerHTML = '<div style="color:#444;font-size:12px;padding:10px 20px">Gagal memuat</div>';
+            }
+        }
+        async function musicLoadHomePlaylistCard() {
+            const p = MUSIC_PLAYLISTS[0];
+            try {
+                const r = await fetch(`${ITUNES_API}/search?term=${encodeURIComponent(p.query)}&media=music&limit=1`);
+                const d = await r.json();
+                const t = (d.results || [])[0];
+                if (t && t.artworkUrl100) {
+                    const el = document.getElementById('musicHomePlCard1');
+                    el.innerHTML = `<img src="${t.artworkUrl100.replace('100x100','300x300')}" onerror="musicImgFallback(this)" style="width:100%;height:100%;object-fit:cover">`;
+                }
+            } catch(e) {}
+        }
+        async function musicRenderCommunityPlaylists() {
+            const el = document.getElementById('musicCommunityScroll');
+            el.innerHTML = MUSIC_PLAYLISTS.map(p => `
+                <div onclick="musicOpenPlaylistDetail('${p.id}')" style="flex-shrink:0;width:150px;cursor:pointer">
+                    <div id="musicCommCollage-${p.id}" style="width:150px;height:150px;border-radius:10px;overflow:hidden;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;background:${p.color}"></div>
+                    <div style="margin-top:8px;font-size:13px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${p.title}</div>
+                    <div style="font-size:11px;color:#666;margin-top:2px">Nash • Playlist</div>
+                </div>`).join('');
+            MUSIC_PLAYLISTS.forEach(async p => {
+                try {
+                    const r = await fetch(`${ITUNES_API}/search?term=${encodeURIComponent(p.query)}&media=music&limit=4`);
+                    const d = await r.json();
+                    const arts = (d.results || []).map(t => t.artworkUrl100).filter(Boolean);
+                    const collage = document.getElementById(`musicCommCollage-${p.id}`);
+                    if (collage && arts.length) {
+                        collage.innerHTML = arts.slice(0,4).map(u => `<img src="${u}" onerror="musicImgFallback(this)" style="width:100%;height:100%;object-fit:cover">`).join('');
+                    }
+                } catch(e) {}
+            });
         }
 
         async function musicFetchAlbums() {
@@ -3476,7 +3513,7 @@
                 el.innerHTML = albums.map(a => `
                     <div onclick="musicOpenAlbumDetail(${a.collectionId},'${(a.collectionName||'').replace(/'/g,"&#39;")}','${(a.artistName||'').replace(/'/g,"&#39;")}','${(a.artworkUrl100||'').replace('100x100','600x600')}')" style="flex-shrink:0;width:130px;cursor:pointer">
                         <div style="width:130px;height:130px;border-radius:10px;overflow:hidden;background:#1a1a1a">
-                            <img src="${(a.artworkUrl100||'').replace('100x100','600x600')}" loading="lazy" style="width:100%;height:100%;object-fit:cover">
+                            <img src="${(a.artworkUrl100||'').replace('100x100','600x600')}" loading="lazy" onerror="musicImgFallback(this)" style="width:100%;height:100%;object-fit:cover">
                         </div>
                         <div style="margin-top:7px;font-size:12px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${a.collectionName||''}</div>
                         <div style="font-size:10px;color:#666;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${a.artistName||''}</div>
@@ -3488,6 +3525,7 @@
 
         async function musicFetchAndRenderScroll(query, containerId) {
             const el = document.getElementById(containerId);
+            if (!el) return;
             el.innerHTML = musicSkeletonCards(6);
             try {
                 const r = await fetch(`${ITUNES_API}/search?term=${encodeURIComponent(query)}&media=music&limit=15`);
@@ -3500,6 +3538,35 @@
             }
         }
 
+        // ---------- ARTIST ARTWORK (iTunes tidak punya endpoint foto artis,
+        // jadi dipakai artwork lagu/album teratas milik artis itu sebagai foto) ----------
+        const _musicArtistArtCache = {};
+        async function musicFetchArtistArt(artistId) {
+            if (_musicArtistArtCache[artistId] !== undefined) return _musicArtistArtCache[artistId];
+            try {
+                const r = await fetch(`${ITUNES_API}/lookup?id=${artistId}&entity=song&limit=1`);
+                const d = await r.json();
+                const track = (d.results || []).find(t => t.wrapperType === 'track' && t.artworkUrl100);
+                const url = track ? track.artworkUrl100.replace('100x100','300x300') : null;
+                _musicArtistArtCache[artistId] = url;
+                return url;
+            } catch(e) {
+                _musicArtistArtCache[artistId] = null;
+                return null;
+            }
+        }
+        // artists: [{artistId, ...}] — mengisi elemen circle #artistCircle-{artistId}-{scopeSalt} dengan foto asli
+        function musicHydrateArtistArt(artists, scopeSalt) {
+            artists.forEach(a => {
+                if (!a.artistId) return;
+                musicFetchArtistArt(a.artistId).then(url => {
+                    if (!url) return;
+                    const el = document.getElementById(`artistCircle-${a.artistId}-${scopeSalt}`);
+                    if (el) el.innerHTML = `<img src="${url}" loading="lazy" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
+                });
+            });
+        }
+
         async function musicFetchArtists() {
             const el = document.getElementById('musicArtistScroll');
             el.innerHTML = musicSkeletonCards(6, true);
@@ -3509,12 +3576,15 @@
                 const artists = (d.results || []).filter(a => a.artistName);
                 if (!artists.length) { el.innerHTML = ''; return; }
                 el.innerHTML = artists.map(a => `
-                    <div onclick="musicSearch('${(a.artistName||'').replace(/'/g,"\\'")}')" style="flex-shrink:0;width:84px;text-align:center;cursor:pointer">
-                        <div style="width:84px;height:84px;border-radius:50%;background:linear-gradient(135deg,#222,#111);display:flex;align-items:center;justify-content:center;margin-bottom:8px;overflow:hidden">
-                            <i class="fa-solid fa-user-music" style="font-size:30px;color:#444"></i>
+                    <div onclick="musicOpenArtistProfile(${a.artistId},'${(a.artistName||'').replace(/'/g,"&#39;")}')" style="flex-shrink:0;width:84px;text-align:center;cursor:pointer">
+                        <div class="music-avatar-ring" style="width:84px;height:84px;margin-bottom:8px">
+                            <div id="artistCircle-${a.artistId}-home" class="music-avatar-ring-inner">
+                                <i class="fa-solid fa-user-music" style="font-size:30px;color:#444"></i>
+                            </div>
                         </div>
                         <div style="font-size:11px;font-weight:600;color:#ccc;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${a.artistName}</div>
                     </div>`).join('');
+                musicHydrateArtistArt(artists, 'home');
             } catch(e) {
                 el.innerHTML = '';
             }
@@ -3532,43 +3602,41 @@
             musicShowTab('search');
         }
 
-        // ---------- HOME CATEGORY PILLS (Semua/Mood/Workout/Santai/Fokus) ----------
-        function musicHomeFilter(cat) {
-            document.querySelectorAll('#musicHomePills .music-pill').forEach(el => {
-                el.classList.toggle('music-pill-active', el.dataset.cat === cat);
-            });
-            const map = {
-                semua:   { title:'Untuk kamu',   query:'top hits indonesia' },
-                mood:    { title:'Sesuai mood',  query:'lagu galau santai indonesia' },
-                workout: { title:'Workout',      query:'workout gym motivation songs' },
-                santai:  { title:'Santai',       query:'santai chill indonesia' },
-                fokus:   { title:'Fokus',        query:'focus instrumental lofi' },
-            };
-            const conf = map[cat] || map.semua;
-            document.getElementById('musicMadeForYouTitle').textContent = conf.title;
-            musicFetchAndRenderScroll(conf.query, 'musicMadeForYouScroll');
-        }
+        // (filter kategori/pills dihapus — Home sekarang mengikuti layout referensi baru)
 
         // ---------- PLAYLIST (auto-generated dari mood/genre, tab "Playlist") ----------
         const MUSIC_PLAYLISTS = [
-            { id:'galau',   title:'Galau Itu Indah',      query:'lagu galau indonesia',      color:'#1a1a2e' },
-            { id:'santai',  title:'Santai Sore',          query:'santai chill indonesia',    color:'#1e2a1e' },
-            { id:'semangat',title:'Semangat Pagi',        query:'upbeat semangat indonesia', color:'#2a1e1e' },
-            { id:'nostalgia',title:'Nostalgia 2000an',    query:'lagu indonesia nostalgia 2000an', color:'#1e1e2a' },
-            { id:'romantis',title:'Romantis',             query:'lagu romantis indonesia',   color:'#2a1e26' },
+            { id:'galau',   title:'Galau Itu Indah',      query:'lagu galau indonesia',      color:'#141414' },
+            { id:'santai',  title:'Santai Sore',          query:'santai chill indonesia',    color:'#1a1a1a' },
+            { id:'semangat',title:'Semangat Pagi',        query:'upbeat semangat indonesia', color:'#101010' },
+            { id:'nostalgia',title:'Nostalgia 2000an',    query:'lagu indonesia nostalgia 2000an', color:'#1c1c1c' },
+            { id:'romantis',title:'Romantis',             query:'lagu romantis indonesia',   color:'#161616' },
         ];
         let _musicPlaylistDetail = null; // playlist yang sedang dibuka {id,title,tracks}
-        function musicPlaylistCardHTML(p) {
+        function musicPlaylistCardHTML(p, scope) {
+            scope = scope || 'main';
             return `<div onclick="musicOpenPlaylistDetail('${p.id}')" style="cursor:pointer">
-                <div style="width:100%;aspect-ratio:1;border-radius:12px;background:${p.color};display:flex;align-items:center;justify-content:center">
-                    <i class="fa-solid fa-record-vinyl" style="font-size:26px;color:rgba(255,255,255,0.3)"></i>
+                <div id="plCardBg-${p.id}-${scope}" style="width:100%;aspect-ratio:1;border-radius:12px;background:${p.color};background-size:cover;background-position:center;position:relative;overflow:hidden;display:flex;align-items:flex-end">
+                    <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.85) 0%,transparent 55%)"></div>
+                    <div style="position:relative;padding:10px;font-size:13px;font-weight:800;color:#fff;line-height:1.25">${p.title}</div>
                 </div>
-                <div style="margin-top:8px;font-size:12px;font-weight:700;color:#fff">${p.title}</div>
-                <div style="font-size:10px;color:#666">Playlist • Nash</div>
+                <div style="font-size:10px;color:#666;margin-top:6px">Playlist • Nash</div>
             </div>`;
         }
+        function musicHydratePlaylistArt(scope) {
+            MUSIC_PLAYLISTS.forEach(async p => {
+                try {
+                    const r = await fetch(`${ITUNES_API}/search?term=${encodeURIComponent(p.query)}&media=music&limit=1`);
+                    const d = await r.json();
+                    const t = (d.results || [])[0];
+                    const el = document.getElementById(`plCardBg-${p.id}-${scope}`);
+                    if (el && t && t.artworkUrl100) el.style.backgroundImage = `url(${t.artworkUrl100.replace('100x100','400x400')})`;
+                } catch(e) {}
+            });
+        }
         function musicRenderPlaylistTab() {
-            document.getElementById('musicPlaylistGrid').innerHTML = MUSIC_PLAYLISTS.map(musicPlaylistCardHTML).join('');
+            document.getElementById('musicPlaylistGrid').innerHTML = MUSIC_PLAYLISTS.map(p => musicPlaylistCardHTML(p, 'tab')).join('');
+            musicHydratePlaylistArt('tab');
         }
         async function musicOpenPlaylistDetail(id) {
             const p = MUSIC_PLAYLISTS.find(x => x.id === id);
@@ -3680,7 +3748,7 @@
             const isLiked = musicIsLiked(t.id);
             return `<div style="flex-shrink:0;width:130px;cursor:pointer" onclick='musicPlayTrack(${JSON.stringify(t).replace(/'/g,"&#39;")})'>
                 <div style="position:relative;width:130px;height:130px;border-radius:10px;overflow:hidden;background:#1a1a1a">
-                    <img src="${t.artwork || t.artworkSmall}" loading="lazy" style="width:100%;height:100%;object-fit:cover">
+                    <img src="${t.artwork || t.artworkSmall}" loading="lazy" onerror="musicImgFallback(this)" style="width:100%;height:100%;object-fit:cover">
                     <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.25)">
                         <i class="fa-solid fa-play" style="color:#fff;font-size:20px"></i>
                     </div>
@@ -3723,15 +3791,15 @@
             if (!el) return;
             const recent = JSON.parse(localStorage.getItem('musicRecentSearches') || '[]');
             el.innerHTML = `
-                <div style="padding:4px 20px 22px">
-                    <div style="font-size:14px;font-weight:800;color:#fff;margin-bottom:12px">Teratas</div>
-                    <div id="musicSearchTopArtistsScroll" style="display:flex;gap:16px;overflow-x:auto;scrollbar-width:none">${musicSkeletonCards(4, true)}</div>
+                <div style="padding:4px 20px 24px">
+                    <div style="font-size:15px;font-weight:700;color:#eee;margin-bottom:14px">Teratas</div>
+                    <div id="musicSearchTopArtistsScroll" style="display:flex;gap:18px;overflow-x:auto;scrollbar-width:none">${musicSkeletonCards(4, true)}</div>
                 </div>
                 <div style="padding:0 20px">
-                    <div style="font-size:14px;font-weight:800;color:#fff;margin-bottom:10px">Pencarian terbaru</div>
+                    <div style="font-size:15px;font-weight:700;color:#eee;margin-bottom:6px">Pencarian terbaru</div>
                     ${recent.length ? recent.map(q => `
-                        <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid #1a1a1a">
-                            <span onclick="musicSearch('${q.replace(/'/g,"\\'")}')" style="font-size:13px;color:#ccc;cursor:pointer;flex:1">${q}</span>
+                        <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid #1a1a1a">
+                            <span onclick="musicSearch('${q.replace(/'/g,"\\'")}')" style="font-size:14px;color:#ddd;cursor:pointer;flex:1">${q}</span>
                             <i class="fa-solid fa-xmark" style="color:#555;cursor:pointer;padding:6px" onclick="musicRemoveRecentSearch('${q.replace(/'/g,"\\'")}')"></i>
                         </div>`).join('') : '<div style="color:#444;font-size:12px;padding:10px 0 20px">Belum ada pencarian</div>'}
                 </div>`;
@@ -3739,13 +3807,17 @@
                 .then(r => r.json()).then(d => {
                     const scroll = document.getElementById('musicSearchTopArtistsScroll');
                     if (!scroll) return;
-                    scroll.innerHTML = (d.results || []).map(a => `
-                        <div onclick="musicSearch('${(a.artistName||'').replace(/'/g,"\\'")}')" style="flex-shrink:0;width:76px;text-align:center;cursor:pointer">
-                            <div style="width:76px;height:76px;border-radius:50%;background:#1a1a1a;display:flex;align-items:center;justify-content:center;margin-bottom:6px">
-                                <i class="fa-solid fa-user-music" style="font-size:26px;color:#444"></i>
+                    const artists = (d.results || []).filter(a => a.artistId && a.artistName);
+                    scroll.innerHTML = artists.map(a => `
+                        <div onclick="musicOpenArtistProfile(${a.artistId},'${(a.artistName||'').replace(/'/g,"&#39;")}')" style="flex-shrink:0;width:76px;text-align:center;cursor:pointer">
+                            <div class="music-avatar-ring" style="width:76px;height:76px;margin-bottom:6px">
+                                <div id="artistCircle-${a.artistId}-teratas" class="music-avatar-ring-inner">
+                                    <i class="fa-solid fa-user-music" style="font-size:26px;color:#444"></i>
+                                </div>
                             </div>
                             <div style="font-size:11px;color:#ccc;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${a.artistName}</div>
                         </div>`).join('');
+                    musicHydrateArtistArt(artists, 'teratas');
                 }).catch(()=>{});
         }
         async function musicSearch(q) {
@@ -3754,20 +3826,102 @@
             document.getElementById('musicSearchInp').value = q;
             musicSaveRecentSearch(q);
             const el = document.getElementById('musicSearchResults');
-            el.innerHTML = `<div style="text-align:center;padding:50px 20px;color:#444"><i class="fa-solid fa-compact-disc fa-spin" style="font-size:28px;color:#1a73e8;margin-bottom:12px;display:block"></i>Mencari...</div>`;
+            el.innerHTML = `<div style="text-align:center;padding:50px 20px;color:#444"><i class="fa-solid fa-compact-disc fa-spin" style="font-size:28px;color:#fff;margin-bottom:12px;display:block"></i>Mencari...</div>`;
             try {
-                const r = await fetch(`${ITUNES_API}/search?term=${encodeURIComponent(q)}&media=music&limit=30`);
-                const d = await r.json();
-                const tracks = (d.results || []).filter(t => t.trackId && t.previewUrl).map(musicNormalize);
-                if (!tracks.length) {
+                const [trackRes, artistRes] = await Promise.all([
+                    fetch(`${ITUNES_API}/search?term=${encodeURIComponent(q)}&media=music&limit=30`).then(r => r.json()),
+                    fetch(`${ITUNES_API}/search?term=${encodeURIComponent(q)}&entity=musicArtist&limit=6`).then(r => r.json()),
+                ]);
+                const tracks = (trackRes.results || []).filter(t => t.trackId && t.previewUrl).map(musicNormalize);
+                const artists = (artistRes.results || []).filter(a => a.artistId && a.artistName);
+                if (!tracks.length && !artists.length) {
                     el.innerHTML = `<div style="text-align:center;padding:50px 20px;color:#444">Tidak ada hasil untuk "${q}"</div>`;
                     return;
                 }
                 _musicQueue = tracks;
-                el.innerHTML = tracks.map((t, i) => musicListItemHTML(t, i)).join('');
+                let html = '';
+                if (artists.length) {
+                    html += `<div style="padding:4px 0 10px">
+                        <div style="font-size:13px;font-weight:800;color:#888;padding:0 16px 10px">Artis</div>
+                        <div style="display:flex;gap:16px;overflow-x:auto;padding:0 16px;scrollbar-width:none">
+                            ${artists.map(a => `
+                                <div onclick="musicOpenArtistProfile(${a.artistId},'${(a.artistName||'').replace(/'/g,"&#39;")}')" style="flex-shrink:0;width:78px;text-align:center;cursor:pointer">
+                                    <div class="music-avatar-ring" style="width:78px;height:78px;margin-bottom:6px">
+                                        <div id="artistCircle-${a.artistId}-searchres" class="music-avatar-ring-inner">
+                                            <i class="fa-solid fa-user-music" style="font-size:28px;color:#444"></i>
+                                        </div>
+                                    </div>
+                                    <div style="font-size:11px;font-weight:600;color:#ccc;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${a.artistName}</div>
+                                </div>`).join('')}
+                        </div>
+                    </div>`;
+                }
+                if (tracks.length) {
+                    html += `<div style="font-size:13px;font-weight:800;color:#888;padding:14px 16px 4px">Lagu</div>`;
+                    html += tracks.map((t, i) => musicListItemHTML(t, i)).join('');
+                }
+                el.innerHTML = html;
+                if (artists.length) musicHydrateArtistArt(artists, 'searchres');
             } catch(e) {
                 el.innerHTML = `<div style="text-align:center;padding:50px 20px;color:#444">Gagal memuat hasil</div>`;
             }
+        }
+
+        // ---------- ARTIST PROFILE ----------
+        let _musicArtistSongs = [];
+        async function musicOpenArtistProfile(artistId, artistName) {
+            document.getElementById('musicArtistProfile').style.display = 'flex';
+            history.pushState({view:'music', tab:'artistProfile'}, '');
+            document.getElementById('musicArtistName').textContent = artistName || '';
+            document.getElementById('musicArtistBg').innerHTML = '<i class="fa-solid fa-user-music" style="font-size:56px;color:#333"></i>';
+            document.getElementById('musicArtistBg').style.backgroundImage = '';
+            document.getElementById('musicArtistSongs').innerHTML = musicSkeletonListRows(5);
+            document.getElementById('musicArtistAlbums').innerHTML = musicSkeletonCards(4);
+            try {
+                const [songRes, albumRes] = await Promise.all([
+                    fetch(`${ITUNES_API}/lookup?id=${artistId}&entity=song&limit=15`).then(r => r.json()),
+                    fetch(`${ITUNES_API}/lookup?id=${artistId}&entity=album&limit=12`).then(r => r.json()),
+                ]);
+                const songs = (songRes.results || []).filter(t => t.wrapperType === 'track' && t.trackId).map(musicNormalize);
+                const albums = (albumRes.results || []).filter(a => a.wrapperType === 'collection' && a.collectionId);
+                _musicArtistSongs = songs;
+                if (songs.length && songs[0].artwork) {
+                    const bg = document.getElementById('musicArtistBg');
+                    bg.style.backgroundImage = `url(${songs[0].artwork})`;
+                    bg.style.backgroundSize = 'cover';
+                    bg.style.backgroundPosition = 'center';
+                    bg.style.filter = 'brightness(0.65)';
+                    bg.innerHTML = '';
+                }
+                document.getElementById('musicArtistSongs').innerHTML = songs.length
+                    ? songs.slice(0,10).map((t,i) => musicListItemHTML(t,i).replace(`musicPlayFromQueue(${i})`, `musicPlayArtistSongAt(${i})`)).join('')
+                    : '<div style="text-align:center;padding:20px;color:#444;font-size:12px">Lagu tidak ditemukan</div>';
+                document.getElementById('musicArtistAlbums').innerHTML = albums.length
+                    ? albums.map(a => `
+                        <div onclick="musicOpenAlbumDetail(${a.collectionId},'${(a.collectionName||'').replace(/'/g,"&#39;")}','${(a.artistName||'').replace(/'/g,"&#39;")}','${(a.artworkUrl100||'').replace('100x100','600x600')}')" style="flex-shrink:0;width:120px;cursor:pointer">
+                            <div style="width:120px;height:120px;border-radius:10px;overflow:hidden;background:#1a1a1a">
+                                <img src="${(a.artworkUrl100||'').replace('100x100','600x600')}" loading="lazy" onerror="musicImgFallback(this)" style="width:100%;height:100%;object-fit:cover">
+                            </div>
+                            <div style="margin-top:7px;font-size:12px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${a.collectionName||''}</div>
+                        </div>`).join('')
+                    : '<div style="color:#444;font-size:12px;padding:0 4px">Album tidak ditemukan</div>';
+            } catch(e) {
+                document.getElementById('musicArtistSongs').innerHTML = '<div style="text-align:center;padding:20px;color:#444;font-size:12px">Gagal memuat</div>';
+                document.getElementById('musicArtistAlbums').innerHTML = '';
+            }
+        }
+        function musicCloseArtistProfile() {
+            document.getElementById('musicArtistProfile').style.display = 'none';
+        }
+        function musicPlayArtistTop() {
+            if (!_musicArtistSongs.length) return;
+            _musicQueue = _musicArtistSongs; _musicQueueIdx = 0;
+            musicPlayCurrentQueueItem();
+        }
+        function musicPlayArtistSongAt(i) {
+            if (!_musicArtistSongs.length) return;
+            _musicQueue = _musicArtistSongs; _musicQueueIdx = i;
+            musicPlayCurrentQueueItem();
         }
 
         function musicListItemHTML(t, idx) {
@@ -3775,12 +3929,12 @@
             const isPlaying = _musicCurrentTrack && _musicCurrentTrack.id === t.id;
             return `<div style="display:flex;align-items:center;gap:12px;padding:9px 16px;cursor:pointer;${isPlaying?'background:#111':''}"
                 onclick="musicPlayFromQueue(${idx})">
-                <img src="${t.artworkSmall}" style="width:46px;height:46px;border-radius:7px;object-fit:cover;flex-shrink:0;background:#1a1a1a">
+                <img src="${t.artworkSmall}" onerror="musicImgFallback(this)" style="width:46px;height:46px;border-radius:7px;object-fit:cover;flex-shrink:0;background:#1a1a1a">
                 <div style="flex:1;overflow:hidden">
-                    <div style="font-size:13px;font-weight:600;color:${isPlaying?'#1a73e8':'#fff'};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${t.title}</div>
+                    <div style="font-size:13px;font-weight:600;color:${isPlaying?'#fff':'#ccc'};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${t.title}</div>
                     <div style="font-size:11px;color:#666;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${t.artist}</div>
                 </div>
-                <i class="fa-${isLiked?'solid':'regular'} fa-heart" style="color:${isLiked?'#1a73e8':'#444'};font-size:15px;padding:6px" onclick="event.stopPropagation();musicToggleLikeById(${t.id})"></i>
+                <i class="fa-${isLiked?'solid':'regular'} fa-heart" style="color:${isLiked?'#fff':'#444'};font-size:15px;padding:6px" onclick="event.stopPropagation();musicToggleLikeById(${t.id})"></i>
             </div>`;
         }
 
@@ -3837,14 +3991,14 @@
             document.getElementById('musicMiniArtist').textContent = t.artist;
             document.getElementById('musicMiniPlayBtn').className = 'fa-solid fa-pause';
             document.getElementById('musicMiniLikeBtn').className = isLiked ? 'fa-solid fa-heart' : 'fa-regular fa-heart';
-            document.getElementById('musicMiniLikeBtn').style.color = isLiked ? '#1a73e8' : '#888';
+            document.getElementById('musicMiniLikeBtn').style.color = isLiked ? '#fff' : '#888';
             // Full player
             document.getElementById('musicFullArt').src = t.artwork;
             document.getElementById('musicFullTitle').textContent = t.title;
             document.getElementById('musicFullArtist').textContent = t.artist;
-            document.getElementById('musicFullPlayBtn').innerHTML = '<i class="fa-solid fa-pause" style="color:#fff;font-size:24px"></i>';
+            document.getElementById('musicFullPlayBtn').innerHTML = '<i class="fa-solid fa-pause" style="color:#111;font-size:24px"></i>';
             document.getElementById('musicFullLikeBtn').className = isLiked ? 'fa-solid fa-heart' : 'fa-regular fa-heart';
-            document.getElementById('musicFullLikeBtn').style.color = isLiked ? '#1a73e8' : '#fff';
+            document.getElementById('musicFullLikeBtn').style.color = isLiked ? '#fff' : '#666';
             document.getElementById('musicFullPlayerBg').style.backgroundImage = `url('${t.artwork}')`;
         }
 
@@ -3853,11 +4007,11 @@
             if (_musicPlaying) {
                 _musicAudio.pause(); _musicPlaying = false;
                 document.getElementById('musicMiniPlayBtn').className = 'fa-solid fa-play';
-                document.getElementById('musicFullPlayBtn').innerHTML = '<i class="fa-solid fa-play" style="color:#fff;font-size:24px;margin-left:3px"></i>';
+                document.getElementById('musicFullPlayBtn').innerHTML = '<i class="fa-solid fa-play" style="color:#111;font-size:24px;margin-left:3px"></i>';
             } else {
                 _musicAudio.play(); _musicPlaying = true;
                 document.getElementById('musicMiniPlayBtn').className = 'fa-solid fa-pause';
-                document.getElementById('musicFullPlayBtn').innerHTML = '<i class="fa-solid fa-pause" style="color:#fff;font-size:24px"></i>';
+                document.getElementById('musicFullPlayBtn').innerHTML = '<i class="fa-solid fa-pause" style="color:#111;font-size:24px"></i>';
             }
         }
 
@@ -3884,14 +4038,14 @@
 
         function musicToggleShuffle() {
             _musicShuffle = !_musicShuffle;
-            document.getElementById('musicShuffleBtn').style.color = _musicShuffle ? '#1a73e8' : '#888';
+            document.getElementById('musicShuffleBtn').style.color = _musicShuffle ? '#fff' : '#888';
         }
         function musicToggleRepeat() {
             const modes = ['off','all','one'];
             const cur = modes.indexOf(_musicRepeat);
             _musicRepeat = modes[(cur+1) % 3];
             const btn = document.getElementById('musicRepeatBtn');
-            btn.style.color = _musicRepeat === 'off' ? '#888' : '#1a73e8';
+            btn.style.color = _musicRepeat === 'off' ? '#888' : '#fff';
             btn.className = _musicRepeat === 'one' ? 'fa-solid fa-1' : 'fa-solid fa-repeat';
         }
 
@@ -3963,8 +4117,37 @@
                 { icon:'fa-solid fa-podcast',     label:'Podcast',  count:'Segera hadir',                onclick:"" },
                 { icon:'fa-solid fa-download',    label:'Download', count:'0 lagu',                      onclick:"musicLibSwitch('download')" },
             ];
+            const genrePills = [
+                { label:'Galau',    icon:'fa-solid fa-cloud-rain',   query:'lagu galau indonesia' },
+                { label:'Santai',   icon:'fa-solid fa-mug-hot',      query:'santai chill indonesia' },
+                { label:'Semangat', icon:'fa-solid fa-bolt',         query:'upbeat semangat indonesia' },
+                { label:'Nostalgia',icon:'fa-solid fa-clock-rotate-left', query:'lagu indonesia nostalgia 2000an' },
+                { label:'Romantis', icon:'fa-solid fa-heart',        query:'lagu romantis indonesia' },
+            ];
             const content = document.getElementById('musicLibraryContent');
             content.innerHTML = `
+                <!-- Stats row gaya profil film -->
+                <div style="display:flex;padding:4px 20px 20px;border-bottom:1px solid #1a1a1a;margin-bottom:18px">
+                    <div style="flex:1;cursor:pointer" onclick="musicLibSwitch('liked')"><span class="music-stat-num">${liked.length}</span><span class="music-stat-lbl">lagu</span></div>
+                    <div style="width:1px;background:#222"></div>
+                    <div style="flex:1;cursor:pointer" onclick="musicLibSwitch('album')"><span class="music-stat-num">${albumSet.size}</span><span class="music-stat-lbl">album</span></div>
+                    <div style="width:1px;background:#222"></div>
+                    <div style="flex:1;cursor:pointer" onclick="musicLibSwitch('artist')"><span class="music-stat-num">${artistSet.size}</span><span class="music-stat-lbl">artis</span></div>
+                    <div style="width:1px;background:#222"></div>
+                    <div style="flex:1;cursor:pointer" onclick="musicShowTab('playlist')"><span class="music-stat-num">${MUSIC_PLAYLISTS.length}</span><span class="music-stat-lbl">playlist</span></div>
+                </div>
+
+                <!-- Genre cepat, gaya lingkaran kategori film -->
+                <div style="display:flex;gap:18px;padding:0 20px 22px;overflow-x:auto;scrollbar-width:none">
+                    ${genrePills.map(g => `
+                        <div onclick="musicSearch('${g.query.replace(/'/g,"&#39;")}')" style="flex-shrink:0;text-align:center;cursor:pointer">
+                            <div style="width:56px;height:56px;border-radius:50%;background:#1a1a1a;border:1px solid #262626;display:flex;align-items:center;justify-content:center;margin-bottom:6px">
+                                <i class="${g.icon}" style="font-size:18px;color:#ccc"></i>
+                            </div>
+                            <div style="font-size:10px;color:#999;width:56px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${g.label}</div>
+                        </div>`).join('')}
+                </div>
+
                 <div style="padding:0 20px">
                     ${rows.map(r => `
                         <div class="music-koleksi-row" onclick="${r.onclick}">
@@ -3973,15 +4156,16 @@
                                 <div style="font-size:14px;font-weight:700;color:#fff">${r.label}</div>
                                 <div style="font-size:11px;color:#666;margin-top:2px">${r.count}</div>
                             </div>
-                            <i class="fa-solid fa-chevron-right" style="color:#333;font-size:12px"></i>
+                            <i class="fa-solid fa-chevron-right music-row-chevron"></i>
                         </div>`).join('')}
                 </div>
                 ${hist.length ? `
                 <div style="padding:22px 20px 0;display:flex;justify-content:space-between;align-items:center">
-                    <span style="font-size:15px;font-weight:800;color:#fff">Terbaru diputar</span>
-                    <span onclick="musicLibSwitch('history')" style="font-size:11px;color:#1a73e8;font-weight:700;cursor:pointer">Lihat semua</span>
+                    <span class="music-section-label">Terbaru Diputar</span>
+                    <span onclick="musicClearAllData()" style="font-size:11px;color:#ccc;font-weight:700;cursor:pointer">Hapus Semua</span>
                 </div>
-                <div style="padding:8px 8px 0">${hist.slice(0,5).map((t,i) => musicListItemHTML(t,i).replace(`musicPlayFromQueue(${i})`, `musicPlayHistoryAt(${i})`)).join('')}</div>` : ''}
+                <div style="padding:8px 8px 0">${hist.slice(0,5).map((t,i) => musicListItemHTML(t,i).replace(`musicPlayFromQueue(${i})`, `musicPlayHistoryAt(${i})`)).join('')}</div>
+                <div style="padding:6px 20px 0"><span onclick="musicLibSwitch('history')" style="font-size:12px;color:#888;font-weight:700;cursor:pointer">Lihat semua riwayat →</span></div>` : ''}
             `;
         }
         function musicLibSwitch(tab) {
@@ -4004,7 +4188,8 @@
                     : '<div style="text-align:center;padding:60px 20px;color:#444"><i class="fa-solid fa-clock-rotate-left" style="font-size:32px;margin-bottom:12px;display:block"></i>Belum ada riwayat</div>';
                 _musicQueue = hist;
             } else if (tab === 'playlist') {
-                content.innerHTML = `<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:6px 12px">${MUSIC_PLAYLISTS.map(musicPlaylistCardHTML).join('')}</div>`;
+                content.innerHTML = `<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:6px 12px">${MUSIC_PLAYLISTS.map(p => musicPlaylistCardHTML(p, 'koleksi')).join('')}</div>`;
+                musicHydratePlaylistArt('koleksi');
             } else if (tab === 'album') {
                 const liked = JSON.parse(localStorage.getItem(_musicLikedKey) || '[]');
                 const hist = JSON.parse(localStorage.getItem(_musicHistoryKey) || '[]');
@@ -4020,7 +4205,7 @@
                 liked.concat(hist).forEach(t => { if (t.artist && !seen.has(t.artist)) { seen.add(t.artist); artists.push(t.artist); } });
                 content.innerHTML = artists.length
                     ? artists.map(a => `<div onclick="musicSearch('${a.replace(/'/g,"\\'")}')" style="display:flex;align-items:center;gap:14px;padding:12px 20px;cursor:pointer;border-bottom:1px solid #1a1a1a">
-                        <div style="width:46px;height:46px;border-radius:50%;background:#1a1a1a;display:flex;align-items:center;justify-content:center"><i class="fa-solid fa-user-music" style="color:#1a73e8;font-size:17px"></i></div>
+                        <div style="width:46px;height:46px;border-radius:50%;background:#1a1a1a;display:flex;align-items:center;justify-content:center"><i class="fa-solid fa-user-music" style="color:#ccc;font-size:17px"></i></div>
                         <div style="font-size:14px;font-weight:700;color:#fff">${a}</div>
                     </div>`).join('')
                     : '<div style="text-align:center;padding:60px 20px;color:#444"><i class="fa-solid fa-user-music" style="font-size:32px;margin-bottom:12px;display:block"></i>Jelajahi artis di Beranda</div>';
@@ -4039,27 +4224,24 @@
             musicPlayCurrentQueueItem();
         }
 
-        // ---------- PROFILE ----------
-        function musicUpdateProfileStats() {
-            const liked = JSON.parse(localStorage.getItem(_musicLikedKey) || '[]');
-            document.getElementById('musicStatLiked').textContent = `${liked.length} lagu disukai`;
-        }
+        // ---------- HAPUS DATA (dipindah ke Koleksi, fitur Profil dihapus) ----------
         function musicClearAllData() {
             if (!confirm('Hapus semua data musik (disukai, riwayat)?')) return;
             localStorage.removeItem(_musicLikedKey);
             localStorage.removeItem(_musicHistoryKey);
-            musicUpdateProfileStats();
-            musicLibSwitch(_musicCurrentLibTab);
+            if (_musicCurrentLibTab) musicLibSwitch(_musicCurrentLibTab); else musicRenderKoleksi();
         }
 
         // ---------- FULL PLAYER OPEN/CLOSE ----------
         function musicOpenFullPlayer() {
             if (!_musicCurrentTrack) return;
             document.getElementById('musicFullPlayer').style.display = 'flex';
+            document.getElementById('musicMiniPlayer').style.display = 'none';
             history.pushState({view:'musicFullPlayer'}, '');
         }
         function musicCloseFullPlayer() {
             document.getElementById('musicFullPlayer').style.display = 'none';
+            musicRestoreMiniPlayer();
             musicClosePanel();
         }
         function musicRestoreMiniPlayer() {
@@ -4078,10 +4260,25 @@
             overlay.style.display = 'block';
             panel.style.display = 'flex';
 
-            if (type === 'lyrics') {
+            if (type === 'genrefilter') {
+                title.textContent = 'Filter Genre';
+                const genres = [
+                    { label:'Galau', query:'lagu galau indonesia' },
+                    { label:'Santai', query:'santai chill indonesia' },
+                    { label:'Semangat', query:'upbeat semangat indonesia' },
+                    { label:'Nostalgia', query:'lagu indonesia nostalgia 2000an' },
+                    { label:'Romantis', query:'lagu romantis indonesia' },
+                    { label:'Rock', query:'rock indonesia' },
+                    { label:'Pop', query:'pop indonesia' },
+                    { label:'Akustik', query:'akustik indonesia' },
+                ];
+                body.innerHTML = `<div style="display:flex;flex-wrap:wrap;gap:10px;padding-top:4px">
+                    ${genres.map(g => `<div class="music-pill" onclick="musicClosePanel();musicSearch('${g.query.replace(/'/g,"&#39;")}')">${g.label}</div>`).join('')}
+                </div>`;
+            } else if (type === 'lyrics') {
                 title.textContent = 'Lirik';
                 if (!_musicCurrentTrack) { body.innerHTML = '<div style="text-align:center;padding:30px;color:#444">Tidak ada lagu diputar</div>'; return; }
-                body.innerHTML = `<div style="text-align:center;padding:30px 0;color:#555"><i class="fa-solid fa-compact-disc fa-spin" style="font-size:24px;color:#1a73e8"></i><div style="margin-top:10px;font-size:12px">Memuat lirik...</div></div>`;
+                body.innerHTML = `<div style="text-align:center;padding:30px 0;color:#555"><i class="fa-solid fa-compact-disc fa-spin" style="font-size:24px;color:#fff"></i><div style="margin-top:10px;font-size:12px">Memuat lirik...</div></div>`;
                 try {
                     const artist = encodeURIComponent(_musicCurrentTrack.artist);
                     const titleClean = encodeURIComponent(_musicCurrentTrack.title.replace(/\(.*?\)/g, '').trim());
@@ -4104,13 +4301,13 @@
                         <i class="fa-solid fa-quote-left" style="font-size:24px;margin-bottom:14px;display:block;color:#333"></i>
                         <div style="font-size:13px;line-height:1.8">Lirik tidak ditemukan untuk<br><b style="color:#888">${_musicCurrentTrack.title}</b><br>oleh ${_musicCurrentTrack.artist}</div>
                         <a href="https://www.google.com/search?q=${encodeURIComponent(_musicCurrentTrack.title+' '+_musicCurrentTrack.artist+' lyrics')}" target="_blank"
-                            style="display:inline-block;margin-top:16px;background:#1a73e8;color:#fff;padding:10px 24px;border-radius:20px;font-size:12px;font-weight:700;text-decoration:none">Cari di Google</a>
+                            style="display:inline-block;margin-top:16px;background:#fff;color:#000;padding:10px 24px;border-radius:20px;font-size:12px;font-weight:700;text-decoration:none">Cari di Google</a>
                     </div>`;
                 }
             } else if (type === 'queue') {
                 title.innerHTML = `<div style="display:flex;align-items:center;justify-content:space-between;padding:0 4px">
                     <span style="font-size:16px;font-weight:800;color:#fff">Antrian</span>
-                    <span onclick="musicToggleQueueEdit()" style="font-size:12px;font-weight:700;color:#1a73e8;cursor:pointer">${_musicQueueEditMode ? 'Selesai' : 'Edit'}</span>
+                    <span onclick="musicToggleQueueEdit()" style="font-size:12px;font-weight:700;color:#ccc;cursor:pointer">${_musicQueueEditMode ? 'Selesai' : 'Edit'}</span>
                 </div>`;
                 if (!_musicQueue.length) {
                     body.innerHTML = '<div style="text-align:center;padding:30px;color:#444">Antrian kosong</div>';
@@ -4119,13 +4316,13 @@
                     const upNext = _musicQueue.map((t,i) => ({t,i})).filter(x => x.i !== _musicQueueIdx);
                     const rowHTML = (t, i, isCurrent) => `
                         <div style="display:flex;align-items:center;gap:10px;padding:9px 0">
-                            <img onclick="musicPlayFromQueue(${i});musicClosePanel()" src="${t.artworkSmall}" style="width:42px;height:42px;border-radius:6px;object-fit:cover;background:#1a1a1a;cursor:pointer">
+                            <img onclick="musicPlayFromQueue(${i});musicClosePanel()" src="${t.artworkSmall}" onerror="musicImgFallback(this)" style="width:42px;height:42px;border-radius:6px;object-fit:cover;background:#1a1a1a;cursor:pointer">
                             <div onclick="musicPlayFromQueue(${i});musicClosePanel()" style="flex:1;overflow:hidden;cursor:pointer">
-                                <div style="font-size:12px;font-weight:600;color:${isCurrent?'#1a73e8':'#fff'};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${t.title}</div>
+                                <div style="font-size:12px;font-weight:600;color:${isCurrent?'#fff':'#ccc'};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${t.title}</div>
                                 <div style="font-size:10px;color:#666;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${t.artist}</div>
                             </div>
                             ${isCurrent
-                                ? '<i class="fa-solid fa-chart-simple" style="color:#1a73e8;font-size:14px;padding:6px"></i>'
+                                ? '<i class="fa-solid fa-chart-simple" style="color:#fff;font-size:14px;padding:6px"></i>'
                                 : (_musicQueueEditMode
                                     ? `<i class="fa-solid fa-xmark" onclick="event.stopPropagation();musicRemoveFromQueue(${i})" style="color:#666;font-size:15px;padding:6px;cursor:pointer"></i>`
                                     : '<i class="fa-solid fa-bars" style="color:#444;font-size:14px;padding:6px"></i>')}
@@ -4163,7 +4360,7 @@
                 const pct = (( _musicEqValues[i] + 12) / 24) * 100;
                 return `<div style="display:flex;flex-direction:column;align-items:center;gap:8px;height:100%;justify-content:flex-end;flex:1">
                     <input type="range" min="-12" max="12" value="${_musicEqValues[i]}" orient="vertical"
-                        style="writing-mode:vertical-lr;direction:rtl;width:26px;height:150px;accent-color:#1a73e8"
+                        style="writing-mode:vertical-lr;direction:rtl;width:26px;height:150px;accent-color:#fff"
                         oninput="musicEqChange(${i}, this.value)">
                     <span style="font-size:10px;color:#666">${label}</span>
                 </div>`;
@@ -4181,7 +4378,7 @@
         }
         function musicEqToggle(on) {
             _musicEqOn = on;
-            document.getElementById('musicEqToggleTrack').style.background = on ? '#1a73e8' : '#333';
+            document.getElementById('musicEqToggleTrack').style.background = on ? '#fff' : '#333';
             document.getElementById('musicEqToggleDot').style.left = on ? '21px' : '3px';
         }
         let _musicQueueEditMode = false;
@@ -4983,7 +5180,7 @@
             if (frame && frame.src) frame.src = '';
             document.getElementById('tvPlayerArea').style.display = 'none';
 
-            const labels = { nasional: 'Nasional', lokal: 'Lokal & Regional', berita: 'Berita' };
+            const labels = { nasional: 'Nasional', lokal: 'Lokal & Regional', berita: 'Berita', favorit: 'Favorit' };
             tvTitle.textContent = labels[tab] || 'Live TV';
             tvModal.scrollTop = 0;
             renderTvList('', tab);
@@ -5052,10 +5249,37 @@
                 }
             }, { passive: true });
         }
+        const TV_FAV_KEY = 'tvFavoriteChannels';
+        function getTvFavorites() {
+            try { return JSON.parse(localStorage.getItem(TV_FAV_KEY) || '[]'); } catch(e) { return []; }
+        }
+        function toggleTvFavorite(name, ev) {
+            if (ev) ev.stopPropagation();
+            let favs = getTvFavorites();
+            if (favs.includes(name)) favs = favs.filter(n => n !== name);
+            else favs.unshift(name);
+            localStorage.setItem(TV_FAV_KEY, JSON.stringify(favs));
+            renderTvList(document.getElementById('tvSearchInp') ? document.getElementById('tvSearchInp').value : '', _currentTvTab);
+        }
         function renderTvList(filter, tab) {
             const cont = document.getElementById('tvChannelList');
             const q = (filter || '').toLowerCase();
             const activeTab = tab || _currentTvTab;
+            const favs = getTvFavorites();
+
+            if (activeTab === 'favorit') {
+                const allChannels = [];
+                tvCategories.forEach(cat => { if (cat.label !== 'Sports') allChannels.push(...cat.channels); });
+                const favChannels = allChannels.filter(ch => favs.includes(ch.name) && ch.name.toLowerCase().includes(q));
+                if (!favChannels.length) {
+                    cont.innerHTML = `<div style="text-align:center;padding:60px 20px;color:#444"><i class="fa-regular fa-heart" style="font-size:32px;margin-bottom:12px;display:block"></i>Belum ada channel favorit<br><span style="font-size:11px">Tap ikon hati pada channel untuk menyimpannya di sini</span></div>`;
+                    return;
+                }
+                cont.innerHTML = `<div class="tv-category-label">Favorit</div><div class="tv-channel-grid">` +
+                    favChannels.map(ch => tvChannelCardHTML(ch, favs)).join('') + `</div>`;
+                return;
+            }
+
             const tabMap = { nasional: 'Nasional', lokal: 'Lokal & Regional', berita: 'Berita' };
             const catLabel = tabMap[activeTab];
             let html = '';
@@ -5065,17 +5289,22 @@
                 const filtered = cat.channels.filter(ch => ch.name.toLowerCase().includes(q));
                 if (filtered.length === 0) return;
                 html += `<div class="tv-category-label">${cat.label}</div><div class="tv-channel-grid">`;
-                filtered.forEach(ch => {
-                    html += `<div class="tv-ch-card" id="tvch-${ch.name.replace(/\s/g,'_')}" onclick="playTvChannelInPane('${ch.name}', '${ch.url}')">
-                        <div class="tv-ch-live-badge">LIVE</div>
-                        <div class="tv-ch-logo-box">${ch.logo}</div>
-                        <div class="tv-ch-name">${ch.name}</div>
-                    </div>`;
-                });
+                filtered.forEach(ch => { html += tvChannelCardHTML(ch, favs); });
                 html += `</div>`;
             });
             if (!html) html = '<div class="text-center py-10 text-zinc-600 text-xs">Channel not found.</div>';
             cont.innerHTML = html;
+        }
+        function tvChannelCardHTML(ch, favs) {
+            const isFav = favs.includes(ch.name);
+            return `<div class="tv-ch-card" id="tvch-${ch.name.replace(/\s/g,'_')}" onclick="playTvChannelInPane('${ch.name}', '${ch.url}')">
+                <div class="tv-ch-fav-btn ${isFav ? 'is-fav' : ''}" onclick="toggleTvFavorite('${ch.name.replace(/'/g,"\\'")}', event)">
+                    <i class="fa-${isFav ? 'solid' : 'regular'} fa-heart"></i>
+                </div>
+                <div class="tv-ch-live-badge">LIVE</div>
+                <div class="tv-ch-logo-box">${ch.logo}</div>
+                <div class="tv-ch-name">${ch.name}</div>
+            </div>`;
         }
 
         function playTvChannelInPane(name, url) {
@@ -5091,7 +5320,13 @@
             const frame = document.getElementById('tvPlayerFrame');
             playerArea.style.display = 'block';
             frame.src = url;
+            // tampilkan jadwal acara channel ini (Now Playing / Next / jadwal lengkap)
+            _tvActiveScheduleChannel = name;
+            const schedArea = document.getElementById('tvScheduleArea');
+            const schedHTML = buildScheduleHTML(name);
+            schedArea.innerHTML = schedHTML || '';
         }
+        let _tvActiveScheduleChannel = null;
 
         function initTvChannels() { /* channels di-render saat switchTvTab dipanggil */ }
         function filterTvChannels(q) { renderTvList(q, _currentTvTab); }
@@ -5117,12 +5352,22 @@
             document.getElementById('tvSearchBox').style.display = 'none';
             document.getElementById('tvPlayerArea').style.display = 'none';
             document.getElementById('tvPlayerFrame').src = '';
+            document.getElementById('tvScheduleArea').innerHTML = '';
+            _tvActiveScheduleChannel = null;
             document.getElementById('tvModal').style.display = 'block';
             document.getElementById('tvModal').scrollTop = 0;
             document.body.style.overflow = 'hidden';
             history.pushState({view: 'tv'}, "");
             switchTvTab('nasional');
+            if (_tvScheduleTimer) clearInterval(_tvScheduleTimer);
+            _tvScheduleTimer = setInterval(() => {
+                if (_tvActiveScheduleChannel) {
+                    const el = document.getElementById('tvScheduleArea');
+                    if (el) el.innerHTML = buildScheduleHTML(_tvActiveScheduleChannel) || '';
+                }
+            }, 60000);
         }
+        let _tvScheduleTimer = null;
 
         function closeTvModal() {
             document.getElementById('tvPlayerFrame').src = '';
@@ -5130,6 +5375,7 @@
             document.body.style.overflow = 'auto';
             updateActiveNav(document.getElementById('homeBtnNav'));
             history.replaceState({view: 'home'}, '');
+            if (_tvScheduleTimer) { clearInterval(_tvScheduleTimer); _tvScheduleTimer = null; }
         }
 
         function playTvChannel(name, url) {
@@ -5621,6 +5867,11 @@
                     musicCloseAlbumDetail();
                     return;
                 }
+                // 2c. Artist profile terbuka?
+                if (document.getElementById('musicArtistProfile').style.display === 'flex') {
+                    musicCloseArtistProfile();
+                    return;
+                }
                 // 3. Playlist detail terbuka?
                 if (document.getElementById('musicPlaylistDetail').style.display === 'flex') {
                     musicClosePlaylistDetail();
@@ -5640,9 +5891,8 @@
                 // 6. Tab selain home aktif?
                 const searchOpen = document.getElementById('musicSearchTab').style.display === 'flex';
                 const libOpen = document.getElementById('musicLibraryTab').style.display === 'flex';
-                const profOpen = document.getElementById('musicProfileTab').style.display === 'flex';
                 const playlistOpen = document.getElementById('musicPlaylistTab').style.display === 'flex';
-                if (searchOpen || libOpen || profOpen || playlistOpen) {
+                if (searchOpen || libOpen || playlistOpen) {
                     musicShowTab('home');
                     history.replaceState({view:'music'}, '');
                     return;
