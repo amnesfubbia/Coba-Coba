@@ -2110,11 +2110,14 @@
                 <!-- progress bar -->
                 <div id="lsProgressRow" style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
                     <span id="lsTime" style="font-size:11px;color:#fff;min-width:40px">0:00</span>
-                    <div style="flex:1;height:3px;background:rgba(255,255,255,0.25);border-radius:2px;cursor:pointer" onclick="event.stopPropagation()">
-                        <div id="lsProgress" style="width:0%;height:100%;background:#fff;border-radius:2px;transition:width 0.5s linear"></div>
+                    <div id="lsProgressTrack" style="flex:1;height:14px;display:flex;align-items:center;cursor:pointer" onclick="event.stopPropagation(); lsSeekToTap(event)">
+                        <div style="width:100%;height:3px;background:rgba(255,255,255,0.25);border-radius:2px;position:relative">
+                            <div id="lsProgress" style="width:0%;height:100%;background:#fff;border-radius:2px"></div>
+                        </div>
                     </div>
                     <span id="lsDuration" style="font-size:11px;color:#aaa;min-width:40px;text-align:right">0:00</span>
                 </div>
+
                 <!-- controls row -->
                 <div id="lsControlsRow" style="display:flex;justify-content:space-around;align-items:center">
                     <i class="fa-solid fa-backward-step ls-btn ls-btn-sm" onclick="event.stopPropagation(); lsCarouselNav(-1)" title="Prev"></i>
@@ -3090,7 +3093,7 @@
                     <i id="musicAlbumLikeBtn" class="fa-regular fa-heart" style="font-size:19px;color:#666;cursor:pointer;padding:6px" onclick="musicToggleAlbumLike()"></i>
                 </div>
                 <div style="text-align:center;padding:6px 20px 0">
-                    <img id="musicAlbumArt" src="" onerror="musicImgFallback(this)" style="width:170px;height:170px;border-radius:14px;object-fit:cover;background:#1a1a1a;box-shadow:0 20px 50px rgba(0,0,0,0.5)">
+                    <img id="musicAlbumArt" src="" style="width:170px;height:170px;border-radius:14px;object-fit:cover;background:#1a1a1a;box-shadow:0 20px 50px rgba(0,0,0,0.5)">
                     <div id="musicAlbumTitle" style="font-size:19px;font-weight:900;color:#fff;margin-top:16px"></div>
                     <div id="musicAlbumArtist" style="font-size:13px;color:#666;margin-top:4px"></div>
                     <div id="musicAlbumMeta" style="font-size:11px;color:#555;margin-top:2px"></div>
@@ -3173,7 +3176,7 @@
         <div id="musicMiniPlayer" onclick="musicOpenFullPlayer()" style="display:none;position:absolute;bottom:64px;left:0;right:0;background:#1e1e1e;cursor:pointer;z-index:50;border-top:1px solid #2a2a2a">
             <div id="musicMiniProgress" style="height:2px;background:#ccc;width:0%;transition:width 0.3s linear"></div>
             <div style="display:flex;align-items:center;gap:12px;padding:10px 16px">
-                <img id="musicMiniArt" src="" onerror="musicImgFallback(this)" style="width:42px;height:42px;border-radius:8px;object-fit:cover;background:#2a2a2a;flex-shrink:0">
+                <img id="musicMiniArt" src="" style="width:42px;height:42px;border-radius:8px;object-fit:cover;background:#2a2a2a;flex-shrink:0">
                 <div style="flex:1;overflow:hidden">
                     <div id="musicMiniTitle" style="font-size:13px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></div>
                     <div id="musicMiniArtist" style="font-size:11px;color:#666;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px"></div>
@@ -3202,7 +3205,7 @@
 
                 <!-- Artwork -->
                 <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:20px 40px 10px">
-                    <img id="musicFullArt" src="" onerror="musicImgFallback(this)" style="width:100%;max-width:300px;aspect-ratio:1;border-radius:18px;object-fit:cover;box-shadow:0 30px 70px rgba(0,0,0,0.6);background:#1e1e1e">
+                    <img id="musicFullArt" src="" style="width:100%;max-width:300px;aspect-ratio:1;border-radius:18px;object-fit:cover;box-shadow:0 30px 70px rgba(0,0,0,0.6);background:#1e1e1e">
                 </div>
 
                 <!-- Track info -->
@@ -3337,6 +3340,12 @@
         const ITUNES_API = 'https://itunes.apple.com';
         const MUSIC_PLACEHOLDER_IMG = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><rect width="200" height="200" fill="#181818"/><text x="100" y="128" font-size="86" text-anchor="middle" fill="#3a3a3a" font-family="sans-serif">&#9834;</text></svg>');
         function musicImgFallback(el) { el.onerror = null; el.src = MUSIC_PLACEHOLDER_IMG; }
+        // Pasang onerror lewat JS (bukan atribut statis di HTML) supaya tidak race
+        // dengan parsing sebelum fungsi ini terdefinisi.
+        ['musicAlbumArt','musicMiniArt','musicFullArt'].forEach(function(id){
+            var el = document.getElementById(id);
+            if (el) el.onerror = function(){ musicImgFallback(this); };
+        });
         let _musicQueue = [];           // antrian lagu aktif (array of track objects)
         let _musicQueueIdx = -1;        // index lagu yang sedang main
         let _musicAudio = null;
@@ -4420,7 +4429,16 @@
             document.body.removeChild(a);
         }
 
+        let _tvFrameSrcBeforeLivesport = null;
         function openLivesportModal() {
+            // Hentikan audio channel TV yang sedang jalan supaya tidak dobel suara dengan Live Sport
+            const tvFrame = document.getElementById('tvPlayerFrame');
+            if (tvFrame && tvFrame.src) {
+                _tvFrameSrcBeforeLivesport = tvFrame.src;
+                tvFrame.src = '';
+            } else {
+                _tvFrameSrcBeforeLivesport = null;
+            }
             document.getElementById('livesportModal').style.display = 'flex';
             document.getElementById('livesportIframe').src = 'https://dami-tv.pro/';
             document.body.style.overflow = 'hidden';
@@ -4432,6 +4450,11 @@
             document.getElementById('livesportIframe').src = '';
             document.getElementById('livesportModal').style.display = 'none';
             document.body.style.overflow = 'hidden'; // tvModal masih terbuka
+            // Lanjutkan lagi channel TV yang sempat dihentikan
+            if (_tvFrameSrcBeforeLivesport) {
+                document.getElementById('tvPlayerFrame').src = _tvFrameSrcBeforeLivesport;
+                _tvFrameSrcBeforeLivesport = null;
+            }
             // Tidak perlu replaceState — history.back() sudah kembalikan ke state tv
         }
         // Edit di sini saja untuk ubah semua nav sekaligus
@@ -4539,35 +4562,17 @@
         let _lsPausedSrc = '';
 
         function lsPlayPause() {
+            // Streaming pihak ketiga tidak bisa dikontrol play/pause-nya lewat JS
+            // (beda origin, tanpa API) — tombol ini hanya tampil untuk trailer (YouTube).
+            if (activeServerIdx !== 99) return;
             const icon = document.getElementById('lsPlayBtn');
-            if (activeServerIdx === 99) {
-                // Trailer (YouTube) — pakai postMessage
-                modalVideoCmd('playpause');
-                _modalPlaying = !_modalPlaying;
-                icon.className = _modalPlaying ? 'fa-solid fa-pause ls-btn' : 'fa-solid fa-play ls-btn';
-                icon.style.cssText = 'font-size:26px;border:2px solid #fff;border-radius:50%;padding:10px;width:48px;height:48px;display:flex;align-items:center;justify-content:center;box-sizing:border-box';
-            } else {
-                // Streaming — pause = kosongkan src, play = kembalikan src
-                const iframe = document.querySelector('#carouselTrack iframe') || document.querySelector('#mainVideoArea iframe');
-                if (!iframe) return;
-                if (!_lsPaused) {
-                    _lsPausedSrc = iframe.src || _lsPausedSrc;
-                    if (!_lsPausedSrc) {
-                        // Fallback: rebuild URL
-                        _lsPausedSrc = buildEmbedUrl(window.currentMediaType, window.currentMediaId, activeSeason, activeEpisode, activeServerIdx);
-                    }
-                    iframe.src = 'about:blank';
-                    _lsPaused = true;
-                    icon.className = 'fa-solid fa-play ls-btn';
-                } else {
-                    iframe.src = _lsPausedSrc;
-                    _lsPaused = false;
-                    icon.className = 'fa-solid fa-pause ls-btn';
-                }
-                icon.style.cssText = 'font-size:26px;border:2px solid #fff;border-radius:50%;padding:10px;width:48px;height:48px;display:flex;align-items:center;justify-content:center;box-sizing:border-box';
-            }
+            modalVideoCmd('playpause');
+            _modalPlaying = !_modalPlaying;
+            icon.className = _modalPlaying ? 'fa-solid fa-pause ls-btn' : 'fa-solid fa-play ls-btn';
+            icon.style.cssText = 'font-size:26px;border:2px solid #fff;border-radius:50%;padding:10px;width:48px;height:48px;display:flex;align-items:center;justify-content:center;box-sizing:border-box';
         }
 
+        let _lsLastDuration = 0;
         function lsSeek(sec) {
             if (activeServerIdx === 99) {
                 // Trailer (YouTube) — seek via postMessage
@@ -4575,6 +4580,20 @@
                 try { iframe && iframe.contentWindow.postMessage(JSON.stringify({event:'command',func:'seekBy',args:[sec]}), '*'); } catch(e) {}
             }
             // Streaming — seek tidak bisa, abaikan
+        }
+        function lsSeekToTap(ev) {
+            if (activeServerIdx !== 99 || !_lsLastDuration) return; // hanya trailer, butuh durasi valid
+            const track = document.getElementById('lsProgressTrack');
+            const rect = track.getBoundingClientRect();
+            const clientX = (ev.touches && ev.touches[0] ? ev.touches[0].clientX : ev.clientX);
+            const ratio = Math.min(1, Math.max(0, (clientX - rect.left) / rect.width));
+            const targetTime = ratio * _lsLastDuration;
+            const iframe = document.getElementById(`vid-${currentIdx}`);
+            try {
+                iframe && iframe.contentWindow.postMessage(JSON.stringify({event:'command',func:'seekTo',args:[targetTime, true]}), '*');
+                // Update UI langsung supaya terasa responsif, tidak menunggu postMessage berikutnya
+                document.getElementById('lsProgress').style.width = (ratio * 100) + '%';
+            } catch(e) {}
         }
         function lsCarouselNav(dir) { modalVideoCmd(dir > 0 ? 'next' : 'prev'); }
         // Swipe helper — threshold 25px, ratio 2.0
@@ -6043,14 +6062,16 @@
             overlay.style.display = 'block';
             buildLsServerList();
 
-            // Tampilkan semua kontrol kita untuk semua server
             const lsControlsRow = document.getElementById('lsControlsRow');
             const lsProgressArea = document.getElementById('lsProgressRow');
             if (lsControlsRow) lsControlsRow.style.display = 'flex';
-            if (lsProgressArea) lsProgressArea.style.display = 'flex';
-            // Seek hanya untuk trailer
+            // Seek, play/pause & progress bar hanya berfungsi untuk trailer (YouTube postMessage) —
+            // server streaming pihak ketiga tidak mengirim data waktu, jadi disembunyikan daripada nampilkan bar mati
             const _isTrailer = activeServerIdx === 99;
+            if (lsProgressArea) lsProgressArea.style.display = _isTrailer ? 'flex' : 'none';
             document.querySelectorAll('.ls-seek-btn').forEach(b => b.style.display = _isTrailer ? 'inline-flex' : 'none');
+            const _lspb = document.getElementById('lsPlayBtn');
+            if (_lspb) _lspb.style.display = _isTrailer ? 'flex' : 'none';
             // Reset pause state
             _lsPaused = false; _lsPausedSrc = '';
             const _lspi = document.getElementById('lsPlayBtn');
@@ -6111,18 +6132,18 @@
             document.getElementById('lsSubtitle').innerText = srvIdx === 99 ? 'Trailer · amnesfubbia' : `Server ${srvIdx} · amnesfubbia`;
             const url = buildEmbedUrl(window.currentMediaType, window.currentMediaId, activeSeason, activeEpisode, activeServerIdx);
             playVid(url);
-            // Selalu tampilkan kontrol kita untuk semua server
+            const isTrailer = srvIdx === 99;
+            // Kontrol kita: progress bar, seek ±10s, dan play/pause hanya berfungsi untuk trailer (YouTube postMessage)
             const lsControlsRow = document.getElementById('lsControlsRow');
             const lsProgressArea = document.getElementById('lsProgressRow');
             if (lsControlsRow) lsControlsRow.style.display = 'flex';
-            if (lsProgressArea) lsProgressArea.style.display = 'flex';
+            if (lsProgressArea) lsProgressArea.style.display = isTrailer ? 'flex' : 'none';
             // Reset pause state saat ganti server
             _lsPaused = false; _lsPausedSrc = '';
             const lsPlayIcon = document.getElementById('lsPlayBtn');
             if (lsPlayIcon) { lsPlayIcon.className = 'fa-solid fa-pause ls-btn'; }
-            // Sembunyikan tombol seek (±10s) untuk streaming — hanya untuk trailer
-            const isTrailer = srvIdx === 99;
             document.querySelectorAll('.ls-seek-btn').forEach(b => b.style.display = isTrailer ? 'inline-flex' : 'none');
+            if (lsPlayIcon) lsPlayIcon.style.display = isTrailer ? 'flex' : 'none';
             const panel = document.getElementById('lsServerPanel');
             panel.classList.remove('open');
             panel.style.display = 'none';
@@ -7023,6 +7044,7 @@
                 if (lp) lp.style.width = pct + '%';
                 if (lTime) lTime.textContent = fmt(cur);
                 if (lDur) lDur.textContent = fmt(dur);
+                _lsLastDuration = dur;
             } catch(e2) {}
         });
         // Stop video/streaming saat tab disembunyikan — tapi BUKAN music iframe
