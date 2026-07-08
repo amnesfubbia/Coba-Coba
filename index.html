@@ -2091,7 +2091,7 @@
 
         <!-- Main control overlay -->
         <div class="ls-controls" id="lsUI">
-            <!-- TOP: back + title + lock -->
+            <!-- TOP: back + title -->
             <div class="ls-top">
                 <div class="ls-top-left">
                     <i class="fa-solid fa-chevron-left ls-btn ls-btn-back" onclick="event.stopPropagation(); handleLsBack()"></i>
@@ -2100,26 +2100,24 @@
                         <div id="lsSubtitle" class="ls-subtitle-text">amnesfubbia</div>
                     </div>
                 </div>
-                <div class="ls-top-right">
-                    <i class="fa-solid fa-lock-open ls-btn ls-btn-sm" onclick="event.stopPropagation(); lockScreen()" title="Kunci layar"></i>
-                </div>
             </div>
 
             <!-- BOTTOM: progress + controls -->
             <div class="ls-bottom-area">
-                <!-- progress bar -->
-                <div id="lsProgressRow" style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
-                    <span id="lsTime" style="font-size:11px;color:#fff;min-width:40px">0:00</span>
+                <!-- progress bar — waktu di ujung kiri/kanan, bar penuh di tengah -->
+                <div id="lsProgressRow" style="display:flex;align-items:center;gap:14px;margin-bottom:16px;padding:0 4px">
+                    <span id="lsTime" style="font-size:12px;color:#fff;min-width:40px">0:00</span>
                     <div id="lsProgressTrack" style="flex:1;height:14px;display:flex;align-items:center;cursor:pointer" onclick="event.stopPropagation(); lsSeekToTap(event)">
                         <div style="width:100%;height:3px;background:rgba(255,255,255,0.25);border-radius:2px;position:relative">
                             <div id="lsProgress" style="width:0%;height:100%;background:#fff;border-radius:2px"></div>
                         </div>
                     </div>
-                    <span id="lsDuration" style="font-size:11px;color:#aaa;min-width:40px;text-align:right">0:00</span>
+                    <span id="lsDuration" style="font-size:12px;color:#aaa;min-width:40px;text-align:right">0:00</span>
                 </div>
 
-                <!-- controls row -->
-                <div id="lsControlsRow" style="display:flex;justify-content:space-around;align-items:center">
+                <!-- controls row: kunci — prev — -10 — play/pause — +10 — next — fullscreen, rata dari ujung ke ujung -->
+                <div id="lsControlsRow" style="display:flex;justify-content:space-between;align-items:center;padding:0 4px">
+                    <i class="fa-solid fa-lock-open ls-btn ls-btn-sm" onclick="event.stopPropagation(); lockScreen()" title="Kunci layar"></i>
                     <i class="fa-solid fa-backward-step ls-btn ls-btn-sm" onclick="event.stopPropagation(); lsCarouselNav(-1)" title="Prev"></i>
                     <div class="ls-seek-btn" style="position:relative;display:inline-flex;align-items:center">
                         <i class="fa-solid fa-rotate-left ls-btn ls-btn-sm" onclick="event.stopPropagation(); lsSeek(-10)" title="-10s"></i>
@@ -2830,7 +2828,7 @@
             <!-- tombol LiveSport di antara video dan channel list -->
             <div style="padding:10px 16px 4px">
                 <button onclick="openLivesportModal()" style="width:100%;background:#2a2a2a;border:1px solid #3a3a3a;color:#fff;font-size:13px;font-weight:700;padding:11px 0;border-radius:12px;cursor:pointer;letter-spacing:0.3px;display:flex;align-items:center;justify-content:center;gap:8px">
-                    <i class="fa-solid fa-signal-stream"></i> Live Sport — Dami TV
+                    <i class="fa-solid fa-signal-stream"></i> Live Sport
                 </button>
             </div>
             <!-- scrollable channel list -->
@@ -4083,6 +4081,22 @@
             }
         }
 
+        // ---------- AUDIO DUCKING — musik auto-pause saat trailer/streaming/reels/TV/livesport main,
+        // biar suaranya nggak dobel/tumpuk. Lanjut otomatis begitu sumber lain berhenti. ----------
+        let _musicDuckedByOther = false;
+        function musicDuckForOtherAudio() {
+            if (_musicAudio && _musicPlaying) {
+                musicTogglePlay();
+                _musicDuckedByOther = true;
+            }
+        }
+        function musicResumeFromDuck() {
+            if (_musicDuckedByOther && _musicAudio && !_musicPlaying) {
+                musicTogglePlay();
+            }
+            _musicDuckedByOther = false;
+        }
+
         function musicNext() {
             if (!_musicQueue.length) return;
             if (_musicShuffle) {
@@ -4510,6 +4524,7 @@
 
         let _tvFrameSrcBeforeLivesport = null;
         function openLivesportModal() {
+            musicDuckForOtherAudio();
             // Hentikan audio channel TV yang sedang jalan supaya tidak dobel suara dengan Live Sport
             const tvFrame = document.getElementById('tvPlayerFrame');
             if (tvFrame && tvFrame.src) {
@@ -4526,6 +4541,7 @@
             renderBottomNav('livesportBottomNav', 'sport', null);
         }
         function closeLivesportModal() {
+            musicResumeFromDuck();
             document.getElementById('livesportIframe').src = '';
             document.getElementById('livesportModal').style.display = 'none';
             document.body.style.overflow = 'hidden'; // tvModal masih terbuka
@@ -4641,13 +4657,7 @@
         let _lsPausedSrc = '';
 
         function lsCenterBtnAction() {
-            if (activeServerIdx === 99) {
-                lsPlayPause();
-            } else {
-                // Streaming pihak ketiga tidak bisa dikontrol play/pause — tombol ini jadi kunci layar
-                // supaya tidak ketekan-tekan tidak sengaja saat nonton.
-                lockScreen();
-            }
+            lsPlayPause();
         }
         function lsPlayPause() {
             // Streaming pihak ketiga tidak bisa dikontrol play/pause-nya lewat JS
@@ -5415,6 +5425,7 @@
         }
 
         function playTvChannelInPane(name, url) {
+            musicDuckForOtherAudio();
             // highlight active channel card
             document.querySelectorAll('.tv-ch-card').forEach(c => c.classList.remove('active-ch'));
             const card = document.getElementById('tvch-' + name.replace(/\s/g,'_'));
@@ -5477,6 +5488,7 @@
         let _tvScheduleTimer = null;
 
         function closeTvModal() {
+            musicResumeFromDuck();
             document.getElementById('tvPlayerFrame').src = '';
             document.getElementById('tvModal').style.display = 'none';
             document.body.style.overflow = 'auto';
@@ -5896,6 +5908,7 @@
         }
 
         function _closeReelsSilent() {
+            musicResumeFromDuck();
             document.getElementById('reelsModal').style.display = 'none';
             document.getElementById('reelsBottomNav').style.display = 'none';
             document.querySelectorAll('#reelsContainer iframe').forEach(f => {
@@ -6155,15 +6168,16 @@
             if (lsControlsRow) lsControlsRow.style.display = 'flex';
             // Seek & progress bar hanya berfungsi untuk trailer (YouTube postMessage) —
             // server streaming pihak ketiga tidak mengirim data waktu, jadi disembunyikan daripada nampilkan bar mati.
-            // Tombol tengah tetap ada: play/pause untuk trailer, kunci layar untuk streaming.
+            // Tombol tengah (play/pause) cuma berfungsi untuk trailer — disembunyikan untuk streaming
+            // supaya baris kontrol rapi (kunci layar sudah ada di ikon kanan atas, tidak perlu duplikat).
             const _isTrailer = activeServerIdx === 99;
             if (lsProgressArea) lsProgressArea.style.display = _isTrailer ? 'flex' : 'none';
             document.querySelectorAll('.ls-seek-btn').forEach(b => b.style.display = _isTrailer ? 'inline-flex' : 'none');
             const _lspb = document.getElementById('lsPlayBtn');
             if (_lspb) {
-                _lspb.style.display = 'flex';
-                _lspb.className = _isTrailer ? 'fa-solid fa-pause ls-btn' : 'fa-solid fa-lock ls-btn';
-                _lspb.title = _isTrailer ? 'Play/Pause' : 'Kunci layar';
+                _lspb.style.display = _isTrailer ? 'flex' : 'none';
+                _lspb.className = 'fa-solid fa-pause ls-btn';
+                _lspb.title = 'Play/Pause';
             }
             // Reset pause state
             _lsPaused = false; _lsPausedSrc = '';
@@ -6234,9 +6248,9 @@
             document.querySelectorAll('.ls-seek-btn').forEach(b => b.style.display = isTrailer ? 'inline-flex' : 'none');
             const lsPlayIcon = document.getElementById('lsPlayBtn');
             if (lsPlayIcon) {
-                lsPlayIcon.style.display = 'flex';
-                lsPlayIcon.className = isTrailer ? 'fa-solid fa-pause ls-btn' : 'fa-solid fa-lock ls-btn';
-                lsPlayIcon.title = isTrailer ? 'Play/Pause' : 'Kunci layar';
+                lsPlayIcon.style.display = isTrailer ? 'flex' : 'none';
+                lsPlayIcon.className = 'fa-solid fa-pause ls-btn';
+                lsPlayIcon.title = 'Play/Pause';
             }
             const panel = document.getElementById('lsServerPanel');
             panel.classList.remove('open');
@@ -6721,6 +6735,7 @@
         const PORTRAIT_REGEX = /\bvertical\b|\bportrait\b|9\s*:\s*16|\breels?\b|\btiktok\b|#shorts|\bshorts\b/i;
 
         async function openReels() {
+            musicDuckForOtherAudio();
             // Pause/mute semua video dari modal film yang mungkin masih main
             document.querySelectorAll('#carouselTrack iframe').forEach(f => {
                 try { f.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*'); } catch(e) {}
@@ -6742,6 +6757,7 @@
         }
 
         function closeReels() {
+            musicResumeFromDuck();
             // Tutup detail sheet jika masih terbuka
             document.getElementById('reelDetailOverlay').style.display = 'none';
             document.getElementById('reelDetailSheet').style.display = 'none';
@@ -7070,7 +7086,9 @@
                     const player = new YT.Player(iframe, {
                         events: {
                             onStateChange: (event) => {
-                                // State 0 = ended
+                                // State 0 = ended, 1 = playing, 2 = paused
+                                if (event.data === 1) musicDuckForOtherAudio();
+                                else if (event.data === 2 || event.data === 0) musicResumeFromDuck();
                                 if (event.data === 0) {
                                     const sheet = document.getElementById('reelDetailSheet');
                                     if (sheet && sheet.style.display === 'block') return;
@@ -7118,6 +7136,11 @@
             try {
                 const d = JSON.parse(e.data);
                 if (d.event !== 'infoDelivery' || !d.info) return;
+                // playerState: 1=playing, 2=paused, 0=ended — dipakai untuk auto-pause/lanjutkan musik
+                if (typeof d.info.playerState === 'number') {
+                    if (d.info.playerState === 1) musicDuckForOtherAudio();
+                    else if (d.info.playerState === 2 || d.info.playerState === 0) musicResumeFromDuck();
+                }
                 const cur = d.info.currentTime, dur = d.info.duration;
                 if (!dur || dur <= 0) return;
                 const pct = (cur / dur * 100).toFixed(2);
@@ -8555,7 +8578,7 @@
 
                 if (rVideos.length === 0) {
                     const fallbackUrl = buildEmbedUrl(type, id, 1, 1, 1);
-                    track.innerHTML = `<div class="carousel-slide"><iframe id="player-frame" src="${fallbackUrl}" class="w-full h-full" allowfullscreen allow="autoplay; fullscreen; picture-in-picture"></iframe></div>`;
+                    track.innerHTML = `<div class="carousel-slide"><iframe id="player-frame" src="${fallbackUrl}" class="w-full h-full" allowfullscreen allow="autoplay; fullscreen; picture-in-picture" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-presentation allow-orientation-lock"></iframe></div>`;
                     document.getElementById('swipeOverlay').style.display = 'none';
                     return;
                 }
@@ -8613,7 +8636,7 @@
 
                 if (vidsToDisplay.length === 0) {
                     const fallbackUrl = buildEmbedUrl(type, id, 1, 1, 1);
-                    track.innerHTML = `<div class="carousel-slide"><iframe id="player-frame" src="${fallbackUrl}" class="w-full h-full" allowfullscreen allow="autoplay; fullscreen; picture-in-picture"></iframe></div>`;
+                    track.innerHTML = `<div class="carousel-slide"><iframe id="player-frame" src="${fallbackUrl}" class="w-full h-full" allowfullscreen allow="autoplay; fullscreen; picture-in-picture" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-presentation allow-orientation-lock"></iframe></div>`;
                     document.getElementById('swipeOverlay').style.display = 'none';
                     return;
                 }
@@ -8639,6 +8662,7 @@
         }
 
         async function openModal(id, type) {
+            musicDuckForOtherAudio();
             const actorModal = document.getElementById('actorModal');
             if (actorModal.style.display === 'block') actorModal.style.display = 'none';
             window.currentMediaId = id; window.currentMediaType = type;
@@ -8726,7 +8750,7 @@
 
             const handleTrailerError = async () => {
                 const fallbackUrl = buildEmbedUrl(type, id, 1, 1, 1); 
-                track.innerHTML = `<div class="carousel-slide"><iframe id="player-frame" src="${fallbackUrl}" class="w-full h-full" allowfullscreen allow="autoplay; fullscreen; picture-in-picture"></iframe></div>`; 
+                track.innerHTML = `<div class="carousel-slide"><iframe id="player-frame" src="${fallbackUrl}" class="w-full h-full" allowfullscreen allow="autoplay; fullscreen; picture-in-picture" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-presentation allow-orientation-lock"></iframe></div>`; 
                 document.getElementById('swipeOverlay').style.display = 'none';
             };
 
@@ -9053,6 +9077,7 @@
         }
 
         function closeModal() {
+            musicResumeFromDuck();
             const track = document.getElementById('carouselTrack'); 
             if(track) { 
                 track.querySelectorAll('iframe').forEach(f => { f.src = ""; f.remove(); }); 
@@ -9162,6 +9187,7 @@
         })();
 
         function playVid(url, el) { 
+            musicDuckForOtherAudio();
             const track = document.getElementById('carouselTrack'); 
             const dots = document.getElementById('carouselDots'); 
             const loader = document.getElementById('videoLoader');
@@ -9188,8 +9214,11 @@
             newIframe.setAttribute('referrerpolicy', 'no-referrer-when-downgrade');
             newIframe.setAttribute('scrolling', 'no');
             newIframe.setAttribute('frameborder', '0');
-            // Sandbox: blokir popup/redirect iklan tapi izinkan video tetap jalan
-            // No sandbox - biarkan server streaming berjalan normal
+            // Sandbox: blokir iframe menavigasi/menutup halaman utama kita (ini penyebab modal landscape
+            // suka ketutup sendiri saat tap layar — banyak server streaming pakai script iklan yang
+            // memanipulasi history/top-level navigation). Scripts, popup, form tetap diizinkan supaya
+            // pemutarannya tetap jalan normal seperti biasa.
+            newIframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms allow-popups allow-presentation allow-orientation-lock');
             
             // FIX BUG 2: fallback timer — loader pasti sembunyi setelah 6 detik
             newIframe.onload = () => {
