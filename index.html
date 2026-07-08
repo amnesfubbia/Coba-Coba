@@ -3396,6 +3396,17 @@
 
         // ---------- TAB SWITCHING ----------
         function musicShowTab(tab) {
+            // Tutup dulu semua layar overlay (Pemutaran, Playlist/Album/Artist Detail, Equalizer, panel Antrian)
+            // supaya perpindahan tab lewat nav bawah benar-benar terlihat — sebelumnya nav "kelihatan tidak
+            // berfungsi" karena tab di baliknya sudah berganti tapi overlay di atasnya masih menutupi layar.
+            const overlayIds = ['musicFullPlayer','musicPlaylistDetail','musicAlbumDetail','musicArtistProfile','musicEqScreen'];
+            overlayIds.forEach(id => {
+                const el = document.getElementById(id);
+                if (el && el.style.display === 'flex') el.style.display = 'none';
+            });
+            const panelEl = document.getElementById('musicPanel');
+            if (panelEl && panelEl.style.display === 'flex') panelEl.style.display = 'none';
+
             ['home','search','library','playlist'].forEach(t => {
                 const el = document.getElementById('music' + t.charAt(0).toUpperCase() + t.slice(1) + 'Tab');
                 if (el) el.style.display = (t === tab) ? 'flex' : 'none';
@@ -3786,6 +3797,18 @@
         }
 
         // ---------- CARD RENDER ----------
+        function musicAlbumLandscapeCardHTML(t) {
+            return `<div onclick='musicPlayTrack(${JSON.stringify(t).replace(/'/g,"&#39;")})' style="cursor:pointer">
+                <div style="position:relative;width:100%;aspect-ratio:16/10;border-radius:12px;overflow:hidden;background:#1a1a1a">
+                    <img src="${t.artwork || t.artworkSmall}" loading="lazy" onerror="musicImgFallback(this)" style="width:100%;height:100%;object-fit:cover">
+                    <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.88) 0%,rgba(0,0,0,0.15) 55%,transparent 75%)"></div>
+                    <div style="position:absolute;bottom:0;left:0;right:0;padding:10px 12px">
+                        <div style="font-size:13px;font-weight:800;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${t.title}</div>
+                        <div style="font-size:11px;color:#ccc;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${t.artist}</div>
+                    </div>
+                </div>
+            </div>`;
+        }
         function musicCardHTML(t) {
             const isLiked = musicIsLiked(t.id);
             return `<div style="flex-shrink:0;width:130px;cursor:pointer" onclick='musicPlayTrack(${JSON.stringify(t).replace(/'/g,"&#39;")})'>
@@ -4241,19 +4264,39 @@
                 const seen = new Set(); const albums = [];
                 liked.concat(hist).forEach(t => { if (t.album && !seen.has(t.album)) { seen.add(t.album); albums.push(t); } });
                 content.innerHTML = albums.length
-                    ? `<div style="display:flex;flex-wrap:wrap;gap:14px;padding:6px 20px">${albums.map(t => musicCardHTML(t)).join('')}</div>`
+                    ? `<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:6px 20px">${albums.map(t => musicAlbumLandscapeCardHTML(t)).join('')}</div>`
                     : '<div style="text-align:center;padding:60px 20px;color:#444"><i class="fa-solid fa-compact-disc" style="font-size:32px;margin-bottom:12px;display:block"></i>Belum ada album<br><span style="font-size:11px">Sukai atau putar lagu untuk mengisi Album</span></div>';
             } else if (tab === 'artist') {
                 const liked = JSON.parse(localStorage.getItem(_musicLikedKey) || '[]');
                 const hist = JSON.parse(localStorage.getItem(_musicHistoryKey) || '[]');
-                const seen = new Set(); const artists = [];
-                liked.concat(hist).forEach(t => { if (t.artist && !seen.has(t.artist)) { seen.add(t.artist); artists.push(t.artist); } });
-                content.innerHTML = artists.length
-                    ? artists.map(a => `<div onclick="musicSearch('${a.replace(/'/g,"\\'")}')" style="display:flex;align-items:center;gap:14px;padding:12px 20px;cursor:pointer;border-bottom:1px solid #1a1a1a">
-                        <div style="width:46px;height:46px;border-radius:50%;background:#1a1a1a;display:flex;align-items:center;justify-content:center"><i class="fa-solid fa-user-music" style="color:#ccc;font-size:17px"></i></div>
-                        <div style="font-size:14px;font-weight:700;color:#fff">${a}</div>
-                    </div>`).join('')
-                    : '<div style="text-align:center;padding:60px 20px;color:#444"><i class="fa-solid fa-user-music" style="font-size:32px;margin-bottom:12px;display:block"></i>Jelajahi artis di Beranda</div>';
+                const seen = new Set(); const artistNames = [];
+                liked.concat(hist).forEach(t => { if (t.artist && !seen.has(t.artist)) { seen.add(t.artist); artistNames.push(t.artist); } });
+                if (!artistNames.length) {
+                    content.innerHTML = '<div style="text-align:center;padding:60px 20px;color:#444"><i class="fa-solid fa-user-music" style="font-size:32px;margin-bottom:12px;display:block"></i>Jelajahi artis di Beranda</div>';
+                } else {
+                    content.innerHTML = artistNames.map(a => `
+                        <div id="koleksiArtistRow-${a.replace(/[^a-zA-Z0-9]/g,'')}" onclick="musicSearch('${a.replace(/'/g,"\\'")}')" style="display:flex;align-items:center;gap:14px;padding:12px 20px;cursor:pointer;border-bottom:1px solid #1a1a1a">
+                            <div class="music-avatar-ring" style="width:46px;height:46px;flex-shrink:0">
+                                <div class="music-avatar-ring-inner" id="koleksiArtistArt-${a.replace(/[^a-zA-Z0-9]/g,'')}"><i class="fa-solid fa-user-music" style="color:#ccc;font-size:16px"></i></div>
+                            </div>
+                            <div style="font-size:14px;font-weight:700;color:#fff">${a}</div>
+                        </div>`).join('');
+                    // Cari artistId asli per nama supaya bisa ambil foto + buka Profil Artis (bukan cuma teks pencarian)
+                    artistNames.forEach(async a => {
+                        try {
+                            const r = await fetch(`${ITUNES_API}/search?term=${encodeURIComponent(a)}&entity=musicArtist&limit=1`);
+                            const d = await r.json();
+                            const artist = (d.results || [])[0];
+                            if (!artist || !artist.artistId) return;
+                            const key = a.replace(/[^a-zA-Z0-9]/g,'');
+                            const row = document.getElementById(`koleksiArtistRow-${key}`);
+                            if (row) row.setAttribute('onclick', `musicOpenArtistProfile(${artist.artistId},'${a.replace(/'/g,"&#39;")}')`);
+                            const artEl = document.getElementById(`koleksiArtistArt-${key}`);
+                            if (artEl) artEl.id = `artistCircle-${artist.artistId}-koleksirow-${key}`;
+                            musicHydrateArtistArt([{artistId: artist.artistId}], `koleksirow-${key}`);
+                        } catch(e) {}
+                    });
+                }
             } else if (tab === 'download') {
                 content.innerHTML = '<div style="text-align:center;padding:60px 20px;color:#444"><i class="fa-solid fa-download" style="font-size:32px;margin-bottom:12px;display:block"></i>Belum ada lagu diunduh</div>';
             }
