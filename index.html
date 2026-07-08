@@ -3338,6 +3338,24 @@
         // MUSIC MODULE — iTunes Search API
         // ============================================================
         const ITUNES_API = 'https://itunes.apple.com';
+        // iTunes Search API tidak punya sorting "populer" — pencarian frasa generik seperti
+        // "top hits indonesia" hanya text-match ke katalog (sering nyangkut ke musisi indie/tidak dikenal).
+        // Jadi dipakai daftar artis yang memang terkenal sebagai jangkar pencarian, supaya hasilnya benar-benar dikenali.
+        const MUSIC_POPULAR_ARTISTS = [
+            'Tulus', 'Raisa', 'Rizky Febian', 'Yura Yunita', 'Mahalini', 'Hindia', 'Nadin Amizah',
+            'Sheila On 7', 'Noah', 'Dewa 19', 'Iwan Fals', 'Isyana Sarasvati', 'Afgan', 'Rossa',
+            'Agnez Mo', 'Judika', 'Vidi Aldiano', 'Kunto Aji', 'Fiersa Besari', 'RAN', 'Maliq D Essentials',
+            'Glenn Fredly', 'Andmesh', 'Ari Lasso', 'GAC', 'Pamungkas', 'Danilla',
+            'Taylor Swift', 'Ed Sheeran', 'Bruno Mars', 'The Weeknd', 'Adele', 'Coldplay', 'Dua Lipa', 'Ariana Grande'
+        ];
+        function musicPickRandomArtists(n) {
+            const pool = [...MUSIC_POPULAR_ARTISTS];
+            const picked = [];
+            while (picked.length < n && pool.length) {
+                picked.push(pool.splice(Math.floor(Math.random() * pool.length), 1)[0]);
+            }
+            return picked;
+        }
         const MUSIC_PLACEHOLDER_IMG = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><rect width="200" height="200" fill="#181818"/><text x="100" y="128" font-size="86" text-anchor="middle" fill="#3a3a3a" font-family="sans-serif">&#9834;</text></svg>');
         function musicImgFallback(el) { el.onerror = null; el.src = MUSIC_PLACEHOLDER_IMG; }
         // Pasang onerror lewat JS (bukan atribut statis di HTML) supaya tidak race
@@ -3445,6 +3463,13 @@
             _musicQueue = arr; _musicQueueIdx = i;
             musicPlayCurrentQueueItem();
         }
+        async function musicFetchTracksByArtists(names, perArtist) {
+            const batches = await Promise.all(names.map(name =>
+                fetch(`${ITUNES_API}/search?term=${encodeURIComponent(name)}&media=music&limit=${perArtist}`)
+                    .then(r => r.json()).then(d => (d.results || []).filter(t => t.trackId && t.previewUrl)).catch(() => [])
+            ));
+            return batches.flat();
+        }
         async function musicRenderRecoList() {
             const el = document.getElementById('musicRecoList');
             const hist = JSON.parse(localStorage.getItem(_musicHistoryKey) || '[]');
@@ -3455,9 +3480,8 @@
             }
             el.innerHTML = musicSkeletonListRows(4);
             try {
-                const r = await fetch(`${ITUNES_API}/search?term=${encodeURIComponent('top hits indonesia')}&media=music&limit=8`);
-                const d = await r.json();
-                const tracks = (d.results || []).filter(t => t.trackId && t.previewUrl).map(musicNormalize);
+                const raw = await musicFetchTracksByArtists(musicPickRandomArtists(4), 3);
+                const tracks = raw.map(musicNormalize);
                 _musicHomeQueues.reco = tracks;
                 el.innerHTML = tracks.length ? tracks.map((t,i) => musicRadioRowHTML(t, i, 'reco')).join('') : '<div style="color:#444;font-size:12px;padding:10px 20px">Tidak ada data</div>';
             } catch(e) {
@@ -3468,9 +3492,10 @@
             const el = document.getElementById('musicNewReleaseList');
             el.innerHTML = musicSkeletonListRows(4);
             try {
-                const r = await fetch(`${ITUNES_API}/search?term=${encodeURIComponent('lagu indonesia terbaru 2026')}&media=music&limit=8`);
-                const d = await r.json();
-                const tracks = (d.results || []).filter(t => t.trackId && t.previewUrl).map(musicNormalize);
+                const raw = await musicFetchTracksByArtists(musicPickRandomArtists(4), 3);
+                // Urutkan berdasarkan tanggal rilis terbaru dulu agar terasa seperti "rilis baru"
+                raw.sort((a, b) => new Date(b.releaseDate || 0) - new Date(a.releaseDate || 0));
+                const tracks = raw.map(musicNormalize);
                 _musicHomeQueues.newrelease = tracks;
                 el.innerHTML = tracks.length ? tracks.map((t,i) => musicRadioRowHTML(t, i, 'newrelease')).join('') : '<div style="color:#444;font-size:12px;padding:10px 20px">Tidak ada data</div>';
             } catch(e) {
@@ -3480,7 +3505,7 @@
         async function musicLoadHomePlaylistCard() {
             const p = MUSIC_PLAYLISTS[0];
             try {
-                const r = await fetch(`${ITUNES_API}/search?term=${encodeURIComponent(p.query)}&media=music&limit=1`);
+                const r = await fetch(`${ITUNES_API}/search?term=${encodeURIComponent(p.artists[0])}&media=music&limit=1`);
                 const d = await r.json();
                 const t = (d.results || [])[0];
                 if (t && t.artworkUrl100) {
@@ -3499,9 +3524,8 @@
                 </div>`).join('');
             MUSIC_PLAYLISTS.forEach(async p => {
                 try {
-                    const r = await fetch(`${ITUNES_API}/search?term=${encodeURIComponent(p.query)}&media=music&limit=4`);
-                    const d = await r.json();
-                    const arts = (d.results || []).map(t => t.artworkUrl100).filter(Boolean);
+                    const raw = await musicFetchPlaylistTracks(p, 1);
+                    const arts = raw.map(t => t.artworkUrl100).filter(Boolean);
                     const collage = document.getElementById(`musicCommCollage-${p.id}`);
                     if (collage && arts.length) {
                         collage.innerHTML = arts.slice(0,4).map(u => `<img src="${u}" onerror="musicImgFallback(this)" style="width:100%;height:100%;object-fit:cover">`).join('');
@@ -3515,9 +3539,12 @@
             if (!el) return;
             el.innerHTML = musicSkeletonCards(6);
             try {
-                const r = await fetch(`${ITUNES_API}/search?term=${encodeURIComponent('album indonesia populer')}&entity=album&limit=12`);
-                const d = await r.json();
-                const albums = (d.results || []).filter(a => a.collectionId);
+                const names = musicPickRandomArtists(6);
+                const batches = await Promise.all(names.map(name =>
+                    fetch(`${ITUNES_API}/search?term=${encodeURIComponent(name)}&entity=album&limit=2`)
+                        .then(r => r.json()).then(d => (d.results || []).filter(a => a.collectionId)).catch(() => [])
+                ));
+                const albums = batches.flat();
                 if (!albums.length) { el.innerHTML = '<div style="color:#444;font-size:12px;padding:10px">Tidak ada data</div>'; return; }
                 el.innerHTML = albums.map(a => `
                     <div onclick="musicOpenAlbumDetail(${a.collectionId},'${(a.collectionName||'').replace(/'/g,"&#39;")}','${(a.artistName||'').replace(/'/g,"&#39;")}','${(a.artworkUrl100||'').replace('100x100','600x600')}')" style="flex-shrink:0;width:130px;cursor:pointer">
@@ -3580,10 +3607,13 @@
             const el = document.getElementById('musicArtistScroll');
             el.innerHTML = musicSkeletonCards(6, true);
             try {
-                const r = await fetch(`${ITUNES_API}/search?term=${encodeURIComponent('musisi populer indonesia')}&entity=musicArtist&limit=12`);
-                const d = await r.json();
-                const artists = (d.results || []).filter(a => a.artistName);
-                if (!artists.length) { el.innerHTML = ''; return; }
+                const names = musicPickRandomArtists(10);
+                const results = await Promise.all(names.map(name =>
+                    fetch(`${ITUNES_API}/search?term=${encodeURIComponent(name)}&entity=musicArtist&limit=1`)
+                        .then(r => r.json()).then(d => (d.results || [])[0]).catch(() => null)
+                ));
+                const artists = results.filter(a => a && a.artistId && a.artistName);
+                if (!artists.length) { el.innerHTML = '<div style="color:#444;font-size:12px;padding:10px">Tidak ada data</div>'; return; }
                 el.innerHTML = artists.map(a => `
                     <div onclick="musicOpenArtistProfile(${a.artistId},'${(a.artistName||'').replace(/'/g,"&#39;")}')" style="flex-shrink:0;width:84px;text-align:center;cursor:pointer">
                         <div class="music-avatar-ring" style="width:84px;height:84px;margin-bottom:8px">
@@ -3595,7 +3625,7 @@
                     </div>`).join('');
                 musicHydrateArtistArt(artists, 'home');
             } catch(e) {
-                el.innerHTML = '';
+                el.innerHTML = '<div style="color:#444;font-size:12px;padding:10px">Gagal memuat</div>';
             }
         }
 
@@ -3615,12 +3645,16 @@
 
         // ---------- PLAYLIST (auto-generated dari mood/genre, tab "Playlist") ----------
         const MUSIC_PLAYLISTS = [
-            { id:'galau',   title:'Galau Itu Indah',      query:'lagu galau indonesia',      color:'#141414' },
-            { id:'santai',  title:'Santai Sore',          query:'santai chill indonesia',    color:'#1a1a1a' },
-            { id:'semangat',title:'Semangat Pagi',        query:'upbeat semangat indonesia', color:'#101010' },
-            { id:'nostalgia',title:'Nostalgia 2000an',    query:'lagu indonesia nostalgia 2000an', color:'#1c1c1c' },
-            { id:'romantis',title:'Romantis',             query:'lagu romantis indonesia',   color:'#161616' },
+            { id:'galau',    title:'Galau Itu Indah',   artists:['Tulus','Hindia','Nadin Amizah','Yura Yunita'],       color:'#141414' },
+            { id:'santai',   title:'Santai Sore',       artists:['Sheila On 7','Maliq D Essentials','RAN','Kunto Aji'], color:'#1a1a1a' },
+            { id:'semangat', title:'Semangat Pagi',     artists:['Agnez Mo','Afgan','Rizky Febian','Vidi Aldiano'],    color:'#101010' },
+            { id:'nostalgia',title:'Nostalgia 2000an',  artists:['Dewa 19','Sheila On 7','Iwan Fals','Ari Lasso'],     color:'#1c1c1c' },
+            { id:'romantis', title:'Romantis',          artists:['Raisa','Rossa','Judika','Glenn Fredly'],             color:'#161616' },
         ];
+        async function musicFetchPlaylistTracks(p, perArtist) {
+            const raw = await musicFetchTracksByArtists(p.artists, perArtist);
+            return raw;
+        }
         let _musicPlaylistDetail = null; // playlist yang sedang dibuka {id,title,tracks}
         function musicPlaylistCardHTML(p, scope) {
             scope = scope || 'main';
@@ -3635,7 +3669,7 @@
         function musicHydratePlaylistArt(scope) {
             MUSIC_PLAYLISTS.forEach(async p => {
                 try {
-                    const r = await fetch(`${ITUNES_API}/search?term=${encodeURIComponent(p.query)}&media=music&limit=1`);
+                    const r = await fetch(`${ITUNES_API}/search?term=${encodeURIComponent(p.artists[0])}&media=music&limit=1`);
                     const d = await r.json();
                     const t = (d.results || [])[0];
                     const el = document.getElementById(`plCardBg-${p.id}-${scope}`);
@@ -3657,9 +3691,8 @@
             document.getElementById('musicPlDetailArt').style.backgroundImage = '';
             document.getElementById('musicPlDetailList').innerHTML = musicSkeletonListRows(6);
             try {
-                const r = await fetch(`${ITUNES_API}/search?term=${encodeURIComponent(p.query)}&media=music&limit=20`);
-                const data = await r.json();
-                const tracks = (data.results || []).filter(t => t.trackId).map(musicNormalize);
+                const raw = await musicFetchPlaylistTracks(p, 6);
+                const tracks = raw.filter(t => t.trackId).map(musicNormalize);
                 _musicPlaylistDetail = { id:p.id, title:p.title, tracks };
                 if (tracks[0]) document.getElementById('musicPlDetailArt').style.backgroundImage = `url(${tracks[0].artwork})`;
                 document.getElementById('musicPlDetailMeta').textContent = `${tracks.length} lagu`;
@@ -3812,11 +3845,14 @@
                             <i class="fa-solid fa-xmark" style="color:#555;cursor:pointer;padding:6px" onclick="musicRemoveRecentSearch('${q.replace(/'/g,"\\'")}')"></i>
                         </div>`).join('') : '<div style="color:#444;font-size:12px;padding:10px 0 20px">Belum ada pencarian</div>'}
                 </div>`;
-            fetch(`${ITUNES_API}/search?term=${encodeURIComponent('musisi populer indonesia')}&entity=musicArtist&limit=8`)
-                .then(r => r.json()).then(d => {
+            const teratasNames = musicPickRandomArtists(8);
+            Promise.all(teratasNames.map(name =>
+                fetch(`${ITUNES_API}/search?term=${encodeURIComponent(name)}&entity=musicArtist&limit=1`)
+                    .then(r => r.json()).then(d => (d.results || [])[0]).catch(() => null)
+            )).then(results => {
                     const scroll = document.getElementById('musicSearchTopArtistsScroll');
                     if (!scroll) return;
-                    const artists = (d.results || []).filter(a => a.artistId && a.artistName);
+                    const artists = results.filter(a => a && a.artistId && a.artistName);
                     scroll.innerHTML = artists.map(a => `
                         <div onclick="musicOpenArtistProfile(${a.artistId},'${(a.artistName||'').replace(/'/g,"&#39;")}')" style="flex-shrink:0;width:76px;text-align:center;cursor:pointer">
                             <div class="music-avatar-ring" style="width:76px;height:76px;margin-bottom:6px">
