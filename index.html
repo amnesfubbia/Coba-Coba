@@ -469,6 +469,19 @@
         }
         @keyframes lsFadeIn { from { opacity: 0; } to { opacity: 1; } }
 
+        /* Fallback rotasi paksa lewat CSS — dipakai kalau screen.orientation.lock() tidak didukung
+           browser (kebanyakan browser Android selain Chrome, dan semua browser iOS). Tanpa ini,
+           HP tetap portrait secara fisik padahal kita anggap sudah landscape, jadi video/kontrolnya
+           tampil kepotong/berantakan dan terasa seperti "balik ke portrait" begitu disentuh. */
+        .landscape-overlay.ls-force-rotate {
+            width: 100vh;
+            height: 100vw;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(90deg);
+            transform-origin: center center;
+        }
+
         .landscape-video-container { width: 100%; height: 100%; position: relative; }
 
         /* Gradient overlay untuk kontrol */
@@ -6162,6 +6175,7 @@
             document.body.classList.add('landscape-active');
             overlay.style.display = 'block';
             buildLsServerList();
+            lsCheckOrientationFallback();
 
             const lsControlsRow = document.getElementById('lsControlsRow');
             const lsProgressArea = document.getElementById('lsProgressRow');
@@ -6196,7 +6210,19 @@
                     }
                 }
             } catch (e) {}
+
+            // Cek setelah percobaan rotasi asli selesai — kalau HP masih fisik portrait
+            // (API tidak didukung/gagal), pakai fallback rotasi CSS supaya tetap kepakai
+            lsCheckOrientationFallback();
         }
+
+        function lsCheckOrientationFallback() {
+            const overlay = document.getElementById('landscapeOverlay');
+            if (!overlay || !document.body.classList.contains('landscape-active')) return;
+            const isPhysicallyPortrait = window.innerWidth < window.innerHeight;
+            overlay.classList.toggle('ls-force-rotate', isPhysicallyPortrait);
+        }
+        window.addEventListener('resize', lsCheckOrientationFallback);
 
         function buildLsServerList() {
             const scroll = document.getElementById('lsServerScroll');
@@ -6277,6 +6303,7 @@
             document.body.classList.remove('landscape-active');
             const overlay = document.getElementById('landscapeOverlay');
             overlay.style.display = 'none';
+            overlay.classList.remove('ls-force-rotate');
             // close server panel if open
             const panel = document.getElementById('lsServerPanel');
             panel.classList.remove('open');
