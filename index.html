@@ -469,25 +469,6 @@
         }
         @keyframes lsFadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* Fallback kalau screen.orientation.lock() tidak didukung browser (kebanyakan browser Android
-           selain Chrome, dan semua browser iOS): daripada memaksa rotasi lewat CSS transform (bikin
-           kontrol jadi salah posisi kalau HP tidak benar-benar diputar fisik), tampilkan pesan minta
-           user memutar HP-nya — ini pola yang aman dan sudah lazim dipakai situs video manapun.
-        */
-        .ls-rotate-prompt {
-            display: none; position: fixed; inset: 0; z-index: 9950; background: #000;
-            flex-direction: column; align-items: center; justify-content: center; gap: 18px;
-            color: #fff; text-align: center; padding: 0 30px;
-        }
-        .ls-rotate-prompt.visible { display: flex; }
-        .ls-rotate-prompt i { font-size: 46px; color: #666; animation: lsRotateHint 1.6s ease-in-out infinite; }
-        .ls-rotate-prompt .ls-rotate-title { font-size: 16px; font-weight: 700; }
-        .ls-rotate-prompt .ls-rotate-sub { font-size: 12px; color: #888; }
-        @keyframes lsRotateHint {
-            0%, 100% { transform: rotate(0deg); }
-            50% { transform: rotate(90deg); }
-        }
-
         .landscape-video-container { width: 100%; height: 100%; position: relative; }
 
         /* Gradient overlay untuk kontrol */
@@ -2100,13 +2081,6 @@
     </div>
 
     <div id="landscapeOverlay" class="landscape-overlay" onclick="toggleLsUI()">
-        <!-- Prompt: minta user memutar HP kalau orientation lock browser tidak didukung -->
-        <div id="lsRotatePrompt" class="ls-rotate-prompt">
-            <i class="fa-solid fa-mobile-screen"></i>
-            <div class="ls-rotate-title">Putar HP kamu ke mode landscape</div>
-            <div class="ls-rotate-sub">Browser ini tidak mendukung rotasi otomatis</div>
-        </div>
-
         <!-- Lock layer -->
         <div id="lsLockLayer" class="ls-lock-screen" style="display:none">
             <div class="ls-lock-badge" onclick="event.stopPropagation(); unlockScreen()">
@@ -6188,7 +6162,6 @@
             document.body.classList.add('landscape-active');
             overlay.style.display = 'block';
             buildLsServerList();
-            lsCheckOrientationFallback();
 
             const lsControlsRow = document.getElementById('lsControlsRow');
             const lsProgressArea = document.getElementById('lsProgressRow');
@@ -6215,34 +6188,16 @@
             
             history.pushState({view: 'landscape'}, "");
 
+            // Cuma minta fullscreen biasa (didukung luas, aman kalau gagal juga tidak apa-apa).
+            // Rotasi ke landscape sepenuhnya diserahkan ke fisik HP + perilaku responsive browser
+            // yang normal — tanpa screen.orientation.lock() atau trik CSS lain yang gampang bermasalah
+            // di berbagai browser.
             try {
                 if (document.documentElement.requestFullscreen) {
                     await document.documentElement.requestFullscreen();
-                    if (screen.orientation && screen.orientation.lock) {
-                        await screen.orientation.lock('landscape').catch(() => {});
-                    }
                 }
             } catch (e) {}
-
-            // Cek setelah percobaan rotasi asli selesai — kalau HP masih fisik portrait
-            // (API tidak didukung/gagal), pakai fallback rotasi CSS supaya tetap kepakai
-            lsCheckOrientationFallback();
         }
-
-        function lsCheckOrientationFallback() {
-            const overlay = document.getElementById('landscapeOverlay');
-            const prompt = document.getElementById('lsRotatePrompt');
-            const ui = document.getElementById('lsUI');
-            if (!overlay || !document.body.classList.contains('landscape-active')) return;
-            const isPhysicallyPortrait = window.innerWidth < window.innerHeight;
-            // Kalau HP masih fisik portrait (rotasi otomatis browser tidak didukung/gagal),
-            // sembunyikan kontrol (supaya tidak salah posisi) dan tampilkan pesan minta putar HP.
-            // Begitu HP benar-benar diputar, browser akan reflow ke landscape secara normal
-            // (perilaku standar browser, tidak tergantung API orientation-lock) dan kontrol muncul lagi.
-            if (prompt) prompt.classList.toggle('visible', isPhysicallyPortrait);
-            if (ui) ui.style.display = isPhysicallyPortrait ? 'none' : '';
-        }
-        window.addEventListener('resize', lsCheckOrientationFallback);
 
         function buildLsServerList() {
             const scroll = document.getElementById('lsServerScroll');
@@ -6323,10 +6278,6 @@
             document.body.classList.remove('landscape-active');
             const overlay = document.getElementById('landscapeOverlay');
             overlay.style.display = 'none';
-            const prompt = document.getElementById('lsRotatePrompt');
-            if (prompt) prompt.classList.remove('visible');
-            const ui = document.getElementById('lsUI');
-            if (ui) ui.style.display = '';
             // close server panel if open
             const panel = document.getElementById('lsServerPanel');
             panel.classList.remove('open');
