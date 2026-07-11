@@ -2992,7 +2992,7 @@
 
                 <!-- Playlist trending komunitas -->
                 <div style="margin-bottom:28px">
-                    <div style="padding:0 20px 14px"><span style="font-size:18px;font-weight:800;color:#fff">Playlist trending komunitas</span></div>
+                    <div style="padding:0 20px 14px"><span style="font-size:18px;font-weight:800;color:#fff">Playlist Pilihan</span></div>
                     <div id="musicCommunityScroll" style="display:flex;gap:14px;overflow-x:auto;padding:0 20px;scrollbar-width:none"></div>
                 </div>
 
@@ -3058,7 +3058,7 @@
                 </div>
                 <div style="padding:14px 20px 0">
                     <div id="musicPlDetailTitle" style="font-size:21px;font-weight:900;color:#fff"></div>
-                    <div style="font-size:12px;color:#666;margin-top:4px">oleh Nash</div>
+                    <div style="font-size:12px;color:#666;margin-top:4px">Playlist pilihan</div>
                     <div id="musicPlDetailMeta" style="font-size:11px;color:#555;margin-top:2px"></div>
                     <div style="display:flex;align-items:center;gap:12px;margin-top:16px">
                         <div onclick="musicPlayPlaylistDetail()" style="width:48px;height:48px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer">
@@ -3480,12 +3480,6 @@
         }
         async function musicRenderRecoList() {
             const el = document.getElementById('musicRecoList');
-            const hist = JSON.parse(localStorage.getItem(_musicHistoryKey) || '[]');
-            if (hist.length >= 3) {
-                _musicHomeQueues.reco = hist.slice(0, 8);
-                el.innerHTML = _musicHomeQueues.reco.map((t,i) => musicRecoGridCardHTML(t, i, 'reco')).join('');
-                return;
-            }
             el.innerHTML = musicSkeletonGridCards(6);
             try {
                 const raw = await musicFetchTracksByArtists(musicPickRandomArtists(4), 3);
@@ -3500,12 +3494,17 @@
             const el = document.getElementById('musicNewReleaseList');
             el.innerHTML = musicSkeletonListRows(4);
             try {
-                const raw = await musicFetchTracksByArtists(musicPickRandomArtists(4), 3);
-                // Urutkan berdasarkan tanggal rilis terbaru dulu agar terasa seperti "rilis baru"
-                raw.sort((a, b) => new Date(b.releaseDate || 0) - new Date(a.releaseDate || 0));
-                const tracks = raw.map(musicNormalize);
+                // Ambil lebih banyak dari katalog tiap artis (bukan cuma top-3 populer mereka yang biasanya lagu lama),
+                // supaya ada peluang nemu rilisan yang benar-benar baru.
+                const raw = await musicFetchTracksByArtists(musicPickRandomArtists(6), 25);
+                const cutoff = new Date(); cutoff.setFullYear(cutoff.getFullYear() - 2); // hanya anggap "baru" kalau rilis 2 tahun terakhir
+                const recent = raw.filter(t => t.releaseDate && new Date(t.releaseDate) >= cutoff);
+                recent.sort((a, b) => new Date(b.releaseDate) - new Date(a.releaseDate));
+                const tracks = recent.slice(0, 8).map(musicNormalize);
                 _musicHomeQueues.newrelease = tracks;
-                el.innerHTML = tracks.length ? tracks.map((t,i) => musicRadioRowHTML(t, i, 'newrelease')).join('') : '<div style="color:#444;font-size:12px;padding:10px 20px">Tidak ada data</div>';
+                el.innerHTML = tracks.length
+                    ? tracks.map((t,i) => musicRadioRowHTML(t, i, 'newrelease')).join('')
+                    : '<div style="color:#444;font-size:12px;padding:10px 20px">Belum ada rilisan baru dari artis-artis ini</div>';
             } catch(e) {
                 el.innerHTML = '<div style="color:#444;font-size:12px;padding:10px 20px">Gagal memuat</div>';
             }
@@ -3529,7 +3528,7 @@
                 <div onclick="musicOpenPlaylistDetail('${p.id}')" style="flex-shrink:0;width:150px;cursor:pointer">
                     <div id="musicCommCollage-${p.id}" style="width:150px;height:150px;border-radius:10px;overflow:hidden;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;background:${p.color}"></div>
                     <div style="margin-top:8px;font-size:13px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${p.title}</div>
-                    <div style="font-size:11px;color:#666;margin-top:2px">Nash • Playlist</div>
+                    <div style="font-size:11px;color:#666;margin-top:2px">Playlist pilihan</div>
                 </div>`).join('');
             MUSIC_PLAYLISTS.forEach(async p => {
                 try {
@@ -3672,7 +3671,7 @@
                     <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.85) 0%,transparent 55%)"></div>
                     <div style="position:relative;padding:10px;font-size:13px;font-weight:800;color:#fff;line-height:1.25">${p.title}</div>
                 </div>
-                <div style="font-size:10px;color:#666;margin-top:6px">Playlist • Nash</div>
+                <div style="font-size:10px;color:#666;margin-top:6px">Playlist pilihan</div>
             </div>`;
         }
         function musicHydratePlaylistArt(scope) {
