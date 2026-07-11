@@ -4570,7 +4570,7 @@
                 const onclick = (closeFunc && !isActive)
                     ? `${closeFunc}(); _navAction('${item.action}')`
                     : `_navAction('${item.action}')`;
-                return `<div id="${item.id}" class="nav-item-wrap ${isActive ? 'nav-active' : ''}" onclick="${onclick}">
+                return `<div id="${containerId}-${item.id}" class="nav-item-wrap ${isActive ? 'nav-active' : ''}" onclick="${onclick}">
                     <i class="${item.icon} cursor-pointer" style="font-size:20px"></i>
                 </div>`;
             }).join('');
@@ -4596,11 +4596,11 @@
             try { closeReelDetail && closeReelDetail(); } catch(e){}
 
             switch(target) {
-                case 'home':   updateActiveNav(document.getElementById('homeBtnNav'));   backToHome();    break;
-                case 'search': updateActiveNav(document.getElementById('searchBtnNav')); openSearch();    break;
-                case 'reels':  updateActiveNav(document.getElementById('reelsBtnNav'));  openReels();     break;
-                case 'tv':     updateActiveNav(document.getElementById('tvBtnNav'));     openTvModal();   break;
-                case 'music':  updateActiveNav(document.getElementById('musicBtnNav'));
+                case 'home':   updateActiveNav('home');   backToHome();    break;
+                case 'search': updateActiveNav('search'); openSearch();    break;
+                case 'reels':  updateActiveNav('reels');  openReels();     break;
+                case 'tv':     updateActiveNav('tv');     openTvModal();   break;
+                case 'music':  updateActiveNav('music');
                                if (document.getElementById('musicModal').style.display !== 'flex') openMusicModal();
                                break;
             }
@@ -5492,7 +5492,7 @@
             document.getElementById('tvPlayerFrame').src = '';
             document.getElementById('tvModal').style.display = 'none';
             document.body.style.overflow = 'auto';
-            updateActiveNav(document.getElementById('homeBtnNav'));
+            updateActiveNav('home');
             history.replaceState({view: 'home'}, '');
             if (_tvScheduleTimer) { clearInterval(_tvScheduleTimer); _tvScheduleTimer = null; }
         }
@@ -6146,7 +6146,7 @@
                 currentLibMode = false;
                 document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
                 document.getElementById('tabGrid').classList.add('active');
-                updateActiveNav(document.getElementById('homeBtnNav'));
+                updateActiveNav('home');
                 loadFeed(true);
                 return;
             }
@@ -7198,11 +7198,9 @@
         });
 
         // Tambah reels ke popstate handler
-        function updateActiveNav(el) {
+        function updateActiveNav(action) {
             document.querySelectorAll('.nav-item-wrap').forEach(w => w.classList.remove('nav-active'));
-            if (el) {
-                // Cari nav-item-wrap yang action-nya cocok
-                const action = (el.id||'').replace('BtnNav','').toLowerCase();
+            if (action) {
                 document.querySelectorAll('.nav-item-wrap').forEach(w => {
                     const oc = w.getAttribute('onclick') || '';
                     if (oc.includes(`'${action}'`)) w.classList.add('nav-active');
@@ -7406,7 +7404,7 @@
             document.getElementById('mainProfile').style.display = 'block';
 
             // Update nav & tab
-            updateActiveNav(document.getElementById('homeBtnNav'));
+            updateActiveNav('home');
             document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
             document.getElementById('tabBookmark').classList.add('active');
             document.getElementById('tabLikes').classList.remove('active');
@@ -7651,7 +7649,7 @@
             document.getElementById('tabGrid').classList.add('active');
             document.getElementById('tabLikes').classList.remove('active');
             document.getElementById('tabBookmark').classList.remove('active');
-            updateActiveNav(document.getElementById('homeBtnNav'));
+            updateActiveNav('home');
             currentLibMode = false;
             loadFeed(true);
             window.scrollTo({top: 0, behavior: 'smooth'});
@@ -8421,7 +8419,7 @@
             document.getElementById('searchClearBtn').style.display = 'none';
             // Tidak auto-focus agar keyboard tidak langsung muncul
             document.body.style.overflow = 'hidden';
-            updateActiveNav(document.getElementById('searchBtnNav'));
+            updateActiveNav('search');
             history.pushState({view: 'search'}, "");
         }
 
@@ -8447,7 +8445,7 @@
             if (filterBtn) { filterBtn.style.background = '#1a1a1a'; filterBtn.style.borderColor = '#2a2a2a'; const ic = filterBtn.querySelector('i'); if(ic) ic.style.color = '#aaa'; }
             const dot = document.getElementById('searchFilterDot');
             if (dot) dot.style.display = 'none';
-            updateActiveNav(document.getElementById('homeBtnNav'));
+            updateActiveNav('home');
             history.replaceState({view: 'home'}, '');
         }
         
@@ -9529,8 +9527,8 @@
                 document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
                 if (el) el.classList.add('active');
             }
-            if(mode === 'bookmarks') updateActiveNav(document.getElementById('homeBtnNav')); 
-            else updateActiveNav(document.getElementById('homeBtnNav'));
+            if(mode === 'bookmarks') updateActiveNav('home'); 
+            else updateActiveNav('home');
             const grid = document.getElementById('feedGrid'); grid.innerHTML = ''; 
             if(mode === 'likes' || mode === 'bookmarks') { 
                 currentLibMode = true;
