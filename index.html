@@ -4570,7 +4570,7 @@
                 const onclick = (closeFunc && !isActive)
                     ? `${closeFunc}(); _navAction('${item.action}')`
                     : `_navAction('${item.action}')`;
-                return `<div class="nav-item-wrap ${isActive ? 'nav-active' : ''}" onclick="${onclick}">
+                return `<div id="${item.id}" class="nav-item-wrap ${isActive ? 'nav-active' : ''}" onclick="${onclick}">
                     <i class="${item.icon} cursor-pointer" style="font-size:20px"></i>
                 </div>`;
             }).join('');
@@ -8698,7 +8698,7 @@
             const _rb2 = document.getElementById('mRatingBar');         if (_rb2) { _rb2.style.display='none'; _rb2.innerHTML=''; }
             const _ig2 = document.getElementById('mInfoGrid');          if (_ig2) { _ig2.style.display='none'; _ig2.innerHTML=''; }
             const _eg2 = document.getElementById('episodeGrid');        if (_eg2) _eg2.innerHTML='';
-            const _ep2 = document.getElementById('episodePagination'); if (_ep2) _ep2.innerHTML='';
+            const _ep2 = document.getElementById('epPagination'); if (_ep2) _ep2.innerHTML='';
 
             document.getElementById('movieModal').style.display = 'block'; 
             document.getElementById('movieModal').scrollTop = 0;
