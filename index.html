@@ -2823,8 +2823,6 @@
             <div id="tvPlayerArea">
                 <iframe id="tvPlayerFrame" src="" allowfullscreen allow="autoplay; encrypted-media"></iframe>
             </div>
-            <!-- jadwal acara channel yang sedang tayang -->
-            <div id="tvScheduleArea"></div>
             <!-- tombol LiveSport di antara video dan channel list -->
             <div style="padding:10px 16px 4px">
                 <button onclick="openLivesportModal()" style="width:100%;background:#2a2a2a;border:1px solid #3a3a3a;color:#fff;font-size:13px;font-weight:700;padding:11px 0;border-radius:12px;cursor:pointer;letter-spacing:0.3px;display:flex;align-items:center;justify-content:center;gap:8px">
@@ -2983,11 +2981,11 @@
                             </div>
                             <div style="margin-top:8px;font-size:13px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Galau Itu Indah</div>
                         </div>
-                        <div onclick="musicShowTab('library');musicLibSwitch('download')" style="flex:1;cursor:pointer">
-                            <div style="width:100%;aspect-ratio:1;border-radius:14px;background:#1e1e1e;display:flex;align-items:center;justify-content:center">
-                                <i class="fa-solid fa-download" style="font-size:34px;color:#888"></i>
+                        <div onclick="musicOpenPlaylistDetail('santai')" style="flex:1;cursor:pointer">
+                            <div id="musicHomePlCard2" style="width:100%;aspect-ratio:1;border-radius:14px;background:#1a1a1a;overflow:hidden;display:flex;align-items:center;justify-content:center">
+                                <i class="fa-solid fa-record-vinyl" style="font-size:26px;color:#333"></i>
                             </div>
-                            <div style="margin-top:8px;font-size:13px;font-weight:700;color:#fff">Lagu Offline</div>
+                            <div style="margin-top:8px;font-size:13px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Santai Sore</div>
                         </div>
                     </div>
                 </div>
@@ -3036,15 +3034,6 @@
                 </div>
             </div>
             <div id="musicSearchResults" style="flex:1;overflow-y:auto;padding:4px 0 160px"></div>
-        </div>
-
-        <!-- ===== KOLEKSI (LIBRARY) TAB ===== -->
-        <div id="musicLibraryTab" style="display:none;flex:1;flex-direction:column;overflow:hidden">
-            <div style="padding:16px 20px 6px;flex-shrink:0;display:flex;align-items:center;gap:12px">
-                <i id="musicKoleksiBack" class="fa-solid fa-chevron-left" style="display:none;font-size:18px;color:#fff;cursor:pointer" onclick="musicRenderKoleksi()"></i>
-                <div id="musicKoleksiTitle" style="font-size:22px;font-weight:800;color:#fff">Koleksi</div>
-            </div>
-            <div id="musicLibraryContent" style="flex:1;overflow-y:auto;padding:6px 0 160px"></div>
         </div>
 
         <!-- ===== PLAYLIST TAB (browse semua playlist) ===== -->
@@ -3405,13 +3394,12 @@
             const panelEl = document.getElementById('musicPanel');
             if (panelEl && panelEl.style.display === 'flex') panelEl.style.display = 'none';
 
-            ['home','search','library','playlist'].forEach(t => {
+            ['home','search','playlist'].forEach(t => {
                 const el = document.getElementById('music' + t.charAt(0).toUpperCase() + t.slice(1) + 'Tab');
                 if (el) el.style.display = (t === tab) ? 'flex' : 'none';
             });
             musicRenderNav(tab);
             if (tab === 'search') { setTimeout(() => document.getElementById('musicSearchInp').focus(), 100); musicRenderSearchLanding(); }
-            if (tab === 'library') musicRenderKoleksi();
             if (tab === 'playlist') musicRenderPlaylistTab();
             // pushState saat masuk tab baru (kecuali ke home, itu sudah ditangani popstate via replaceState)
             if (tab !== 'home' && !(history.state && history.state.tab === tab)) {
@@ -3423,7 +3411,6 @@
         const MUSIC_NAV_ITEMS = [
             { tab:'home',     icon:'fa-solid fa-house',            label:'Home'     },
             { tab:'search',   icon:'fa-solid fa-magnifying-glass', label:'Cari'     },
-            { tab:'library',  icon:'fa-solid fa-layer-group',      label:'Koleksi'  },
             { tab:'playlist', icon:'fa-solid fa-list-ul',          label:'Playlist' },
         ];
         function musicRenderNav(activeTab) {
@@ -3512,16 +3499,17 @@
             }
         }
         async function musicLoadHomePlaylistCard() {
-            const p = MUSIC_PLAYLISTS[0];
-            try {
-                const r = await fetch(`${ITUNES_API}/search?term=${encodeURIComponent(p.artists[0])}&media=music&limit=1`);
-                const d = await r.json();
-                const t = (d.results || [])[0];
-                if (t && t.artworkUrl100) {
-                    const el = document.getElementById('musicHomePlCard1');
-                    el.innerHTML = `<img src="${t.artworkUrl100.replace('100x100','300x300')}" onerror="musicImgFallback(this)" style="width:100%;height:100%;object-fit:cover">`;
-                }
-            } catch(e) {}
+            [[MUSIC_PLAYLISTS[0], 'musicHomePlCard1'], [MUSIC_PLAYLISTS[1], 'musicHomePlCard2']].forEach(async ([p, elId]) => {
+                try {
+                    const r = await fetch(`${ITUNES_API}/search?term=${encodeURIComponent(p.artists[0])}&media=music&limit=1`);
+                    const d = await r.json();
+                    const t = (d.results || [])[0];
+                    if (t && t.artworkUrl100) {
+                        const el = document.getElementById(elId);
+                        if (el) el.innerHTML = `<img src="${t.artworkUrl100.replace('100x100','300x300')}" onerror="musicImgFallback(this)" style="width:100%;height:100%;object-fit:cover">`;
+                    }
+                } catch(e) {}
+            });
         }
         async function musicRenderCommunityPlaylists() {
             const el = document.getElementById('musicCommunityScroll');
@@ -4167,9 +4155,6 @@
                 const q = document.getElementById('musicSearchInp').value;
                 if (q) musicSearch(q);
             }
-            if (document.getElementById('musicLibraryTab').style.display === 'flex') {
-                if (_musicCurrentLibTab) musicLibSwitch(_musicCurrentLibTab); else musicRenderKoleksi();
-            }
         }
 
         // ---------- HISTORY ----------
@@ -4179,159 +4164,6 @@
             hist.unshift(t);
             hist = hist.slice(0, 30);
             localStorage.setItem(_musicHistoryKey, JSON.stringify(hist));
-        }
-
-        // ---------- KOLEKSI TAB (overview + drilldown) ----------
-        let _musicCurrentLibTab = null; // null = overview
-        function musicRenderKoleksi() {
-            _musicCurrentLibTab = null;
-            document.getElementById('musicKoleksiBack').style.display = 'none';
-            document.getElementById('musicKoleksiTitle').textContent = 'Koleksi';
-            const liked = JSON.parse(localStorage.getItem(_musicLikedKey) || '[]');
-            const hist = JSON.parse(localStorage.getItem(_musicHistoryKey) || '[]');
-            const albumSet = new Set(liked.concat(hist).map(t => t.album).filter(Boolean));
-            const artistSet = new Set(liked.concat(hist).map(t => t.artist).filter(Boolean));
-            const rows = [
-                { icon:'fa-solid fa-music',       label:'Lagu',     count:`${liked.length} lagu`,        onclick:"musicLibSwitch('liked')" },
-                { icon:'fa-solid fa-record-vinyl',label:'Album',    count:`${albumSet.size} album`,      onclick:"musicLibSwitch('album')" },
-                { icon:'fa-solid fa-user-music',  label:'Artis',    count:`${artistSet.size} artis`,     onclick:"musicLibSwitch('artist')" },
-                { icon:'fa-solid fa-list-ul',     label:'Playlist', count:`${MUSIC_PLAYLISTS.length} playlist`, onclick:"musicShowTab('playlist')" },
-                { icon:'fa-solid fa-podcast',     label:'Podcast',  count:'Segera hadir',                onclick:"" },
-                { icon:'fa-solid fa-download',    label:'Download', count:'0 lagu',                      onclick:"musicLibSwitch('download')" },
-            ];
-            const genrePills = [
-                { label:'Galau',    icon:'fa-solid fa-cloud-rain',   query:'lagu galau indonesia' },
-                { label:'Santai',   icon:'fa-solid fa-mug-hot',      query:'santai chill indonesia' },
-                { label:'Semangat', icon:'fa-solid fa-bolt',         query:'upbeat semangat indonesia' },
-                { label:'Nostalgia',icon:'fa-solid fa-clock-rotate-left', query:'lagu indonesia nostalgia 2000an' },
-                { label:'Romantis', icon:'fa-solid fa-heart',        query:'lagu romantis indonesia' },
-            ];
-            const content = document.getElementById('musicLibraryContent');
-            content.innerHTML = `
-                <!-- Stats row gaya profil film -->
-                <div style="display:flex;padding:4px 20px 20px;border-bottom:1px solid #1a1a1a;margin-bottom:18px">
-                    <div style="flex:1;cursor:pointer" onclick="musicLibSwitch('liked')"><span class="music-stat-num">${liked.length}</span><span class="music-stat-lbl">lagu</span></div>
-                    <div style="width:1px;background:#222"></div>
-                    <div style="flex:1;cursor:pointer" onclick="musicLibSwitch('album')"><span class="music-stat-num">${albumSet.size}</span><span class="music-stat-lbl">album</span></div>
-                    <div style="width:1px;background:#222"></div>
-                    <div style="flex:1;cursor:pointer" onclick="musicLibSwitch('artist')"><span class="music-stat-num">${artistSet.size}</span><span class="music-stat-lbl">artis</span></div>
-                    <div style="width:1px;background:#222"></div>
-                    <div style="flex:1;cursor:pointer" onclick="musicShowTab('playlist')"><span class="music-stat-num">${MUSIC_PLAYLISTS.length}</span><span class="music-stat-lbl">playlist</span></div>
-                </div>
-
-                <!-- Genre cepat, gaya lingkaran kategori film -->
-                <div style="display:flex;gap:18px;padding:0 20px 22px;overflow-x:auto;scrollbar-width:none">
-                    ${genrePills.map(g => `
-                        <div onclick="musicSearch('${g.query.replace(/'/g,"&#39;")}')" style="flex-shrink:0;text-align:center;cursor:pointer">
-                            <div style="width:56px;height:56px;border-radius:50%;background:#1a1a1a;border:1px solid #262626;display:flex;align-items:center;justify-content:center;margin-bottom:6px">
-                                <i class="${g.icon}" style="font-size:18px;color:#ccc"></i>
-                            </div>
-                            <div style="font-size:10px;color:#999;width:56px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${g.label}</div>
-                        </div>`).join('')}
-                </div>
-
-                <div style="padding:0 20px">
-                    ${rows.map(r => `
-                        <div class="music-koleksi-row" onclick="${r.onclick}">
-                            <i class="${r.icon}"></i>
-                            <div style="flex:1">
-                                <div style="font-size:14px;font-weight:700;color:#fff">${r.label}</div>
-                                <div style="font-size:11px;color:#666;margin-top:2px">${r.count}</div>
-                            </div>
-                            <i class="fa-solid fa-chevron-right music-row-chevron"></i>
-                        </div>`).join('')}
-                </div>
-                ${hist.length ? `
-                <div style="padding:22px 20px 0;display:flex;justify-content:space-between;align-items:center">
-                    <span class="music-section-label">Terbaru Diputar</span>
-                    <span onclick="musicClearAllData()" style="font-size:11px;color:#ccc;font-weight:700;cursor:pointer">Hapus Semua</span>
-                </div>
-                <div style="padding:8px 8px 0">${hist.slice(0,5).map((t,i) => musicListItemHTML(t,i).replace(`musicPlayFromQueue(${i})`, `musicPlayHistoryAt(${i})`)).join('')}</div>
-                <div style="padding:6px 20px 0"><span onclick="musicLibSwitch('history')" style="font-size:12px;color:#888;font-weight:700;cursor:pointer">Lihat semua riwayat →</span></div>` : ''}
-            `;
-        }
-        function musicLibSwitch(tab) {
-            _musicCurrentLibTab = tab;
-            document.getElementById('musicKoleksiBack').style.display = 'block';
-            const titles = { liked:'Lagu', history:'Riwayat', playlist:'Playlist', album:'Album', artist:'Artis', download:'Download' };
-            document.getElementById('musicKoleksiTitle').textContent = titles[tab] || 'Koleksi';
-
-            const content = document.getElementById('musicLibraryContent');
-            if (tab === 'liked') {
-                const liked = JSON.parse(localStorage.getItem(_musicLikedKey) || '[]');
-                content.innerHTML = liked.length
-                    ? liked.map((t,i) => musicListItemHTML(t,i).replace(`musicPlayFromQueue(${i})`, `musicPlayLikedAt(${i})`)).join('')
-                    : '<div style="text-align:center;padding:60px 20px;color:#444"><i class="fa-regular fa-heart" style="font-size:32px;margin-bottom:12px;display:block"></i>Belum ada lagu disukai</div>';
-                _musicQueue = liked; // agar next/prev jalan di liked list juga
-            } else if (tab === 'history') {
-                const hist = JSON.parse(localStorage.getItem(_musicHistoryKey) || '[]');
-                content.innerHTML = hist.length
-                    ? hist.map((t,i) => musicListItemHTML(t,i).replace(`musicPlayFromQueue(${i})`, `musicPlayHistoryAt(${i})`)).join('')
-                    : '<div style="text-align:center;padding:60px 20px;color:#444"><i class="fa-solid fa-clock-rotate-left" style="font-size:32px;margin-bottom:12px;display:block"></i>Belum ada riwayat</div>';
-                _musicQueue = hist;
-            } else if (tab === 'playlist') {
-                content.innerHTML = `<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:6px 12px">${MUSIC_PLAYLISTS.map(p => musicPlaylistCardHTML(p, 'koleksi')).join('')}</div>`;
-                musicHydratePlaylistArt('koleksi');
-            } else if (tab === 'album') {
-                const liked = JSON.parse(localStorage.getItem(_musicLikedKey) || '[]');
-                const hist = JSON.parse(localStorage.getItem(_musicHistoryKey) || '[]');
-                const seen = new Set(); const albums = [];
-                liked.concat(hist).forEach(t => { if (t.album && !seen.has(t.album)) { seen.add(t.album); albums.push(t); } });
-                content.innerHTML = albums.length
-                    ? `<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:6px 20px">${albums.map(t => musicAlbumLandscapeCardHTML(t)).join('')}</div>`
-                    : '<div style="text-align:center;padding:60px 20px;color:#444"><i class="fa-solid fa-compact-disc" style="font-size:32px;margin-bottom:12px;display:block"></i>Belum ada album<br><span style="font-size:11px">Sukai atau putar lagu untuk mengisi Album</span></div>';
-            } else if (tab === 'artist') {
-                const liked = JSON.parse(localStorage.getItem(_musicLikedKey) || '[]');
-                const hist = JSON.parse(localStorage.getItem(_musicHistoryKey) || '[]');
-                const seen = new Set(); const artistNames = [];
-                liked.concat(hist).forEach(t => { if (t.artist && !seen.has(t.artist)) { seen.add(t.artist); artistNames.push(t.artist); } });
-                if (!artistNames.length) {
-                    content.innerHTML = '<div style="text-align:center;padding:60px 20px;color:#444"><i class="fa-solid fa-user-music" style="font-size:32px;margin-bottom:12px;display:block"></i>Jelajahi artis di Beranda</div>';
-                } else {
-                    content.innerHTML = artistNames.map(a => `
-                        <div id="koleksiArtistRow-${a.replace(/[^a-zA-Z0-9]/g,'')}" onclick="musicSearch('${a.replace(/'/g,"\\'")}')" style="display:flex;align-items:center;gap:14px;padding:12px 20px;cursor:pointer;border-bottom:1px solid #1a1a1a">
-                            <div class="music-avatar-ring" style="width:46px;height:46px;flex-shrink:0">
-                                <div class="music-avatar-ring-inner" id="koleksiArtistArt-${a.replace(/[^a-zA-Z0-9]/g,'')}"><i class="fa-solid fa-user-music" style="color:#ccc;font-size:16px"></i></div>
-                            </div>
-                            <div style="font-size:14px;font-weight:700;color:#fff">${a}</div>
-                        </div>`).join('');
-                    // Cari artistId asli per nama supaya bisa ambil foto + buka Profil Artis (bukan cuma teks pencarian)
-                    artistNames.forEach(async a => {
-                        try {
-                            const r = await fetch(`${ITUNES_API}/search?term=${encodeURIComponent(a)}&entity=musicArtist&limit=1`);
-                            const d = await r.json();
-                            const artist = (d.results || [])[0];
-                            if (!artist || !artist.artistId) return;
-                            const key = a.replace(/[^a-zA-Z0-9]/g,'');
-                            const row = document.getElementById(`koleksiArtistRow-${key}`);
-                            if (row) row.setAttribute('onclick', `musicOpenArtistProfile(${artist.artistId},'${a.replace(/'/g,"&#39;")}')`);
-                            const artEl = document.getElementById(`koleksiArtistArt-${key}`);
-                            if (artEl) artEl.id = `artistCircle-${artist.artistId}-koleksirow-${key}`;
-                            musicHydrateArtistArt([{artistId: artist.artistId}], `koleksirow-${key}`);
-                        } catch(e) {}
-                    });
-                }
-            } else if (tab === 'download') {
-                content.innerHTML = '<div style="text-align:center;padding:60px 20px;color:#444"><i class="fa-solid fa-download" style="font-size:32px;margin-bottom:12px;display:block"></i>Belum ada lagu diunduh</div>';
-            }
-        }
-        function musicPlayLikedAt(i) {
-            const liked = JSON.parse(localStorage.getItem(_musicLikedKey) || '[]');
-            _musicQueue = liked; _musicQueueIdx = i;
-            musicPlayCurrentQueueItem();
-        }
-        function musicPlayHistoryAt(i) {
-            const hist = JSON.parse(localStorage.getItem(_musicHistoryKey) || '[]');
-            _musicQueue = hist; _musicQueueIdx = i;
-            musicPlayCurrentQueueItem();
-        }
-
-        // ---------- HAPUS DATA (dipindah ke Koleksi, fitur Profil dihapus) ----------
-        function musicClearAllData() {
-            if (!confirm('Hapus semua data musik (disukai, riwayat)?')) return;
-            localStorage.removeItem(_musicLikedKey);
-            localStorage.removeItem(_musicHistoryKey);
-            if (_musicCurrentLibTab) musicLibSwitch(_musicCurrentLibTab); else musicRenderKoleksi();
         }
 
         // ---------- FULL PLAYER OPEN/CLOSE ----------
@@ -5438,13 +5270,7 @@
             const frame = document.getElementById('tvPlayerFrame');
             playerArea.style.display = 'block';
             frame.src = url;
-            // tampilkan jadwal acara channel ini (Now Playing / Next / jadwal lengkap)
-            _tvActiveScheduleChannel = name;
-            const schedArea = document.getElementById('tvScheduleArea');
-            const schedHTML = buildScheduleHTML(name);
-            schedArea.innerHTML = schedHTML || '';
         }
-        let _tvActiveScheduleChannel = null;
 
         function initTvChannels() { /* channels di-render saat switchTvTab dipanggil */ }
         function filterTvChannels(q) { renderTvList(q, _currentTvTab); }
@@ -5470,22 +5296,12 @@
             document.getElementById('tvSearchBox').style.display = 'none';
             document.getElementById('tvPlayerArea').style.display = 'none';
             document.getElementById('tvPlayerFrame').src = '';
-            document.getElementById('tvScheduleArea').innerHTML = '';
-            _tvActiveScheduleChannel = null;
             document.getElementById('tvModal').style.display = 'block';
             document.getElementById('tvModal').scrollTop = 0;
             document.body.style.overflow = 'hidden';
             history.pushState({view: 'tv'}, "");
             switchTvTab('nasional');
-            if (_tvScheduleTimer) clearInterval(_tvScheduleTimer);
-            _tvScheduleTimer = setInterval(() => {
-                if (_tvActiveScheduleChannel) {
-                    const el = document.getElementById('tvScheduleArea');
-                    if (el) el.innerHTML = buildScheduleHTML(_tvActiveScheduleChannel) || '';
-                }
-            }, 60000);
         }
-        let _tvScheduleTimer = null;
 
         function closeTvModal() {
             musicResumeFromDuck();
@@ -5494,7 +5310,6 @@
             document.body.style.overflow = 'auto';
             updateActiveNav('home');
             history.replaceState({view: 'home'}, '');
-            if (_tvScheduleTimer) { clearInterval(_tvScheduleTimer); _tvScheduleTimer = null; }
         }
 
         function playTvChannel(name, url) {
@@ -6002,22 +5817,15 @@
                     musicCloseFullPlayer();
                     return;
                 }
-                // 5. Koleksi drilldown (sub-list) aktif? kembali ke overview dulu
-                if (document.getElementById('musicLibraryTab').style.display === 'flex' && _musicCurrentLibTab) {
-                    musicRenderKoleksi();
-                    history.replaceState({view:'music', tab:'library'}, '');
-                    return;
-                }
-                // 6. Tab selain home aktif?
+                // 5. Tab selain home aktif?
                 const searchOpen = document.getElementById('musicSearchTab').style.display === 'flex';
-                const libOpen = document.getElementById('musicLibraryTab').style.display === 'flex';
                 const playlistOpen = document.getElementById('musicPlaylistTab').style.display === 'flex';
-                if (searchOpen || libOpen || playlistOpen) {
+                if (searchOpen || playlistOpen) {
                     musicShowTab('home');
                     history.replaceState({view:'music'}, '');
                     return;
                 }
-                // 7. Sudah di home → tutup modal
+                // 6. Sudah di home → tutup modal
                 closeMusicModal();
                 return;
             }
