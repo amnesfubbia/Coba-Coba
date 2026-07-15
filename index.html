@@ -25,6 +25,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.15/dist/hls.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pako@2.1.0/dist/pako.min.js"></script>
     <style>
         /* ===== THEME VARIABLES ===== */
         :root {
@@ -949,11 +951,13 @@
         /* --- TV MODAL (Professional) --- */
         #tvModal {
             display: none; position: fixed; inset: 0;
-            background: #000; z-index: 9600; overflow-y: auto;
+            background: #000; z-index: 9600; overflow: hidden;
             animation: aboutSlideIn 0.3s cubic-bezier(0.25,1,0.5,1);
+            flex-direction: column;
         }
+        #tvModal.tv-modal-flex { display: flex; }
         .tv-topbar {
-            position: sticky; top: 0; z-index: 200;
+            flex-shrink: 0;
             background: rgba(0,0,0,0.92);
             backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
             border-bottom: 1px solid #1a1a1a;
@@ -1054,16 +1058,17 @@
             justify-content: center;
             flex-direction: column;
         }
-        /* Channel pane wrapper */
+        /* Channel pane wrapper — flex column filling remaining height below topbar/tabs */
         #tvChannelPane {
-            display: block;
+            display: flex; flex-direction: column;
+            flex: 1; min-height: 0; overflow: hidden;
         }
-        /* Sticky video player */
+        /* Video player — static position (not sticky). Kanal list scroll SENDIRI di bawahnya,
+           tidak pernah lewat di belakang video, supaya tidak ada masalah video "nembus" konten lain
+           (keterbatasan video native di beberapa browser Android yang render di layer hardware sendiri). */
         #tvPlayerArea {
             display: none;
-            position: sticky;
-            top: 108px; /* topbar + tabbar */
-            z-index: 150;
+            flex-shrink: 0;
             background: #000;
             width: 100%;
             aspect-ratio: 16/9;
@@ -1071,8 +1076,9 @@
         #tvPlayerArea iframe {
             width: 100%; height: 100%; border: none; display: block;
         }
-        /* Channel list scrolls independently below player */
+        /* Channel list scrolls independently below player, dalam wadahnya sendiri */
         #tvChannelList {
+            flex: 1; min-height: 0; overflow-y: auto;
             padding-bottom: 80px;
         }
         .tv-mode .carousel-slide { 
@@ -2807,6 +2813,7 @@
             <div class="tv-tab-item active-tv-tab" id="tvTabNasional" onclick="switchTvTab('nasional')">Nasional</div>
             <div class="tv-tab-item" id="tvTabLokal" onclick="switchTvTab('lokal')">Lokal</div>
             <div class="tv-tab-item" id="tvTabBerita" onclick="switchTvTab('berita')">Berita</div>
+            <div class="tv-tab-item" id="tvTabLainnya" onclick="switchTvTab('lainnya')">Lainnya</div>
             <div class="tv-tab-item" id="tvTabFavorit" onclick="switchTvTab('favorit')">Favorit</div>
         </div>
 
@@ -2822,11 +2829,17 @@
             <!-- sticky video player -->
             <div id="tvPlayerArea">
                 <iframe id="tvPlayerFrame" src="" allowfullscreen allow="autoplay; encrypted-media"></iframe>
+                <video id="tvPlayerVideo" playsinline controls style="display:none;width:100%;height:100%;background:#000;opacity:0.999;border-radius:1px;-webkit-transform:translateZ(0);transform:translateZ(0)"></video>
             </div>
-            <!-- tombol LiveSport di antara video dan channel list -->
-            <div style="padding:10px 16px 4px">
-                <button onclick="openLivesportModal()" style="width:100%;background:#2a2a2a;border:1px solid #3a3a3a;color:#fff;font-size:13px;font-weight:700;padding:11px 0;border-radius:12px;cursor:pointer;letter-spacing:0.3px;display:flex;align-items:center;justify-content:center;gap:8px">
+            <!-- jadwal acara yang sedang tayang (data asli dari iptv-epg.org, kalau ketemu) -->
+            <div id="tvScheduleArea" style="flex-shrink:0"></div>
+            <!-- tombol LiveSport & Highlight di antara video dan channel list -->
+            <div style="padding:10px 16px 4px;flex-shrink:0;display:flex;gap:10px">
+                <button onclick="openLivesportModal('https://damitv.st//livetv','Live Sport')" style="flex:1;background:#2a2a2a;border:1px solid #3a3a3a;color:#fff;font-size:13px;font-weight:700;padding:11px 0;border-radius:12px;cursor:pointer;letter-spacing:0.3px;display:flex;align-items:center;justify-content:center;gap:8px">
                     <i class="fa-solid fa-signal-stream"></i> Live Sport
+                </button>
+                <button onclick="openLivesportModal('https://replay-exc.pages.dev/','Highlight')" style="flex:1;background:#2a2a2a;border:1px solid #3a3a3a;color:#fff;font-size:13px;font-weight:700;padding:11px 0;border-radius:12px;cursor:pointer;letter-spacing:0.3px;display:flex;align-items:center;justify-content:center;gap:8px">
+                    <i class="fa-solid fa-clapperboard"></i> Highlight
                 </button>
             </div>
             <!-- scrollable channel list -->
@@ -3263,7 +3276,7 @@
     <div id="livesportModal" style="display:none;position:fixed;inset:0;z-index:9700;background:#0a0a0a;flex-direction:column">
         <div style="display:flex;align-items:center;gap:12px;padding:14px 16px;background:#000;position:sticky;top:0;z-index:10">
             <i class="fa-solid fa-chevron-left" style="font-size:20px;color:#fff;cursor:pointer" onclick="closeLivesportModal()"></i>
-            <span style="font-size:17px;font-weight:800;color:#fff">Live Sport</span>
+            <span id="livesportTitle" style="font-size:17px;font-weight:800;color:#fff">Live Sport</span>
         </div>
         <iframe id="livesportIframe" src="" style="flex:1;width:100%;border:none;display:block" allow="autoplay; encrypted-media" allowfullscreen></iframe>
         <nav class="bottom-nav" id="livesportBottomNav" style="position:sticky;bottom:0"></nav>
@@ -4369,7 +4382,9 @@
         }
 
         let _tvFrameSrcBeforeLivesport = null;
-        function openLivesportModal() {
+        function openLivesportModal(url, title) {
+            url = url || 'https://damitv.st//livetv';
+            title = title || 'Live Sport';
             musicDuckForOtherAudio();
             // Hentikan audio channel TV yang sedang jalan supaya tidak dobel suara dengan Live Sport
             const tvFrame = document.getElementById('tvPlayerFrame');
@@ -4379,13 +4394,19 @@
             } else {
                 _tvFrameSrcBeforeLivesport = null;
             }
+            const tvVideo = document.getElementById('tvPlayerVideo');
+            _tvVideoWasPlayingBeforeLivesport = !!(tvVideo && !tvVideo.paused);
+            if (tvVideo && !tvVideo.paused) tvVideo.pause();
             document.getElementById('livesportModal').style.display = 'flex';
-            document.getElementById('livesportIframe').src = 'https://dami-tv.pro/';
+            document.getElementById('livesportIframe').src = url;
+            const titleEl = document.getElementById('livesportTitle');
+            if (titleEl) titleEl.textContent = title;
             document.body.style.overflow = 'hidden';
             // pushState di atas tv — back akan kembali ke state tv
             history.pushState({view:'livesport'}, '');
             renderBottomNav('livesportBottomNav', 'sport', null);
         }
+        let _tvVideoWasPlayingBeforeLivesport = false;
         function closeLivesportModal() {
             musicResumeFromDuck();
             document.getElementById('livesportIframe').src = '';
@@ -4395,6 +4416,11 @@
             if (_tvFrameSrcBeforeLivesport) {
                 document.getElementById('tvPlayerFrame').src = _tvFrameSrcBeforeLivesport;
                 _tvFrameSrcBeforeLivesport = null;
+            }
+            if (_tvVideoWasPlayingBeforeLivesport) {
+                const tvVideo = document.getElementById('tvPlayerVideo');
+                if (tvVideo) tvVideo.play().catch(() => {});
+                _tvVideoWasPlayingBeforeLivesport = false;
             }
             // Tidak perlu replaceState — history.back() sudah kembalikan ke state tv
         }
@@ -4432,7 +4458,7 @@
         }
         function _navAction(target) {
             // Tutup semua modal yang mungkin terbuka
-            try { if(document.getElementById('tvModal').style.display==='block'){ document.getElementById('tvPlayerFrame').src=''; document.getElementById('tvModal').style.display='none'; document.body.style.overflow='auto'; }} catch(e){}
+            try { if(document.getElementById('tvModal').style.display==='flex'){ document.getElementById('tvPlayerFrame').src=''; tvStopHls(); document.getElementById('tvModal').style.display='none'; document.body.style.overflow='auto'; }} catch(e){}
             try { if(document.getElementById('livesportModal')&&document.getElementById('livesportModal').style.display==='flex') closeLivesportModal(); } catch(e){}
             try { if(document.getElementById('musicModal')&&document.getElementById('musicModal').style.display==='flex' && target!=='music') { document.getElementById('musicModal').style.display='none'; document.body.style.overflow='auto'; } } catch(e){}
             try { if(document.getElementById('reelsModal')&&document.getElementById('reelsModal').style.display==='block') _closeReelsSilent(); } catch(e){}
@@ -5139,20 +5165,24 @@
             const frame   = document.getElementById('tvPlayerFrame');
             const tvModal = document.getElementById('tvModal');
 
-            // Stop audio channel sebelumnya
+            // Stop audio channel sebelumnya (baik iframe maupun HLS)
             if (frame && frame.src) frame.src = '';
+            tvStopHls();
             document.getElementById('tvPlayerArea').style.display = 'none';
+            const schedEl = document.getElementById('tvScheduleArea');
+            if (schedEl) schedEl.innerHTML = '';
+            _currentTvChannelName = null;
 
-            const labels = { nasional: 'Nasional', lokal: 'Lokal & Regional', berita: 'Berita', favorit: 'Favorit' };
+            const labels = { nasional: 'Nasional', lokal: 'Lokal & Regional', berita: 'Berita', lainnya: 'Lainnya', favorit: 'Favorit' };
             tvTitle.textContent = labels[tab] || 'Live TV';
             tvModal.scrollTop = 0;
             renderTvList('', tab);
 
-            // auto-play channel pertama
+            // auto-play channel pertama (khusus tab dengan data statis — 'lainnya' butuh fetch dulu, tidak auto-play)
             const tabMap = { nasional: 'Nasional', lokal: 'Lokal & Regional', berita: 'Berita' };
             const cat = tvCategories.find(c => c.label === tabMap[tab]);
             if (cat && cat.channels.length > 0) {
-                setTimeout(() => playTvChannelInPane(cat.channels[0].name, cat.channels[0].url), 150);
+                setTimeout(() => playTvChannelInPane(cat.channels[0].name, cat.channels[0].url, false), 150);
             }
         }
 
@@ -5230,9 +5260,25 @@
             const activeTab = tab || _currentTvTab;
             const favs = getTvFavorites();
 
+            if (activeTab === 'lainnya') {
+                cont.innerHTML = `<div style="text-align:center;padding:60px 20px;color:#444"><i class="fa-solid fa-spinner fa-spin" style="font-size:28px;margin-bottom:12px;display:block"></i>Memuat channel dari iptv-org...</div>`;
+                loadIptvOrgChannels().then(channels => {
+                    if (_currentTvTab !== 'lainnya') return; // user sudah pindah tab, jangan overwrite
+                    const filtered = channels.filter(ch => ch.category === 'lainnya' && ch.name.toLowerCase().includes(q));
+                    if (!filtered.length) {
+                        cont.innerHTML = `<div style="text-align:center;padding:60px 20px;color:#444"><i class="fa-solid fa-satellite-dish" style="font-size:32px;margin-bottom:12px;display:block"></i>Tidak ada channel ditemukan<br><span style="font-size:11px">Sumber: iptv-org (free-to-air)</span></div>`;
+                        return;
+                    }
+                    cont.innerHTML = `<div class="tv-category-label">Lainnya (sumber: iptv-org, free-to-air)</div><div class="tv-channel-grid">` +
+                        filtered.map(ch => tvChannelCardHTML(ch, favs)).join('') + `</div>`;
+                });
+                return;
+            }
+
             if (activeTab === 'favorit') {
                 const allChannels = [];
                 tvCategories.forEach(cat => { if (cat.label !== 'Sports') allChannels.push(...cat.channels); });
+                if (_iptvOrgChannels) allChannels.push(..._iptvOrgChannels);
                 const favChannels = allChannels.filter(ch => favs.includes(ch.name) && ch.name.toLowerCase().includes(q));
                 if (!favChannels.length) {
                     cont.innerHTML = `<div style="text-align:center;padding:60px 20px;color:#444"><i class="fa-regular fa-heart" style="font-size:32px;margin-bottom:12px;display:block"></i>Belum ada channel favorit<br><span style="font-size:11px">Tap ikon hati pada channel untuk menyimpannya di sini</span></div>`;
@@ -5251,27 +5297,206 @@
                 if (cat.label === 'Sports') return; // Sports hanya di tab LiveSport
                 const filtered = cat.channels.filter(ch => ch.name.toLowerCase().includes(q));
                 if (filtered.length === 0) return;
-                html += `<div class="tv-category-label">${cat.label}</div><div class="tv-channel-grid">`;
+                html += `<div class="tv-category-label">${cat.label}</div><div class="tv-channel-grid" id="tvGrid-${activeTab}">`;
                 filtered.forEach(ch => { html += tvChannelCardHTML(ch, favs); });
                 html += `</div>`;
             });
             if (!html) html = '<div class="text-center py-10 text-zinc-600 text-xs">Channel not found.</div>';
             cont.innerHTML = html;
+
+            // Ganti channel kurasi dengan versi iptv-org kalau namanya cocok (lineup tetap sama, sumbernya
+            // yang di-upgrade ke iptv-org bila ketemu), dan tambahkan channel baru yang belum ada di daftar kurasi
+            if (['nasional', 'lokal', 'berita'].includes(activeTab)) {
+                loadIptvOrgChannels().then(channels => {
+                    if (_currentTvTab !== activeTab) return; // user sudah pindah tab
+                    const curatedNames = new Set();
+                    tvCategories.forEach(cat => { if (cat.label === catLabel) cat.channels.forEach(ch => curatedNames.add(ch.name)); });
+                    // Channel kurasi manual TIDAK ditukar otomatis lagi (channel iptv-org belum tentu lebih andal) —
+                    // iptv-org sekarang murni tambahan, bukan pengganti.
+                    const extra = channels.filter(ch => ch.category === activeTab && !curatedNames.has(ch.name) && ch.name.toLowerCase().includes(q));
+                    if (!extra.length) return;
+                    const extraHTML = `<div class="tv-category-label">Dari iptv-org</div><div class="tv-channel-grid">` +
+                        extra.map(ch => tvChannelCardHTML(ch, favs)).join('') + `</div>`;
+                    cont.insertAdjacentHTML('beforeend', extraHTML);
+                });
+            }
         }
+        // ---------- IPTV-ORG (channel tambahan, diambil otomatis, bukan hardcode manual) ----------
+        let _iptvOrgChannels = null; // null = belum di-fetch, [] = sudah tapi kosong/gagal
+        let _iptvOrgStreamData = null;
+        async function loadIptvOrgStreamData() {
+            if (_iptvOrgStreamData !== null) return _iptvOrgStreamData;
+            try {
+                const res = await fetch('https://iptv-org.github.io/api/streams.json');
+                const data = await res.json();
+                const labels = {}; const urlsByChannel = {};
+                data.forEach(s => {
+                    if (!s.channel) return;
+                    if (s.label) labels[s.channel] = s.label;
+                    if (s.url) {
+                        if (!urlsByChannel[s.channel]) urlsByChannel[s.channel] = [];
+                        if (s.label !== 'Geo-blocked' && !urlsByChannel[s.channel].includes(s.url)) {
+                            urlsByChannel[s.channel].push(s.url);
+                        }
+                    }
+                });
+                _iptvOrgStreamData = { labels, urlsByChannel };
+            } catch (e) {
+                _iptvOrgStreamData = { labels: {}, urlsByChannel: {} };
+            }
+            return _iptvOrgStreamData;
+        }
+        async function loadIptvOrgChannels() {
+            if (_iptvOrgChannels !== null) return _iptvOrgChannels;
+            try {
+                const [m3uRes, streamData] = await Promise.all([
+                    fetch('https://iptv-org.github.io/iptv/countries/id.m3u'),
+                    loadIptvOrgStreamData()
+                ]);
+                const { labels, urlsByChannel } = streamData;
+                const text = await m3uRes.text();
+                const lines = text.split('\n');
+                const channels = [];
+                let pendingName = null, pendingLogo = '', pendingGroup = '', pendingId = '';
+                for (let i = 0; i < lines.length; i++) {
+                    const line = lines[i].trim();
+                    if (line.startsWith('#EXTINF')) {
+                        const logoMatch = line.match(/tvg-logo="([^"]*)"/);
+                        const groupMatch = line.match(/group-title="([^"]*)"/);
+                        const idMatch = line.match(/tvg-id="([^"]*)"/);
+                        const nameMatch = line.match(/,(.*)$/);
+                        pendingLogo = logoMatch ? logoMatch[1] : '';
+                        pendingGroup = groupMatch ? groupMatch[1] : '';
+                        pendingId = idMatch ? idMatch[1] : '';
+                        pendingName = nameMatch ? nameMatch[1].trim() : 'Channel';
+                    } else if (line && !line.startsWith('#') && pendingName) {
+                        // Lewati channel yang sudah diketahui geo-blocked (data dari iptv-org sendiri)
+                        const label = labels[pendingId];
+                        if (label !== 'Geo-blocked') {
+                            // Kumpulkan semua mirror URL yang diketahui untuk channel ini (selain yang dari m3u)
+                            const knownMirrors = (urlsByChannel[pendingId] || []).filter(u => u !== line);
+                            channels.push({
+                                name: pendingName, url: line,
+                                mirrors: knownMirrors,
+                                logo: pendingLogo || pendingName.slice(0,4).toUpperCase(),
+                                isHls: true,
+                                tvgId: pendingId,
+                                category: tvCategorizeIptvChannel(pendingGroup)
+                            });
+                        }
+                        pendingName = null; pendingLogo = ''; pendingGroup = ''; pendingId = '';
+                    }
+                }
+                // Buang duplikat nama channel
+                const seen = new Set();
+                _iptvOrgChannels = channels.filter(c => { if (seen.has(c.name)) return false; seen.add(c.name); return true; });
+            } catch (e) {
+                _iptvOrgChannels = [];
+            }
+            return _iptvOrgChannels;
+        }
+        // Petakan group-title dari iptv-org ke tab kita (Nasional/Lokal/Berita), sisanya masuk 'lainnya'
+        // Normalisasi nama channel untuk pencocokan (huruf kecil, buang spasi/simbol) — "TVRI Nasional" ~ "TVRI"
+        function tvNormalizeChannelName(name) {
+            return (name || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+        }
+        function tvCategorizeIptvChannel(groupTitle) {
+            const g = (groupTitle || '').toLowerCase();
+            if (/news|business/.test(g)) return 'berita';
+            if (/local|regional/.test(g)) return 'lokal';
+            if (/general|entertainment|undefined|^$/.test(g)) return 'nasional';
+            return 'lainnya'; // kids, religious, music, sports, movies, dll
+        }
+
+        // ---------- EPG (jadwal acara asli dari iptv-epg.org) ----------
+        // Beda sumber dari iptv-org (yang urus URL siaran) — ini XMLTV buat jadwal acaranya.
+        // ID channel di sini belum tentu sama dengan tvg-id iptv-org, jadi dicocokkan juga lewat nama.
+        let _epgData = null; // { byId: {id:{name,programmes:[...]}}, byNormName: {normName:id} }
+        async function loadEpgData() {
+            if (_epgData !== null) return _epgData;
+            try {
+                const res = await fetch('https://iptv-epg.org/files/epg-id.xml.gz');
+                const buf = await res.arrayBuffer();
+                const bytes = new Uint8Array(buf);
+                let xmlText;
+                if (bytes[0] === 0x1f && bytes[1] === 0x8b) {
+                    // Masih gzip mentah — decompress manual pakai pako
+                    xmlText = window.pako ? pako.inflate(bytes, { to: 'string' }) : '';
+                } else {
+                    // Server sudah auto-decompress, ini teks XML biasa
+                    xmlText = new TextDecoder('utf-8').decode(bytes);
+                }
+                if (!xmlText) { _epgData = { byId: {}, byNormName: {} }; return _epgData; }
+                const xmlDoc = new DOMParser().parseFromString(xmlText, 'text/xml');
+                const byId = {}; const byNormName = {};
+                xmlDoc.querySelectorAll('channel').forEach(chEl => {
+                    const id = chEl.getAttribute('id');
+                    const dn = chEl.querySelector('display-name');
+                    const name = dn ? dn.textContent : id;
+                    if (!id) return;
+                    byId[id] = { name, programmes: [] };
+                    byNormName[tvNormalizeChannelName(name)] = id;
+                });
+                const parseTime = t => {
+                    // Format XMLTV: YYYYMMDDHHmmss +0000
+                    if (!t) return null;
+                    const m = t.match(/^(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/);
+                    if (!m) return null;
+                    return new Date(Date.UTC(+m[1], +m[2]-1, +m[3], +m[4], +m[5], +m[6]));
+                };
+                xmlDoc.querySelectorAll('programme').forEach(pEl => {
+                    const chId = pEl.getAttribute('channel');
+                    if (!chId || !byId[chId]) return;
+                    const titleEl = pEl.querySelector('title');
+                    byId[chId].programmes.push({
+                        start: parseTime(pEl.getAttribute('start')),
+                        stop: parseTime(pEl.getAttribute('stop')),
+                        title: titleEl ? titleEl.textContent : 'Tanpa judul'
+                    });
+                });
+                _epgData = { byId, byNormName };
+            } catch (e) {
+                _epgData = { byId: {}, byNormName: {} };
+            }
+            return _epgData;
+        }
+        // Cari programme yang sedang tayang untuk sebuah channel (cocokkan lewat tvg-id dulu, baru nama)
+        function tvFindCurrentProgramme(epg, tvgId, channelName) {
+            let entry = tvgId && epg.byId[tvgId] ? epg.byId[tvgId] : null;
+            if (!entry) {
+                const matchedId = epg.byNormName[tvNormalizeChannelName(channelName)];
+                if (matchedId) entry = epg.byId[matchedId];
+            }
+            if (!entry) return null;
+            const now = new Date();
+            return entry.programmes.find(p => p.start && p.stop && now >= p.start && now <= p.stop) || null;
+        }
+
         function tvChannelCardHTML(ch, favs) {
             const isFav = favs.includes(ch.name);
-            return `<div class="tv-ch-card" id="tvch-${ch.name.replace(/\s/g,'_')}" onclick="playTvChannelInPane('${ch.name}', '${ch.url}')">
+            const logoHTML = (ch.logo && ch.logo.indexOf('http') === 0)
+                ? `<img src="${ch.logo}" loading="lazy" onerror="this.parentElement.textContent='${(ch.name||'').slice(0,4).toUpperCase()}'" style="width:100%;height:100%;object-fit:contain">`
+                : ch.logo;
+            return `<div class="tv-ch-card" id="tvch-${ch.name.replace(/\s/g,'_')}" onclick="playTvChannelInPane('${ch.name.replace(/'/g,"\\'")}', '${ch.url}', ${ch.isHls ? 'true' : 'false'})">
                 <div class="tv-ch-fav-btn ${isFav ? 'is-fav' : ''}" onclick="toggleTvFavorite('${ch.name.replace(/'/g,"\\'")}', event)">
                     <i class="fa-${isFav ? 'solid' : 'regular'} fa-heart"></i>
                 </div>
                 <div class="tv-ch-live-badge">LIVE</div>
-                <div class="tv-ch-logo-box">${ch.logo}</div>
+                <div class="tv-ch-logo-box">${logoHTML}</div>
                 <div class="tv-ch-name">${ch.name}</div>
+                ${ch.isHls ? '<div style="font-size:8px;color:#555;margin-top:2px">komunitas</div>' : ''}
             </div>`;
         }
 
-        function playTvChannelInPane(name, url) {
+        let _tvHls = null;
+        function tvStopHls() {
+            if (_tvHls) { try { _tvHls.destroy(); } catch(e) {} _tvHls = null; }
+            const vid = document.getElementById('tvPlayerVideo');
+            if (vid) { vid.pause(); vid.removeAttribute('src'); vid.load(); vid.style.display = 'none'; }
+        }
+        function playTvChannelInPane(name, url, isHls) {
             musicDuckForOtherAudio();
+            _currentTvChannelName = name;
             // highlight active channel card
             document.querySelectorAll('.tv-ch-card').forEach(c => c.classList.remove('active-ch'));
             const card = document.getElementById('tvch-' + name.replace(/\s/g,'_'));
@@ -5282,8 +5507,68 @@
             // load player — sticky di atas, tidak perlu scroll
             const playerArea = document.getElementById('tvPlayerArea');
             const frame = document.getElementById('tvPlayerFrame');
+            const video = document.getElementById('tvPlayerVideo');
             playerArea.style.display = 'block';
-            frame.src = url;
+            tvStopHls();
+
+            if (isHls) {
+                // Susun antrean URL: url utama dulu, lalu semua mirror yang diketahui dari streams.json
+                const chObj = _iptvOrgChannels ? _iptvOrgChannels.find(c => c.name === name) : null;
+                const urlQueue = [url, ...((chObj && chObj.mirrors) || [])];
+                frame.src = '';
+                frame.style.display = 'none';
+                video.style.display = 'block';
+                tvTryHlsQueue(video, urlQueue, 0, name);
+            } else {
+                frame.style.display = 'block';
+                video.style.display = 'none';
+                frame.src = url;
+            }
+            tvShowCurrentProgramme(name, isHls ? (( _iptvOrgChannels ? _iptvOrgChannels.find(c => c.name === name) : null) || {}).tvgId : null);
+        }
+        async function tvShowCurrentProgramme(name, tvgId) {
+            const el = document.getElementById('tvScheduleArea');
+            if (!el) return;
+            el.innerHTML = '';
+            const epg = await loadEpgData();
+            if (_currentTvChannelName !== name) return; // user sudah ganti channel lagi
+            const prog = tvFindCurrentProgramme(epg, tvgId, name);
+            if (!prog) return; // tidak ketemu jadwalnya — diam saja, tidak maksa nampilin apa-apa
+            const fmt = d => d ? `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}` : '';
+            el.innerHTML = `<div style="padding:10px 16px 0;display:flex;align-items:center;gap:8px">
+                <span style="width:6px;height:6px;border-radius:50%;background:#ff3b30;flex-shrink:0"></span>
+                <span style="font-size:11px;color:#888">${fmt(prog.start)}–${fmt(prog.stop)}</span>
+                <span style="font-size:12px;color:#fff;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${prog.title}</span>
+            </div>`;
+        }
+        let _currentTvChannelName = null;
+        function tvTryHlsQueue(video, urlQueue, idx, name) {
+            if (idx >= urlQueue.length) {
+                showToast(`${name}: semua sumber gagal dimuat`);
+                return;
+            }
+            const url = urlQueue[idx];
+            const tryNext = () => tvTryHlsQueue(video, urlQueue, idx + 1, name);
+            if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                // Safari/iOS bisa main HLS native
+                video.src = url;
+                video.onerror = tryNext;
+                video.play().catch(() => {});
+            } else if (window.Hls && Hls.isSupported()) {
+                _tvHls = new Hls();
+                _tvHls.loadSource(url);
+                _tvHls.attachMedia(video);
+                _tvHls.on(Hls.Events.MANIFEST_PARSED, () => video.play().catch(() => {}));
+                _tvHls.on(Hls.Events.ERROR, (evt, data) => {
+                    if (data.fatal) {
+                        try { _tvHls.destroy(); } catch(e) {}
+                        _tvHls = null;
+                        tryNext(); // otomatis coba mirror berikutnya, diam-diam
+                    }
+                });
+            } else {
+                showToast('Browser ini tidak mendukung pemutaran channel ini');
+            }
         }
 
         function initTvChannels() { /* channels di-render saat switchTvTab dipanggil */ }
@@ -5310,7 +5595,8 @@
             document.getElementById('tvSearchBox').style.display = 'none';
             document.getElementById('tvPlayerArea').style.display = 'none';
             document.getElementById('tvPlayerFrame').src = '';
-            document.getElementById('tvModal').style.display = 'block';
+            tvStopHls();
+            document.getElementById('tvModal').style.display = 'flex';
             document.getElementById('tvModal').scrollTop = 0;
             document.body.style.overflow = 'hidden';
             history.pushState({view: 'tv'}, "");
@@ -5320,6 +5606,7 @@
         function closeTvModal() {
             musicResumeFromDuck();
             document.getElementById('tvPlayerFrame').src = '';
+            tvStopHls();
             document.getElementById('tvModal').style.display = 'none';
             document.body.style.overflow = 'auto';
             updateActiveNav('home');
@@ -5337,7 +5624,7 @@
                 actorModal.style.display = 'none';
             }
             // Simpan state tvModal agar back bisa kembali ke sana
-            const wasTvOpen = document.getElementById('tvModal').style.display === 'block';
+            const wasTvOpen = document.getElementById('tvModal').style.display === 'flex';
             closeTvModal();
             const modal = document.getElementById('movieModal');
             modal.classList.add('tv-mode');
@@ -5919,7 +6206,7 @@
                 document.getElementById('tvSearchInp').value = '';
                 document.getElementById('tvSearchBox').style.display = 'none';
                 renderTvList('', _currentTvTab || 'nasional');
-                document.getElementById('tvModal').style.display = 'block';
+                document.getElementById('tvModal').style.display = 'flex';
                 document.getElementById('tvModal').scrollTop = 0;
                 document.body.style.overflow = 'hidden';
                 history.replaceState({view: 'tv'}, '');
@@ -5946,7 +6233,7 @@
             }
 
             // TV modal
-            if (document.getElementById('tvModal').style.display === 'block') {
+            if (document.getElementById('tvModal').style.display === 'flex') {
                 _closeTvModalSilent();
                 return;
             }
@@ -8872,7 +9159,7 @@
                 document.getElementById('tvSearchInp').value = '';
                 document.getElementById('tvSearchBox').style.display = 'none';
                 renderTvList('');
-                document.getElementById('tvModal').style.display = 'block';
+                document.getElementById('tvModal').style.display = 'flex';
                 document.getElementById('tvModal').scrollTop = 0;
                 document.body.style.overflow = 'hidden';
                 history.replaceState({view: 'tv'}, '');
