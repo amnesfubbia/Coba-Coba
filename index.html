@@ -5389,11 +5389,38 @@
                 }
                 // Buang duplikat nama channel
                 const seen = new Set();
-                _iptvOrgChannels = channels.filter(c => { if (seen.has(c.name)) return false; seen.add(c.name); return true; });
+                let cleaned = channels.filter(c => { if (seen.has(c.name)) return false; seen.add(c.name); return true; });
+                cleaned = tvCleanupIptvChannels(cleaned);
+                _iptvOrgChannels = cleaned;
             } catch (e) {
                 _iptvOrgChannels = [];
             }
             return _iptvOrgChannels;
+        }
+        // Bersihkan daftar channel iptv-org: buang entri sampah, buang yang sudah ada versi embed
+        // yang lebih andal, dan buat grup channel regional (TVRI, Stara TV, JTV, Jawa Pos TV)
+        // cuma simpan satu (versi Nasional/utama saja, sisanya dihapus).
+        function tvCleanupIptvChannels(channels) {
+            // Entri sampah — nama-nya kebetulan berisi string user-agent browser (bug parsing dari sumber data)
+            channels = channels.filter(c => !/like Gecko|Chrome\/|Mozilla\/|AppleWebKit/i.test(c.name));
+
+            // Channel yang sudah ada versi embed sendiri (dipakai di tab kurasi manual) — jangan dobel
+            const alreadyEmbedded = new Set(['antv','rcti','trans7','transtv','transtv']);
+            channels = channels.filter(c => !alreadyEmbedded.has(tvNormalizeChannelName(c.name)));
+
+            // Grup regional — simpan cuma satu (yang match "nasional", atau nama terpendek kalau tidak ada)
+            const keepOnlyOne = (list, pattern) => {
+                const group = list.filter(c => pattern.test(c.name));
+                if (group.length <= 1) return list;
+                const keep = group.find(c => /nasional/i.test(c.name))
+                    || group.slice().sort((a,b) => a.name.length - b.name.length)[0];
+                return list.filter(c => !pattern.test(c.name) || c === keep);
+            };
+            channels = keepOnlyOne(channels, /^tvri\b/i);
+            channels = keepOnlyOne(channels, /^stara\s*tv\b/i);
+            channels = keepOnlyOne(channels, /^jtv\b/i);
+            channels = keepOnlyOne(channels, /^jawa\s*pos\s*tv\b/i);
+            return channels;
         }
         // Petakan group-title dari iptv-org ke tab kita (Nasional/Lokal/Berita), sisanya masuk 'lainnya'
         // Normalisasi nama channel untuk pencocokan (huruf kecil, buang spasi/simbol) — "TVRI Nasional" ~ "TVRI"
