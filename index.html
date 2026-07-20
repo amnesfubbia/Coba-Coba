@@ -1068,6 +1068,9 @@
             background: #000;
             width: 100%;
             aspect-ratio: 16/9;
+            min-height: 300px; /* ekstra ruang — beberapa embed pihak ke-3 (mis. Vidio) menyisipkan
+                                   UI mereka sendiri (strip channel lain) di bawah video yang bisa
+                                   membuat video terlihat kecil kalau tingginya dipatok pas 16:9 */
         }
         #tvPlayerArea iframe {
             width: 100%; height: 100%; border: none; display: block;
@@ -2833,7 +2836,7 @@
                     <i class="fa-solid fa-signal-stream"></i> Live Sport
                 </button>
                 <button onclick="openLivesportModal('highlight')" style="flex:1;background:#2a2a2a;border:1px solid #3a3a3a;color:#fff;font-size:13px;font-weight:700;padding:11px 0;border-radius:12px;cursor:pointer;letter-spacing:0.3px;display:flex;align-items:center;justify-content:center;gap:8px">
-                    <i class="fa-solid fa-star"></i> Highlight
+                    Highlight
                 </button>
             </div>
             <!-- scrollable channel list -->
