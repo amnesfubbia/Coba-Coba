@@ -2660,7 +2660,7 @@
         <div id="tvChannelPane">
             <!-- sticky video player -->
             <div id="tvPlayerArea">
-                <iframe id="tvPlayerFrame" src="" allowfullscreen allow="autoplay; encrypted-media" sandbox="allow-scripts allow-same-origin allow-forms allow-presentation allow-orientation-lock"></iframe>
+                <iframe id="tvPlayerFrame" src="" allowfullscreen allow="autoplay; encrypted-media"></iframe>
                 <video id="tvPlayerVideo" playsinline autoplay controls style="display:none"></video>
             </div>
             <!-- tombol LiveSport & Highlight di antara video dan channel list -->
@@ -3108,7 +3108,7 @@
             <i class="fa-solid fa-chevron-left" style="font-size:20px;color:#fff;cursor:pointer" onclick="closeLivesportModal()"></i>
             <span style="font-size:17px;font-weight:800;color:#fff" id="livesportTitle">Live Sport</span>
         </div>
-        <iframe id="livesportIframe" src="" style="flex:1;width:100%;border:none;display:block" allow="autoplay; encrypted-media" allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms allow-presentation allow-orientation-lock"></iframe>
+        <iframe id="livesportIframe" src="" style="flex:1;width:100%;border:none;display:block" allow="autoplay; encrypted-media" allowfullscreen></iframe>
         <nav class="bottom-nav" id="livesportBottomNav" style="position:sticky;bottom:0"></nav>
     </div>
 
@@ -8520,13 +8520,7 @@
             newIframe.setAttribute('referrerpolicy', 'no-referrer-when-downgrade');
             newIframe.setAttribute('scrolling', 'no');
             newIframe.setAttribute('frameborder', '0');
-            // Sandbox: izinkan player berjalan normal (script, cookie/session, form, fullscreen,
-            // orientasi layar) TAPI blokir situs di dalam iframe untuk membuka tab/popup baru
-            // atau membajak/redirect halaman utama — ini akar masalah "tekan video → kebawa ke
-            // iklan". Diblokir langsung oleh browser, jadi lebih pasti daripada nebak lewat timer.
             newIframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms allow-presentation allow-orientation-lock');
-            // Sandbox dicoba tapi memblokir hampir semua server streaming (cuma beberapa yang tetap jalan) —
-            // dikembalikan ke tanpa sandbox supaya semua server berfungsi normal lagi.
             
             // FIX BUG 2: fallback timer — loader pasti sembunyi setelah 6 detik
             newIframe.onload = () => {
@@ -8595,7 +8589,7 @@
                 case 19: url = `https://vidlux.xyz/embed/${type}/${id}${type==='tv'?`/${s}/${e}`:''}`; break;
                 case 20: url = `https://nontongo.win/embed/${type}/${id}${seriesSuffix}`; break;
                 case 21: url = `https://cinesrc.st/embed/${type}/${id}${type==='tv'?`/${s}/${e}`:''}`; break;
-                case 22: url = `https://player.vidify.top/embed/${type}/${id}${type==='tv'?`?s=${s}&e=${e}`:''}`; break;
+                case 22: url = `https://player.vidify.top/embed/${type}/${id}${seriesSuffix}`; break;
                 case 23: url = `https://vidking.net/embed/${type}/${id}${seriesSuffix}`; break;
                 case 24: url = `https://2embed.cc/embed/${type}/${id}${seriesSuffix}`; break;
                 case 25: url = `https://streamrip.fun/embed/${type}/${id}${type==='tv'?`/${s}/${e}`:''}`; break;
