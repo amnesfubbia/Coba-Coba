@@ -53,56 +53,6 @@
         @keyframes splashScale { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         @keyframes fadeIn { to { opacity: 1; } }
 
-        /* ===== LIGHT THEME OVERRIDES ===== */
-        body.light-theme {
-            --bg: #f0f0f0; --bg2: #f5f5f5; --bg3: #e8e8e8; --bg4: #ddd;
-            --border: #d4d4d4; --border2: #c0c0c0;
-            --text: #0a0a0a; --text2: #1a1a1a; --text3: #555; --text4: #888;
-            --card: #fff; --card2: #f0f0f0;
-            background-color: #f0f0f0 !important; color: #0a0a0a !important;
-        }
-        body.light-theme .profile-header,
-        body.light-theme #mainFeed,
-        body.light-theme #searchOverlay,
-        body.light-theme .bottom-nav,
-        body.light-theme #movieModal,
-        body.light-theme #actorModal,
-        body.light-theme #aboutPage { background: var(--bg) !important; }
-        body.light-theme .bottom-nav { border-top-color: #ddd !important; }
-        body.light-theme .bottom-nav-item { color: #888 !important; }
-        body.light-theme .bottom-nav-item.active-nav { color: #0a0a0a !important; }
-        body.light-theme .pill { background: #e0e0e0 !important; color: #0a0a0a !important; border-color: #ccc !important; }
-        body.light-theme .pill.active-pill { background: #0a0a0a !important; color: #fff !important; }
-        body.light-theme .movie-card { background: #fff !important; }
-        body.light-theme .card-title { color: #0a0a0a !important; }
-        body.light-theme .filter-dropdown { background: #fff !important; border-color: #ddd !important; }
-        body.light-theme .filter-item { color: #0a0a0a !important; border-bottom-color: #f0f0f0 !important; }
-        body.light-theme .filter-item:hover { background: #f5f5f5 !important; }
-        body.light-theme .tab-item { color: #888 !important; border-bottom-color: transparent !important; }
-        body.light-theme .tab-item.active { color: #0a0a0a !important; border-bottom-color: #0a0a0a !important; }
-        body.light-theme .search-tab { color: #888 !important; }
-        body.light-theme .search-tab.active { color: #0a0a0a !important; border-bottom-color: #0a0a0a !important; }
-        body.light-theme #searchInp { background: #e8e8e8 !important; color: #0a0a0a !important; }
-        body.light-theme .ep-card { background: #fff !important; border-bottom-color: #eee !important; }
-        body.light-theme .ep-title { color: #0a0a0a !important; }
-        body.light-theme .ep-synopsis { color: #555 !important; }
-        body.light-theme .about-feature-row { background: #fff !important; border-bottom-color: #f0f0f0 !important; }
-        body.light-theme .about-feat-title { color: #0a0a0a !important; }
-        body.light-theme .about-feat-desc { color: #555 !important; }
-        body.light-theme .about-info-list { background: #fff !important; }
-        body.light-theme .about-info-label { color: #0a0a0a !important; }
-        body.light-theme .about-info-value { color: #555 !important; }
-        body.light-theme .about-link-row { background: #fff !important; border-bottom-color: #f0f0f0 !important; }
-        body.light-theme .about-section-label { color: #888 !important; }
-        body.light-theme .minfo-cell { background: #fff !important; }
-        body.light-theme .minfo-key { color: #888 !important; }
-        body.light-theme .minfo-val { color: #0a0a0a !important; }
-        body.light-theme #movieModal .modal-content-area { background: var(--bg) !important; }
-        body.light-theme .cast-name { color: #0a0a0a !important; }
-        body.light-theme .ig-logo { color: #0a0a0a !important; }
-        body.light-theme .stat-val { color: #0a0a0a !important; }
-
-
         /* PWA Status Bar Fix */
         body.pwa-mode { padding-top: var(--status-bar-height); }
         .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 10px 14px 0; }
@@ -1068,9 +1018,6 @@
             background: #000;
             width: 100%;
             aspect-ratio: 16/9;
-            min-height: 300px; /* ekstra ruang — beberapa embed pihak ke-3 (mis. Vidio) menyisipkan
-                                   UI mereka sendiri (strip channel lain) di bawah video yang bisa
-                                   membuat video terlihat kecil kalau tingginya dipatok pas 16:9 */
         }
         #tvPlayerArea iframe {
             width: 100%; height: 100%; border: none; display: block;
@@ -1099,121 +1046,6 @@
         .tv-mode #mDateDisplay, .tv-mode #mTranslateBtn, .tv-mode #mToggleBtn,
         .tv-mode .fa-comment, .tv-mode #serverList,
         .tv-mode .dl-grid { display: none !important; }
-
-        /* TV player area below video */
-        #tvChannelSwitcher { padding: 0 0 100px; }
-
-        /* Channel info bar (below player) */
-        .tv-now-bar {
-            background: #000000; border-bottom: 1px solid #111;
-            padding: 12px 15px; display: flex; align-items: center; gap: 12px;
-        }
-        .tv-now-dot {
-            width: 8px; height: 8px; border-radius: 50%; background: #ff3b30;
-            flex-shrink: 0; animation: livePulse 1.5s ease-in-out infinite;
-        }
-        .tv-now-info { flex: 1; min-width: 0; }
-        .tv-now-label {
-            font-size: 9px; font-weight: 800; color: #ff3b30;
-            text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2px;
-        }
-        .tv-now-show {
-            font-size: 13px; font-weight: 700; color: #fff;
-            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-        }
-        .tv-now-time {
-            font-size: 10px; color: #8e8e8e; margin-top: 1px;
-        }
-        .tv-now-next {
-            text-align: right; flex-shrink: 0;
-        }
-        .tv-now-next-label {
-            font-size: 9px; color: #555; font-weight: 700;
-            text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;
-        }
-        .tv-now-next-show {
-            font-size: 11px; color: #8e8e8e; font-weight: 600;
-            max-width: 100px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-        }
-
-        /* Schedule section */
-        .tv-schedule-header {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 16px 15px 8px;
-        }
-        .tv-schedule-title {
-            font-size: 10px; font-weight: 800; color: #555;
-            text-transform: uppercase; letter-spacing: 2px;
-        }
-        .tv-schedule-date {
-            font-size: 10px; color: #8e8e8e; font-weight: 600;
-        }
-        /* Progress-based schedule rows */
-        .tv-schedule-row {
-            display: flex; align-items: center; gap: 12px;
-            padding: 10px 15px; border-bottom: 1px solid #0f0f0f;
-            position: relative; transition: background 0.2s;
-        }
-        .tv-schedule-row.now-playing {
-            background: rgba(255,59,48,0.04);
-        }
-        .tv-schedule-row.past { opacity: 0.45; }
-        .tv-schedule-time {
-            font-size: 11px; font-weight: 700; color: #8e8e8e;
-            flex: 0 0 40px; text-align: right;
-        }
-        .tv-schedule-row.now-playing .tv-schedule-time { color: #ff3b30; }
-        .tv-schedule-dot {
-            width: 8px; height: 8px; border-radius: 50%;
-            background: #2a2a2a; flex-shrink: 0;
-        }
-        .tv-schedule-row.now-playing .tv-schedule-dot {
-            background: #ff3b30; box-shadow: 0 0 6px #ff3b30;
-            animation: livePulse 1.5s ease-in-out infinite;
-        }
-        .tv-schedule-info { flex: 1; min-width: 0; }
-        .tv-schedule-show {
-            font-size: 13px; font-weight: 700; color: #fff;
-            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-            margin-bottom: 1px;
-        }
-        .tv-schedule-row.now-playing .tv-schedule-show { color: #fff; }
-        .tv-schedule-genre {
-            font-size: 10px; color: #555; font-weight: 500;
-        }
-        /* Progress bar on now-playing row */
-        .tv-progress-bar {
-            position: absolute; bottom: 0; left: 0; right: 0;
-            height: 2px; background: rgba(255,59,48,0.15); overflow: hidden;
-        }
-        .tv-progress-fill {
-            height: 100%; background: #ff3b30; border-radius: 99px;
-        }
-
-        /* Channel switcher section below schedule */
-        .tv-switcher-section-title {
-            padding: 16px 15px 8px;
-            font-size: 10px; font-weight: 800; color: #555;
-            text-transform: uppercase; letter-spacing: 2px;
-        }
-        .tv-switcher-grid-new {
-            display: grid; grid-template-columns: repeat(4, 1fr);
-            gap: 7px; padding: 0 15px 8px;
-        }
-        .tv-switcher-btn-new {
-            background: #111; border: 1px solid #1c1c1c; border-radius: 10px;
-            padding: 8px 4px; text-align: center; cursor: pointer;
-            transition: all 0.18s; position: relative;
-        }
-        .tv-switcher-btn-new:active { transform: scale(0.93); }
-        .tv-switcher-btn-new.active-ch { border-color: #fff; background: #1a1a1a; }
-        .tv-switcher-logo-new {
-            width: 32px; height: 32px; border-radius: 8px;
-            background: #222; margin: 0 auto 5px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 8px; font-weight: 900; color: #fff;
-        }
-        .tv-switcher-name-new { font-size: 8px; font-weight: 700; color: #ccc; }
 
         /* Universal nav item */
         .nav-item-wrap {
@@ -2827,7 +2659,7 @@
         <div id="tvChannelPane">
             <!-- sticky video player -->
             <div id="tvPlayerArea">
-                <iframe id="tvPlayerFrame" src="" allowfullscreen allow="autoplay; encrypted-media"></iframe>
+                <iframe id="tvPlayerFrame" src="" allowfullscreen allow="autoplay; encrypted-media" sandbox="allow-scripts allow-same-origin allow-forms allow-presentation allow-orientation-lock"></iframe>
                 <video id="tvPlayerVideo" playsinline autoplay controls style="display:none"></video>
             </div>
             <!-- tombol LiveSport & Highlight di antara video dan channel list -->
@@ -3275,7 +3107,7 @@
             <i class="fa-solid fa-chevron-left" style="font-size:20px;color:#fff;cursor:pointer" onclick="closeLivesportModal()"></i>
             <span style="font-size:17px;font-weight:800;color:#fff" id="livesportTitle">Live Sport</span>
         </div>
-        <iframe id="livesportIframe" src="" style="flex:1;width:100%;border:none;display:block" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        <iframe id="livesportIframe" src="" style="flex:1;width:100%;border:none;display:block" allow="autoplay; encrypted-media" allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms allow-presentation allow-orientation-lock"></iframe>
         <nav class="bottom-nav" id="livesportBottomNav" style="position:sticky;bottom:0"></nav>
     </div>
 
@@ -3577,21 +3409,6 @@
             }
         }
 
-        async function musicFetchAndRenderScroll(query, containerId) {
-            const el = document.getElementById(containerId);
-            if (!el) return;
-            el.innerHTML = musicSkeletonCards(6);
-            try {
-                const r = await fetch(`${ITUNES_API}/search?term=${encodeURIComponent(query)}&media=music&limit=15`);
-                const d = await r.json();
-                const tracks = (d.results || []).filter(t => t.trackId && t.previewUrl);
-                if (!tracks.length) { el.innerHTML = '<div style="color:#444;font-size:12px;padding:10px">Tidak ada data</div>'; return; }
-                el.innerHTML = tracks.map(t => musicCardHTML(musicNormalize(t))).join('');
-            } catch(e) {
-                el.innerHTML = '<div style="color:#444;font-size:12px;padding:10px">Gagal memuat</div>';
-            }
-        }
-
         // ---------- ARTIST ARTWORK (iTunes tidak punya endpoint foto artis,
         // jadi dipakai artwork lagu/album teratas milik artis itu sebagai foto) ----------
         const _musicArtistArtCache = {};
@@ -3645,18 +3462,6 @@
             } catch(e) {
                 el.innerHTML = '<div style="color:#444;font-size:12px;padding:10px">Gagal memuat</div>';
             }
-        }
-
-        function musicLoadMood(mood) {
-            const moodQueries = {
-                'Happy': 'happy upbeat songs',
-                'Chill': 'chill relax songs',
-                'Sad': 'sad emotional songs',
-                'Workout': 'workout gym motivation songs',
-                'Romantic': 'romantic love songs'
-            };
-            musicSearch(moodQueries[mood] || mood);
-            musicShowTab('search');
         }
 
         // (filter kategori/pills dihapus — Home sekarang mengikuti layout referensi baru)
@@ -3804,18 +3609,6 @@
         }
 
         // ---------- CARD RENDER ----------
-        function musicAlbumLandscapeCardHTML(t) {
-            return `<div onclick='musicPlayTrack(${JSON.stringify(t).replace(/'/g,"&#39;")})' style="cursor:pointer">
-                <div style="position:relative;width:100%;aspect-ratio:16/10;border-radius:12px;overflow:hidden;background:#1a1a1a">
-                    <img src="${t.artwork || t.artworkSmall}" loading="lazy" onerror="musicImgFallback(this)" style="width:100%;height:100%;object-fit:cover">
-                    <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.88) 0%,rgba(0,0,0,0.15) 55%,transparent 75%)"></div>
-                    <div style="position:absolute;bottom:0;left:0;right:0;padding:10px 12px">
-                        <div style="font-size:13px;font-weight:800;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${t.title}</div>
-                        <div style="font-size:11px;color:#ccc;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${t.artist}</div>
-                    </div>
-                </div>
-            </div>`;
-        }
         function musicCardHTML(t) {
             const isLiked = musicIsLiked(t.id);
             return `<div style="flex-shrink:0;width:130px;cursor:pointer" onclick='musicPlayTrack(${JSON.stringify(t).replace(/'/g,"&#39;")})'>
@@ -4740,49 +4533,8 @@
                 }
             }, { passive: true });
 
-            // ── LIVE TV: swipe kiri/kanan ganti channel (di movieModal tv-mode) ──
-            const movieModal = document.getElementById('movieModal');
-            let _tvSwipeExclude = false;
-            movieModal.addEventListener('touchstart', e => {
-                _tvSwipeExclude = !!e.target.closest('#tvChannelSwitcher') || !movieModal.classList.contains('tv-mode');
-            }, { passive: true });
-            function _tvSwipeChange(dir) {
-                if (_tvSwipeExclude) return;
-                const allCh = [];
-                tvCategories.forEach(cat => cat.channels.forEach(ch => allCh.push(ch)));
-                const curTitle = (document.getElementById('mTitle')?.innerText || '').replace('● LIVE: ','').trim();
-                const idx = allCh.findIndex(c => c.name === curTitle);
-                const nextIdx = idx + dir;
-                if (nextIdx < 0 || nextIdx >= allCh.length) return;
-                const ch = allCh[nextIdx];
-                document.getElementById('mTitle').innerText = '● LIVE: ' + ch.name;
-                document.querySelectorAll('.tv-switcher-btn-new').forEach(b => {
-                    b.classList.toggle('active-ch', b.querySelector('.tv-switcher-name-new')?.textContent === ch.name);
-                });
-                // rebuild schedule
-                const switcher = document.getElementById('tvChannelSwitcher');
-                if (switcher) {
-                    const newSchedHTML = buildScheduleHTML(ch.name);
-                    let html = `<div id="tvChannelSwitcher">`;
-                    if (newSchedHTML) html += newSchedHTML;
-                    tvCategories.forEach(cat => {
-                        html += `<div class="tv-switcher-section-title">${cat.label}</div><div class="tv-switcher-grid-new">`;
-                        cat.channels.forEach(c2 => {
-                            html += `<div class="tv-switcher-btn-new ${c2.name===ch.name?'active-ch':''}" onclick="switchTvChannel('${c2.name}','${c2.url}',this)"><div class="tv-switcher-logo-new">${c2.logo}</div><div class="tv-switcher-name-new">${c2.name}</div></div>`;
-                        });
-                        html += `</div>`;
-                    });
-                    html += `</div>`;
-                    document.querySelector('#movieModal .ig-post-content').innerHTML = html;
-                }
-                playVid(ch.url);
-            }
-            addSwipe(movieModal,
-                () => _tvSwipeChange(1),
-                () => _tvSwipeChange(-1)
-            );
-
             // ── DOUBLE TAP LIKE di movie modal ───────────────────────────
+            const movieModal = document.getElementById('movieModal');
             let _dtTimer = null, _dtLocked = false;
             const _heartPop = document.getElementById('modalHeartPop');
             movieModal.addEventListener('touchend', e => {
@@ -4891,269 +4643,6 @@
                 ]
             }
         ];
-
-        // =============================================
-        // TV SCHEDULE DATA (WIB-based, per channel)
-        // =============================================
-        const tvSchedules = {
-            'RCTI': [
-                {time:'03:00',show:'Layar Drama Indonesia',genre:'Drama'},
-                {time:'04:30',show:'Seputar Indonesia Pagi',genre:'Berita'},
-                {time:'06:00',show:'Dahsyat',genre:'Hiburan'},
-                {time:'09:30',show:'Sinetron Pagi',genre:'Drama'},
-                {time:'11:00',show:'Seputar Indonesia Siang',genre:'Berita'},
-                {time:'11:30',show:'Sinetron Siang',genre:'Drama'},
-                {time:'14:30',show:'Sinetron Sore',genre:'Drama'},
-                {time:'17:00',show:'Seputar Indonesia',genre:'Berita'},
-                {time:'17:30',show:'Sinetron Sore',genre:'Drama'},
-                {time:'19:30',show:'Sinetron Prime Time',genre:'Drama'},
-                {time:'21:00',show:'Seputar Indonesia Malam',genre:'Berita'},
-                {time:'21:30',show:'Movie Malam',genre:'Movie'},
-                {time:'23:30',show:'Layar Drama Indonesia',genre:'Drama'},
-            ],
-            'GTV': [
-                {time:'05:00',show:'Morning Show',genre:'Hiburan'},
-                {time:'07:00',show:'Kartun Pagi',genre:'Animasi'},
-                {time:'10:00',show:'Variety Show',genre:'Hiburan'},
-                {time:'12:00',show:'Movie Siang',genre:'Movie'},
-                {time:'14:00',show:'Drama Korea',genre:'Drama'},
-                {time:'16:00',show:'Kartun Sore',genre:'Animasi'},
-                {time:'19:00',show:'Movie Prime Time',genre:'Movie'},
-                {time:'21:00',show:'Reality Show',genre:'Hiburan'},
-                {time:'23:00',show:'Movie Malam',genre:'Movie'},
-            ],
-            'MNCTV': [
-                {time:'05:00',show:'Khotbah Pagi',genre:'Religi'},
-                {time:'06:00',show:'Kartun Pagi',genre:'Animasi'},
-                {time:'09:00',show:'Sinetron Pagi',genre:'Drama'},
-                {time:'12:00',show:'Berita Siang',genre:'Berita'},
-                {time:'13:00',show:'Drama Siang',genre:'Drama'},
-                {time:'15:00',show:'Game Show',genre:'Hiburan'},
-                {time:'17:00',show:'Sinetron Sore',genre:'Drama'},
-                {time:'19:00',show:'Upin & Ipin',genre:'Animasi'},
-                {time:'20:00',show:'Sinetron Malam',genre:'Drama'},
-                {time:'22:00',show:'Movie Malam',genre:'Movie'},
-            ],
-            'SCTV': [
-                {time:'05:00',show:'Liputan 6 Pagi',genre:'Berita'},
-                {time:'06:30',show:'Sinetron Pagi',genre:'Drama'},
-                {time:'09:00',show:'FTV Pagi',genre:'Movie'},
-                {time:'11:30',show:'Liputan 6 Siang',genre:'Berita'},
-                {time:'12:00',show:'FTV Siang',genre:'Movie'},
-                {time:'15:30',show:'FTV Sore',genre:'Movie'},
-                {time:'17:30',show:'Liputan 6 Sore',genre:'Berita'},
-                {time:'19:00',show:'Sinetron Malam',genre:'Drama'},
-                {time:'21:30',show:'Liputan 6 Malam',genre:'Berita'},
-                {time:'22:30',show:'FTV Malam',genre:'Movie'},
-            ],
-            'INDOSIAR': [
-                {time:'05:00',show:'Fokus Pagi',genre:'Berita'},
-                {time:'06:00',show:'Sinetron Pagi',genre:'Drama'},
-                {time:'09:00',show:'FTV Pagi',genre:'Movie'},
-                {time:'11:30',show:'Fokus Siang',genre:'Berita'},
-                {time:'13:00',show:'Liga 1 / Hiburan',genre:'Olahraga'},
-                {time:'15:30',show:'Kisah Nyata',genre:'Drama'},
-                {time:'17:30',show:'Fokus',genre:'Berita'},
-                {time:'20:00',show:'Sinetron Malam',genre:'Drama'},
-                {time:'22:00',show:'Fokus Malam',genre:'Berita'},
-            ],
-            'ANTV': [
-                {time:'05:00',show:'Topik Pagi',genre:'Berita'},
-                {time:'07:00',show:'Drama India',genre:'Drama'},
-                {time:'10:00',show:'FTV',genre:'Movie'},
-                {time:'12:00',show:'Topik Siang',genre:'Berita'},
-                {time:'13:00',show:'Drama India',genre:'Drama'},
-                {time:'16:00',show:'Animasi',genre:'Animasi'},
-                {time:'18:00',show:'Topik Petang',genre:'Berita'},
-                {time:'19:00',show:'Drama India Prime',genre:'Drama'},
-                {time:'22:00',show:'Movie Malam',genre:'Movie'},
-            ],
-            'Trans 7': [
-                {time:'05:00',show:'Redaksi Pagi',genre:'Berita'},
-                {time:'06:00',show:'Laptop Si Unyil',genre:'Edukasi'},
-                {time:'07:30',show:'Bukan Haji Biasa',genre:'Religi'},
-                {time:'09:00',show:'Redaksi',genre:'Berita'},
-                {time:'10:00',show:'Jejak Petualang',genre:'Dokumenter'},
-                {time:'12:00',show:'Redaksi Siang',genre:'Berita'},
-                {time:'14:00',show:'Hitam Putih',genre:'Talkshow'},
-                {time:'16:00',show:'Redaksi Sore',genre:'Berita'},
-                {time:'18:30',show:'Insert',genre:'Hiburan'},
-                {time:'19:30',show:'On The Spot',genre:'Hiburan'},
-                {time:'20:30',show:'Bocah Petualang',genre:'Dokumenter'},
-                {time:'22:00',show:'Redaksi Malam',genre:'Berita'},
-            ],
-            'Trans TV': [
-                {time:'05:00',show:'CNN Indonesia Pagi',genre:'Berita'},
-                {time:'07:00',show:'Sinema Pagi',genre:'Movie'},
-                {time:'09:00',show:'Bioskop Trans',genre:'Movie'},
-                {time:'12:00',show:'CNN Indonesia Siang',genre:'Berita'},
-                {time:'13:00',show:'Sinema Siang',genre:'Movie'},
-                {time:'15:00',show:'Bioskop Trans',genre:'Movie'},
-                {time:'17:00',show:'CNN Indonesia Sore',genre:'Berita'},
-                {time:'19:00',show:'Bioskop Prime',genre:'Movie'},
-                {time:'21:30',show:'CNN Indonesia Malam',genre:'Berita'},
-                {time:'22:30',show:'Sinema Malam',genre:'Movie'},
-            ],
-            'NET TV': [
-                {time:'06:00',show:'NET Pagi',genre:'Hiburan'},
-                {time:'09:00',show:'The Comment',genre:'Talkshow'},
-                {time:'11:00',show:'Ini Talk Show',genre:'Talkshow'},
-                {time:'14:00',show:'NET 12',genre:'Hiburan'},
-                {time:'16:00',show:'The Comment',genre:'Talkshow'},
-                {time:'18:00',show:'Ini Talk Show',genre:'Talkshow'},
-                {time:'20:00',show:'Movie Prime',genre:'Movie'},
-                {time:'22:00',show:'Tonight Show',genre:'Talkshow'},
-            ],
-            'METRO TV': [
-                {time:'04:30',show:'Metro Pagi Primetime',genre:'Berita'},
-                {time:'07:00',show:'Metro Kini',genre:'Berita'},
-                {time:'09:00',show:'Election Update',genre:'Berita'},
-                {time:'10:00',show:'Metro Siang',genre:'Berita'},
-                {time:'12:00',show:'Primetime News',genre:'Berita'},
-                {time:'14:00',show:'Metro Sore',genre:'Berita'},
-                {time:'17:00',show:'Top News',genre:'Berita'},
-                {time:'18:00',show:'Prime Time',genre:'Berita'},
-                {time:'20:00',show:'Indonesia Now',genre:'Berita'},
-                {time:'22:00',show:'Headline News',genre:'Berita'},
-            ],
-            'TV ONE': [
-                {time:'05:00',show:'Kabar Pagi',genre:'Berita'},
-                {time:'07:00',show:'Indonesia Morning Show',genre:'Berita'},
-                {time:'09:00',show:'Apa Kabar Indonesia',genre:'Berita'},
-                {time:'12:00',show:'Kabar Siang',genre:'Berita'},
-                {time:'14:00',show:'Kabar Pasar',genre:'Berita'},
-                {time:'16:00',show:'Kabar Petang',genre:'Berita'},
-                {time:'18:00',show:'Kabar Pilihan',genre:'Berita'},
-                {time:'20:00',show:'Prime Time',genre:'Berita'},
-                {time:'22:00',show:'Kabar Malam',genre:'Berita'},
-            ],
-            'KOMPAS TV': [
-                {time:'05:00',show:'Kompas Pagi',genre:'Berita'},
-                {time:'07:00',show:'Sapa Indonesia Pagi',genre:'Berita'},
-                {time:'09:00',show:'Sapa Indonesia',genre:'Berita'},
-                {time:'12:00',show:'Kompas Siang',genre:'Berita'},
-                {time:'15:00',show:'Sapa Indonesia Sore',genre:'Berita'},
-                {time:'17:00',show:'Kompas Petang',genre:'Berita'},
-                {time:'19:00',show:'Kompas Malam',genre:'Berita'},
-                {time:'21:00',show:'Malam Ini',genre:'Talkshow'},
-                {time:'23:00',show:'Kompas Larut Malam',genre:'Berita'},
-            ],
-            'CNN INDO': [
-                {time:'04:30',show:'First News',genre:'Berita'},
-                {time:'07:00',show:'The Brief',genre:'Berita'},
-                {time:'09:00',show:'Closing Bell',genre:'Berita'},
-                {time:'12:00',show:'News Flash',genre:'Berita'},
-                {time:'14:00',show:'State of The Economy',genre:'Berita'},
-                {time:'17:00',show:'The World Tonight',genre:'Berita'},
-                {time:'19:00',show:'Prime Time News',genre:'Berita'},
-                {time:'21:00',show:'Special Report',genre:'Berita'},
-                {time:'23:00',show:'Late Night Show',genre:'Berita'},
-            ],
-            'TVRI': [
-                {time:'05:00',show:'Berita Nusantara',genre:'Berita'},
-                {time:'06:00',show:'Mutiara Hikmah',genre:'Religi'},
-                {time:'07:00',show:'Berita Pagi',genre:'Berita'},
-                {time:'09:00',show:'Indonesia Bagus',genre:'Dokumenter'},
-                {time:'12:00',show:'Berita Siang',genre:'Berita'},
-                {time:'13:00',show:'Kuis Kebangsaan',genre:'Hiburan'},
-                {time:'15:00',show:'Budaya Nusantara',genre:'Budaya'},
-                {time:'17:00',show:'Berita Petang',genre:'Berita'},
-                {time:'19:00',show:'Berita Nasional',genre:'Berita'},
-                {time:'21:00',show:'Bincang Malam',genre:'Talkshow'},
-                {time:'23:00',show:'Berita Malam',genre:'Berita'},
-            ],
-        };
-
-        // Ambil jadwal sekarang & berikutnya berdasarkan WIB
-        function getCurrentSchedule(channelName) {
-            const schedule = tvSchedules[channelName];
-            if (!schedule || schedule.length === 0) return null;
-
-            // WIB = UTC+7
-            const now = new Date();
-            const wibOffset = 7 * 60;
-            const utcMinutes = now.getUTCHours() * 60 + now.getUTCMinutes();
-            const wibMinutes = (utcMinutes + wibOffset) % (24 * 60);
-
-            const toMinutes = t => {
-                const [h, m] = t.split(':').map(Number);
-                return h * 60 + m;
-            };
-
-            let nowIdx = -1;
-            for (let i = schedule.length - 1; i >= 0; i--) {
-                if (wibMinutes >= toMinutes(schedule[i].time)) { nowIdx = i; break; }
-            }
-            if (nowIdx === -1) nowIdx = schedule.length - 1;
-
-            const nextIdx = (nowIdx + 1) % schedule.length;
-            const current = schedule[nowIdx];
-            const next = schedule[nextIdx];
-
-            const currentStart = toMinutes(current.time);
-            const nextStart = toMinutes(next.time);
-            const duration = nextStart > currentStart ? nextStart - currentStart : (24*60 - currentStart + nextStart);
-            const elapsed = wibMinutes >= currentStart ? wibMinutes - currentStart : (24*60 - currentStart + wibMinutes);
-            const progress = Math.min(100, Math.round((elapsed / duration) * 100));
-
-            return { current, next, progress, schedule, nowIdx, wibMinutes };
-        }
-
-        function buildScheduleHTML(channelName) {
-            const info = getCurrentSchedule(channelName);
-            if (!info) return '';
-            const { current, next, progress, schedule, nowIdx, wibMinutes } = info;
-
-            const toMinutes = t => { const [h,m]=t.split(':').map(Number); return h*60+m; };
-            const wibH = Math.floor(wibMinutes / 60);
-            const wibM = wibMinutes % 60;
-            const wibStr = `${String(wibH).padStart(2,'0')}:${String(wibM).padStart(2,'0')} WIB`;
-
-            let nowBarHTML = `
-                <div class="tv-now-bar">
-                    <div class="tv-now-dot"></div>
-                    <div class="tv-now-info">
-                        <div class="tv-now-label">Now Playing</div>
-                        <div class="tv-now-show">${current.show}</div>
-                        <div class="tv-now-time">${current.time} WIB · ${current.genre}</div>
-                    </div>
-                    <div class="tv-now-next">
-                        <div class="tv-now-next-label">Next</div>
-                        <div class="tv-now-next-show">${next.show}</div>
-                        <div class="tv-now-time">${next.time} WIB</div>
-                    </div>
-                </div>`;
-
-            let schedHTML = `<div class="tv-schedule-header">
-                <div class="tv-schedule-title">Today's Schedule <span style="font-weight:400;color:#444;font-size:8px;text-transform:none;letter-spacing:0">(estimated)</span></div>
-                <div class="tv-schedule-date">${wibStr}</div>
-            </div>`;
-
-            schedule.forEach((item, i) => {
-                const isNow = i === nowIdx;
-                const isPast = !isNow && (() => {
-                    const itemMin = toMinutes(item.time);
-                    if (wibMinutes >= toMinutes(schedule[0].time)) {
-                        return itemMin < toMinutes(schedule[nowIdx].time);
-                    }
-                    return false;
-                })();
-                const rowClass = isNow ? 'tv-schedule-row now-playing' : isPast ? 'tv-schedule-row past' : 'tv-schedule-row';
-                const progressBar = isNow ? `<div class="tv-progress-bar"><div class="tv-progress-fill" style="width:${progress}%"></div></div>` : '';
-                schedHTML += `
-                    <div class="${rowClass}">
-                        <div class="tv-schedule-time">${item.time}</div>
-                        <div class="tv-schedule-dot"></div>
-                        <div class="tv-schedule-info">
-                            <div class="tv-schedule-show">${item.show}</div>
-                            <div class="tv-schedule-genre">${item.genre}${isNow ? ` · ${progress}% selesai` : ''}</div>
-                        </div>
-                        ${progressBar}
-                    </div>`;
-            });
-
-            return nowBarHTML + schedHTML;
-        }
 
         let _currentTvTab = 'embed';
         let _tvMuted = false;
@@ -5515,105 +5004,6 @@
             updateActiveNav('home');
             history.replaceState({view: 'home'}, '');
         }
-
-        function playTvChannel(name, url) {
-            // Tutup semua overlay yang mungkin aktif
-            if (document.getElementById('reelsModal').style.display === 'block') {
-                _closeReelsSilent();
-            }
-            // Tutup actorModal jika sedang terbuka
-            const actorModal = document.getElementById('actorModal');
-            if (actorModal && actorModal.style.display === 'block') {
-                actorModal.style.display = 'none';
-            }
-            // Simpan state tvModal agar back bisa kembali ke sana
-            const wasTvOpen = document.getElementById('tvModal').style.display === 'block';
-            closeTvModal();
-            const modal = document.getElementById('movieModal');
-            modal.classList.add('tv-mode');
-            modal.style.display = 'block';
-            document.getElementById('mTitle').innerText = '● LIVE: ' + name;
-            // Tandai tombol back agar kembali ke tvModal bukan home
-            const _mBackBtn = document.querySelector('#movieModal .fa-chevron-left');
-            if (_mBackBtn) _mBackBtn.setAttribute('onclick', 'handleModalBack()');
-            document.getElementById('mDesc').innerText = '';
-            document.getElementById('mLikeDisplay').innerText = '';
-            // mDateDisplay disabled
-            document.getElementById('castContainer').innerHTML = '';
-            document.getElementById('serverList').innerHTML = '';
-            document.getElementById('seriesControl').classList.add('hidden');
-            document.getElementById('mHashtags').innerHTML = '';
-            document.getElementById('mToggleBtn').classList.add('hidden');
-            document.getElementById('mTranslateBtn').style.display = 'none';
-            document.body.style.overflow = 'hidden';
-            // Hanya replaceState jika sudah ada state tv (bukan saat pertama buka)
-            if (history.state && (history.state.view === 'tv' || history.state.view === 'tvChannel')) {
-                history.replaceState({view: 'tv'}, '');
-            }
-
-            const postContent = document.querySelector('#movieModal .ig-post-content');
-
-            // Build channel switcher + schedule
-            let switcherHTML = `<div id="tvChannelSwitcher">`;
-
-            // Schedule section
-            const schedHTML = buildScheduleHTML(name);
-            if (schedHTML) switcherHTML += schedHTML;
-
-            // Channel switcher
-            tvCategories.forEach(cat => {
-                switcherHTML += `<div class="tv-switcher-section-title">${cat.label}</div><div class="tv-switcher-grid-new">`;
-                cat.channels.forEach(ch => {
-                    const isActive = ch.name === name ? 'active-ch' : '';
-                    switcherHTML += `<div class="tv-switcher-btn-new ${isActive}" onclick="switchTvChannel('${ch.name}','${ch.url}',this)">
-                        <div class="tv-switcher-logo-new">${ch.logo}</div>
-                        <div class="tv-switcher-name-new">${ch.name}</div>
-                    </div>`;
-                });
-                switcherHTML += `</div>`;
-            });
-            switcherHTML += `</div>`;
-            postContent.innerHTML = switcherHTML;
-
-            playVid(url);
-        }
-
-        function switchTvChannel(name, url, el) {
-            document.querySelectorAll('.tv-switcher-btn-new').forEach(b => b.classList.remove('active-ch'));
-            el.classList.add('active-ch');
-            document.getElementById('mTitle').innerText = '● LIVE: ' + name;
-            // Pastikan back btn tetap ke handleModalBack setelah switch channel
-            const _backBtn = document.querySelector('#movieModal .fa-chevron-left');
-            if (_backBtn) _backBtn.setAttribute('onclick', 'handleModalBack()');
-
-            // Update schedule section
-            const switcher = document.getElementById('tvChannelSwitcher');
-            if (switcher) {
-                // Remove old schedule nodes (everything before first .tv-switcher-section-title)
-                const postContent = document.querySelector('#movieModal .ig-post-content');
-                const currentSwitcherHTML = document.getElementById('tvChannelSwitcher');
-                const newSchedHTML = buildScheduleHTML(name);
-                // Rebuild schedule + keep channel grid
-                let switcherHTML = `<div id="tvChannelSwitcher">`;
-                if (newSchedHTML) switcherHTML += newSchedHTML;
-                tvCategories.forEach(cat => {
-                    switcherHTML += `<div class="tv-switcher-section-title">${cat.label}</div><div class="tv-switcher-grid-new">`;
-                    cat.channels.forEach(ch => {
-                        const isActive = ch.name === name ? 'active-ch' : '';
-                        switcherHTML += `<div class="tv-switcher-btn-new ${isActive}" onclick="switchTvChannel('${ch.name}','${ch.url}',this)">
-                            <div class="tv-switcher-logo-new">${ch.logo}</div>
-                            <div class="tv-switcher-name-new">${ch.name}</div>
-                        </div>`;
-                    });
-                    switcherHTML += `</div>`;
-                });
-                switcherHTML += `</div>`;
-                postContent.innerHTML = switcherHTML;
-            }
-
-            playVid(url);
-        }
-
 
         async function openSoundtrack() {
             document.querySelectorAll('#carouselTrack iframe').forEach(iframe => {
@@ -6271,11 +5661,6 @@
             showLsUI();
         }
 
-        function replayTrailerLs() {
-            replayTrailer();
-            showLsUI();
-        }
-
         async function tryFullscreen() {
             try {
                 if (document.documentElement.requestFullscreen) {
@@ -6343,15 +5728,6 @@
         // Jika judul mengandung karakter non-Latin (Korea, Jepang, Arab, Hindi, Thai, dll), gunakan judul EN
         function isNonLatin(str) {
             return /[\u0900-\u097F\u0600-\u06FF\u0E00-\u0E7F\u3040-\u30FF\u4E00-\u9FFF\uAC00-\uD7FF\u0400-\u04FF\u0370-\u03FF]/.test(str || '');
-        }
-        async function getLatinTitle(idData, type, id) {
-            const rawTitle = idData.title || idData.name || '';
-            if (!isNonLatin(rawTitle)) return rawTitle; // sudah Latin
-            // Fetch versi EN untuk judul Latin
-            try {
-                const enData = await fetchWithCache(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&language=en-US`);
-                return enData.title || enData.name || rawTitle;
-            } catch { return rawTitle; }
         }
 
         async function fetchWithCache(url) {
@@ -6667,25 +6043,6 @@
             }
         }
 
-        function openActorShare() {
-            const name = document.getElementById('actorName').innerText;
-            if (!name) return;
-            const imdbId = window._actorImdbId || '';
-            const searchUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(name + ' actor interview')}`;
-            const imdbUrl = imdbId ? `https://www.imdb.com/name/${imdbId}` : `https://www.google.com/search?q=${encodeURIComponent(name + ' actor')}`;
-            // Share sheet native jika tersedia
-            if (navigator.share) {
-                navigator.share({
-                    title: name,
-                    text: `Lihat profil ${name} di amnesfubbia`,
-                    url: imdbUrl
-                }).catch(() => {});
-            } else {
-                // Fallback: buka YouTube search aktor
-                window.open(searchUrl, '_blank');
-            }
-        }
-
         function openActorImdb() {
             if (window._actorImdbId) {
                 window.open(`https://www.imdb.com/name/${window._actorImdbId}`, '_blank');
@@ -6726,16 +6083,6 @@
             window._actorModalPendingReopen = currentActorId;
             openModal(id, type);
         }
-
-        function searchByStudio(studioId, studioName) {
-            closeModal();
-            currentCompany = studioId;
-            currentType = 'movie'; 
-            document.getElementById('btnGenre').innerHTML = studioName + ' <i class="fa-solid fa-caret-down"></i>';
-            document.getElementById('btnGenre').classList.add('active-pill');
-            loadFeed(true);
-        }
-
 
         // ===== REELS FEATURE =====
         let _reelsLoaded = false;
@@ -7397,41 +6744,6 @@
             _rdsCurrentType = null;
         }
 
-        // Tombol bookmark di nav bawah reels → buka halaman bookmarks
-        function openBookmarksFromReels() {
-            // Tutup detail sheet jika terbuka
-            document.getElementById('reelDetailOverlay').style.display = 'none';
-            document.getElementById('reelDetailSheet').style.display = 'none';
-            _rdsCurrentId = null; _rdsCurrentType = null;
-
-            // Tutup reels + nav
-            document.getElementById('reelsModal').style.display = 'none';
-            document.getElementById('reelsBottomNav').style.display = 'none';
-            document.querySelectorAll('#reelsContainer iframe').forEach(f => {
-                try { f.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*'); } catch(e) {}
-            });
-            document.body.style.overflow = 'auto';
-
-            // Pastikan mainProfile tampil
-            document.getElementById('mainProfile').style.display = 'block';
-
-            // Update nav & tab
-            updateActiveNav('home');
-            document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
-            document.getElementById('tabBookmark').classList.add('active');
-            document.getElementById('tabLikes').classList.remove('active');
-            document.getElementById('tabGrid').classList.remove('active');
-
-            // Push history
-            currentLibMode = true;
-            history.replaceState({view: 'bookmarks'}, '');
-
-            // Load bookmark grid
-            const grid = document.getElementById('feedGrid');
-            grid.innerHTML = '';
-            showLibrary('bookmarks');
-        }
-
         // Helper: terjemahkan teks panjang dengan chunking (maks 450 char per request)
         async function translateTextChunked(text, from, to) {
             const CHUNK = 450;
@@ -7881,19 +7193,6 @@
             }
         }
 
-        function searchByCast(castId) { 
-            closeActorModal();
-            closeModal(); 
-            currentCastId = castId; searchQuery = ''; 
-            document.getElementById('searchInp').value = ''; 
-            document.getElementById('searchOverlay').style.display = 'block';
-            document.getElementById('smartSearchDropdown').style.display = 'none';
-            showSearchResults();
-            document.body.style.overflow='hidden'; 
-            history.pushState({view: 'search'}, "");
-            loadFeed(true);
-        }
-
         // ── MOVIEOGRAFI MODAL ─────────────────────────────────────────────
         let _mvgMovies = [], _mvgTVs = [], _mvgCurrentTab = 'movie', _mvgCurrentSort = 'popularity';
 
@@ -8254,16 +7553,6 @@
             loading = false;
         }
 
-        function toggleSearchFilterBar() {
-            const bar = document.getElementById('searchFilterBar');
-            const btn = document.getElementById('searchFilterToggleBtn');
-            const icon = btn ? btn.querySelector('i') : null;
-            const isVisible = bar && bar.style.display !== 'none';
-            if (bar) bar.style.display = isVisible ? 'none' : 'flex';
-            if (icon) { icon.style.color = isVisible ? '#aaa' : '#fff'; }
-            if (btn) { btn.style.background = isVisible ? '#1a1a1a' : '#2a2a2a'; btn.style.borderColor = isVisible ? '#2a2a2a' : '#555'; }
-        }
-
         function updateSearchFilterDot() {
             const yr = document.getElementById('searchYearFilter')?.value;
             const gn = document.getElementById('searchGenreFilter')?.value;
@@ -8405,15 +7694,6 @@
             document.getElementById('searchContent').style.display = 'flex';
             document.getElementById('searchTypeTabs').style.display = 'flex';
             window._isSearchMode = true;
-        }
-
-        function quickSearch(term) {
-            document.getElementById('searchInp').value = term;
-            document.getElementById('searchClearBtn').style.display = 'block';
-            document.getElementById('smartSearchDropdown').style.display = 'none';
-            searchQuery = term;
-            showSearchResults();
-            loadFeed(true);
         }
 
         function openSearch() { 
@@ -8589,7 +7869,7 @@
 
                 if (rVideos.length === 0) {
                     const fallbackUrl = buildEmbedUrl(type, id, 1, 1, 1);
-                    track.innerHTML = `<div class="carousel-slide"><iframe id="player-frame" src="${fallbackUrl}" class="w-full h-full" allowfullscreen allow="autoplay; fullscreen; picture-in-picture"></iframe></div>`;
+                    track.innerHTML = `<div class="carousel-slide"><iframe id="player-frame" src="${fallbackUrl}" class="w-full h-full" allowfullscreen allow="autoplay; fullscreen; picture-in-picture" sandbox="allow-scripts allow-same-origin allow-forms allow-presentation allow-orientation-lock"></iframe></div>`;
                     document.getElementById('swipeOverlay').style.display = 'none';
                     return;
                 }
@@ -8647,7 +7927,7 @@
 
                 if (vidsToDisplay.length === 0) {
                     const fallbackUrl = buildEmbedUrl(type, id, 1, 1, 1);
-                    track.innerHTML = `<div class="carousel-slide"><iframe id="player-frame" src="${fallbackUrl}" class="w-full h-full" allowfullscreen allow="autoplay; fullscreen; picture-in-picture"></iframe></div>`;
+                    track.innerHTML = `<div class="carousel-slide"><iframe id="player-frame" src="${fallbackUrl}" class="w-full h-full" allowfullscreen allow="autoplay; fullscreen; picture-in-picture" sandbox="allow-scripts allow-same-origin allow-forms allow-presentation allow-orientation-lock"></iframe></div>`;
                     document.getElementById('swipeOverlay').style.display = 'none';
                     return;
                 }
@@ -8761,7 +8041,7 @@
 
             const handleTrailerError = async () => {
                 const fallbackUrl = buildEmbedUrl(type, id, 1, 1, 1); 
-                track.innerHTML = `<div class="carousel-slide"><iframe id="player-frame" src="${fallbackUrl}" class="w-full h-full" allowfullscreen allow="autoplay; fullscreen; picture-in-picture"></iframe></div>`; 
+                track.innerHTML = `<div class="carousel-slide"><iframe id="player-frame" src="${fallbackUrl}" class="w-full h-full" allowfullscreen allow="autoplay; fullscreen; picture-in-picture" sandbox="allow-scripts allow-same-origin allow-forms allow-presentation allow-orientation-lock"></iframe></div>`; 
                 document.getElementById('swipeOverlay').style.display = 'none';
             };
 
@@ -9180,8 +8460,10 @@
                 if (timeSinceUser > 1500) {
                     e.preventDefault();
                     e.returnValue = '';
-                    // Kembalikan ke halaman ini
-                    window.history.go(0);
+                    // CATATAN: sebelumnya di sini ada window.history.go(0) — itu yang
+                    // menyebabkan seluruh aplikasi reload penuh (video jadi blank/reset
+                    // ke awal) setiap kali redirect diblokir. Cukup preventDefault saja;
+                    // browser akan menahan halaman tetap di sini tanpa perlu reload apa pun.
                 }
             });
 
@@ -9225,6 +8507,11 @@
             newIframe.setAttribute('referrerpolicy', 'no-referrer-when-downgrade');
             newIframe.setAttribute('scrolling', 'no');
             newIframe.setAttribute('frameborder', '0');
+            // Sandbox: izinkan player berjalan normal (script, cookie/session, form, fullscreen,
+            // orientasi layar) TAPI blokir situs di dalam iframe untuk membuka tab/popup baru
+            // atau membajak/redirect halaman utama — ini akar masalah "tekan video → kebawa ke
+            // iklan". Diblokir langsung oleh browser, jadi lebih pasti daripada nebak lewat timer.
+            newIframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms allow-presentation allow-orientation-lock');
             // Sandbox dicoba tapi memblokir hampir semua server streaming (cuma beberapa yang tetap jalan) —
             // dikembalikan ke tanpa sandbox supaya semua server berfungsi normal lagi.
             
@@ -10059,7 +9346,6 @@
         }
 
         // ===== SIMILAR FILMS =====
-        function loadSimilarFilms(id,type,genreIds){return loadSimilarMovies(id,type,genreIds);}
 
         async function loadSimilarMovies(id, type, genreIds) {
             const section = document.getElementById('mSimilarSection');
@@ -10509,14 +9795,6 @@
         }
 
         // ===== SKELETON HELPERS =====
-        function skeletonPoster3(count = 6) {
-            return `<div class="skeleton-grid-3">${Array(count).fill(`
-                <div style="display:flex;flex-direction:column;gap:5px;padding:2px">
-                    <div class="sk sk-poster"></div>
-                    <div class="sk sk-line" style="width:80%"></div>
-                    <div class="sk sk-line-short"></div>
-                </div>`).join('')}</div>`;
-        }
         function skeletonLandscape2(count = 6) {
             return Array(count).fill(`<div class="sk sk-landscape"></div>`).join('');
         }
