@@ -2534,6 +2534,7 @@
                     <button class="dl-link-btn" onclick="handleDownload3()">Down3</button>
                     <button class="dl-link-btn" onclick="handleDownload4()">Down4</button>
                     <button class="dl-link-btn" onclick="handleDownload5()">Down5</button>
+                    <button class="dl-link-btn" onclick="handleDownload6()">Down6</button>
                 </div>
                 <div id="mCollectionSection" class="similar-section" style="display:none">
                     <span class="similar-label" id="mCollectionLabel">Part of Collection</span>
@@ -5226,6 +5227,16 @@
             } else { showToast('Media tidak ditemukan.'); }
         }
 
+        function handleDownload6() {
+            if(window.currentMediaId && window.currentMediaType) {
+                const isTV = window.currentMediaType === 'tv';
+                const url = isTV
+                    ? `https://1embed.cc/download/tv/${window.currentMediaId}/${activeSeason || 1}/${activeEpisode || 1}`
+                    : `https://1embed.cc/download/movie/${window.currentMediaId}`;
+                window.open(url, '_blank');
+            } else { showToast('Media tidak ditemukan.'); }
+        }
+
         // Download per episode — konsisten dengan Down1, pakai activeSeason global
         function handleEpDownload(epNum) {
             const id = window.currentMediaId;
@@ -5281,6 +5292,7 @@
                     <button class="dl-link-btn" onclick="handleDownload3()">Down3</button>
                     <button class="dl-link-btn" onclick="handleDownload4()">Down4</button>
                     <button class="dl-link-btn" onclick="handleDownload5()">Down5</button>
+                    <button class="dl-link-btn" onclick="handleDownload6()">Down6</button>
                 </div>
                 <div id="mSimilarSection" class="similar-section" style="display:none">
                     <span class="similar-label">Similar Movies</span>
@@ -5604,7 +5616,7 @@
         function buildLsServerList() {
             const scroll = document.getElementById('lsServerScroll');
             let html = '';
-            for (let i = 1; i <= 28; i++) {
+            for (let i = 1; i <= 47; i++) {
                 const active = (i === activeServerIdx) ? 'active-link' : '';
                 html += `<div class="ls-srv-btn ${active}" onclick="event.stopPropagation(); lsChangeServer(${i}, this)">Server ${i}</div>`;
             }
@@ -8269,7 +8281,7 @@
             // tanggal dihapus dari modal (sudah ada di info grid)
             
             let serverButtonsHTML = '';
-            for(let i=1; i<=28; i++) {
+            for(let i=1; i<=47; i++) {
                 serverButtonsHTML += `<button class="server-btn" onclick="changeServer(${i}, this)">Server ${i}</button>`;
             }
             document.getElementById('serverList').innerHTML = serverButtonsHTML;
@@ -8426,6 +8438,7 @@
                     <button class="dl-link-btn" onclick="handleDownload3()">Down3</button>
                     <button class="dl-link-btn" onclick="handleDownload4()">Down4</button>
                     <button class="dl-link-btn" onclick="handleDownload5()">Down5</button>
+                    <button class="dl-link-btn" onclick="handleDownload6()">Down6</button>
                 </div>
                 <div id="mSimilarSection" class="similar-section" style="display:none">
                     <span class="similar-label">Similar Movies</span>
@@ -8589,6 +8602,25 @@
                 case 26: url = `https://warezcdn.site/${type==='tv'?'serie':'filme'}/${id}${type==='tv'?`/${s}/${e}`:''}`; break;
                 case 27: url = `https://vidsrc.wtf/1/${type}/${id}${seriesSuffix}`; break;
                 case 28: url = `https://player.cinezo.live/embed/${type}/${id}${type==='tv'?`/${s}/${e}`:''}`; break;
+                case 29: url = `https://1embed.cc/embed/${type}/${id}${seriesSuffix}`; break;
+                case 30: url = `https://zxcstream.xyz/embed/${type}/${id}${seriesSuffix}`; break;
+                case 31: url = `https://embed.wfs.lol/embed/${type}/${id}${seriesSuffix}`; break;
+                case 32: url = `https://vidsuper.net/${type}/${id}${seriesSuffix}`; break;
+                case 33: url = `https://production-player.vidrift.pages.dev/embed/${type}/${id}${seriesSuffix}`; break;
+                case 34: url = `https://vidflix.club/${type}/${id}${seriesSuffix}`; break;
+                case 35: url = `https://vidapi.xyz/embed/${type}/${id}${seriesSuffix}`; break;
+                case 36: url = `https://vaplayer.ru/embed/${type}/${id}${seriesSuffix}`; break;
+                case 37: url = `https://streamvaultsrc.click/embed/${type}/${id}${seriesSuffix}`; break;
+                case 38: url = `https://multiembed.mov/?video_id=${id}&tmdb=1${type==='tv'?`&s=${s}&e=${e}`:''}`; break;
+                case 39: url = `https://primesrc.me/embed/${type}/${id}${seriesSuffix}`; break;
+                case 40: url = `https://peachify.top/embed/${type}/${id}${seriesSuffix}`; break;
+                case 41: url = `https://web.nxsha.app/embed/${type}/${id}${seriesSuffix}`; break;
+                case 42: url = `https://mapple.uk/watch/${type}/${type==='tv'?`${id}-${s}-${e}`:id}?autoPlay=true`; break;
+                case 43: url = `https://fmovies4u.com/embed/${type}/${id}${seriesSuffix}`; break;
+                case 44: url = `https://embed.icefy.top/${type}?id=${id}${type==='tv'?`&season=${s}&episode=${e}`:''}`; break;
+                case 45: url = `https://cinemaos.tech/player/${id}${seriesSuffix}`; break;
+                case 46: url = `https://cinextream.net/api/embed/${type}/${id}${seriesSuffix}`; break;
+                case 47: url = `https://vidsync.live/embed/${type}/${id}${seriesSuffix}?autoPlay=true${type==='tv'?'&autoNext=true':''}`; break;
                 case 99: url = `https://www.dailymotion.com/embed/video/${currentDailymotionId}`; break;     default: url = `https://player.videasy.net/${type}/${id}${type==='tv'?`/${s}/${e}`:''}`;
             }
             return url.replace("http://", "https://");
