@@ -5616,7 +5616,7 @@
         function buildLsServerList() {
             const scroll = document.getElementById('lsServerScroll');
             let html = '';
-            for (let i = 1; i <= 47; i++) {
+            for (let i = 1; i <= 19; i++) {
                 const active = (i === activeServerIdx) ? 'active-link' : '';
                 html += `<div class="ls-srv-btn ${active}" onclick="event.stopPropagation(); lsChangeServer(${i}, this)">Server ${i}</div>`;
             }
@@ -6559,12 +6559,13 @@
             if (document.hidden) stopNonMusicIframes();
         });
 
-        // Stop SEMUA iframe (termasuk music) saat app benar-benar ditutup
-        window.addEventListener('pagehide', () => {
-            document.querySelectorAll('iframe').forEach(f => { try { f.src = ''; } catch(e) {} });
-        });
-
-        window.addEventListener('beforeunload', () => {
+        // Stop SEMUA iframe (termasuk music) saat app benar-benar ditutup.
+        // PENTING: kalau e.persisted true, halaman cuma "dibekukan" browser (bfcache) untuk
+        // kemungkinan di-restore lewat tombol back — BUKAN benar-benar ditutup. Kalau kita tetap
+        // kosongkan iframe di sini, snapshot yang dibekukan itu sudah kepalang kosong duluan,
+        // jadi begitu user tekan back dari halaman iklan, yang muncul iframe hitam kosong.
+        window.addEventListener('pagehide', (e) => {
+            if (e.persisted) return;
             document.querySelectorAll('iframe').forEach(f => { try { f.src = ''; } catch(e) {} });
         });
 
@@ -8281,7 +8282,7 @@
             // tanggal dihapus dari modal (sudah ada di info grid)
             
             let serverButtonsHTML = '';
-            for(let i=1; i<=47; i++) {
+            for(let i=1; i<=19; i++) {
                 serverButtonsHTML += `<button class="server-btn" onclick="changeServer(${i}, this)">Server ${i}</button>`;
             }
             document.getElementById('serverList').innerHTML = serverButtonsHTML;
