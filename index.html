@@ -3610,20 +3610,6 @@
         }
 
         // ---------- CARD RENDER ----------
-        function musicCardHTML(t) {
-            const isLiked = musicIsLiked(t.id);
-            return `<div style="flex-shrink:0;width:130px;cursor:pointer" onclick='musicPlayTrack(${JSON.stringify(t).replace(/'/g,"&#39;")})'>
-                <div style="position:relative;width:130px;height:130px;border-radius:10px;overflow:hidden;background:#1a1a1a">
-                    <img src="${t.artwork || t.artworkSmall}" loading="lazy" onerror="musicImgFallback(this)" style="width:100%;height:100%;object-fit:cover">
-                    <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.25)">
-                        <i class="fa-solid fa-play" style="color:#fff;font-size:20px"></i>
-                    </div>
-                </div>
-                <div style="margin-top:7px;font-size:12px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${t.title}</div>
-                <div style="font-size:10px;color:#666;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${t.artist}</div>
-            </div>`;
-        }
-
         function musicSkeletonCards(n, round) {
             return Array(n).fill(`<div style="flex-shrink:0;width:${round?'84px':'130px'}">
                 <div class="sk" style="width:${round?'84px':'130px'};height:${round?'84px':'130px'};border-radius:${round?'50%':'10px'}"></div>
@@ -8348,38 +8334,6 @@
             renderSynopsis();
         }
         
-        function handleModalBack() {
-            // Jika TV mode aktif, kembali ke tvModal
-            if (document.getElementById('movieModal').classList.contains('tv-mode')) {
-                _closeModalSilent();
-                document.getElementById('tvSearchInp').value = '';
-                document.getElementById('tvSearchBox').style.display = 'none';
-                renderTvList('');
-                document.getElementById('tvModal').style.display = 'block';
-                document.getElementById('tvModal').scrollTop = 0;
-                document.body.style.overflow = 'hidden';
-                history.replaceState({view: 'tv'}, '');
-            } else {
-                // Tombol ← layar: sembunyikan modal dulu, lalu pop state
-                _closeModalSilent();
-                // Restore actor/movieografi jika film dibuka dari sana
-                if (window._fromMovieografi) {
-                    window._fromMovieografi = false;
-                    document.getElementById('movieografiModal').style.display = 'block';
-                    document.getElementById('movieografiModal').scrollTop = 0;
-                    document.body.style.overflow = 'hidden';
-                } else if (window._actorModalPendingReopen) {
-                    window._actorModalPendingReopen = null;
-                    document.getElementById('actorModal').style.display = 'block';
-                    document.getElementById('actorModal').scrollTop = 0;
-                    document.body.style.overflow = 'hidden';
-                } else {
-                    document.body.style.overflow = 'auto';
-                }
-                history.back(); // pop state 'modal' — AMAN, hanya dari tombol ←
-            }
-        }
-
         function closeModal() {
             musicResumeFromDuck();
             const track = document.getElementById('carouselTrack'); 
