@@ -201,8 +201,8 @@
         .server-btn.active-link { border: 1.5px solid #fff !important; background: rgba(255,255,255,0.1); }
         
         /* DOWNLOAD & TRAILER GRID - DIPERKECIL */
-        .dl-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-top: 8px; margin-bottom: 2px; }
-        .dl-link-btn { width: 100%; padding: 10px; border-radius: 12px; background: #000; color: #fff; font-size: 11px; font-weight: 800; text-transform: uppercase; text-align: center; border: 1px solid #333; cursor: pointer; }
+        .dl-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 4px; margin-top: 8px; margin-bottom: 2px; }
+        .dl-link-btn { width: 100%; padding: 8px 2px; border-radius: 10px; background: #000; color: #fff; font-size: 9.5px; font-weight: 800; text-transform: uppercase; text-align: center; border: 1px solid #333; cursor: pointer; }
         
         /* PENYELARASAN WARNA TOMBOL TRAILER */
         .btn-trailer-special { background: #000; color: #fff; border: 1px solid #333; }
@@ -2548,7 +2548,7 @@
 
                 <div id="serverList" class="server-scroll-wrapper mt-4 px-4"></div>
                 
-                <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-top:8px;margin-bottom:2px;">
+                <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:4px;margin-top:8px;margin-bottom:2px;">
                     <button class="dl-link-btn" onclick="handleDownload()">Down1</button>
                     <button class="dl-link-btn" onclick="handleDownload2()">Down2</button>
                     <button class="dl-link-btn" onclick="handleDownload3()">Down3</button>
@@ -5196,6 +5196,16 @@
         function handleDownload2() {
             if(window.currentMediaId && window.currentMediaType) {
                 const isTV = window.currentMediaType === 'tv';
+                const url = isTV
+                    ? `https://1embed.cc/download/tv/${window.currentMediaId}/${activeSeason || 1}/${activeEpisode || 1}`
+                    : `https://1embed.cc/download/movie/${window.currentMediaId}`;
+                window.open(url, '_blank');
+            } else { showToast('Media tidak ditemukan.'); }
+        }
+
+        function handleDownload3() {
+            if(window.currentMediaId && window.currentMediaType) {
+                const isTV = window.currentMediaType === 'tv';
                 const downloadUrl = isTV
                     ? `https://02moviedownloader.site/api/download/tv/${window.currentMediaId}/${activeSeason || 1}/${activeEpisode || 1}`
                     : `https://02moviedownloader.site/api/download/movie/${window.currentMediaId}`;
@@ -5203,7 +5213,7 @@
             } else { showToast('Media tidak ditemukan.'); }
         }
 
-        function handleDownload3() {
+        function handleDownload4() {
             if(window.currentMediaId && window.currentMediaType) {
                 const isTV = window.currentMediaType === 'tv';
                 const url = isTV
@@ -5213,7 +5223,7 @@
             } else { showToast('Media tidak ditemukan.'); }
         }
 
-        function handleDownload4() {
+        function handleDownload5() {
             if(window.currentMediaId && window.currentMediaType) {
                 const isTV = window.currentMediaType === 'tv';
                 const url = isTV
@@ -5223,22 +5233,12 @@
             } else { showToast('Media tidak ditemukan.'); }
         }
 
-        function handleDownload5() {
+        function handleDownload6() {
             if(window.currentMediaId && window.currentMediaType) {
                 const isTV = window.currentMediaType === 'tv';
                 const url = isTV
                     ? `https://cinesrc.st/download/tv/${window.currentMediaId}`
                     : `https://cinesrc.st/download/movie/${window.currentMediaId}`;
-                window.open(url, '_blank');
-            } else { showToast('Media tidak ditemukan.'); }
-        }
-
-        function handleDownload6() {
-            if(window.currentMediaId && window.currentMediaType) {
-                const isTV = window.currentMediaType === 'tv';
-                const url = isTV
-                    ? `https://1embed.cc/download/tv/${window.currentMediaId}/${activeSeason || 1}/${activeEpisode || 1}`
-                    : `https://1embed.cc/download/movie/${window.currentMediaId}`;
                 window.open(url, '_blank');
             } else { showToast('Media tidak ditemukan.'); }
         }
@@ -5622,7 +5622,7 @@
         function buildLsServerList() {
             const scroll = document.getElementById('lsServerScroll');
             let html = '';
-            for (let i = 1; i <= 19; i++) {
+            for (let i = 1; i <= 18; i++) {
                 const active = (i === activeServerIdx) ? 'active-link' : '';
                 html += `<div class="ls-srv-btn ${active}" onclick="event.stopPropagation(); lsChangeServer(${i}, this)">Server ${i}</div>`;
             }
@@ -8288,7 +8288,7 @@
             // tanggal dihapus dari modal (sudah ada di info grid)
             
             let serverButtonsHTML = '';
-            for(let i=1; i<=19; i++) {
+            for(let i=1; i<=18; i++) {
                 serverButtonsHTML += `<button class="server-btn" onclick="changeServer(${i}, this)">Server ${i}</button>`;
             }
             document.getElementById('serverList').innerHTML = serverButtonsHTML;
@@ -8549,18 +8549,18 @@
                 case 5:  url = `https://111movies.net/${type}/${id}${type==='tv'?`/${s}/${e}`:''}`; break;
                 case 6:  url = `https://embed.smashystream.com/playere.php?tmdb=${id}${type==='tv'?`&season=${s}&episode=${e}`:''}`; break;
                 case 7:  url = `https://cinesrc.st/embed/${type}/${id}${type==='tv'?`/${s}/${e}`:''}`; break;
-                case 8:  url = `https://vidsuper.net/${type}/${id}${seriesSuffix}`; break;
-                case 9:  url = `https://player.videasy.net/${type}/${id}${type==='tv'?`/${s}/${e}`:''}?autoplay=1${type==='tv'?'&autoNext=true':''}`; break;
-                case 10: url = `https://vidlink.pro/${type}/${id}${seriesSuffix}`; break;
-                case 11: url = `https://vidcore.net/${type}/${id}${type==='tv'?`/${s}/${e}`:''}?autoPlay=true`; break;
-                case 12: url = `https://vidstorm.ru/embed/${type}/${id}${seriesSuffix}`; break;
-                case 13: url = `https://vidsync.xyz/embed/${type}/${id}${type==='tv'?`/${s}/${e}`:''}?autoPlay=true${type==='tv'?'&autoNext=true':''}`; break;
-                case 14: url = `https://mgeb.top/embed/${id}${type==='tv'?`/${s}/${e}`:''}`; break;
-                case 15: url = `https://player.vidzee.wtf/embed/${type}/${id}${seriesSuffix}`; break;
-                case 16: url = `https://2embed.cc/embed/${type}/${id}${seriesSuffix}`; break;
-                case 17: url = `https://embed.wfs.lol/embed/${type}/${id}${seriesSuffix}`; break;
-                case 18: url = `https://vaplayer.ru/embed/${type}/${id}${seriesSuffix}`; break;
-                case 19: url = `https://vidsync.live/embed/${type}/${id}${seriesSuffix}?autoPlay=true${type==='tv'?'&autoNext=true':''}`; break;
+                case 8:  url = `https://player.videasy.net/${type}/${id}${type==='tv'?`/${s}/${e}`:''}?autoplay=1${type==='tv'?'&autoNext=true':''}`; break;
+                case 9:  url = `https://vidlink.pro/${type}/${id}${seriesSuffix}`; break;
+                case 10: url = `https://vidcore.net/${type}/${id}${type==='tv'?`/${s}/${e}`:''}?autoPlay=true`; break;
+                case 11: url = `https://vidstorm.ru/embed/${type}/${id}${seriesSuffix}`; break;
+                case 12: url = `https://vidsync.xyz/embed/${type}/${id}${type==='tv'?`/${s}/${e}`:''}?autoPlay=true${type==='tv'?'&autoNext=true':''}`; break;
+                case 13: url = `https://mgeb.top/embed/${id}${type==='tv'?`/${s}/${e}`:''}`; break;
+                case 14: url = `https://player.vidzee.wtf/embed/${type}/${id}${seriesSuffix}`; break;
+                case 15: url = `https://2embed.cc/embed/${type}/${id}${seriesSuffix}`; break;
+                case 16: url = `https://embed.wfs.lol/embed/${type}/${id}${seriesSuffix}`; break;
+                case 17: url = `https://vaplayer.ru/embed/${type}/${id}${seriesSuffix}`; break;
+                case 18: url = `https://vidsync.live/embed/${type}/${id}${seriesSuffix}?autoPlay=true${type==='tv'?'&autoNext=true':''}`; break;
+                case 19: url = `https://vidsuper.net/${type}/${id}${seriesSuffix}`; break;
                 case 20: url = `https://vidfast.pro/${type}/${id}${type==='tv'?`/${s}/${e}`:''}`; break;
                 case 21: url = `https://vidrock.net/embed/${type}/${id}${seriesSuffix}`; break;
                 case 22: url = `https://vidup.to/${type}/${id}${type==='tv'?`/${s}/${e}`:''}?autoPlay=true`; break;
