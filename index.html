@@ -2033,7 +2033,7 @@
                 <span class="about-stat-lbl">Series</span>
             </div>
             <div class="about-stat-card">
-                <span class="about-stat-num">30+</span>
+                <span class="about-stat-num">18</span>
                 <span class="about-stat-lbl">Server</span>
             </div>
             <div class="about-stat-card">
@@ -2087,7 +2087,7 @@
                 </div>
                 <div class="about-feat-text">
                     <div class="about-feat-title">Multi-Server Streaming</div>
-                    <div class="about-feat-desc">30+ server streaming pilihan untuk movie & series. Ganti server langsung tanpa reload. Trailer embedded di dalam modal.</div>
+                    <div class="about-feat-desc">18 server streaming pilihan untuk movie & series. Auto-skip otomatis ke server berikutnya kalau satu server gagal dimuat, dan otomatis ingat server terakhir yang berhasil untuk judul yang sama.</div>
                 </div>
             </div>
             <div class="about-feature-row">
@@ -2096,7 +2096,7 @@
                 </div>
                 <div class="about-feat-text">
                     <div class="about-feat-title">Multi-Server Download</div>
-                    <div class="about-feat-desc">5 server download tersedia untuk movie & series, termasuk per episode. Pilih server terbaik sesuai koneksi.</div>
+                    <div class="about-feat-desc">6 server download tersedia untuk movie & series, termasuk per episode. Pilih server terbaik sesuai koneksi.</div>
                 </div>
             </div>
             <div class="about-feature-row">
@@ -2104,8 +2104,8 @@
                     <i class="ph ph-television-simple" style="color:#a78bfa"></i>
                 </div>
                 <div class="about-feat-text">
-                    <div class="about-feat-title">Live TV Indonesia</div>
-                    <div class="about-feat-desc">Tonton siaran langsung channel TV nasional Indonesia kapan saja, langsung di dalam app.</div>
+                    <div class="about-feat-title">Live TV — Embed, IPTV & Favorit</div>
+                    <div class="about-feat-desc">3 tab Live TV: Embed (channel TV nasional & lokal Indonesia), IPTV (ratusan channel dari playlist terbuka iptv-org), dan Favorit (channel pilihanmu dari kedua sumber). Ditambah Live Sport & Highlight terpisah untuk nonton pertandingan olahraga.</div>
                 </div>
             </div>
             <div class="about-feature-row">
@@ -2162,11 +2162,15 @@
             </div>
             <div class="about-info-row">
                 <span class="about-info-label">Streaming Server</span>
-                <span class="about-info-value">30+ Provider</span>
+                <span class="about-info-value">18 Provider</span>
             </div>
             <div class="about-info-row">
                 <span class="about-info-label">Download Server</span>
-                <span class="about-info-value">5 Provider</span>
+                <span class="about-info-value">6 Provider</span>
+            </div>
+            <div class="about-info-row">
+                <span class="about-info-label">Live TV & IPTV</span>
+                <span class="about-info-value">Embed + iptv-org</span>
             </div>
             <div class="about-info-row">
                 <span class="about-info-label">Soundtrack</span>
@@ -2174,7 +2178,7 @@
             </div>
             <div class="about-info-row">
                 <span class="about-info-label">Terjemahan Sinopsis</span>
-                <span class="about-info-value">Google Translate API</span>
+                <span class="about-info-value">MyMemory / Google Translate</span>
             </div>
         </div>
 
@@ -3148,6 +3152,28 @@
         let activeServerIdx = 1;
         let activeEpisode = 1;
         let activeSeason = 1;
+        const TOTAL_SERVERS = 18; // sinkron dengan jumlah tombol server yang ditampilkan
+        let _autoAdvanceCount = 0;
+        let _isAutoAdvancing = false;
+
+        // ---------- Ingat server terakhir yang berhasil, per judul (localStorage) ----------
+        const LAST_SERVER_KEY = 'lastWorkingServer';
+        function getLastWorkingServer(mediaId) {
+            try {
+                const map = JSON.parse(localStorage.getItem(LAST_SERVER_KEY) || '{}');
+                return map[mediaId] || null;
+            } catch(e) { return null; }
+        }
+        function saveLastWorkingServer(mediaId, srvIdx) {
+            if (!mediaId || srvIdx === 99) return; // 99 = trailer/dailymotion, bukan server streaming
+            try {
+                const map = JSON.parse(localStorage.getItem(LAST_SERVER_KEY) || '{}');
+                map[mediaId] = srvIdx;
+                const keys = Object.keys(map);
+                if (keys.length > 300) delete map[keys[0]]; // batasi biar tidak membengkak
+                localStorage.setItem(LAST_SERVER_KEY, JSON.stringify(map));
+            } catch(e) {}
+        }
 
         document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
@@ -5647,6 +5673,7 @@
         }
 
         function lsChangeServer(srvIdx, el) {
+            if (!_isAutoAdvancing) _autoAdvanceCount = 0;
             activeServerIdx = srvIdx;
             document.querySelectorAll('.server-btn').forEach((b, i) => {
                 b.classList.remove('active-link');
@@ -8293,6 +8320,21 @@
             }
             document.getElementById('serverList').innerHTML = serverButtonsHTML;
 
+            // Kalau film ini pernah diputar dan ada server yang terakhir berhasil, langsung
+            // pakai itu (skip trailer) — biar tidak perlu coba-coba server dari awal lagi.
+            // Khusus movie dulu — untuk series, biarkan trailer tampil dulu karena alur
+            // pemilihan episode berjalan async setelah baris ini.
+            if (type === 'movie') {
+                const remembered = getLastWorkingServer(id);
+                if (remembered) {
+                    _autoAdvanceCount = 0;
+                    const btns = document.querySelectorAll('#serverList .server-btn');
+                    if (btns[remembered - 1]) {
+                        changeServer(remembered, btns[remembered - 1]);
+                    }
+                }
+            }
+
             if(type === 'tv') { document.getElementById('seriesControl').classList.remove('hidden'); document.getElementById('seasonSel').innerHTML = (dId.seasons||[]).filter(s=>s.season_number>0).map(s=>`<option value="${s.season_number}">Season ${s.season_number}</option>`).join(''); loadEpisodes(); } else { document.getElementById('seriesControl').classList.add('hidden'); }
             updateLibButtons(id);
 
@@ -8496,14 +8538,24 @@
             newIframe.setAttribute('scrolling', 'no');
             newIframe.setAttribute('frameborder', '0');
             
-            // FIX BUG 2: fallback timer — loader pasti sembunyi setelah 6 detik
+            // FIX BUG 2: fallback timer — loader pasti sembunyi setelah 6 detik.
+            // Sekaligus dipakai sebagai sinyal "server ini gagal dimuat" kalau onload tidak
+            // pernah terpanggil dalam waktu itu → otomatis coba server berikutnya.
+            let _loadedOK = false;
             newIframe.onload = () => {
+                _loadedOK = true;
                 loader.classList.add('hidden');
                 if (_loaderTimer) { clearTimeout(_loaderTimer); _loaderTimer = null; }
+                // Server ini berhasil dimuat — simpan sebagai server terakhir yang berhasil
+                if (activeServerIdx !== 99) saveLastWorkingServer(window.currentMediaId, activeServerIdx);
+            };
+            newIframe.onerror = () => {
+                if (activeServerIdx !== 99) _tryNextServerOnFail();
             };
             _loaderTimer = setTimeout(() => {
                 loader.classList.add('hidden');
                 _loaderTimer = null;
+                if (!_loadedOK && activeServerIdx !== 99) _tryNextServerOnFail();
             }, 6000);
             
             track.innerHTML = '';
@@ -8520,8 +8572,29 @@
             swipeOverlay.style.display = 'none';
             swipeOverlay.style.pointerEvents = 'none';
         }
+
+        // Kalau server gagal dimuat (timeout/error), otomatis coba server berikutnya.
+        // Berhenti kalau sudah mencoba semua 18 server supaya tidak muter selamanya.
+        function _tryNextServerOnFail() {
+            if (_autoAdvanceCount >= TOTAL_SERVERS - 1) {
+                _autoAdvanceCount = 0;
+                showToast('Semua server gagal dimuat, coba pilih manual.');
+                return;
+            }
+            _autoAdvanceCount++;
+            const next = (activeServerIdx % TOTAL_SERVERS) + 1;
+            activeServerIdx = next;
+            document.querySelectorAll('.server-btn').forEach(b => b.classList.remove('active-link'));
+            const allBtns = document.querySelectorAll('.server-btn');
+            if (allBtns[next - 1]) allBtns[next - 1].classList.add('active-link');
+            _isAutoAdvancing = true;
+            const url = buildEmbedUrl(window.currentMediaType, window.currentMediaId, activeSeason, activeEpisode, next);
+            playVid(url);
+            _isAutoAdvancing = false;
+        }
         
         function changeServer(srvIdx, el) {
+            if (!_isAutoAdvancing) _autoAdvanceCount = 0; // reset hitungan cuma kalau user pilih manual
             activeServerIdx = srvIdx;
             document.querySelectorAll('.server-btn').forEach(b => b.classList.remove('active-link'));
             if(srvIdx !== 99) el.classList.add('active-link');
