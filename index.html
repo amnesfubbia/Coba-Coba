@@ -6589,7 +6589,21 @@
         }
 
         document.addEventListener('visibilitychange', () => {
-            if (document.hidden) stopNonMusicIframes();
+            if (document.hidden) {
+                stopNonMusicIframes();
+            } else {
+                // Tab aktif lagi — kembalikan iframe streaming yang tadi "dihentikan"
+                // (src dikosongkan) saat tab sempat tersembunyi (mis. redirect iklan).
+                // SEBELUM INI: src cuma disimpan ke dataset.pausedSrc tapi TIDAK PERNAH
+                // dikembalikan — makanya video selalu blank permanen setelah kembali
+                // dari halaman lain, apapun penyebab tab-nya sempat hidden.
+                document.querySelectorAll('iframe').forEach(f => {
+                    if (f.dataset.pausedSrc) {
+                        f.src = f.dataset.pausedSrc;
+                        delete f.dataset.pausedSrc;
+                    }
+                });
+            }
         });
 
         // Stop SEMUA iframe (termasuk music) saat app benar-benar ditutup.
@@ -8319,21 +8333,6 @@
                 serverButtonsHTML += `<button class="server-btn" onclick="changeServer(${i}, this)">Server ${i}</button>`;
             }
             document.getElementById('serverList').innerHTML = serverButtonsHTML;
-
-            // Kalau film ini pernah diputar dan ada server yang terakhir berhasil, langsung
-            // pakai itu (skip trailer) — biar tidak perlu coba-coba server dari awal lagi.
-            // Khusus movie dulu — untuk series, biarkan trailer tampil dulu karena alur
-            // pemilihan episode berjalan async setelah baris ini.
-            if (type === 'movie') {
-                const remembered = getLastWorkingServer(id);
-                if (remembered) {
-                    _autoAdvanceCount = 0;
-                    const btns = document.querySelectorAll('#serverList .server-btn');
-                    if (btns[remembered - 1]) {
-                        changeServer(remembered, btns[remembered - 1]);
-                    }
-                }
-            }
 
             if(type === 'tv') { document.getElementById('seriesControl').classList.remove('hidden'); document.getElementById('seasonSel').innerHTML = (dId.seasons||[]).filter(s=>s.season_number>0).map(s=>`<option value="${s.season_number}">Season ${s.season_number}</option>`).join(''); loadEpisodes(); } else { document.getElementById('seriesControl').classList.add('hidden'); }
             updateLibButtons(id);
