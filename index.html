@@ -187,7 +187,7 @@
         .modal-player { display: none; position: fixed; inset: 0; z-index: 8000; background: #000; overflow-y: auto; }
         .carousel-track { display: flex; transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1); width: 100%; }
         .carousel-slide { min-width: 100%; aspect-ratio: 16/9; position: relative; background: #000; overflow: hidden; }
-        .carousel-slide iframe { position: absolute; top: -60px; left: 0; width: 100%; height: calc(100% + 120px); border: none; }
+        .carousel-slide iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
         .carousel-slide::after { content:''; position:absolute; inset:0; z-index:6; background:transparent; pointer-events:none; }
         .swipe-overlay { position: absolute; inset: 0; z-index: 10; background: transparent; }
         .interaction-icon { font-size: 24px; cursor: pointer; color: #fff; transition: transform 0.1s; }
@@ -2033,7 +2033,7 @@
                 <span class="about-stat-lbl">Series</span>
             </div>
             <div class="about-stat-card">
-                <span class="about-stat-num">18</span>
+                <span class="about-stat-num">17</span>
                 <span class="about-stat-lbl">Server</span>
             </div>
             <div class="about-stat-card">
@@ -2087,7 +2087,7 @@
                 </div>
                 <div class="about-feat-text">
                     <div class="about-feat-title">Multi-Server Streaming</div>
-                    <div class="about-feat-desc">18 server streaming pilihan untuk movie & series. Auto-skip otomatis ke server berikutnya kalau satu server gagal dimuat, dan otomatis ingat server terakhir yang berhasil untuk judul yang sama.</div>
+                    <div class="about-feat-desc">17 server streaming pilihan untuk movie & series. Auto-skip otomatis ke server berikutnya kalau satu server gagal dimuat, dan otomatis ingat server terakhir yang berhasil untuk judul yang sama.</div>
                 </div>
             </div>
             <div class="about-feature-row">
@@ -2162,7 +2162,7 @@
             </div>
             <div class="about-info-row">
                 <span class="about-info-label">Streaming Server</span>
-                <span class="about-info-value">18 Provider</span>
+                <span class="about-info-value">17 Provider</span>
             </div>
             <div class="about-info-row">
                 <span class="about-info-label">Download Server</span>
@@ -3152,7 +3152,7 @@
         let activeServerIdx = 1;
         let activeEpisode = 1;
         let activeSeason = 1;
-        const TOTAL_SERVERS = 18; // sinkron dengan jumlah tombol server yang ditampilkan
+        const TOTAL_SERVERS = 17; // sinkron dengan jumlah tombol server yang ditampilkan
         let _autoAdvanceCount = 0;
         let _isAutoAdvancing = false;
 
@@ -5648,7 +5648,7 @@
         function buildLsServerList() {
             const scroll = document.getElementById('lsServerScroll');
             let html = '';
-            for (let i = 1; i <= 18; i++) {
+            for (let i = 1; i <= 17; i++) {
                 const active = (i === activeServerIdx) ? 'active-link' : '';
                 html += `<div class="ls-srv-btn ${active}" onclick="event.stopPropagation(); lsChangeServer(${i}, this)">Server ${i}</div>`;
             }
@@ -8315,7 +8315,7 @@
             // tanggal dihapus dari modal (sudah ada di info grid)
             
             let serverButtonsHTML = '';
-            for(let i=1; i<=18; i++) {
+            for(let i=1; i<=17; i++) {
                 serverButtonsHTML += `<button class="server-btn" onclick="changeServer(${i}, this)">Server ${i}</button>`;
             }
             document.getElementById('serverList').innerHTML = serverButtonsHTML;
@@ -8620,19 +8620,19 @@
                 case 3:  url = `https://vidsrc.wtf/1/${type}/${id}${seriesSuffix}`; break;
                 case 4:  url = `https://111movies.com/${type}/${id}${type==='tv'?`/${s}/${e}`:''}`; break;
                 case 5:  url = `https://111movies.net/${type}/${id}${type==='tv'?`/${s}/${e}`:''}`; break;
-                case 6:  url = `https://embed.smashystream.com/playere.php?tmdb=${id}${type==='tv'?`&season=${s}&episode=${e}`:''}`; break;
-                case 7:  url = `https://cinesrc.st/embed/${type}/${id}${type==='tv'?`/${s}/${e}`:''}`; break;
-                case 8:  url = `https://player.videasy.net/${type}/${id}${type==='tv'?`/${s}/${e}`:''}?autoplay=1${type==='tv'?'&autoNext=true':''}`; break;
-                case 9:  url = `https://vidlink.pro/${type}/${id}${seriesSuffix}`; break;
-                case 10: url = `https://vidcore.net/${type}/${id}${type==='tv'?`/${s}/${e}`:''}?autoPlay=true`; break;
-                case 11: url = `https://vidstorm.ru/embed/${type}/${id}${seriesSuffix}`; break;
-                case 12: url = `https://vidsync.xyz/embed/${type}/${id}${type==='tv'?`/${s}/${e}`:''}?autoPlay=true${type==='tv'?'&autoNext=true':''}`; break;
-                case 13: url = `https://mgeb.top/embed/${id}${type==='tv'?`/${s}/${e}`:''}`; break;
-                case 14: url = `https://player.vidzee.wtf/embed/${type}/${id}${seriesSuffix}`; break;
-                case 15: url = `https://2embed.cc/embed/${type}/${id}${seriesSuffix}`; break;
-                case 16: url = `https://embed.wfs.lol/embed/${type}/${id}${seriesSuffix}`; break;
-                case 17: url = `https://vaplayer.ru/embed/${type}/${id}${seriesSuffix}`; break;
-                case 18: url = `https://vidsync.live/embed/${type}/${id}${seriesSuffix}?autoPlay=true${type==='tv'?'&autoNext=true':''}`; break;
+                case 6:  url = `https://cinesrc.st/embed/${type}/${id}${type==='tv'?`/${s}/${e}`:''}`; break;
+                case 7:  url = `https://player.videasy.net/${type}/${id}${type==='tv'?`/${s}/${e}`:''}?autoplay=1${type==='tv'?'&autoNext=true':''}`; break;
+                case 8:  url = `https://vidlink.pro/${type}/${id}${seriesSuffix}`; break;
+                case 9:  url = `https://vidcore.net/${type}/${id}${type==='tv'?`/${s}/${e}`:''}?autoPlay=true`; break;
+                case 10: url = `https://vidstorm.ru/embed/${type}/${id}${seriesSuffix}`; break;
+                case 11: url = `https://vidsync.xyz/embed/${type}/${id}${type==='tv'?`/${s}/${e}`:''}?autoPlay=true${type==='tv'?'&autoNext=true':''}`; break;
+                case 12: url = `https://mgeb.top/embed/${id}${type==='tv'?`/${s}/${e}`:''}`; break;
+                case 13: url = `https://player.vidzee.wtf/embed/${type}/${id}${seriesSuffix}`; break;
+                case 14: url = `https://2embed.cc/embed/${type}/${id}${seriesSuffix}`; break;
+                case 15: url = `https://embed.wfs.lol/embed/${type}/${id}${seriesSuffix}`; break;
+                case 16: url = `https://vaplayer.ru/embed/${type}/${id}${seriesSuffix}`; break;
+                case 17: url = `https://vidsync.live/embed/${type}/${id}${seriesSuffix}?autoPlay=true${type==='tv'?'&autoNext=true':''}`; break;
+                case 18: url = `https://embed.smashystream.com/playere.php?tmdb=${id}${type==='tv'?`&season=${s}&episode=${e}`:''}`; break;
                 case 19: url = `https://vidsuper.net/${type}/${id}${seriesSuffix}`; break;
                 case 20: url = `https://vidfast.pro/${type}/${id}${type==='tv'?`/${s}/${e}`:''}`; break;
                 case 21: url = `https://vidrock.net/embed/${type}/${id}${seriesSuffix}`; break;
