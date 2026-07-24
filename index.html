@@ -8539,8 +8539,13 @@
             newIframe.setAttribute('frameborder', '0');
             
             // FIX BUG 2: fallback timer — loader pasti sembunyi setelah 6 detik.
-            // Sekaligus dipakai sebagai sinyal "server ini gagal dimuat" kalau onload tidak
-            // pernah terpanggil dalam waktu itu → otomatis coba server berikutnya.
+            // CATATAN: timer ini HANYA buat sembunyiin spinner loading, BUKAN sinyal
+            // kegagalan. Banyak server memang tidak pernah memicu event 'onload' sama
+            // sekali meski videonya jalan normal (karena skrip/iklan di halamannya jalan
+            // terus-menerus) — kalau timeout ini dipakai buat auto-skip, server yang
+            // sebenarnya aman malah otomatis "dicabut" tiap 6 detik dan diganti server
+            // lain yang belum tentu lebih baik. Auto-skip sekarang HANYA jalan lewat
+            // onerror (kegagalan jaringan asli — domain mati/gagal konek), bukan timeout.
             let _loadedOK = false;
             newIframe.onload = () => {
                 _loadedOK = true;
@@ -8555,7 +8560,12 @@
             _loaderTimer = setTimeout(() => {
                 loader.classList.add('hidden');
                 _loaderTimer = null;
-                if (!_loadedOK && activeServerIdx !== 99) _tryNextServerOnFail();
+                // Anggap berhasil dimuat setelah loader disembunyikan, biar tersimpan
+                // sebagai "server terakhir yang berhasil" walau onload-nya tidak pernah
+                // terpanggil (umum terjadi, bukan berarti servernya gagal).
+                if (!_loadedOK && activeServerIdx !== 99) {
+                    saveLastWorkingServer(window.currentMediaId, activeServerIdx);
+                }
             }, 6000);
             
             track.innerHTML = '';
