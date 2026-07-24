@@ -2033,7 +2033,7 @@
                 <span class="about-stat-lbl">Series</span>
             </div>
             <div class="about-stat-card">
-                <span class="about-stat-num">17</span>
+                <span class="about-stat-num">4</span>
                 <span class="about-stat-lbl">Server</span>
             </div>
             <div class="about-stat-card">
@@ -2087,7 +2087,7 @@
                 </div>
                 <div class="about-feat-text">
                     <div class="about-feat-title">Multi-Server Streaming</div>
-                    <div class="about-feat-desc">17 server streaming pilihan untuk movie & series. Auto-skip otomatis ke server berikutnya kalau satu server gagal dimuat, dan otomatis ingat server terakhir yang berhasil untuk judul yang sama.</div>
+                    <div class="about-feat-desc">4 server streaming terpilih yang sudah diuji aman dari redirect iklan (pakai sandbox browser). Auto-skip otomatis ke server berikutnya kalau satu server gagal dimuat.</div>
                 </div>
             </div>
             <div class="about-feature-row">
@@ -2162,7 +2162,7 @@
             </div>
             <div class="about-info-row">
                 <span class="about-info-label">Streaming Server</span>
-                <span class="about-info-value">17 Provider</span>
+                <span class="about-info-value">4 Provider</span>
             </div>
             <div class="about-info-row">
                 <span class="about-info-label">Download Server</span>
@@ -3152,7 +3152,7 @@
         let activeServerIdx = 1;
         let activeEpisode = 1;
         let activeSeason = 1;
-        const TOTAL_SERVERS = 17; // sinkron dengan jumlah tombol server yang ditampilkan
+        const TOTAL_SERVERS = 4; // sinkron dengan jumlah tombol server yang ditampilkan
         let _autoAdvanceCount = 0;
         let _isAutoAdvancing = false;
 
@@ -5648,7 +5648,7 @@
         function buildLsServerList() {
             const scroll = document.getElementById('lsServerScroll');
             let html = '';
-            for (let i = 1; i <= 17; i++) {
+            for (let i = 1; i <= 4; i++) {
                 const active = (i === activeServerIdx) ? 'active-link' : '';
                 html += `<div class="ls-srv-btn ${active}" onclick="event.stopPropagation(); lsChangeServer(${i}, this)">Server ${i}</div>`;
             }
@@ -8329,7 +8329,7 @@
             // tanggal dihapus dari modal (sudah ada di info grid)
             
             let serverButtonsHTML = '';
-            for(let i=1; i<=17; i++) {
+            for(let i=1; i<=4; i++) {
                 serverButtonsHTML += `<button class="server-btn" onclick="changeServer(${i}, this)">Server ${i}</button>`;
             }
             document.getElementById('serverList').innerHTML = serverButtonsHTML;
@@ -8482,19 +8482,11 @@
             document.addEventListener('touchend', () => { _lastUserAction = Date.now(); }, true);
             document.addEventListener('keydown', () => { _lastUserAction = Date.now(); }, true);
 
-            // Intersepsi beforeunload — dipanggil saat halaman mau pindah
-            window.addEventListener('beforeunload', (e) => {
-                const timeSinceUser = Date.now() - _lastUserAction;
-                // Jika tidak ada aksi user dalam 1.5 detik terakhir → redirect dari iframe
-                if (timeSinceUser > 1500) {
-                    e.preventDefault();
-                    e.returnValue = '';
-                    // CATATAN: sebelumnya di sini ada window.history.go(0) — itu yang
-                    // menyebabkan seluruh aplikasi reload penuh (video jadi blank/reset
-                    // ke awal) setiap kali redirect diblokir. Cukup preventDefault saja;
-                    // browser akan menahan halaman tetap di sini tanpa perlu reload apa pun.
-                }
-            });
+            // CATATAN: listener beforeunload yang dulu ada di sini sudah dihapus — itu yang
+            // memicu dialog "Tinggalkan halaman?" muncul, kadang di momen yang salah (bukan
+            // cuma pas ada redirect iklan beneran). Sekarang proteksi utama dari redirect
+            // iklan sudah ditangani `sandbox` di iframe player (diblokir langsung oleh
+            // browser), jadi penjagaan tambahan lewat JS ini sudah tidak diperlukan lagi.
 
             // Blokir window.open dari iframe yang mencurigakan (popup iklan)
             const _origOpen = window.open;
@@ -8628,9 +8620,9 @@
                 case 1:  url = `https://cinextream.net/api/embed/${type}/${id}${seriesSuffix}`; break;
                 case 2:  url = `https://player.cinezo.live/embed/${type}/${id}${type==='tv'?`/${s}/${e}`:''}`; break;
                 case 3:  url = `https://vidsrc.wtf/1/${type}/${id}${seriesSuffix}`; break;
-                case 4:  url = `https://111movies.com/${type}/${id}${type==='tv'?`/${s}/${e}`:''}`; break;
-                case 5:  url = `https://111movies.net/${type}/${id}${type==='tv'?`/${s}/${e}`:''}`; break;
-                case 6:  url = `https://cinesrc.st/embed/${type}/${id}${type==='tv'?`/${s}/${e}`:''}`; break;
+                case 4:  url = `https://cinesrc.st/embed/${type}/${id}${type==='tv'?`/${s}/${e}`:''}`; break;
+                case 5:  url = `https://111movies.com/${type}/${id}${type==='tv'?`/${s}/${e}`:''}`; break;
+                case 6:  url = `https://111movies.net/${type}/${id}${type==='tv'?`/${s}/${e}`:''}`; break;
                 case 7:  url = `https://player.videasy.net/${type}/${id}${type==='tv'?`/${s}/${e}`:''}?autoplay=1${type==='tv'?'&autoNext=true':''}`; break;
                 case 8:  url = `https://vidlink.pro/${type}/${id}${seriesSuffix}`; break;
                 case 9:  url = `https://vidcore.net/${type}/${id}${type==='tv'?`/${s}/${e}`:''}?autoPlay=true`; break;
