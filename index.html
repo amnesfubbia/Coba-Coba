@@ -194,14 +194,13 @@
         .interaction-icon:active { transform: scale(1.2); }
         
         /* SERVER LIST SCROLL HORIZONTAL - DIPERKECIL */
-        .server-scroll-wrapper { display: flex; overflow-x: auto; gap: 8px; padding: 10px 0; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
-        .server-scroll-wrapper::-webkit-scrollbar { display: none; }
-        .server-btn { flex: 0 0 auto; min-width: 75px; padding: 7px 12px; border-radius: 8px; font-size: 9px; font-weight: 800; text-transform: uppercase; border: 1px solid #1c1c1c; text-align: center; cursor: pointer; background: #000000; color: #fff; transition: all 0.2s; }
+        .server-scroll-wrapper { display: flex; gap: 8px; padding: 10px 0; }
+        .server-btn { flex: 1; min-width: 0; padding: 7px 6px; border-radius: 8px; font-size: 9px; font-weight: 800; text-transform: uppercase; border: 1px solid #1c1c1c; text-align: center; cursor: pointer; background: #000000; color: #fff; transition: all 0.2s; }
         .server-btn:active { background: #1c1c1c; }
         .server-btn.active-link { border: 1.5px solid #fff !important; background: rgba(255,255,255,0.1); }
         
         /* DOWNLOAD & TRAILER GRID - DIPERKECIL */
-        .dl-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 4px; margin-top: 8px; margin-bottom: 2px; }
+        .dl-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 8px; margin-bottom: 2px; }
         .dl-link-btn { width: 100%; padding: 8px 2px; border-radius: 10px; background: #000; color: #fff; font-size: 9.5px; font-weight: 800; text-transform: uppercase; text-align: center; border: 1px solid #333; cursor: pointer; }
         
         /* PENYELARASAN WARNA TOMBOL TRAILER */
@@ -1090,7 +1089,7 @@
 
         /* Tiap slide = 1 layar penuh, video 4:5 di tengah */
         .reel-slide {
-            width: 100%; height: 100svh;
+            width: 100%; height: calc(100svh - 52px); /* 52px = tinggi .reels-bottom-nav fixed di bawah, biar konten (termasuk tombol) nggak ketutup */
             scroll-snap-align: start; scroll-snap-stop: always;
             position: relative; background: #000000;
             display: flex; flex-direction: column;
@@ -1103,17 +1102,17 @@
            menutupi video, seberapa pun ukurannya berubah. */
         .reel-header-text {
             flex-shrink: 0;
-            padding: 58px 16px 12px; /* 58px atas = kasih ruang buat .reels-topbar yang fixed */
+            padding: 90px 16px 16px; /* 90px atas = kasih ruang buat .reels-topbar yang fixed + jarak lebih */
         }
         .reel-title {
             font-size: 22px; font-weight: 900; color: #fff;
             margin-bottom: 6px; line-height: 1.15; letter-spacing: -0.6px;
-            display: -webkit-box; -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical; overflow: hidden;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         }
         .reel-meta-inline {
-            display: flex; align-items: center; flex-wrap: wrap; gap: 0;
+            display: flex; align-items: center; flex-wrap: nowrap; gap: 0;
             font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.75);
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         }
         .reel-meta-inline .rmi-rating { color: #f5c518; font-weight: 700; margin-right: 8px; }
         .reel-meta-inline .rmi-dot { color: rgba(255,255,255,0.4); margin: 0 6px; }
@@ -1138,27 +1137,20 @@
             z-index: 3; background: transparent;
             pointer-events: auto;
         }
+        /* Begitu tombol Watch ditekan dan streaming asli mulai main, matikan overlay
+           penghalang ini supaya user bisa berinteraksi langsung dengan player-nya */
+        .reel-video-wrap.streaming::after { pointer-events: none; }
         .reel-video-wrap iframe {
             width: 100%;
-            height: calc(100% + 100px);
-            margin-top: -50px;
+            height: 100%;
             border: none; pointer-events: none;
             display: block;
-        }
-        .reel-yt-mask-top {
-            position: absolute; top: 0; left: 0; right: 0;
-            height: 40px; background: #000000;
-            z-index: 4; pointer-events: none;
-        }
-        .reel-yt-mask-bottom {
-            position: absolute; bottom: 0; left: 0; right: 0;
-            height: 40px; background: #000000;
-            z-index: 4; pointer-events: none;
         }
 
         /* Like/Save sekarang nempel di sisi kanan VIDEO saja (bukan melayang di seluruh layar) */
         .reel-actions {
-            position: absolute; bottom: 12px; right: 12px;
+            position: absolute; top: 50%; right: 12px;
+            transform: translateY(-50%);
             display: flex; flex-direction: column; align-items: center; gap: 16px;
             z-index: 10;
         }
@@ -1198,20 +1190,21 @@
             100% { transform: translate(-50%,-50%) scale(1.1); opacity: 0; }
         }
 
-        /* Sinopsis — di BAWAH video, area fleksibel & bisa di-scroll kalau kepanjangan,
-           biar total tinggi slide tetap pas 1 layar (buat scroll-snap antar reel tetap rapi). */
+        /* Sinopsis — di BAWAH video. Tinggi teksnya DIBATASI (line-clamp) supaya nggak
+           pernah bisa "mendorong" baris tombol Watch/Download/Detail sampai keluar layar,
+           walau sinopsisnya panjang. */
         .reel-desc-block {
             flex: 1; min-height: 0; overflow-y: auto;
-            padding: 12px 16px;
+            padding: 32px 16px 8px;
         }
         .reel-synopsis-overlay {
             font-size: 13px; color: rgba(255,255,255,0.8);
-            line-height: 1.5;
+            line-height: 1.45;
         }
         .reel-translate-btn {
             display: block;
             font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.55);
-            cursor: pointer; margin-bottom: 8px;
+            cursor: pointer; margin-bottom: 6px;
             -webkit-tap-highlight-color: transparent;
         }
         .reel-translate-btn:active { color: rgba(255,255,255,0.9); }
@@ -1220,7 +1213,7 @@
         .reel-action-buttons {
             display: grid; grid-template-columns: 1fr 1fr 1fr;
             gap: 8px; flex-shrink: 0;
-            padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px));
+            padding: 8px 16px calc(14px + env(safe-area-inset-bottom, 0px));
         }
         .reel-btn-watch, .reel-btn-detail {
             padding: 10px 4px; border-radius: 10px;
@@ -1428,14 +1421,16 @@
         .modal-rating-bar {
             display: flex; align-items: center; gap: 8px;
             padding: 6px 15px 2px; flex-wrap: wrap;
+            margin-bottom: 5px; /* samakan dgn margin-bottom tombol Trailer/Soundtrack di sebelahnya */
         }
         .modal-rating-badge {
             display: inline-flex; align-items: center; gap: 5px;
             padding: 4px 10px; border-radius: 8px;
-            font-size: 12px; font-weight: 700; line-height: 1;
+            font-size: 11px; font-weight: 700; line-height: 1;
+            text-transform: uppercase; letter-spacing: -0.3px;
             color: #fff;
         }
-        .modal-rating-badge i { font-size: 12px; }
+        .modal-rating-badge i { font-size: 11px; }
         .modal-rating-badge.tmdb i { color: #01b4e4; }
         .modal-rating-badge.imdb i { color: #f5c518; }
 
@@ -2418,10 +2413,6 @@
                                 <i class="fa-solid fa-rotate-left"></i>
                                 <span style="font-size:8px;font-weight:800;position:absolute;bottom:2px;right:4px">10</span>
                             </button>
-                            <!-- play/pause utama -->
-                            <button id="mvPlayBtn" onclick="modalVideoCmd('playpause')" style="background:none;border:2px solid #fff;border-radius:50%;color:#fff;font-size:22px;width:52px;height:52px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0" title="Play/Pause">
-                                <i class="fa-solid fa-pause"></i>
-                            </button>
                             <!-- forward 10s -->
                             <button onclick="modalVideoCmd('fwd10')" style="background:none;border:none;color:#fff;font-size:20px;padding:4px 8px;cursor:pointer;position:relative" title="+10s">
                                 <i class="fa-solid fa-rotate-right"></i>
@@ -2451,7 +2442,7 @@
                 </div>
                 
                 <div class="px-4 bg-black pb-1 flex justify-between items-end">
-                    <span id="mLikeDisplay" class="ig-likes-count"></span>
+                    <div id="mRatingBar" class="modal-rating-bar" style="padding:0;display:none"></div>
                     <div style="display:flex;align-items:center;gap:14px;margin-bottom:5px">
                         <span class="text-[11px] font-bold text-white cursor-pointer uppercase tracking-tighter" onclick="changeServer(99, this)" id="btnTrailerTop">Trailer</span>
                         <span class="text-[11px] font-bold text-white cursor-pointer uppercase tracking-tighter" onclick="openSoundtrack()">Soundtrack</span>
@@ -2459,7 +2450,6 @@
                 </div>
             </div>
             
-            <div id="mRatingBar" class="modal-rating-bar" style="display:none"></div>
             <div class="ig-post-content">
                 <div class="mb-1">
                     <span class="ig-username" id="mModalTitle"></span>
@@ -2503,13 +2493,11 @@
 
                 <div id="serverList" class="server-scroll-wrapper mt-4 px-4"></div>
                 
-                <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:4px;margin-top:8px;margin-bottom:2px;">
+                <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:8px;margin-bottom:2px;">
                     <button class="dl-link-btn" onclick="handleDownload()">Down1</button>
                     <button class="dl-link-btn" onclick="handleDownload2()">Down2</button>
                     <button class="dl-link-btn" onclick="handleDownload3()">Down3</button>
-                    <button class="dl-link-btn" onclick="handleDownload4()">Down4</button>
-                    <button class="dl-link-btn" onclick="handleDownload5()">Down5</button>
-                    <button class="dl-link-btn" onclick="handleDownload6()">Down6</button>
+                    <button class="dl-link-btn" onclick="handleDownload5()">Down4</button>
                 </div>
                 <div id="mCollectionSection" class="similar-section" style="display:none">
                     <span class="similar-label" id="mCollectionLabel">Part of Collection</span>
@@ -4218,6 +4206,13 @@
             if (!el) return;
             el.innerHTML = NAV_ITEMS.map(item => {
                 const isActive = item.action === activeAction;
+                // Khusus nav bawah modal TV: ikon cari harus buka pencarian channel TV
+                // (di dalam modal), BUKAN pencarian film/series global.
+                if (containerId === 'tvBottomNav' && item.action === 'search') {
+                    return `<div id="${containerId}-${item.id}" class="nav-item-wrap" onclick="focusTvSearch()">
+                        <i class="${item.icon} cursor-pointer" style="font-size:20px"></i>
+                    </div>`;
+                }
                 // Active item: tidak perlu closeFunc (sudah di sini)
                 const onclick = (closeFunc && !isActive)
                     ? `${closeFunc}(); _navAction('${item.action}')`
@@ -4269,12 +4264,10 @@
                 if (_modalPlaying) {
                     postMsg('pauseVideo');
                     _modalPlaying = false;
-                    document.querySelector('#mvPlayBtn i').className = 'fa-solid fa-play';
                     document.getElementById('lsPlayBtn').className = 'fa-solid fa-play ls-btn';
                 } else {
                     postMsg('playVideo');
                     _modalPlaying = true;
-                    document.querySelector('#mvPlayBtn i').className = 'fa-solid fa-pause';
                     document.getElementById('lsPlayBtn').className = 'fa-solid fa-pause ls-btn';
                 }
             } else if (cmd === 'back10') {
@@ -4300,7 +4293,6 @@
                     newVid.closest('.carousel-slide')?.classList.add('playing');
                 }
                 _modalPlaying = true;
-                document.querySelector('#mvPlayBtn i').className = 'fa-solid fa-pause';
             }
         }
 
@@ -4973,6 +4965,7 @@
             document.getElementById('tvModal').style.display = 'block';
             document.getElementById('tvModal').scrollTop = 0;
             document.body.style.overflow = 'hidden';
+            const _gbn = document.getElementById('globalBottomNav'); if (_gbn) _gbn.style.display = 'none';
             history.pushState({view: 'tv'}, "");
             switchTvTab('embed');
         }
@@ -4985,6 +4978,7 @@
             if (video) { video.pause(); video.removeAttribute('src'); video.load(); }
             document.getElementById('tvModal').style.display = 'none';
             document.body.style.overflow = 'auto';
+            const _gbn = document.getElementById('globalBottomNav'); if (_gbn) _gbn.style.display = 'flex';
             updateActiveNav('home');
             history.replaceState({view: 'home'}, '');
         }
@@ -5273,9 +5267,7 @@
                     <button class="dl-link-btn" onclick="handleDownload()">Down1</button>
                     <button class="dl-link-btn" onclick="handleDownload2()">Down2</button>
                     <button class="dl-link-btn" onclick="handleDownload3()">Down3</button>
-                    <button class="dl-link-btn" onclick="handleDownload4()">Down4</button>
-                    <button class="dl-link-btn" onclick="handleDownload5()">Down5</button>
-                    <button class="dl-link-btn" onclick="handleDownload6()">Down6</button>
+                    <button class="dl-link-btn" onclick="handleDownload5()">Down4</button>
                 </div>
                 <div id="mSimilarSection" class="similar-section" style="display:none">
                     <span class="similar-label">Similar Movies</span>
@@ -6299,10 +6291,6 @@
                         </div>
                         <div class="reel-video-wrap">
                             <iframe src="${embedUrl}" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen loading="lazy"></iframe>
-                            <!-- Masker hitam solid tutup tombol header YouTube (judul, share, dll) -->
-                            <div class="reel-yt-mask-top"></div>
-                            <!-- Masker hitam solid tutup tombol footer YouTube (progress bar, play, volume, dll) -->
-                            <div class="reel-yt-mask-bottom"></div>
                             <div class="reel-heart-pop" id="heart-${reel.movieId}"><i class="fa-solid fa-heart"></i></div>
                             <div class="reel-actions">
                                 <div class="reel-action-btn ${lib.liked ? 'liked' : ''}" 
@@ -6874,7 +6862,18 @@
             if (!id || !type) return;
             if (btn && btn.classList) { btn.classList.add('pressed'); setTimeout(() => btn && btn.classList.remove('pressed'), 300); }
             const url = buildEmbedUrl(type, id, 1, 1, 1);
-            window.open(url, '_blank');
+            // Putar langsung di dalam frame reel-nya sendiri, bukan buka tab baru
+            const slide = document.querySelector(`.reel-slide[data-movie-id="${id}"]`);
+            const wrap = slide ? slide.querySelector('.reel-video-wrap') : null;
+            const iframe = wrap ? wrap.querySelector('iframe') : null;
+            if (iframe) {
+                iframe.src = url;
+                iframe.style.pointerEvents = 'auto';
+                iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms allow-presentation allow-orientation-lock');
+                if (wrap) wrap.classList.add('streaming'); // matikan overlay penghalang tap trailer
+            } else {
+                window.open(url, '_blank'); // fallback kalau slide-nya nggak ketemu di layar
+            }
         }
 
         function openReelDownload(btn) {
@@ -6908,14 +6907,15 @@
 
                 // Touch gestures
                 slide.addEventListener('touchstart', e => {
-                    // Skip if tap on interactive elements (di luar area video)
-                    if (e.target.closest('.reel-btn-detail, .reel-btn-watch, .reel-actions, .reel-header-text, .reel-desc-block, .reel-action-buttons')) return;
+                    // Skip cuma kalau tap tepat di tombol/link interaktif, bukan seluruh
+                    // area judul/sinopsis (biar gestur tetap jalan di ruang kosong sekitarnya)
+                    if (e.target.closest('.reel-btn-detail, .reel-btn-watch, .reel-actions, .reel-translate-btn')) return;
                     sx = e.touches[0].clientX;
                     sy = e.touches[0].clientY;
                 }, { passive: true });
 
                 slide.addEventListener('touchend', e => {
-                    if (e.target.closest('.reel-btn-detail, .reel-btn-watch, .reel-actions, .reel-header-text, .reel-desc-block, .reel-action-buttons')) return;
+                    if (e.target.closest('.reel-btn-detail, .reel-btn-watch, .reel-actions, .reel-translate-btn')) return;
                     const dx = sx - e.changedTouches[0].clientX;
                     const dy = Math.abs(sy - e.changedTouches[0].clientY);
 
@@ -6924,6 +6924,17 @@
                         const movieId = parseInt(slide.dataset.movieId);
                         const type = slide.dataset.type;
                         if (movieId && type) openReelDetail(movieId, type);
+                        return;
+                    }
+
+                    // Swipe kanan → simpan (bookmark)
+                    if (dx < -55 && Math.abs(dx) > dy * 1.5) {
+                        const movieId = parseInt(slide.dataset.movieId);
+                        const type = slide.dataset.type;
+                        const bmBtn = document.getElementById(`reel-bm-${movieId}`);
+                        if (bmBtn && !bmBtn.classList.contains('bookmarked')) {
+                            toggleReelLib('bookmarks', movieId, type, bmBtn);
+                        }
                         return;
                     }
 
@@ -7981,7 +7992,6 @@
             
             document.getElementById('mTitle').innerHTML = `<div class="sk sk-line" style="width:60%;height:14px;display:inline-block"></div>`;
             document.getElementById('mDesc').innerHTML = "";
-            document.getElementById('mLikeDisplay').innerText = "";
             document.getElementById('mDateDisplay').innerText = "";
             document.getElementById('mHashtags').innerHTML = "";
             document.getElementById('castContainer').innerHTML = `<div style="display:flex;gap:15px;padding:8px 16px">${Array(5).fill(`<div style="display:flex;flex-direction:column;align-items:center;gap:5px;flex-shrink:0"><div class="sk sk-circle" style="width:60px;height:60px"></div><div class="sk sk-line" style="width:50px;height:8px"></div></div>`).join('')}</div>`;
@@ -8207,7 +8217,6 @@
                 return `<div class="cast-item" onclick="openActorProfile(${c.id})"><div class="cast-img-border"><div class="inner-border">${profileImg}</div></div><span class="cast-name">${displayName}</span>${charName ? `<span style="font-size:8px;color:#555;display:block;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:65px">${charName}</span>` : ''}</div>`;
             }));
             document.getElementById('castContainer').innerHTML = castItems.join('');
-            document.getElementById('mLikeDisplay').innerText = `${Math.floor((dId.vote_average || 0) * 1234).toLocaleString('id-ID')} suka`;
             // Prioritaskan judul en-US agar selalu Latin
             // Jika dEn kosong atau masih non-Latin, coba ambil lagi
             let displayTitle = dEn.title || dEn.name || dId.title || dId.name || '';
@@ -8409,9 +8418,7 @@
                     <button class="dl-link-btn" onclick="handleDownload()">Down1</button>
                     <button class="dl-link-btn" onclick="handleDownload2()">Down2</button>
                     <button class="dl-link-btn" onclick="handleDownload3()">Down3</button>
-                    <button class="dl-link-btn" onclick="handleDownload4()">Down4</button>
-                    <button class="dl-link-btn" onclick="handleDownload5()">Down5</button>
-                    <button class="dl-link-btn" onclick="handleDownload6()">Down6</button>
+                    <button class="dl-link-btn" onclick="handleDownload5()">Down4</button>
                 </div>
                 <div id="mSimilarSection" class="similar-section" style="display:none">
                     <span class="similar-label">Similar Movies</span>
@@ -8958,11 +8965,11 @@
             // Build slides - semua portrait/landscape fit screen
             track.innerHTML = images.map((img, i) => {
                 const size = img.isBackdrop ? 'original' : 'w780';
-                return `<div class="lb-slide" style="min-width:100%;height:100vh;display:flex;align-items:center;justify-content:center;background:#000">
+                return `<div class="lb-slide" style="min-width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#000">
                     <img src="https://image.tmdb.org/t/p/${size}${img.path}"
                          loading="${Math.abs(i - _lbIdx) <= 1 ? 'eager' : 'lazy'}"
                          draggable="false"
-                         style="max-width:100%;max-height:100vh;object-fit:contain;display:block">
+                         style="max-width:100%;max-height:100%;object-fit:contain;display:block">
                 </div>`;
             }).join('');
 
@@ -9285,11 +9292,11 @@
             // Tidak perlu push history lagi karena actorPhotos sudah push
 
             track.innerHTML = window._galleryImages.map((img, i) => {
-                return `<div class="lb-slide" style="min-width:100%;height:100vh;display:flex;align-items:center;justify-content:center;background:#000">
+                return `<div class="lb-slide" style="min-width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#000">
                     <img src="https://image.tmdb.org/t/p/w780${img.path}"
                          loading="${Math.abs(i - _lbIdx) <= 1 ? 'eager' : 'lazy'}"
                          draggable="false"
-                         style="max-width:100%;max-height:100vh;object-fit:contain;display:block">
+                         style="max-width:100%;max-height:100%;object-fit:contain;display:block">
                 </div>`;
             }).join('');
 
