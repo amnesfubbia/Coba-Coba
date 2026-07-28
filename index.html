@@ -4858,16 +4858,19 @@
 
         // Beberapa channel (TVRI, JTV, Jawa Pos TV, Star TV) muncul berkali-kali di
         // playlist dengan nama yang beda-beda dikit (mis. "TVRI Nasional", "TVRI Jatim",
-        // "TVRI Jabar", dst — bukan duplikat persis, tapi tetap satu "merek" yang sama).
-        // Supaya daftar channel rapi & tidak dobel-dobel, sisakan cuma 1 per merek —
-        // diutamakan yang ada kata "Nasional"-nya, kalau tidak ada ya yang pertama ketemu.
+        // "TVRI Jabar", "STARTV Jakarta", dst — bukan duplikat persis, tapi tetap satu
+        // "merek" yang sama). Supaya daftar channel rapi & tidak dobel-dobel, sisakan
+        // cuma 1 per merek — diutamakan yang ada kata "Nasional"-nya, kalau tidak ada
+        // ya yang pertama ketemu. Nama dinormalisasi (buang spasi/tanda baca) dan dicek
+        // "mengandung" (bukan cuma "diawali") supaya varian penulisan apapun tetap kena.
         function _collapseChannelBrands(channels) {
-            const BRANDS = ['tvri', 'jtv', 'jawa pos tv', 'jawapos tv', 'star tv'];
+            const BRANDS = ['tvri', 'jtv', 'jawapostv', 'startv'];
+            const norm = s => s.toLowerCase().replace(/[^a-z0-9]/g, '');
             const pickedIdxByBrand = {};
             const result = [];
-            channels.forEach((ch, i) => {
-                const n = ch.name.toLowerCase();
-                const brand = BRANDS.find(b => n.startsWith(b));
+            channels.forEach((ch) => {
+                const n = norm(ch.name);
+                const brand = BRANDS.find(b => n.includes(b));
                 if (!brand) { result.push(ch); return; }
                 if (!(brand in pickedIdxByBrand)) {
                     pickedIdxByBrand[brand] = result.length;
