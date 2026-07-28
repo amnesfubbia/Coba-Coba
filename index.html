@@ -4828,6 +4828,7 @@
         function parseM3U(text) {
             const lines = text.split(/\r?\n/);
             const channels = [];
+            const seenNames = new Set(); // buat buang channel yang namanya sama persis (duplikat dari playlist)
             let cur = null;
             for (const line of lines) {
                 if (line.startsWith('#EXTINF')) {
@@ -4844,7 +4845,11 @@
                     };
                 } else if (line && !line.startsWith('#') && cur) {
                     cur.url = line.trim();
-                    if (!_isJunkIptvName(cur.name)) channels.push(cur);
+                    const nameKey = cur.name.toLowerCase().trim();
+                    if (!_isJunkIptvName(cur.name) && !seenNames.has(nameKey)) {
+                        seenNames.add(nameKey);
+                        channels.push(cur);
+                    }
                     cur = null;
                 }
             }
@@ -6371,7 +6376,15 @@
                         // Attach YT Player jika belum
                         if (!slide._ytPlayer) attachYTPlayer(iframe, slide);
                     } else {
-                        if (slide._ytPlayer && slide._ytPlayer.pauseVideo) {
+                        const wrap = slide.querySelector('.reel-video-wrap');
+                        if (wrap && wrap.classList.contains('streaming')) {
+                            // Ini bukan trailer YouTube lagi — ini stream pihak ketiga (habis
+                            // tekan Watch). Perintah pauseVideo lewat postMessage nggak bakal
+                            // dimengerti situs lain, jadi videonya tetap jalan+bunyi walau sudah
+                            // discroll. Satu-satunya cara pasti berhenti: kosongkan src-nya.
+                            iframe.src = '';
+                            wrap.classList.remove('streaming');
+                        } else if (slide._ytPlayer && slide._ytPlayer.pauseVideo) {
                             try { slide._ytPlayer.pauseVideo(); } catch(e) {}
                         } else {
                             try { iframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*'); } catch(e) {}
