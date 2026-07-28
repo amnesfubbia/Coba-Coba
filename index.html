@@ -3074,15 +3074,6 @@
         <nav class="bottom-nav" id="livesportBottomNav" style="position:sticky;bottom:0"></nav>
     </div>
 
-    <!-- ===== IN-APP DOWNLOAD OVERLAY (supaya halaman download tidak buka tab baru) ===== -->
-    <div id="downloadModal" style="display:none;position:fixed;inset:0;z-index:9700;background:#0a0a0a;flex-direction:column">
-        <div style="display:flex;align-items:center;gap:12px;padding:14px 16px;background:#000;position:sticky;top:0;z-index:10">
-            <i class="fa-solid fa-chevron-left" style="font-size:20px;color:#fff;cursor:pointer" onclick="history.back()"></i>
-            <span style="font-size:17px;font-weight:800;color:#fff">Download</span>
-        </div>
-        <iframe id="downloadIframe" src="" style="flex:1;width:100%;border:none;display:block" allow="autoplay" sandbox="allow-scripts allow-same-origin allow-forms allow-downloads allow-popups"></iframe>
-    </div>
-
     <!-- ===== UNIVERSAL BOTTOM NAV ===== -->
     <nav class="bottom-nav" id="globalBottomNav"></nav>
 
@@ -4200,27 +4191,6 @@
             }
             // Tidak perlu replaceState — history.back() sudah kembalikan ke state tv
         }
-
-        // ===== IN-APP DOWNLOAD OVERLAY — supaya link download tidak buka tab baru =====
-        function openDownloadInApp(url) {
-            musicDuckForOtherAudio();
-            document.getElementById('downloadModal').style.display = 'flex';
-            document.getElementById('downloadIframe').src = url;
-            document.body.style.overflow = 'hidden';
-            history.pushState({view: 'download'}, '');
-        }
-        function closeDownloadModal() {
-            musicResumeFromDuck();
-            document.getElementById('downloadIframe').src = '';
-            document.getElementById('downloadModal').style.display = 'none';
-            // Jangan paksa body scroll balik ke 'auto' kalau ada modal lain yang masih
-            // terbuka di baliknya (mis. modal film) — modal itu sendiri yang butuh
-            // overflow:hidden tetap aktif, kalau kita timpa jadi 'auto' bisa bikin
-            // render-nya kedip/salah render sesaat sebelum tampil normal lagi.
-            const parentStillOpen = ['movieModal','tvModal','reelsModal','actorModal','musicModal']
-                .some(id => { const el = document.getElementById(id); return el && el.style.display !== 'none' && el.style.display !== ''; });
-            if (!parentStillOpen) document.body.style.overflow = 'auto';
-        }
         // Edit di sini saja untuk ubah semua nav sekaligus
         const NAV_ITEMS = [
             { id: 'homeBtnNav',   icon: 'fa-solid fa-house',          action: 'home'   },
@@ -4264,7 +4234,6 @@
             // Tutup semua modal yang mungkin terbuka
             try { if(document.getElementById('tvModal').style.display==='block'){ document.getElementById('tvPlayerFrame').src=''; _destroyHls(); const _tvv=document.getElementById('tvPlayerVideo'); if(_tvv){_tvv.pause();_tvv.removeAttribute('src');_tvv.load();} document.getElementById('tvModal').style.display='none'; document.body.style.overflow='auto'; }} catch(e){}
             try { if(document.getElementById('livesportModal')&&document.getElementById('livesportModal').style.display==='flex') closeLivesportModal(); } catch(e){}
-            try { if(document.getElementById('downloadModal')&&document.getElementById('downloadModal').style.display==='flex') closeDownloadModal(); } catch(e){}
             try { if(document.getElementById('musicModal')&&document.getElementById('musicModal').style.display==='flex' && target!=='music') { document.getElementById('musicModal').style.display='none'; document.body.style.overflow='auto'; } } catch(e){}
             try { if(document.getElementById('reelsModal')&&document.getElementById('reelsModal').style.display==='block') _closeReelsSilent(); } catch(e){}
             try { if(document.getElementById('movieModal').style.display==='block') _closeModalSilent(); } catch(e){}
@@ -5188,7 +5157,7 @@
                 const downloadUrl = isTV
                     ? `https://vidvault.ru/tv/${window.currentMediaId}/${activeSeason || 1}/${activeEpisode || 1}`
                     : `https://vidvault.ru/movie/${window.currentMediaId}`;
-                openDownloadInApp(downloadUrl);
+                window.open(downloadUrl, '_blank');
             } else {
                 showToast('Media tidak ditemukan.');
             }
@@ -5200,7 +5169,7 @@
                 const url = isTV
                     ? `https://1embed.cc/download/tv/${window.currentMediaId}/${activeSeason || 1}/${activeEpisode || 1}`
                     : `https://1embed.cc/download/movie/${window.currentMediaId}`;
-                openDownloadInApp(url);
+                window.open(url, '_blank');
             } else { showToast('Media tidak ditemukan.'); }
         }
 
@@ -5210,7 +5179,7 @@
                 const downloadUrl = isTV
                     ? `https://02moviedownloader.site/api/download/tv/${window.currentMediaId}/${activeSeason || 1}/${activeEpisode || 1}`
                     : `https://02moviedownloader.site/api/download/movie/${window.currentMediaId}`;
-                openDownloadInApp(downloadUrl);
+                window.open(downloadUrl, '_blank');
             } else { showToast('Media tidak ditemukan.'); }
         }
 
@@ -5220,7 +5189,7 @@
                 const url = isTV
                     ? `https://rivestream.ru/download?type=tv&id=${window.currentMediaId}`
                     : `https://dl.peachify.top/movie/${window.currentMediaId}`;
-                openDownloadInApp(url);
+                window.open(url, '_blank');
             } else { showToast('Media tidak ditemukan.'); }
         }
 
@@ -5230,7 +5199,7 @@
                 const url = isTV
                     ? `https://rivestream.ru/download?type=tv&id=${window.currentMediaId}`
                     : `https://rivestream.ru/download?type=movie&id=${window.currentMediaId}`;
-                openDownloadInApp(url);
+                window.open(url, '_blank');
             } else { showToast('Media tidak ditemukan.'); }
         }
 
@@ -5240,7 +5209,7 @@
                 const url = isTV
                     ? `https://cinesrc.st/download/tv/${window.currentMediaId}`
                     : `https://cinesrc.st/download/movie/${window.currentMediaId}`;
-                openDownloadInApp(url);
+                window.open(url, '_blank');
             } else { showToast('Media tidak ditemukan.'); }
         }
 
@@ -5444,12 +5413,6 @@
             // LiveSport modal (di atas tvModal)
             if (document.getElementById('livesportModal').style.display === 'flex') {
                 closeLivesportModal();
-                return;
-            }
-
-            // Download overlay dalam-app
-            if (document.getElementById('downloadModal') && document.getElementById('downloadModal').style.display === 'flex') {
-                closeDownloadModal();
                 return;
             }
 
@@ -6888,7 +6851,7 @@
             const url = isTV
                 ? `https://vidvault.ru/tv/${id}/1/1`
                 : `https://vidvault.ru/movie/${id}`;
-            openDownloadInApp(url);
+            window.open(url, '_blank');
         }
 
         function openReelStream(btn, directId, directType) {
@@ -6919,7 +6882,7 @@
             const url = isTV
                 ? `https://vidvault.ru/tv/${_rdsCurrentId}/1/1`
                 : `https://vidvault.ru/movie/${_rdsCurrentId}`;
-            openDownloadInApp(url);
+            window.open(url, '_blank');
         }
 
         function openReelDownload2(btn) {
@@ -6929,7 +6892,7 @@
             const url = isTV
                 ? `https://02moviedownloader.site/api/download/tv/${_rdsCurrentId}/1/1`
                 : `https://02moviedownloader.site/api/download/movie/${_rdsCurrentId}`;
-            openDownloadInApp(url);
+            window.open(url, '_blank');
         }
 
         // Setup swipe-left (open detail) + double-tap (like) + gestures on reel slides
@@ -8619,7 +8582,7 @@
             switch(srv) {
                 case 1:  url = `https://cinextream.net/api/embed/${type}/${id}${seriesSuffix}`; break;
                 case 2:  url = `https://cinesrc.st/embed/${type}/${id}${type==='tv'?`/${s}/${e}`:''}`; break;
-                case 3:  url = `https://player.cinezo.live/embed/${type}/${id}${type==='tv'?`/${s}/${e}`:''}`; break;
+                case 3:  url = `https://player.cinezo.live/embed/${type}/${id}${type==='tv'?`/${s}/${e}`:''}?autoplay=true`; break;
                 case 4:  url = `https://vidsrc.wtf/1/${type}/${id}${seriesSuffix}`; break;
                 case 5:  url = `https://111movies.com/${type}/${id}${type==='tv'?`/${s}/${e}`:''}`; break;
                 case 6:  url = `https://111movies.net/${type}/${id}${type==='tv'?`/${s}/${e}`:''}`; break;
