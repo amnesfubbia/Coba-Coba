@@ -4864,7 +4864,7 @@
         // ya yang pertama ketemu. Nama dinormalisasi (buang spasi/tanda baca) dan dicek
         // "mengandung" (bukan cuma "diawali") supaya varian penulisan apapun tetap kena.
         function _collapseChannelBrands(channels) {
-            const BRANDS = ['tvri', 'jtv', 'jawapostv', 'startv'];
+            const BRANDS = ['tvri', 'jtv', 'jawapostv', 'staratv'];
             const norm = s => s.toLowerCase().replace(/[^a-z0-9]/g, '');
             const pickedIdxByBrand = {};
             const result = [];
