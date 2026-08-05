@@ -15,7 +15,7 @@
     --night:#000000;
     --night-2:#0D0D0D;
     --gold:#D8A94E;
-    --clay:#E0824F;
+    --clay:#3FAE6A;
     --line:#232323;
     --card:#0A0A0A;
     --app-h:100dvh;
@@ -141,6 +141,8 @@
   .card-body .arabic{font-size:1.25rem;color:var(--ink);margin:8px 0 6px;line-height:2;}
   .dalil{margin-top:12px;padding:11px 12px;background:var(--paper-2);border-left:2px solid var(--clay);font-size:.83rem;border-radius:0 8px 8px 0;}
   .dalil .src{display:block;margin-top:5px;font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--clay);}
+  .play-verse{background:none;border:1px solid var(--clay);color:var(--clay);border-radius:20px;font-size:.68rem;padding:1px 7px;margin-left:6px;cursor:pointer;text-transform:none;letter-spacing:0;}
+  .play-verse.playing{background:var(--clay);color:#000;}
   ul.detail-list{margin:6px 0 0;padding-left:16px;color:var(--ink-soft);font-size:.86rem;}
   ul.detail-list li{margin-bottom:5px;}
   .subgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;}
@@ -197,7 +199,7 @@
   .field input{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px;font-size:.9rem;font-family:'Inter',sans-serif;}
   .btn-primary{width:100%;padding:12px;border:none;border-radius:10px;background:var(--night);color:#F5F0E1;font-weight:600;font-size:.9rem;cursor:pointer;}
   .calc-result{margin-top:14px;padding:14px;border-radius:12px;font-size:.87rem;}
-  .calc-result.kena{background:#F2E4D3;border:1px solid var(--clay);}
+  .calc-result.kena{background:#0F2118;border:1px solid var(--clay);}
   .calc-result.tidak{background:var(--paper-2);border:1px solid var(--line);}
   .calc-result b{display:block;font-family:'Fraunces',serif;font-size:1.15rem;margin:4px 0;}
 
@@ -281,7 +283,7 @@
         <div class="quick-tile" data-goto="iman"><span class="ic">🌙</span><b>Rukun Iman</b><span>6 perkara keyakinan</span></div>
         <div class="quick-tile" data-goto="islam"><span class="ic">🕋</span><b>Rukun Islam</b><span>5 tiang amal</span></div>
         <div class="quick-tile" data-goto="quran"><span class="ic">📖</span><b>Al-Qur'an</b><span>114 surah + audio</span></div>
-        <div class="quick-tile" data-goto="more-malaikat"><span class="ic">🕊️</span><b>Malaikat & Tugasnya</b><span>10 malaikat</span></div>
+        <div class="quick-tile" data-goto="more-tajwid"><span class="ic">🔤</span><b>Iqra' & Tajwid</b><span>Hukum bacaan Qur'an</span></div>
       </div>
 
       <div class="subhead" style="margin-top:6px;">Kisah & Sejarah</div>
@@ -295,31 +297,43 @@
         <div class="quick-tile" data-goto="more-peristiwa"><span class="ic">🗓️</span><b>Peristiwa Penting</b><span>Isra Mi'raj, Hijrah, dll</span></div>
       </div>
 
-      <div class="subhead">Ibadah & Panduan</div>
+      <div class="subhead">Sholat & Puasa</div>
       <div class="quick-grid">
-        <div class="quick-tile" data-goto="islam"><span class="ic">🕋</span><b>Tata Cara Sholat</b><span>Niat per waktu, lengkap</span></div>
+        <div class="quick-tile" data-goto="more-sholat"><span class="ic">🕋</span><b>Tata Cara Sholat</b><span>Niat per waktu, lengkap</span></div>
         <div class="quick-tile" data-goto="more-wudhu"><span class="ic">💧</span><b>Wudhu & Tayamum</b><span>Tata cara bersuci</span></div>
         <div class="quick-tile" data-goto="more-sunnah"><span class="ic">🌟</span><b>Sholat Sunnah</b><span>Dhuha, Tahajud, Witir</span></div>
         <div class="quick-tile" data-goto="more-puasasunnah"><span class="ic">🌙</span><b>Puasa Sunnah</b><span>Senin-Kamis, Daud, dll</span></div>
-        <div class="quick-tile" data-goto="more-tajwid"><span class="ic">🔤</span><b>Iqra' & Tajwid</b><span>Hukum bacaan Al-Qur'an</span></div>
         <div class="quick-tile" data-goto="more-kiblat"><span class="ic">🧭</span><b>Arah Kiblat</b><span>Dari lokasimu</span></div>
-        <div class="quick-tile" data-goto="more-hijriyah"><span class="ic">📅</span><b>Kalender Hijriyah</b><span>Konversi tanggal</span></div>
-        <div class="quick-tile" data-goto="more-zakatjenis"><span class="ic">💰</span><b>Jenis-Jenis Zakat</b><span>Fitrah, maal, profesi, dll</span></div>
-        <div class="quick-tile" data-goto="more-haji"><span class="ic">🕋</span><b>Manasik Haji</b><span>Ihram sampai tawaf wada</span></div>
-        <div class="quick-tile" data-goto="more-zakat"><span class="ic">🧮</span><b>Kalkulator Zakat</b><span>Hitung zakat maal</span></div>
       </div>
 
-      <div class="subhead">Ilmu & Referensi</div>
+      <div class="subhead">Zakat & Haji</div>
       <div class="quick-grid">
+        <div class="quick-tile" data-goto="more-zakatjenis"><span class="ic">💰</span><b>Jenis-Jenis Zakat</b><span>Fitrah, maal, profesi, dll</span></div>
+        <div class="quick-tile" data-goto="more-zakat"><span class="ic">🧮</span><b>Kalkulator Zakat</b><span>Hitung zakat maal</span></div>
+        <div class="quick-tile" data-goto="more-haji"><span class="ic">🕋</span><b>Manasik Haji</b><span>Ihram sampai tawaf wada</span></div>
+      </div>
+
+      <div class="subhead">Aqidah & Akhirat</div>
+      <div class="quick-grid">
+        <div class="quick-tile" data-goto="more-malaikat"><span class="ic">🕊️</span><b>Malaikat & Tugasnya</b><span>10 malaikat</span></div>
         <div class="quick-tile" data-goto="more-asmaul"><span class="ic">✨</span><b>Asmaul Husna</b><span>99 nama Allah</span></div>
         <div class="quick-tile" data-goto="more-sifat20"><span class="ic">🕯️</span><b>Sifat 20</b><span>Sifat wajib bagi Allah</span></div>
+        <div class="quick-tile" data-goto="more-akhirat"><span class="ic">🌸</span><b>Surga & Neraka</b><span>Tingkatannya</span></div>
         <div class="quick-tile" data-goto="more-kiamat"><span class="ic">⏳</span><b>Tanda Kiamat</b><span>Kecil & besar</span></div>
+      </div>
+
+      <div class="subhead">Dzikir, Doa & Hadits</div>
+      <div class="quick-grid">
         <div class="quick-tile" data-goto="more-doa"><span class="ic">🤲</span><b>Doa Harian</b><span>Amalan sehari-hari</span></div>
         <div class="quick-tile" data-goto="more-zikir"><span class="ic">📿</span><b>Zikir Pagi & Petang</b><span>Amalan rutin</span></div>
         <div class="quick-tile" data-goto="more-hadits"><span class="ic">📗</span><b>Hadits Pilihan</b><span>Arbain Nawawi</span></div>
+      </div>
+
+      <div class="subhead">Fiqih & Referensi</div>
+      <div class="quick-grid">
         <div class="quick-tile" data-goto="more-mazhab"><span class="ic">⚖️</span><b>4 Mazhab Fiqih</b><span>Hanafi, Maliki, Syafi'i, Hambali</span></div>
-        <div class="quick-tile" data-goto="more-akhirat"><span class="ic">🌸</span><b>Surga & Neraka</b><span>Tingkatannya</span></div>
         <div class="quick-tile" data-goto="more-adab"><span class="ic">🤍</span><b>Adab Harian</b><span>Makan, tidur, bertetangga</span></div>
+        <div class="quick-tile" data-goto="more-hijriyah"><span class="ic">📅</span><b>Kalender Hijriyah</b><span>Konversi tanggal</span></div>
       </div>
     </div>
 
@@ -335,7 +349,7 @@
         <div class="card-head" data-toggle><div class="num">01</div><h3>Iman kepada Allah</h3><div class="chev">+</div></div>
         <div class="card-body">
           <p>Meyakini dengan sepenuh hati bahwa Allah ada, Esa dalam dzat, sifat, dan perbuatan-Nya, serta satu-satunya yang berhak disembah tanpa sekutu.</p>
-          <div class="dalil"><div class="arabic" style="font-size:1.1rem;">قُلْ هُوَ اللَّهُ أَحَدٌ</div>"Katakanlah: Dialah Allah, Yang Maha Esa."<span class="src">QS. Al-Ikhlas: 1</span></div>
+          <div class="dalil"><div class="arabic" style="font-size:1.1rem;">قُلْ هُوَ اللَّهُ أَحَدٌ</div>"Katakanlah: Dialah Allah, Yang Maha Esa."<span class="src">QS. Al-Ikhlas: 1 <button class="play-verse" data-surah="112" data-ayah="1">🔊</button></span></div>
           <ul class="detail-list">
             <li>Tauhid Rububiyah — Allah sebagai satu-satunya Pencipta & Pengatur alam.</li>
             <li>Tauhid Uluhiyah — hanya Allah yang berhak disembah.</li>
@@ -401,7 +415,7 @@
         <div class="card-head" data-toggle><div class="num">06</div><h3>Iman kepada Qada & Qadar</h3><div class="chev">+</div></div>
         <div class="card-body">
           <p>Meyakini segala sesuatu terjadi atas ketetapan Allah, tanpa menghilangkan kewajiban manusia untuk berikhtiar.</p>
-          <div class="dalil"><div class="arabic" style="font-size:1.05rem;">إِنَّا كُلَّ شَيْءٍ خَلَقْنَاهُ بِقَدَرٍ</div>"Sesungguhnya Kami menciptakan segala sesuatu menurut ukuran (takdir)."<span class="src">QS. Al-Qamar: 49</span></div>
+          <div class="dalil"><div class="arabic" style="font-size:1.05rem;">إِنَّا كُلَّ شَيْءٍ خَلَقْنَاهُ بِقَدَرٍ</div>"Sesungguhnya Kami menciptakan segala sesuatu menurut ukuran (takdir)."<span class="src">QS. Al-Qamar: 49 <button class="play-verse" data-surah="54" data-ayah="49">🔊</button></span></div>
         </div>
       </div>
     </div>
@@ -573,6 +587,7 @@
       <div id="surahDetailView" style="display:none;">
         <div class="back-row" id="backToSurahList">‹ Kembali ke daftar surah</div>
         <div id="ayahStatus" style="font-size:.85rem;color:var(--ink-soft);"></div>
+        <button class="btn-primary" id="btnPlayAll" style="margin:10px 0 14px;">▶ Putar Semua Ayat</button>
         <div id="ayahList"></div>
       </div>
     </div>
@@ -594,31 +609,37 @@
         <div class="more-item" data-sub="more-qurban"><div class="ic">🐑</div><div><b>Sejarah Qurban & Idul Adha</b><span>Asal-usul, hukum, dan tata cara</span></div><div class="arrow">›</div></div>
         <div class="more-item" data-sub="more-peristiwa"><div class="ic">🗓️</div><div><b>Peristiwa Penting dalam Islam</b><span>Nuzulul Qur'an, Isra Mi'raj, Hijrah, dll</span></div><div class="arrow">›</div></div>
 
-        <div class="subhead">Ibadah & Panduan</div>
-        <div class="more-item" data-sub="more-sholat"><div class="ic">🕋</div><div><b>Tata Cara Sholat Lengkap</b><span>Niat sampai salam, per gerakan</span></div><div class="arrow">›</div></div>
-        <div class="more-item" data-sub="more-wudhu"><div class="ic">💧</div><div><b>Wudhu & Tayamum</b><span>Tata cara bersuci sebelum sholat</span></div><div class="arrow">›</div></div>
-        <div class="more-item" data-sub="more-zakatjenis"><div class="ic">💰</div><div><b>Jenis-Jenis Zakat</b><span>Fitrah, maal, pertanian, profesi, & lainnya</span></div><div class="arrow">›</div></div>
-        <div class="more-item" data-sub="more-haji"><div class="ic">🕋</div><div><b>Panduan Manasik Haji</b><span>Ihram sampai tawaf wada, urut & lengkap</span></div><div class="arrow">›</div></div>
-        <div class="more-item" data-sub="more-sunnah"><div class="ic">🌟</div><div><b>Sholat Sunnah</b><span>Dhuha, Tahajud, Witir, & lainnya</span></div><div class="arrow">›</div></div>
-        <div class="more-item" data-sub="more-puasasunnah"><div class="ic">🌙</div><div><b>Puasa Sunnah</b><span>Senin-Kamis, Daud, Syawal, Arafah, & lainnya</span></div><div class="arrow">›</div></div>
-        <div class="more-item" data-sub="more-kiblat"><div class="ic">🧭</div><div><b>Arah Kiblat</b><span>Berdasarkan lokasimu saat ini</span></div><div class="arrow">›</div></div>
-        <div class="more-item" data-sub="more-hijriyah"><div class="ic">📅</div><div><b>Kalender Hijriyah</b><span>Konversi tanggal Masehi ke Hijriyah</span></div><div class="arrow">›</div></div>
-        <div class="more-item" data-sub="more-malaikat"><div class="ic">🕊️</div><div><b>Malaikat & Tugasnya</b><span>10 malaikat yang wajib diketahui</span></div><div class="arrow">›</div></div>
-
         <div class="subhead">Belajar Al-Qur'an</div>
         <div class="more-item" data-sub="more-tajwid"><div class="ic">🔤</div><div><b>Iqra' & Ilmu Tajwid</b><span>Huruf hijaiyah sampai hukum bacaan</span></div><div class="arrow">›</div></div>
 
-        <div class="subhead">Ilmu & Referensi</div>
+        <div class="subhead">Sholat & Puasa</div>
+        <div class="more-item" data-sub="more-sholat"><div class="ic">🕋</div><div><b>Tata Cara Sholat Lengkap</b><span>Niat sampai salam, per gerakan</span></div><div class="arrow">›</div></div>
+        <div class="more-item" data-sub="more-wudhu"><div class="ic">💧</div><div><b>Wudhu & Tayamum</b><span>Tata cara bersuci sebelum sholat</span></div><div class="arrow">›</div></div>
+        <div class="more-item" data-sub="more-sunnah"><div class="ic">🌟</div><div><b>Sholat Sunnah</b><span>Dhuha, Tahajud, Witir, & lainnya</span></div><div class="arrow">›</div></div>
+        <div class="more-item" data-sub="more-puasasunnah"><div class="ic">🌙</div><div><b>Puasa Sunnah</b><span>Senin-Kamis, Daud, Syawal, Arafah, & lainnya</span></div><div class="arrow">›</div></div>
+        <div class="more-item" data-sub="more-kiblat"><div class="ic">🧭</div><div><b>Arah Kiblat</b><span>Berdasarkan lokasimu saat ini</span></div><div class="arrow">›</div></div>
+
+        <div class="subhead">Zakat & Haji</div>
+        <div class="more-item" data-sub="more-zakatjenis"><div class="ic">💰</div><div><b>Jenis-Jenis Zakat</b><span>Fitrah, maal, pertanian, profesi, & lainnya</span></div><div class="arrow">›</div></div>
+        <div class="more-item" data-sub="more-zakat"><div class="ic">🧮</div><div><b>Kalkulator Zakat</b><span>Hitung zakat maal kamu</span></div><div class="arrow">›</div></div>
+        <div class="more-item" data-sub="more-haji"><div class="ic">🕋</div><div><b>Panduan Manasik Haji</b><span>Ihram sampai tawaf wada, urut & lengkap</span></div><div class="arrow">›</div></div>
+
+        <div class="subhead">Aqidah & Akhirat</div>
+        <div class="more-item" data-sub="more-malaikat"><div class="ic">🕊️</div><div><b>Malaikat & Tugasnya</b><span>10 malaikat yang wajib diketahui</span></div><div class="arrow">›</div></div>
         <div class="more-item" data-sub="more-asmaul"><div class="ic">✨</div><div><b>Asmaul Husna</b><span>99 nama Allah</span></div><div class="arrow">›</div></div>
         <div class="more-item" data-sub="more-sifat20"><div class="ic">🕯️</div><div><b>Sifat-Sifat Allah</b><span>20 sifat wajib bagi Allah</span></div><div class="arrow">›</div></div>
+        <div class="more-item" data-sub="more-akhirat"><div class="ic">🌸</div><div><b>Surga & Neraka</b><span>Tingkatan dalam Al-Qur'an & hadits</span></div><div class="arrow">›</div></div>
+        <div class="more-item" data-sub="more-kiamat"><div class="ic">⏳</div><div><b>Tanda-Tanda Kiamat</b><span>Tanda kecil & besar sebelum hari akhir</span></div><div class="arrow">›</div></div>
+
+        <div class="subhead">Dzikir, Doa & Hadits</div>
         <div class="more-item" data-sub="more-doa"><div class="ic">🤲</div><div><b>Doa Harian</b><span>Doa untuk aktivitas sehari-hari</span></div><div class="arrow">›</div></div>
         <div class="more-item" data-sub="more-zikir"><div class="ic">📿</div><div><b>Zikir Pagi & Petang</b><span>Amalan rutin harian</span></div><div class="arrow">›</div></div>
         <div class="more-item" data-sub="more-hadits"><div class="ic">📗</div><div><b>Hadits Pilihan</b><span>Ringkasan dari Arbain Nawawi</span></div><div class="arrow">›</div></div>
+
+        <div class="subhead">Fiqih & Referensi</div>
         <div class="more-item" data-sub="more-mazhab"><div class="ic">⚖️</div><div><b>4 Mazhab Fiqih</b><span>Hanafi, Maliki, Syafi'i, Hambali</span></div><div class="arrow">›</div></div>
-        <div class="more-item" data-sub="more-akhirat"><div class="ic">🌸</div><div><b>Surga & Neraka</b><span>Tingkatan dalam Al-Qur'an & hadits</span></div><div class="arrow">›</div></div>
-        <div class="more-item" data-sub="more-kiamat"><div class="ic">⏳</div><div><b>Tanda-Tanda Kiamat</b><span>Tanda kecil & besar sebelum hari akhir</span></div><div class="arrow">›</div></div>
         <div class="more-item" data-sub="more-adab"><div class="ic">🤍</div><div><b>Adab Harian</b><span>Makan, tidur, bertetangga, & lainnya</span></div><div class="arrow">›</div></div>
-        <div class="more-item" data-sub="more-zakat"><div class="ic">🧮</div><div><b>Kalkulator Zakat</b><span>Hitung zakat maal kamu</span></div><div class="arrow">›</div></div>
+        <div class="more-item" data-sub="more-hijriyah"><div class="ic">📅</div><div><b>Kalender Hijriyah</b><span>Konversi tanggal Masehi ke Hijriyah</span></div><div class="arrow">›</div></div>
       </div>
 
       <div class="sub-screen" id="more-tajwid">
@@ -809,7 +830,7 @@
         </div>
         <div class="card" data-card>
           <div class="card-head" data-toggle><div class="num">✦</div><h3>Naik Kendaraan</h3><div class="chev">+</div></div>
-          <div class="card-body"><div class="arabic">سُبْحَانَ الَّذِي سَخَّرَ لَنَا هَٰذَا وَمَا كُنَّا لَهُ مُقْرِنِينَ</div><p>"Maha Suci Allah yang menundukkan kendaraan ini untuk kami, padahal kami tak mampu menguasainya."</p><div class="dalil"><div class="arabic" style="font-size:.95rem;">سُبْحَانَ الَّذِي سَخَّرَ لَنَا هَذَا</div><span class="src">QS. Az-Zukhruf: 13</span></div></div>
+          <div class="card-body"><div class="arabic">سُبْحَانَ الَّذِي سَخَّرَ لَنَا هَٰذَا وَمَا كُنَّا لَهُ مُقْرِنِينَ</div><p>"Maha Suci Allah yang menundukkan kendaraan ini untuk kami, padahal kami tak mampu menguasainya."</p><div class="dalil"><div class="arabic" style="font-size:.95rem;">سُبْحَانَ الَّذِي سَخَّرَ لَنَا هَذَا</div><span class="src">QS. Az-Zukhruf: 13 <button class="play-verse" data-surah="43" data-ayah="13">🔊</button></span></div></div>
         </div>
         <div class="card" data-card>
           <div class="card-head" data-toggle><div class="num">✦</div><h3>Masuk Masjid</h3><div class="chev">+</div></div>
@@ -855,13 +876,13 @@
         </div>
         <div class="card" data-card>
           <div class="card-head" data-toggle><div class="num">✦</div><h3>Memohon Hidayah</h3><div class="chev">+</div></div>
-          <div class="card-body"><div class="arabic">اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ</div><p>"Tunjukilah kami jalan yang lurus."</p><div class="dalil"><span class="src">QS. Al-Fatihah: 6</span></div></div>
+          <div class="card-body"><div class="arabic">اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ</div><p>"Tunjukilah kami jalan yang lurus."</p><div class="dalil"><span class="src">QS. Al-Fatihah: 6 <button class="play-verse" data-surah="1" data-ayah="6">🔊</button></span></div></div>
         </div>
 
         <div class="subhead">Keluarga & Kesehatan</div>
         <div class="card" data-card>
           <div class="card-head" data-toggle><div class="num">✦</div><h3>Untuk Kedua Orang Tua</h3><div class="chev">+</div></div>
-          <div class="card-body"><div class="arabic">رَبِّ ارْحَمْهُمَا كَمَا رَبَّيَانِي صَغِيرًا</div><p>"Ya Tuhanku, sayangilah keduanya sebagaimana mereka telah mendidikku sewaktu kecil."</p><div class="dalil"><span class="src">QS. Al-Isra: 24</span></div></div>
+          <div class="card-body"><div class="arabic">رَبِّ ارْحَمْهُمَا كَمَا رَبَّيَانِي صَغِيرًا</div><p>"Ya Tuhanku, sayangilah keduanya sebagaimana mereka telah mendidikku sewaktu kecil."</p><div class="dalil"><span class="src">QS. Al-Isra: 24 <button class="play-verse" data-surah="17" data-ayah="24">🔊</button></span></div></div>
         </div>
         <div class="card" data-card>
           <div class="card-head" data-toggle><div class="num">✦</div><h3>Ketika Sakit</h3><div class="chev">+</div></div>
@@ -869,7 +890,37 @@
         </div>
         <div class="card" data-card>
           <div class="card-head" data-toggle><div class="num">✦</div><h3>Safar (Perjalanan Jauh)</h3><div class="chev">+</div></div>
-          <div class="card-body"><div class="arabic">سُبْحَانَ الَّذِي سَخَّرَ لَنَا هَٰذَا وَمَا كُنَّا لَهُ مُقْرِنِينَ وَإِنَّا إِلَىٰ رَبِّنَا لَمُنقَلِبُونَ</div><p>"Maha Suci Allah yang telah menundukkan kendaraan ini untuk kami, padahal kami sebelumnya tidak mampu menguasainya, dan sesungguhnya kami akan kembali kepada Tuhan kami."</p><div class="dalil"><span class="src">QS. Az-Zukhruf: 13–14</span></div></div>
+          <div class="card-body"><div class="arabic">سُبْحَانَ الَّذِي سَخَّرَ لَنَا هَٰذَا وَمَا كُنَّا لَهُ مُقْرِنِينَ وَإِنَّا إِلَىٰ رَبِّنَا لَمُنقَلِبُونَ</div><p>"Maha Suci Allah yang telah menundukkan kendaraan ini untuk kami, padahal kami sebelumnya tidak mampu menguasainya, dan sesungguhnya kami akan kembali kepada Tuhan kami."</p><div class="dalil"><span class="src">QS. Az-Zukhruf: 13–14 <button class="play-verse" data-surah="43" data-ayah="13">🔊</button></span></div></div>
+        </div>
+
+        <div class="subhead">Doa Lainnya</div>
+        <div class="card" data-card>
+          <div class="card-head" data-toggle><div class="num">✦</div><h3>Ilmu yang Bermanfaat</h3><div class="chev">+</div></div>
+          <div class="card-body"><div class="arabic">اللَّهُمَّ انْفَعْنِي بِمَا عَلَّمْتَنِي وَعَلِّمْنِي مَا يَنْفَعُنِي</div><p>"Ya Allah, berilah manfaat kepadaku dengan apa yang telah Engkau ajarkan, dan ajarkanlah kepadaku apa yang bermanfaat bagiku."</p><div class="dalil"><span class="src">HR. Tirmidzi & Ibnu Majah</span></div></div>
+        </div>
+        <div class="card" data-card>
+          <div class="card-head" data-toggle><div class="num">✦</div><h3>Selamat Dunia Akhirat (Sapu Jagat)</h3><div class="chev">+</div></div>
+          <div class="card-body"><div class="arabic">رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ</div><p>"Ya Tuhan kami, berilah kami kebaikan di dunia dan kebaikan di akhirat, dan peliharalah kami dari siksa neraka."</p><div class="dalil"><span class="src">QS. Al-Baqarah: 201 <button class="play-verse" data-surah="2" data-ayah="201">🔊</button></span></div></div>
+        </div>
+        <div class="card" data-card>
+          <div class="card-head" data-toggle><div class="num">✦</div><h3>Ketika Bercermin</h3><div class="chev">+</div></div>
+          <div class="card-body"><div class="arabic">اللَّهُمَّ كَمَا حَسَّنْتَ خَلْقِي فَحَسِّنْ خُلُقِي</div><p>"Ya Allah, sebagaimana Engkau telah memperindah bentukku, perindahlah pula akhlakku."</p><div class="dalil"><span class="src">HR. Ahmad</span></div></div>
+        </div>
+        <div class="card" data-card>
+          <div class="card-head" data-toggle><div class="num">✦</div><h3>Ketika Hujan Turun</h3><div class="chev">+</div></div>
+          <div class="card-body"><div class="arabic">اللَّهُمَّ صَيِّبًا نَافِعًا</div><p>"Ya Allah, turunkanlah hujan yang bermanfaat."</p><div class="dalil"><span class="src">HR. Bukhari</span></div></div>
+        </div>
+        <div class="card" data-card>
+          <div class="card-head" data-toggle><div class="num">✦</div><h3>Masuk Pasar</h3><div class="chev">+</div></div>
+          <div class="card-body"><div class="arabic">لَا إِلَٰهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ يُحْيِي وَيُمِيتُ وَهُوَ حَيٌّ لَا يَمُوتُ بِيَدِهِ الْخَيْرُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ</div><p>"Tiada Tuhan selain Allah semata, tiada sekutu bagi-Nya, bagi-Nya kerajaan dan segala puji, Dia menghidupkan dan mematikan, Dia Maha Hidup tidak akan mati, di tangan-Nya segala kebaikan, dan Dia Maha Kuasa atas segala sesuatu."</p><div class="dalil"><span class="src">HR. Tirmidzi</span></div></div>
+        </div>
+        <div class="card" data-card>
+          <div class="card-head" data-toggle><div class="num">✦</div><h3>Penutup Majelis (Kaffaratul Majelis)</h3><div class="chev">+</div></div>
+          <div class="card-body"><div class="arabic">سُبْحَانَكَ اللَّهُمَّ وَبِحَمْدِكَ أَشْهَدُ أَنْ لَا إِلَٰهَ إِلَّا أَنْتَ أَسْتَغْفِرُكَ وَأَتُوبُ إِلَيْكَ</div><p>"Maha Suci Engkau ya Allah, dan segala puji bagi-Mu, aku bersaksi tiada Tuhan selain Engkau, aku memohon ampun dan bertaubat kepada-Mu."</p><div class="dalil"><span class="src">HR. Tirmidzi & Abu Dawud</span></div></div>
+        </div>
+        <div class="card" data-card>
+          <div class="card-head" data-toggle><div class="num">✦</div><h3>Memohon Anak yang Saleh</h3><div class="chev">+</div></div>
+          <div class="card-body"><div class="arabic">رَبِّ هَبْ لِي مِنَ الصَّالِحِينَ</div><p>"Ya Tuhanku, anugerahkanlah kepadaku seorang anak yang termasuk orang-orang yang saleh."</p><div class="dalil"><span class="src">QS. As-Saffat: 100 <button class="play-verse" data-surah="37" data-ayah="100">🔊</button></span></div></div>
         </div>
       </div>
 
@@ -1118,6 +1169,16 @@
         <div class="card" data-card><div class="card-head" data-toggle><div class="num">8</div><h3>Larangan Marah</h3><div class="chev">+</div></div><div class="card-body"><p>Seorang sahabat meminta wasiat kepada Nabi ﷺ, dan beliau berpesan singkat: "Jangan marah," diulang berkali-kali sebagai penekanan pentingnya mengendalikan amarah. (HR. Bukhari)</p></div></div>
         <div class="card" data-card><div class="card-head" data-toggle><div class="num">9</div><h3>Kemudahan dalam Agama</h3><div class="chev">+</div></div><div class="card-body"><p>Agama Islam adalah agama yang mudah, dan siapa yang memberatkan diri dalam beragama akan kewalahan sendiri. (HR. Bukhari)</p></div></div>
         <div class="card" data-card><div class="card-head" data-toggle><div class="num">10</div><h3>Amal yang Tidak Terputus</h3><div class="chev">+</div></div><div class="card-body"><p>Ketika seseorang wafat, amalnya terputus kecuali tiga: sedekah jariyah, ilmu yang bermanfaat, dan anak saleh yang mendoakannya. (HR. Muslim)</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">11</div><h3>Larangan Berbuat Zalim</h3><div class="chev">+</div></div><div class="card-body"><p>Dalam hadits qudsi, Allah berfirman bahwa Dia mengharamkan kezaliman atas diri-Nya sendiri dan menjadikannya haram di antara hamba-hamba-Nya, maka janganlah saling menzalimi. (HR. Muslim)</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">12</div><h3>Meninggalkan yang Tak Bermanfaat</h3><div class="chev">+</div></div><div class="card-body"><p>Di antara tanda kebaikan Islam seseorang adalah meninggalkan segala sesuatu yang tidak memberi manfaat baginya. (HR. Tirmidzi)</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">13</div><h3>Halal, Haram, dan Syubhat</h3><div class="chev">+</div></div><div class="card-body"><p>Yang halal itu jelas dan yang haram itu jelas, namun di antara keduanya ada perkara syubhat (samar) yang banyak tidak diketahui oleh manusia, maka sepatutnya dijauhi kehati-hatian. (HR. Bukhari & Muslim)</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">14</div><h3>Larangan Dengki & Memutus Silaturahmi</h3><div class="chev">+</div></div><div class="card-body"><p>Janganlah saling dengki, saling menipu dalam jual beli, saling membenci, dan saling memutuskan hubungan, melainkan jadilah hamba-hamba Allah yang bersaudara. (HR. Bukhari & Muslim)</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">15</div><h3>Malu Sebagian dari Iman</h3><div class="chev">+</div></div><div class="card-body"><p>Rasa malu merupakan salah satu cabang dari keimanan seseorang, mendorong untuk menjaga diri dari perbuatan tercela. (HR. Bukhari & Muslim)</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">16</div><h3>Keutamaan Silaturahmi</h3><div class="chev">+</div></div><div class="card-body"><p>Siapa yang ingin dilapangkan rezekinya dan dipanjangkan umurnya (keberkahan usianya), hendaklah ia menyambung tali silaturahmi. (HR. Bukhari & Muslim)</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">17</div><h3>Cinta kepada Rasul</h3><div class="chev">+</div></div><div class="card-body"><p>Tidak sempurna iman seseorang hingga Nabi ﷺ lebih ia cintai daripada anaknya, orang tuanya, dan seluruh manusia. (HR. Bukhari & Muslim)</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">18</div><h3>Takwa di Mana Pun Berada</h3><div class="chev">+</div></div><div class="card-body"><p>Bertakwalah kepada Allah di mana pun berada, iringilah perbuatan buruk dengan kebaikan yang dapat menghapusnya, dan pergaulilah manusia dengan akhlak yang baik. (HR. Tirmidzi)</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">19</div><h3>Menjaga Perintah Allah</h3><div class="chev">+</div></div><div class="card-body"><p>Jagalah (perintah) Allah, niscaya Dia akan menjagamu. Jagalah (batasan) Allah, niscaya kamu akan mendapati-Nya senantiasa bersamamu. (HR. Tirmidzi)</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">20</div><h3>Rasa Malu Mengendalikan Perbuatan</h3><div class="chev">+</div></div><div class="card-body"><p>Jika seseorang tidak lagi memiliki rasa malu, maka ia akan berbuat sesukanya, menunjukkan bahwa malu adalah salah satu pengendali utama akhlak manusia. (HR. Bukhari)</p></div></div>
       </div>
 
       <div class="sub-screen" id="more-mazhab">
@@ -1586,13 +1647,46 @@
   // ---- Ayah detail (text + audio via alquran.cloud) ----
   let currentAudio = null;
   let currentPlayBtn = null;
+  let ayahQueue = [];
+  let queueIndex = 0;
+  let isPlayingAll = false;
 
   function stopAudio(){
-    if(currentAudio){ currentAudio.pause(); currentAudio = null; }
+    isPlayingAll = false;
+    ayahQueue = [];
+    if(currentAudio){ currentAudio.pause(); currentAudio.onended = null; currentAudio = null; }
     if(currentPlayBtn){ currentPlayBtn.classList.remove('playing'); currentPlayBtn.textContent='▶'; currentPlayBtn=null; }
+    const allBtn = document.getElementById('btnPlayAll');
+    if(allBtn) allBtn.textContent = '▶ Putar Semua Ayat';
   }
 
+  function playQueueStep(){
+    if(!isPlayingAll || queueIndex >= ayahQueue.length){ stopAudio(); return; }
+    const item = ayahQueue[queueIndex];
+    if(currentPlayBtn){ currentPlayBtn.classList.remove('playing'); currentPlayBtn.textContent='▶'; }
+    currentAudio = new Audio(item.audio);
+    currentPlayBtn = item.btn;
+    if(currentPlayBtn){ currentPlayBtn.classList.add('playing'); currentPlayBtn.textContent='❚❚'; }
+    currentAudio.scrollIntoViewCalled = false;
+    if(item.btn){ item.btn.closest('.ayah-card').scrollIntoView({behavior:'smooth', block:'center'}); }
+    currentAudio.play();
+    currentAudio.onended = ()=>{ queueIndex++; playQueueStep(); };
+  }
+
+  function playAllAyat(){
+    if(isPlayingAll){ stopAudio(); return; }
+    const buttons = Array.from(document.querySelectorAll('#ayahList .play-btn'));
+    if(buttons.length===0) return;
+    ayahQueue = buttons.map(b=>({audio:b.dataset.audio, btn:b}));
+    queueIndex = 0;
+    isPlayingAll = true;
+    document.getElementById('btnPlayAll').textContent = '❚❚ Berhenti';
+    playQueueStep();
+  }
+  document.getElementById('btnPlayAll').addEventListener('click', playAllAyat);
+
   async function openSurahInner(number, name, arti){
+    stopAudio();
     document.getElementById('surahListView').style.display='none';
     document.getElementById('surahDetailView').style.display='block';
     document.getElementById('quranHeading').textContent = name;
@@ -1626,6 +1720,26 @@
   }
 
   document.addEventListener('click', (e)=>{
+    const playVerse = e.target.closest('.play-verse');
+    if(playVerse){
+      e.stopPropagation();
+      if(currentPlayBtn === playVerse){ stopAudio(); return; }
+      stopAudio();
+      const s = playVerse.dataset.surah, a = playVerse.dataset.ayah;
+      playVerse.textContent = '…';
+      fetch(`https://api.alquran.cloud/v1/ayah/${s}:${a}/ar.alafasy`)
+        .then(r=>r.json())
+        .then(json=>{
+          playVerse.textContent = '🔊';
+          currentAudio = new Audio(json.data.audio);
+          currentAudio.play();
+          currentPlayBtn = playVerse;
+          playVerse.classList.add('playing');
+          currentAudio.addEventListener('ended', stopAudio);
+        })
+        .catch(()=>{ playVerse.textContent = '🔊'; });
+      return;
+    }
     const ahItem = e.target.closest('.ah-item');
     if(ahItem){ navigate({tab:'more', sub:'more-asmaul', ah:Number(ahItem.dataset.ahIndex)}); return; }
     const ahBack = e.target.closest('#backToAhList');
