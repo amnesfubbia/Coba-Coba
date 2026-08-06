@@ -1,0 +1,9 @@
+{
+  "name": "Silmikaffah",
+  "short_name": "Silmikaffah",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#3FAE6A",
+  "description": "Silmikaffah — Panduan Iman & Islam: jadwal sholat, Al-Qur'an, doa, zakat, dan fitur islami lain dalam satu genggaman."
+}
