@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Weather Dashboard — Open-Meteo Example</title>
+  <meta name="description" content="Responsive weather dashboard using Open-Meteo (no API key) and Nominatim geocoding." />
+
+  <style>
+    :root{
+      --bg:#0f1724; --card:#0b1220; --muted:#9aa6b2; --accent:#3fae6a; --glass: rgba(255,255,255,0.03);
+      --max-width:900px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,"Helvetica Neue",Arial;color:#e6eef6;background:linear-gradient(180deg,var(--bg),#041018);display:flex;align-items:center;justify-content:center;padding:20px}
+    .app{width:100%;max-width:var(--max-width);margin:0 auto;background:linear-gradient(180deg,var(--card),#071019);border-radius:12px;padding:18px;box-shadow:0 10px 40px rgba(2,6,23,.6);border:1px solid rgba(255,255,255,0.03)}
+    header{display:flex;gap:12px;align-items:center;justify-content:space-between}
+    .title{display:flex;gap:12px;align-items:center}
+    .logo{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#d6a84f);display:flex;align-items:center;justify-content:center;font-weight:700;color:#032;box-shadow:0 6px 18px rgba(63,174,106,.08)}
+    h1{font-size:1.15rem;margin:0}
+    p.lead{margin:0;color:var(--muted);font-size:.92rem}
+
+    .controls{display:flex;gap:10px;align-items:center;margin-top:12px;flex-wrap:wrap}
+    .search{display:flex;gap:8px;align-items:center;background:var(--glass);padding:8px;border-radius:10px;border:1px solid rgba(255,255,255,0.03)}
+    input[type="search"]{background:transparent;border:0;color:inherit;padding:8px;width:240px;outline:none}
+    button{background:var(--accent);border:0;color:#05221a;padding:8px 10px;border-radius:8px;cursor:pointer;font-weight:600}
+    button.ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted);font-weight:600}
+    small{color:var(--muted)}
+
+    .grid{display:grid;grid-template-columns:1fr 320px;gap:14px;margin-top:16px}
+    @media (max-width:880px){ .grid{grid-template-columns:1fr} .rightcol{order:-1} input[type="search"]{width:140px} }
+
+    /* main card */
+    .maincard{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:16px;border-radius:10px;border:1px solid rgba(255,255,255,0.03)}
+    .row{display:flex;align-items:center;gap:12px}
+    .current{display:flex;align-items:center;gap:14px}
+    .bigtemp{font-size:3rem;font-weight:700;line-height:1;color:#fff}
+    .desc{color:var(--muted);font-weight:600}
+    .meta{display:flex;gap:10px;margin-top:8px;color:var(--muted);font-size:.92rem}
+
+    .hourly{margin-top:12px;overflow:auto;padding-bottom:6px;display:flex;gap:8px}
+    .hour{min-width:78px;background:rgba(255,255,255,0.02);padding:8px;border-radius:8px;text-align:center;border:1px solid rgba(255,255,255,0.02)}
+    .hour b{display:block;font-size:1rem}
+    .daily{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+    .day{display:flex;justify-content:space-between;align-items:center;padding:8px;border-radius:8px;background:rgba(255,255,255,0.01);border:1px solid rgba(255,255,255,0.02)}
+
+    /* right column */
+    .rightcol{display:flex;flex-direction:column;gap:12px}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.03)}
+    .small{font-size:.86rem;color:var(--muted)}
+
+    .loading{opacity:.75}
+    .error{color:#ffb4b4;background:#3a1217;padding:10px;border-radius:8px}
+
+    footer{margin-top:12px;text-align:center;color:var(--muted);font-size:13px}
+    a.link{color:var(--accent);text-decoration:none;font-weight:700}
+  </style>
+</head>
+<body>
+  <div class="app" role="application" aria-label="Weather dashboard">
+    <header>
+      <div class="title">
+        <div class="logo">WX</div>
+        <div>
+          <h1>Silmikaffah — Weather</h1>
+          <p class="lead">Simple dashboard using Open‑Meteo (no API key) & Nominatim geocoding.</p>
+        </div>
+      </div>
+
+      <div style="text-align:right">
+        <small>Data: <a class="link" href="https://open-meteo.com" target="_blank" rel="noreferrer">Open‑Meteo</a> · Geocode: <a class="link" href="https://nominatim.openstreetmap.org" target="_blank" rel="noreferrer">Nominatim</a></small>
+      </div>
+    </header>
+
+    <section class="controls" aria-hidden="false">
+      <div class="search" role="search" aria-label="Search location">
+        <input id="q" type="search" placeholder="Search city or postal code" aria-label="Search city"/>
+        <button id="btnSearch">Search</button>
+      </div>
+
+      <button id="btnGeo" class="ghost" title="Use current location">Use my location</button>
+      <div id="status" style="margin-left:auto"></div>
+    </section>
+
+    <div class="grid" id="mainGrid">
+      <main class="maincard" aria-live="polite">
+        <div id="result">
+          <div class="row current" id="currentRow">
+            <div>
+              <div id="place" style="font-weight:700">—</div>
+              <div id="when" class="desc">—</div>
+            </div>
+
+            <div style="margin-left:auto;text-align:right">
+              <div class="bigtemp" id="temp">--°C</div>
+              <div class="desc" id="wdesc">—</div>
+            </div>
+          </div>
+
+          <div class="meta" id="meta">
+            <div id="wind">—</div>
+            <div id="humidity">—</div>
+            <div id="precip">—</div>
+          </div>
+
+          <div class="hourly" id="hourly" aria-label="Hourly forecast"></div>
+
+          <div class="daily" id="daily" aria-label="Daily forecast"></div>
+        </div>
+
+        <div id="msg" style="margin-top:12px"></div>
+      </main>
+
+      <aside class="rightcol">
+        <div class="card">
+          <div style="font-weight:700">Quick actions</div>
+          <div style="margin-top:8px" class="small">
+            <div><button id="btnRefresh" class="ghost">Refresh</button> <small style="color:var(--muted)">last fetched from API</small></div>
+            <div style="margin-top:8px"><button id="btnSave" class="ghost">Save location</button> <small class="small">store to localStorage</small></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div style="font-weight:700">Saved location</div>
+          <div id="saved" class="small" style="margin-top:8px">— none —</div>
+        </div>
+
+        <div class="card">
+          <div style="font-weight:700">Notes</div>
+          <div class="small" style="margin-top:8px">
+            - Geolocation requires HTTPS or localhost.<br>
+            - Nominatim rate limits: don't spam; cache results.<br>
+            - Temperatures in °C (units from Open‑Meteo).
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <footer>Save this file as a single .html and open (or host over HTTPS). Example uses free APIs — no API key required.</footer>
+  </div>
+
+  <script>
+  // Weather dashboard using Open-Meteo (no API key) + Nominatim geocoding
+  // Minimal dependencies, plain JS.
+  (function(){
+    const qInput = document.getElementById('q');
+    const btnSearch = document.getElementById('btnSearch');
+    const btnGeo = document.getElementById('btnGeo');
+    const statusEl = document.getElementById('status');
+    const tempEl = document.getElementById('temp');
+    const placeEl = document.getElementById('place');
+    const wdescEl = document.getElementById('wdesc');
+    const whenEl = document.getElementById('when');
+    const metaEl = document.getElementById('meta');
+    const hourlyEl = document.getElementById('hourly');
+    const dailyEl = document.getElementById('daily');
+    const msgEl = document.getElementById('msg');
+    const btnRefresh = document.getElementById('btnRefresh');
+    const btnSave = document.getElementById('btnSave');
+    const savedEl = document.getElementById('saved');
+
+    const NominatimURL = (q) => `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q)}&limit=5`;
+    const OpenMeteoURL = (lat, lon) => `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&hourly=temperature_2m,precipitation,weathercode,relativehumidity_2m&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,weathercode&timezone=auto`;
+
+    // Map Open-Meteo weathercode to icons/description (simple)
+    const weatherMap = {
+      0: ['Clear','☀️'],
+      1: ['Mainly clear','🌤️'],
+      2: ['Partly cloudy','⛅'],
+      3: ['Overcast','☁️'],
+      45: ['Fog','🌫️'],
+      48: ['Depositing rime fog','🌫️'],
+      51: ['Light drizzle','🌦️'],
+      53: ['Moderate drizzle','🌦️'],
+      55: ['Dense drizzle','🌧️'],
+      56: ['Freezing drizzle','🥶'],
+      57: ['Dense freezing drizzle','🥶'],
+      61: ['Slight rain','🌧️'],
+      63: ['Moderate rain','🌧️'],
+      65: ['Heavy rain','⛈️'],
+      66: ['Freezing rain','🥶'],
+      67: ['Heavy freezing rain','🥶'],
+      71: ['Slight snow','🌨️'],
+      73: ['Moderate snow','🌨️'],
+      75: ['Heavy snow','❄️'],
+      77: ['Snow grains','❄️'],
+      80: ['Slight rain showers','🌦️'],
+      81: ['Moderate rain showers','🌦️'],
+      82: ['Violent rain showers','⛈️'],
+      85: ['Slight snow showers','🌨️'],
+      86: ['Heavy snow showers','🌨️'],
+      95: ['Thunderstorm','⛈️'],
+      96: ['Thunderstorm with slight hail','⛈️'],
+      99: ['Thunderstorm with heavy hail','⛈️']
+    };
+
+    function mapWeather(code){
+      return weatherMap[code] || ['Unknown','❔'];
+    }
+
+    function setStatus(text, isError=false){
+      statusEl.textContent = text || '';
+      statusEl.className = isError ? 'error' : '';
+    }
+
+    function setLoading(on){
+      if(on){ msgEl.innerHTML = '<div class="small loading">Loading…</div>'; }
+      else msgEl.innerHTML = '';
+    }
+
+    async function geocode(q){
+      setStatus('Searching location…');
+      try{
+        const res = await fetch(NominatimURL(q), {headers:{'Accept':'application/json'}});
+        const data = await res.json();
+        if(!data || data.length===0) throw new Error('No location found');
+        const pick = data[0];
+        return {lat:parseFloat(pick.lat), lon:parseFloat(pick.lon), name: pick.display_name};
+      }catch(err){
+        setStatus('Geocoding error', true);
+        throw err;
+      } finally { setStatus(''); }
+    }
+
+    async function fetchWeather(lat, lon){
+      setLoading(true);
+      setStatus('Fetching weather…');
+      try{
+        const res = await fetch(OpenMeteoURL(lat,lon));
+        const data = await res.json();
+        if(!data) throw new Error('No weather data');
+        renderWeather(data, lat, lon);
+        setStatus('');
+        setLoading(false);
+      }catch(err){
+        setStatus('Weather fetch failed', true);
+        setLoading(false);
+        console.error(err);
+      }
+    }
+
+    function renderWeather(data, lat, lon){
+      // current
+      const cw = data.current_weather;
+      const tz = data.timezone || '';
+      const curTime = cw ? (new Date(cw.time)).toLocaleString() : '';
+      const [desc, icon] = cw ? mapWeather(cw.weathercode) : ['—',''];
+      placeEl.textContent = `Lat ${lat.toFixed(3)}, Lon ${lon.toFixed(3)}`;
+      whenEl.textContent = `Updated: ${curTime} ${tz}`;
+      tempEl.textContent = cw ? `${Math.round(cw.temperature)}°C` : '--';
+      wdescEl.textContent = `${icon} ${desc}`;
+
+      metaEl.innerHTML = `
+        <div id="wind">Wind: ${cw ? cw.windspeed + ' km/h' : '—'}</div>
+        <div id="humidity">Humidity (hourly): ${extractHumidity(data) ?? '—'}</div>
+        <div id="precip">Precip (today): ${extractPrecipDaily(data) ?? '—'}</div>
+      `;
+
+      // hourly: show next 24 hours where available
+      hourlyEl.innerHTML = '';
+      if(data.hourly && data.hourly.time){
+        const times = data.hourly.time;
+        const temps = data.hourly.temperature_2m;
+        const codes = data.hourly.weathercode || [];
+        const nowIdx = times.findIndex(t=> new Date(t) >= new Date());
+        const start = Math.max(0, nowIdx);
+        for(let i=start;i<Math.min(times.length, start+24);i++){
+          const d = new Date(times[i]);
+          const hour = d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+          const t = Math.round(temps[i]);
+          const code = codes[i];
+          const [desc2, icon2] = mapWeather(code);
+          const el = document.createElement('div');
+          el.className = 'hour';
+          el.innerHTML = `<div style="font-size:.85rem">${hour}</div><div style="font-size:1.1rem;margin:6px 0"><b>${t}°</b></div><div style="font-size:.9rem">${icon2}</div><div style="font-size:.75rem;color:var(--muted)">${desc2}</div>`;
+          hourlyEl.appendChild(el);
+        }
+      }
+
+      // daily
+      dailyEl.innerHTML = '';
+      if(data.daily && data.daily.time){
+        const days = data.daily.time;
+        const tmax = data.daily.temperature_2m_max;
+        const tmin = data.daily.temperature_2m_min;
+        const codes = data.daily.weathercode || [];
+        for(let i=0;i<days.length;i++){
+          const dt = new Date(days[i]);
+          const dayName = dt.toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric'});
+          const [dDesc, dIcon] = mapWeather(codes[i]);
+          const el = document.createElement('div');
+          el.className = 'day';
+          el.innerHTML = `<div>${dayName} <small style="color:var(--muted)">${dIcon} ${dDesc}</small></div><div><strong>${Math.round(tmax[i])}° / ${Math.round(tmin[i])}°</strong></div>`;
+          dailyEl.appendChild(el);
+        }
+      }
+    }
+
+    function extractHumidity(data){
+      if(!data.hourly || !data.hourly.relativehumidity_2m) return null;
+      // take current hour humidity if possible
+      const now = new Date();
+      const times = data.hourly.time;
+      const idx = times.findIndex(t=> new Date(t).getHours() === now.getHours() && new Date(t).toDateString() === now.toDateString());
+      if(idx>=0) return data.hourly.relativehumidity_2m[idx] + '%';
+      return data.hourly.relativehumidity_2m[0] + '%';
+    }
+
+    function extractPrecipDaily(data){
+      if(!data.daily || !data.daily.precipitation_sum) return null;
+      return data.daily.precipitation_sum[0] + ' mm';
+    }
+
+    // event handlers
+    btnSearch.addEventListener('click', async ()=>{
+      const q = qInput.value.trim();
+      if(!q) { setStatus('Enter a search query', true); return; }
+      try{
+        setLoading(true);
+        const loc = await geocode(q);
+        placeEl.textContent = loc.name;
+        await fetchWeather(loc.lat, loc.lon);
+        setLoading(false);
+      }catch(err){
+        setLoading(false);
+        console.error(err);
+      }
+    });
+
+    btnGeo.addEventListener('click', ()=>{
+      if(!navigator.geolocation){ setStatus('Geolocation not supported', true); return; }
+      setStatus('Getting current location…');
+      navigator.geolocation.getCurrentPosition(async (pos)=>{
+        setStatus('');
+        const lat = pos.coords.latitude, lon = pos.coords.longitude;
+        placeEl.textContent = `My location`;
+        await fetchWeather(lat, lon);
+      }, (err)=>{
+        setStatus('Geolocation failed: ' + (err.message||err.code), true);
+      }, {enableHighAccuracy:true, timeout:10000});
+    });
+
+    btnRefresh.addEventListener('click', ()=>{
+      // simple: re-run current coordinates if visible
+      const place = placeEl.textContent;
+      if(place && place.startsWith('Lat')) {
+        // parse place "Lat x, Lon y"
+        const m = place.match(/Lat ([0-9\.\-]+), Lon ([0-9\.\-]+)/);
+        if(m){ fetchWeather(parseFloat(m[1]), parseFloat(m[2])); return; }
+      }
+      setStatus('No location to refresh', true);
+    });
+
+    // save / load location to localStorage
+    btnSave.addEventListener('click', ()=>{
+      const text = placeEl.textContent || '';
+      if(!text) { setStatus('Nothing to save', true); return; }
+      localStorage.setItem('wx_saved', JSON.stringify({place:text, timestamp: Date.now()}));
+      renderSaved();
+      setStatus('Location saved');
+      setTimeout(()=>setStatus(''),1500);
+    });
+
+    function renderSaved(){
+      const raw = localStorage.getItem('wx_saved');
+      if(!raw){ savedEl.textContent = '— none —'; return; }
+      try{
+        const obj = JSON.parse(raw);
+        const d = new Date(obj.timestamp);
+        savedEl.innerHTML = `<div style="font-weight:700">${obj.place}</div><div class="small">saved ${d.toLocaleString()}</div>`;
+      }catch(e){ savedEl.textContent = '— none —'; }
+    }
+
+    // quick enter
+    qInput.addEventListener('keydown', (e)=>{ if(e.key === 'Enter') btnSearch.click(); });
+
+    // on load: restore saved or demo fetch for Jakarta
+    (function init(){
+      renderSaved();
+      const raw = localStorage.getItem('wx_saved');
+      if(raw){
+        try{
+          const place = JSON.parse(raw).place;
+          // don't geocode saved display name; just show saved text
+          placeEl.textContent = place;
+        }catch(e){}
+      }
+      // demo: fetch Jakarta weather by default
+      fetchWeather(-6.2088,106.8456); // Jakarta coordinates
+    })();
+
+  })();
+  </script>
+</body>
+</html>
