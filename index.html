@@ -7,134 +7,111 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
 <link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#3FAE6A">
 <style>
-  :root{
-    --paper:#000000;
-    --paper-2:#0A0A0A;
-    --ink:#EDEAE2;
-    --ink-soft:#9C9689;
-    --night:#000000;
-    --night-2:#0D0D0D;
-    --gold:#D8A94E;
-    --clay:#3FAE6A;
-    --line:#232323;
-    --card:#0A0A0A;
-    --app-h:100dvh;
-  }
-  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-  html,body{height:100%;}
-  body{
-    margin:0;
-    background:#000000;
-    color:var(--ink);
-    font-family:'Inter',sans-serif;
-    line-height:1.55;
-    display:flex;
-    justify-content:center;
-  }
-  h1,h2,h3,.display{font-family:'Fraunces',serif;font-weight:600;letter-spacing:-0.01em;}
-  .arabic{font-family:'Amiri',serif;direction:rtl;unicode-bidi:isolate;}
-  button{font-family:inherit;}
-
-  /* PHONE FRAME */
-  #app{
-    width:100%;
-    max-width:430px;
-    height:var(--app-h);
-    background:var(--paper);
-    display:flex;
-    flex-direction:column;
-    position:relative;
-    overflow:hidden;
-    box-shadow:0 0 0 1px #1A1A1A, 0 0 60px rgba(0,0,0,.6);
-  }
-  @media (min-width:460px){
-    body{align-items:center;padding:24px 0;}
-    #app{height:min(860px, 96dvh);border-radius:28px;}
-  }
-
-  /* TOP APP BAR */
-  .appbar{
-    flex:0 0 auto;
-    background:var(--night);
-    color:#F5F0E1;
-    padding:16px 18px 14px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    box-shadow:0 2px 10px rgba(0,0,0,.15);
-    z-index:20;
-  }
-  .appbar .title{display:flex;align-items:center;gap:10px;}
-  .appbar .logo{
-    width:30px;height:30px;border-radius:8px;
-    background:linear-gradient(135deg,var(--gold),var(--clay));
-    display:flex;align-items:center;justify-content:center;
-    font-family:'Fraunces',serif;font-weight:700;color:#000000;font-size:.95rem;
-  }
-  .appbar h1{font-size:1.08rem;margin:0;color:#F5F0E1;}
-  .appbar .sub{font-size:.7rem;color:#8A8478;margin-top:1px;}
-  .appbar .iconbtn{background:none;border:none;color:#EDE7D6;font-size:1.1rem;cursor:pointer;padding:6px;}
-
-  /* SCREENS */
-  .screens{flex:1 1 auto;overflow:hidden;position:relative;}
-  .screen{
-    position:absolute;inset:0;
-    overflow-y:auto;
-    padding:18px 18px 90px;
-    display:none;
-    -webkit-overflow-scrolling:touch;
-  }
-  .screen.active{display:block;}
-
-  .eyebrow{font-size:.72rem;text-transform:uppercase;letter-spacing:.12em;color:var(--clay);font-weight:700;margin-bottom:6px;}
-  .screen-head{margin-bottom:18px;}
-  .screen-head h2{font-size:1.35rem;margin:0 0 4px;}
-  .screen-head p{margin:0;color:var(--ink-soft);font-size:.87rem;}
-
-  /* HOME */
-  .greet-card{
-    background:linear-gradient(135deg,var(--night),var(--night-2));
-    color:#F5F0E1;border-radius:16px;padding:20px;margin-bottom:16px;
-    background-image:radial-gradient(1px 1px at 15% 25%, rgba(232,196,104,.5) 0, transparent 60%),
-      radial-gradient(1px 1px at 75% 60%, rgba(232,196,104,.4) 0, transparent 60%),
-      radial-gradient(1.5px 1.5px at 45% 75%, rgba(232,196,104,.5) 0, transparent 60%);
-    position:relative;overflow:hidden;
-  }
-  .greet-card .eyebrow{color:var(--gold);}...
+  :root{--paper:#000;--paper-2:#0A0A0A;--ink:#EDEAE2;--ink-soft:#9C9689;--gold:#D8A94E;--clay:#3FAE6A;--line:#232323;--card:#0A0A0A;--app-h:100dvh}
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:'Inter',sans-serif;display:flex;justify-content:center}
+  h1,h2,h3{font-family:'Fraunces',serif}
+  .arabic{font-family:'Amiri',serif;direction:rtl}
+  #app{width:100%;max-width:430px;height:var(--app-h);display:flex;flex-direction:column;position:relative;background:var(--paper);}
+  .appbar{padding:14px;display:flex;align-items:center;gap:10px;background:#000}
+  .logo{width:36px;height:36px;border-radius:8px;background:linear-gradient(135deg,var(--gold),var(--clay));display:flex;align-items:center;justify-content:center;font-weight:700;color:#000}
+  .screens{flex:1;position:relative;overflow:hidden}
+  .screen{position:absolute;inset:0;padding:18px;overflow:auto;display:none}
+  .screen.active{display:block}
+  .greet-card{background:linear-gradient(135deg,#050505,#0b0b0b);padding:18px;border-radius:14px}
+  .quick-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:14px}
+  .quick-tile{background:var(--card);padding:12px;border-radius:12px;border:1px solid var(--line);cursor:pointer}
+  .prayer-widget{background:var(--card);padding:12px;border-radius:12px;border:1px solid var(--line);margin-top:12px}
+  .btn-loc{display:block;width:100%;padding:10px;border-radius:10px;border:none;background:var(--clay);color:#000;font-weight:700}
+  .searchbar input{width:100%;padding:10px;border-radius:10px;border:1px solid var(--line);background:transparent;color:var(--ink)}
+  .surah-item{display:flex;justify-content:space-between;align-items:center;padding:10px;border-radius:10px;border:1px solid var(--line);margin-top:8px}
+  .bottomnav{display:flex;padding:8px;border-top:1px solid var(--line);background:var(--card)}
+  .navbtn{flex:1;text-align:center;padding:6px;color:var(--ink-soft);cursor:pointer}
+  .card{background:var(--card);border-radius:12px;padding:12px;border:1px solid var(--line);margin-top:12px}
+  footer{font-size:12px;color:var(--ink-soft);text-align:center;padding:12px}
 </style>
 </head>
 <body>
+<div id="app">
+  <header class="appbar">
+    <div class="logo">۩</div>
+    <div>
+      <div style="font-weight:700">Silmikaffah</div>
+      <div style="font-size:12px;color:var(--ink-soft)">Panduan Iman & Islam</div>
+    </div>
+  </header>
 
-<div id="splash">
-  <div class="splash-inner">
-    <div class="splash-pattern"></div>
-    <div class="splash-logo">۩</div>
-    <h1 class="splash-title">Silmikaffah</h1>
-    <p class="splash-tagline">Islam Kaffah, Satu Genggaman</p>
-    <div class="splash-loader"><div class="splash-loader-bar"></div></div>
-  </div>
+  <main class="screens">
+    <section class="screen active" id="screen-home">
+      <div class="greet-card">
+        <div style="font-size:12px;color:var(--clay);font-weight:700;text-transform:uppercase">Assalamu'alaikum</div>
+        <h2 style="margin:6px 0 6px">Iman itu pondasi, Islam itu bangunannya.</h2>
+        <p style="margin:0 0 8px;color:var(--ink-soft)">Aplikasi lengkap: jadwal sholat, Al-Qur'an, doa, zakat, kiblat, dan panduan praktis.</p>
+        <div class="prayer-widget" id="prayerWidget">
+          <h3 style="margin:0 0 8px">Jadwal Sholat Hari Ini</h3>
+          <div id="prayerStatus" style="color:var(--ink-soft);margin-bottom:8px">Ketuk tombol di bawah untuk memuat jadwal berdasarkan lokasi Anda.</div>
+          <button class="btn-loc" id="btnLoc">📍 Gunakan Lokasi Saya</button>
+        </div>
+      </div>
+
+      <div class="quick-grid">
+        <div class="quick-tile" data-goto="iman">🌙<div style="font-weight:700">Rukun Iman</div><div style="font-size:12px;color:var(--ink-soft)">6 perkara</div></div>
+        <div class="quick-tile" data-goto="islam">🕋<div style="font-weight:700">Rukun Islam</div><div style="font-size:12px;color:var(--ink-soft)">5 tiang</div></div>
+        <div class="quick-tile" data-goto="quran">📖<div style="font-weight:700">Al-Qur'an</div><div style="font-size:12px;color:var(--ink-soft)">114 surah</div></div>
+        <div class="quick-tile" data-goto="more">⋯<div style="font-weight:700">Lainnya</div><div style="font-size:12px;color:var(--ink-soft)">Doa, Asmaul, Zakat...</div></div>
+      </div>
+    </section>
+
+    <section class="screen" id="screen-iman">
+      <div class="screen-head"><div class="eyebrow">Rukun Iman</div><h2>Enam Perkara yang Diyakini Hati</h2><p style="color:var(--ink-soft)">Ringkasan singkat tiap rukun.</p></div>
+      <div class="card">1. Iman kepada Allah</div>
+      <div class="card">2. Iman kepada Malaikat</div>
+      <div class="card">3. Iman kepada Kitab</div>
+      <div class="card">4. Iman kepada Rasul</div>
+      <div class="card">5. Iman kepada Hari Akhir</div>
+      <div class="card">6. Iman kepada Qada & Qadar</div>
+    </section>
+
+    <section class="screen" id="screen-islam">
+      <div class="screen-head"><div class="eyebrow">Rukun Islam</div><h2>Lima Tiang Penopang Amal</h2></div>
+      <div class="card">Syahadat</div>
+      <div class="card">Sholat</div>
+      <div class="card">Zakat</div>
+      <div class="card">Puasa</div>
+      <div class="card">Haji</div>
+    </section>
+
+    <section class="screen" id="screen-quran">
+      <div class="screen-head"><div class="eyebrow">Al-Qur'an</div><h2 id="quranHeading">114 Surah</h2><p id="quranSub" style="color:var(--ink-soft)">Ketuk surah untuk membaca & mendengarkan.</p></div>
+      <div id="surahListView">
+        <div class="searchbar"><input type="text" id="quranSearch" placeholder="Cari surah, mis. Al-Fatihah"></div>
+        <div id="surahList"></div>
+      </div>
+      <div id="surahDetailView" style="display:none;"></div>
+    </section>
+
+    <section class="screen" id="screen-more">
+      <div class="screen-head"><div class="eyebrow">Lainnya</div><h2>Fitur Tambahan</h2></div>
+      <div class="card">Asmaul Husna (99 nama)</div>
+      <div class="card">Doa Harian</div>
+      <div class="card">Kalkulator Zakat</div>
+      <div class="card">Arah Kiblat & Kompas</div>
+    </section>
+
+  </main>
+
+  <nav class="bottomnav">
+    <div class="navbtn" data-goto="home">Beranda</div>
+    <div class="navbtn" data-goto="quran">Qur'an</div>
+    <div class="navbtn" data-goto="more">Lainnya</div>
+  </nav>
+
+  <footer>© Silmikaffah — Aplikasi panduan Iman & Islam</footer>
 </div>
 
-<div id="app">
-
-  <div class="appbar">
-    <div class="title">
-      <div class="logo">۩</div>
-      <div>
-        <h1 id="appbarTitle">Silmikaffah</h1>
-        <div class="sub" id="appbarSub">Panduan Iman & Islam</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="screens">
-
-    <!-- HOME -->
-    <div class="screen active" id="screen-home">
-      <div class="greet-card">
-        <div class="eyebrow">Assalamu'alaikum</div>
-        <h2>Iman itu pondasi, Islam itu bangunannya.</h2>
-        <p>Enam perkara diyakini hati, lima perkara ditegakkan dalam laku hidup.</p>
-      </div>
-
+<script src="/assets/js/app.js" defer></script>
+</body>
+</html>
