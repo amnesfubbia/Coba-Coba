@@ -207,13 +207,22 @@
   .ayah-card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:10px;}
   .ayah-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
   .ayah-num-badge{width:26px;height:26px;border-radius:50%;background:var(--paper-2);color:var(--clay);font-size:.72rem;font-weight:700;display:flex;align-items:center;justify-content:center;}
-  .play-btn{width:34px;height:34px;border-radius:50%;border:none;background:var(--night);color:#F5F0E1;cursor:pointer;font-size:.85rem;display:flex;align-items:center;justify-content:center;}
+  .play-btn{width:34px;height:34px;border-radius:50%;border:none;background:var(--night);color:var(--clay);cursor:pointer;font-size:.85rem;display:flex;align-items:center;justify-content:center;}
+  .play-btn svg{width:15px;height:15px;stroke:currentColor;fill:currentColor;}
   .play-btn.playing{background:var(--clay);}
   .ayah-arabic{font-size:1.4rem;line-height:2.1;margin-bottom:8px;}
   .ayah-translit{font-family:'Fraunces',serif;font-style:italic;font-size:.83rem;color:var(--clay);margin-bottom:8px;}
   .ayah-translation{font-size:.85rem;color:var(--ink-soft);}
 
   .subhead{font-family:'Fraunces',serif;font-size:1rem;margin:22px 0 10px;padding-top:4px;}
+  .arabic-voice-btn{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:26px;height:26px;border-radius:50%;border:1px solid var(--clay);
+    background:rgba(63,174,106,.1);color:var(--clay);cursor:pointer;margin:4px 0 8px 8px;vertical-align:middle;
+  }
+  .arabic-voice-btn svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+  .arabic-voice-btn.speaking{background:var(--clay);color:#000;}
+  .btn-loc svg, .btn-primary svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;vertical-align:-2px;margin-right:4px;}
   .subnav-list{margin-top:12px;}
   .subnav-btn{display:flex;align-items:center;gap:10px;background:var(--paper-2);border:1px solid var(--line);
     border-radius:10px;padding:10px 12px;margin-bottom:8px;cursor:pointer;transition:background .15s ease;}
@@ -397,6 +406,7 @@
       <div class="quick-grid">
         <div class="quick-tile" data-goto="more-malaikat"><span class="ic">🕊️</span><b>Malaikat & Tugasnya</b><span>10 malaikat</span></div>
         <div class="quick-tile" data-goto="more-mazhab"><span class="ic">⚖️</span><b>4 Mazhab Fiqih</b><span>Hanafi, Maliki, Syafi'i, Hambali</span></div>
+        <div class="quick-tile" data-goto="more-faraidh"><span class="ic">📜</span><b>Faraidh</b><span>Ilmu waris</span></div>
         <div class="quick-tile" data-goto="more-adab"><span class="ic">🤍</span><b>Adab Harian</b><span>Makan, tidur, bertetangga</span></div>
       </div>
 
@@ -809,6 +819,7 @@
 
         <div class="subhead">Fiqih & Referensi</div>
         <div class="more-item" data-sub="more-mazhab"><div class="ic">⚖️</div><div><b>4 Mazhab Fiqih</b><span>Hanafi, Maliki, Syafi'i, Hambali</span></div><div class="arrow">›</div></div>
+        <div class="more-item" data-sub="more-faraidh"><div class="ic">📜</div><div><b>Faraidh (Ilmu Waris)</b><span>Ahli waris, syarat, & pembagian</span></div><div class="arrow">›</div></div>
         <div class="more-item" data-sub="more-adab"><div class="ic">🤍</div><div><b>Adab Harian</b><span>Makan, tidur, bertetangga, & lainnya</span></div><div class="arrow">›</div></div>
         <div class="more-item" data-sub="more-hijriyah"><div class="ic">📅</div><div><b>Kalender Hijriyah</b><span>Konversi tanggal Masehi ke Hijriyah</span></div><div class="arrow">›</div></div>
       </div>
@@ -955,6 +966,60 @@
             <li><b>صلى</b> — lebih baik diteruskan meski boleh berhenti.</li>
           </ul>
         </div></div>
+
+        <div class="subhead">Angka Arab</div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Penulisan Angka 0-10 dalam Arab</h3><div class="chev">+</div></div><div class="card-body">
+          <p>Angka Arab (disebut juga angka Hindi-Arab) ditulis dan dibaca dari kiri ke kanan, berbeda dengan huruf Arab yang dibaca kanan ke kiri.</p>
+          <div class="subgrid" style="grid-template-columns:1fr 1fr;">
+            <div class="chip"><b>٠</b>Sifr (0)</div>
+            <div class="chip"><b>١</b>Wahid (1)</div>
+            <div class="chip"><b>٢</b>Itsnan (2)</div>
+            <div class="chip"><b>٣</b>Tsalatsah (3)</div>
+            <div class="chip"><b>٤</b>Arba'ah (4)</div>
+            <div class="chip"><b>٥</b>Khamsah (5)</div>
+            <div class="chip"><b>٦</b>Sittah (6)</div>
+            <div class="chip"><b>٧</b>Sab'ah (7)</div>
+            <div class="chip"><b>٨</b>Tsamaniyah (8)</div>
+            <div class="chip"><b>٩</b>Tis'ah (9)</div>
+            <div class="chip"><b>١٠</b>'Asyarah (10)</div>
+          </div>
+        </div></div>
+
+        <div class="subhead">Kamus Arab Dasar</div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Kata Sehari-Hari</h3><div class="chev">+</div></div><div class="card-body">
+          <div class="subgrid" style="grid-template-columns:1fr 1fr;">
+            <div class="chip"><b>كِتَابٌ</b>Kitab — buku</div>
+            <div class="chip"><b>بَيْتٌ</b>Bait — rumah</div>
+            <div class="chip"><b>مَاءٌ</b>Maa' — air</div>
+            <div class="chip"><b>طَعَامٌ</b>Tha'am — makanan</div>
+            <div class="chip"><b>مَسْجِدٌ</b>Masjid — tempat sujud</div>
+            <div class="chip"><b>مَدْرَسَةٌ</b>Madrasah — sekolah</div>
+            <div class="chip"><b>يَوْمٌ</b>Yaum — hari</div>
+            <div class="chip"><b>شَمْسٌ</b>Syams — matahari</div>
+            <div class="chip"><b>قَمَرٌ</b>Qamar — bulan</div>
+            <div class="chip"><b>عِلْمٌ</b>'Ilmu — ilmu</div>
+          </div>
+        </div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Kata Kekerabatan & Sapaan</h3><div class="chev">+</div></div><div class="card-body">
+          <div class="subgrid" style="grid-template-columns:1fr 1fr;">
+            <div class="chip"><b>أَبٌ</b>Ab — ayah</div>
+            <div class="chip"><b>أُمٌّ</b>Umm — ibu</div>
+            <div class="chip"><b>أَخٌ</b>Akh — saudara laki-laki</div>
+            <div class="chip"><b>أُخْتٌ</b>Ukht — saudara perempuan</div>
+            <div class="chip"><b>صَدِيقٌ</b>Shadiq — teman</div>
+            <div class="chip"><b>مُعَلِّمٌ</b>Mu'allim — guru</div>
+          </div>
+        </div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Ungkapan Islami Umum</h3><div class="chev">+</div></div><div class="card-body">
+          <div class="subgrid" style="grid-template-columns:1fr;">
+            <div class="chip"><b>السَّلَامُ عَلَيْكُمْ</b>Assalamu'alaikum — semoga keselamatan atasmu (salam)</div>
+            <div class="chip"><b>جَزَاكَ اللَّهُ خَيْرًا</b>Jazakallahu khairan — semoga Allah membalasmu dengan kebaikan</div>
+            <div class="chip"><b>بَارَكَ اللَّهُ فِيكَ</b>Barakallahu fiik — semoga Allah memberkahimu</div>
+            <div class="chip"><b>إِنْ شَاءَ اللَّهُ</b>Insya Allah — jika Allah menghendaki</div>
+            <div class="chip"><b>مَا شَاءَ اللَّهُ</b>Masya Allah — sungguh Allah telah berkehendak (kekaguman)</div>
+            <div class="chip"><b>سُبْحَانَ اللَّهُ</b>Subhanallah — Maha Suci Allah</div>
+          </div>
+        </div></div>
       </div>
 
       <div class="sub-screen" id="more-puasasunnah">
@@ -1049,8 +1114,13 @@
               <div class="eyebrow">Arti</div>
               <p id="ahDetailMean" style="margin:4px 0 0;color:var(--ink-soft);font-size:.92rem;"></p>
             </div>
+            <div class="dalil" style="text-align:left;margin-top:12px;">
+              <div class="arabic" style="font-size:1.05rem;">وَلِلَّهِ الْأَسْمَاءُ الْحُسْنَىٰ فَادْعُوهُ بِهَا</div>
+              "Dan Allah memiliki Asmaul Husna (nama-nama yang terbaik), maka bermohonlah kepada-Nya dengan menyebut nama-nama itu."
+              <span class="src">QS. Al-A'raf: 180 · Dihimpun dalam HR. Tirmidzi no. 3507</span>
+            </div>
             <div style="text-align:left;border-top:1px solid var(--line);padding-top:12px;margin-top:12px;">
-              <div class="eyebrow">Renungan</div>
+              <div class="eyebrow">Manfaat Merenungkan Nama Ini</div>
               <p id="ahDetailRenungan" style="margin:4px 0 0;color:var(--ink-soft);font-size:.92rem;"></p>
             </div>
           </div>
@@ -1400,6 +1470,36 @@
         <div class="card" data-card><div class="card-head" data-toggle><div class="num">6</div><h3>Sujud</h3><div class="chev">+</div></div><div class="card-body"><div class="arabic">سُبْحَانَ رَبِّيَ الْأَعْلَى وَبِحَمْدِهِ</div><p>Meletakkan dahi, hidung, kedua telapak tangan, lutut, dan ujung jari kaki ke lantai, membaca tasbih sujud sebanyak tiga kali, dilakukan dua kali tiap rakaat.</p></div></div>
         <div class="card" data-card><div class="card-head" data-toggle><div class="num">7</div><h3>Duduk di Antara Dua Sujud</h3><div class="chev">+</div></div><div class="card-body"><div class="arabic">رَبِّ اغْفِرْ لِي وَارْحَمْنِي</div><p>Duduk sejenak antara sujud pertama dan kedua sambil memohon ampunan dan rahmat Allah.</p></div></div>
         <div class="card" data-card><div class="card-head" data-toggle><div class="num">8</div><h3>Tasyahud & Salam</h3><div class="chev">+</div></div><div class="card-body"><p>Pada rakaat terakhir, duduk membaca tasyahud yang berisi kesaksian dan sholawat kepada Nabi ﷺ, lalu sholat ditutup dengan mengucap salam sambil menoleh ke kanan dan ke kiri.</p></div></div>
+
+        <div class="subhead">Bacaan & Ketentuan Tambahan</div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Tuma'ninah</h3><div class="chev">+</div></div><div class="card-body"><p>Diam sejenak dengan tenang pada setiap gerakan sholat (ruku, i'tidal, sujud, duduk) sebelum berpindah ke gerakan berikutnya. Tuma'ninah termasuk rukun sholat — tanpanya, sholat tidak sah.</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Qunut Subuh</h3><div class="chev">+</div></div><div class="card-body">
+          <div class="arabic">اللَّهُمَّ اهْدِنِي فِيمَنْ هَدَيْتَ وَعَافِنِي فِيمَنْ عَافَيْتَ</div>
+          <p>"Ya Allah, berilah aku petunjuk sebagaimana orang yang telah Engkau beri petunjuk, dan berilah aku keselamatan sebagaimana orang yang telah Engkau beri keselamatan..."</p>
+          <p style="margin-top:6px;">Dibaca pada i'tidal rakaat kedua sholat Subuh (mazhab Syafi'i), sebagai doa memohon petunjuk dan perlindungan.</p>
+        </div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Sujud Sahwi</h3><div class="chev">+</div></div><div class="card-body">
+          <p>Dua kali sujud tambahan sebelum atau sesudah salam, dilakukan ketika lupa atau ragu dalam jumlah rakaat, meninggalkan tasyahud awal, atau kesalahan serupa dalam sholat.</p>
+          <div class="arabic" style="font-size:1.1rem;">سُبْحَانَ مَنْ لَا يَنَامُ وَلَا يَسْهُو</div>
+          <p>"Maha Suci Allah yang tidak tidur dan tidak lupa" (bacaan yang umum diamalkan saat sujud sahwi).</p>
+        </div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Sholat Jumat</h3><div class="chev">+</div></div><div class="card-body">
+          <p>Wajib bagi laki-laki muslim yang mukim, menggantikan sholat Zuhur pada hari Jumat, dikerjakan 2 rakaat secara berjamaah didahului dua khutbah.</p>
+          <ul class="detail-list">
+            <li>Syarat wajib: laki-laki, baligh, berakal, mukim (menetap), sehat.</li>
+            <li>Didahului khutbah pertama & kedua dengan jeda duduk sejenak.</li>
+            <li>Dianjurkan mandi, memakai wangi-wangian, dan datang lebih awal.</li>
+          </ul>
+        </div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Sholat Jenazah</h3><div class="chev">+</div></div><div class="card-body">
+          <p>Fardhu kifayah (kewajiban kolektif) bagi muslim yang wafat, dikerjakan tanpa ruku dan sujud, hanya berdiri dengan 4 takbir.</p>
+          <ul class="detail-list">
+            <li>Takbir 1: niat + membaca Al-Fatihah.</li>
+            <li>Takbir 2: membaca sholawat kepada Nabi ﷺ.</li>
+            <li>Takbir 3: membaca doa untuk jenazah.</li>
+            <li>Takbir 4: membaca doa penutup, lalu salam.</li>
+          </ul>
+        </div></div>
       </div>
 
       <div class="sub-screen" id="more-wudhu">
@@ -1424,15 +1524,50 @@
             <li>Menepukkan tangan ke debu sekali lagi, mengusap kedua tangan hingga pergelangan.</li>
           </ul>
         </div></div>
+
+        <div class="subhead">Mandi Wajib & Sunnah</div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Pengertian Thaharah</h3><div class="chev">+</div></div><div class="card-body"><p>Thaharah adalah bersuci dari hadas (kecil maupun besar) dan najis, menjadi syarat sah sebelum melaksanakan ibadah seperti sholat. Mencakup wudhu, tayamum, dan mandi wajib.</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Mandi Wajib (Janabah)</h3><div class="chev">+</div></div><div class="card-body">
+          <p>Wajib dilakukan setelah berhadas besar, seperti setelah berhubungan suami istri, keluar mani, selesai haid, atau selesai nifas.</p>
+          <ul class="detail-list">
+            <li>Niat menghilangkan hadas besar.</li>
+            <li>Membasuh kedua tangan, lalu membersihkan kemaluan dari kotoran.</li>
+            <li>Berwudhu seperti wudhu untuk sholat.</li>
+            <li>Menyiramkan air ke seluruh tubuh secara merata, dimulai dari kepala hingga kaki.</li>
+          </ul>
+        </div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Mandi Sunnah</h3><div class="chev">+</div></div><div class="card-body">
+          <ul class="detail-list">
+            <li>Mandi sebelum sholat Jumat.</li>
+            <li>Mandi sebelum sholat Idul Fitri & Idul Adha.</li>
+            <li>Mandi sebelum ihram haji/umrah.</li>
+            <li>Mandi setelah memandikan atau mengurus jenazah.</li>
+          </ul>
+        </div></div>
       </div>
 
       <div class="sub-screen" id="more-sunnah">
         <div class="back-row" data-back>‹ Kembali ke Lainnya</div>
-        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Sholat Dhuha</h3><div class="chev">+</div></div><div class="card-body"><p>Dikerjakan 2 hingga 12 rakaat pada pagi hari setelah matahari naik sepenggalah hingga menjelang zuhur. Diyakini terkait dengan kelapangan rezeki.</p></div></div>
+        <p style="font-size:.85rem;color:var(--ink-soft);margin-top:0;">Sholat sunnah adalah ibadah tambahan di luar 5 waktu wajib, dianjurkan untuk menyempurnakan kekurangan pada sholat fardhu.</p>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Sholat Rawatib</h3><div class="chev">+</div></div><div class="card-body"><p>Sholat sunnah yang mengiringi sholat wajib, dikerjakan sebelum (qabliyah) atau sesudah (ba'diyah) sholat fardhu, umumnya 2 rakaat tiap kesempatan.</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Sholat Mutlaq</h3><div class="chev">+</div></div><div class="card-body"><p>Sholat sunnah bebas yang boleh dikerjakan kapan saja tanpa sebab atau waktu khusus, selama bukan pada waktu-waktu terlarang sholat.</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Sholat Hajat</h3><div class="chev">+</div></div><div class="card-body"><p>Dikerjakan 2 rakaat atau lebih untuk memohon kepada Allah agar suatu hajat/keinginan dikabulkan atau dimudahkan.</p></div></div>
         <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Sholat Tahajud</h3><div class="chev">+</div></div><div class="card-body"><p>Dikerjakan pada sepertiga malam terakhir setelah tidur terlebih dahulu, minimal 2 rakaat. Termasuk sholat sunnah yang sangat dianjurkan.</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Sholat Tarawih</h3><div class="chev">+</div></div><div class="card-body"><p>Sholat malam khusus bulan Ramadhan, dikerjakan berjamaah setelah Isya dengan jumlah rakaat yang bervariasi (8 atau 20 rakaat) tergantung tradisi masing-masing.</p></div></div>
         <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Sholat Witir</h3><div class="chev">+</div></div><div class="card-body"><p>Sholat penutup ibadah malam dengan jumlah rakaat ganjil (1, 3, 5, atau lebih), biasa dikerjakan setelah tarawih atau tahajud.</p></div></div>
-        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Sholat Rawatib</h3><div class="chev">+</div></div><div class="card-body"><p>Sholat sunnah yang mengiringi sholat wajib, dikerjakan sebelum (qabliyah) atau sesudah (ba'diyah) sholat fardhu.</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Sholat Idul Fitri</h3><div class="chev">+</div></div><div class="card-body"><p>Dikerjakan 2 rakaat berjamaah pada pagi 1 Syawal, diawali 7 takbir tambahan di rakaat pertama dan 5 takbir di rakaat kedua, tanpa azan dan iqamah.</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Sholat Idul Adha</h3><div class="chev">+</div></div><div class="card-body"><p>Dikerjakan 2 rakaat berjamaah pada pagi 10 Dzulhijjah dengan tata cara serupa Idul Fitri, dilanjutkan penyembelihan hewan qurban.</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Sholat Dhuha</h3><div class="chev">+</div></div><div class="card-body"><p>Dikerjakan 2 hingga 12 rakaat pada pagi hari setelah matahari naik sepenggalah hingga menjelang zuhur. Diyakini terkait dengan kelapangan rezeki.</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Sholat Tahiyatul Masjid</h3><div class="chev">+</div></div><div class="card-body"><p>Dikerjakan 2 rakaat sebagai penghormatan sesaat setelah memasuki masjid, sebelum duduk.</p></div></div>
         <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Sholat Istikharah</h3><div class="chev">+</div></div><div class="card-body"><p>Dikerjakan 2 rakaat untuk memohon petunjuk terbaik dari Allah ketika menghadapi pilihan atau keputusan penting.</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Sholat Taubat</h3><div class="chev">+</div></div><div class="card-body"><p>Dikerjakan 2 rakaat atau lebih disertai penyesalan sungguh-sungguh dan permohonan ampun atas dosa yang telah diperbuat.</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Sholat Gerhana (Kusuf/Khusuf)</h3><div class="chev">+</div></div><div class="card-body"><p>Dikerjakan berjamaah saat terjadi gerhana matahari (kusuf) atau gerhana bulan (khusuf), dengan tata cara khusus: tiap rakaat memiliki dua kali ruku'.</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Sholat Istisqa</h3><div class="chev">+</div></div><div class="card-body"><p>Dikerjakan berjamaah untuk memohon turunnya hujan di masa kekeringan, disertai khutbah dan doa memohon hujan.</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Sholat Sunnah Wudhu</h3><div class="chev">+</div></div><div class="card-body"><p>Dikerjakan 2 rakaat segera setelah berwudhu, sebagai bentuk syukur telah menyempurnakan bersuci.</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Sholat Tasbih</h3><div class="chev">+</div></div><div class="card-body"><p>Dikerjakan 4 rakaat dengan memperbanyak bacaan tasbih (300 kali) di setiap rakaatnya pada posisi-posisi tertentu, sebagai sarana memohon ampunan.</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Sholat Qabliyah Jumat</h3><div class="chev">+</div></div><div class="card-body"><p>Dikerjakan sebelum sholat Jumat dimulai, sebagai pengisi waktu menunggu sekaligus penambah pahala.</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Sholat Syuruq</h3><div class="chev">+</div></div><div class="card-body"><p>Dikerjakan 2 rakaat sesaat setelah matahari terbit sempurna (sekitar 15-20 menit setelahnya), umumnya dilakukan setelah duduk berzikir sejak Subuh.</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Sholat Awwabin</h3><div class="chev">+</div></div><div class="card-body"><p>Dikerjakan antara Maghrib dan Isya, umumnya 2-6 rakaat, sebagai bentuk kembali (awwab) kepada Allah di waktu senja.</p></div></div>
       </div>
 
       <div class="sub-screen" id="more-kiblat">
@@ -1511,6 +1646,93 @@
         <div class="card" data-card><div class="card-head" data-toggle><div class="num">4</div><h3>Hambali</h3><div class="chev">+</div></div><div class="card-body"><p>Didirikan oleh Imam Ahmad bin Hanbal. Dikenal sangat berpegang teguh pada hadits dan berhati-hati dalam penggunaan rasio. Mayoritas dianut di Arab Saudi.</p></div></div>
       </div>
 
+      <div class="sub-screen" id="more-faraidh">
+        <div class="back-row" data-back>‹ Kembali ke Lainnya</div>
+
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Pengertian Faraidh</h3><div class="chev">+</div></div><div class="card-body">
+          <p>Faraidh (ilmu waris/mawarits) adalah ilmu yang mengatur tata cara pembagian harta peninggalan seseorang yang telah wafat kepada ahli warisnya, sesuai bagian-bagian yang telah ditetapkan syariat Islam secara rinci.</p>
+        </div></div>
+
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Dalil Faraidh</h3><div class="chev">+</div></div><div class="card-body">
+          <div class="dalil">
+            <div class="arabic" style="font-size:1.05rem;">يُوصِيكُمُ اللَّهُ فِي أَوْلَادِكُمْ لِلذَّكَرِ مِثْلُ حَظِّ الْأُنْثَيَيْنِ</div>
+            "Allah mensyariatkan bagimu tentang (pembagian warisan untuk) anak-anakmu, yaitu bagian seorang anak laki-laki sama dengan bagian dua anak perempuan."
+            <span class="src">QS. An-Nisa: 11 <button class="play-verse" data-surah="4" data-ayah="11">🔊</button></span>
+          </div>
+          <p style="margin-top:10px;">Ketentuan waris lebih lanjut dijelaskan pada QS. An-Nisa: 12 dan 176, serta hadits: "Berikanlah bagian-bagian warisan kepada yang berhak menerimanya, dan sisanya untuk kerabat laki-laki yang paling utama (dekat)." (HR. Bukhari & Muslim)</p>
+        </div></div>
+
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Rukun Waris</h3><div class="chev">+</div></div><div class="card-body">
+          <ul class="detail-list">
+            <li><b>Muwarris</b> — orang yang meninggal dunia dan meninggalkan harta.</li>
+            <li><b>Warits</b> — ahli waris yang masih hidup dan berhak menerima warisan.</li>
+            <li><b>Tirkah/Mauruts</b> — harta peninggalan yang akan dibagikan.</li>
+          </ul>
+        </div></div>
+
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Sebab & Syarat Mendapat Waris</h3><div class="chev">+</div></div><div class="card-body">
+          <p><b>Sebab-sebab mewarisi:</b></p>
+          <ul class="detail-list">
+            <li>Hubungan nasab/kekerabatan (keturunan atau garis keluarga).</li>
+            <li>Hubungan pernikahan yang sah (suami atau istri).</li>
+            <li>Wala' (hubungan akibat memerdekakan budak — jarang berlaku di masa kini).</li>
+          </ul>
+          <p style="margin-top:10px;"><b>Syarat mewarisi:</b></p>
+          <ul class="detail-list">
+            <li>Meninggalnya muwarris secara nyata, hukmi (dinyatakan hakim), atau taqdiri (diperkirakan).</li>
+            <li>Hidupnya ahli waris pada saat muwarris meninggal dunia.</li>
+            <li>Tidak adanya penghalang yang menggugurkan hak waris.</li>
+          </ul>
+        </div></div>
+
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Penghalang Ahli Waris</h3><div class="chev">+</div></div><div class="card-body">
+          <ul class="detail-list">
+            <li><b>Perbedaan agama</b> — ahli waris nonmuslim tidak mewarisi dari muwarris muslim, begitu pula sebaliknya.</li>
+            <li><b>Pembunuhan</b> — ahli waris yang membunuh muwarris tidak berhak mendapat warisan darinya.</li>
+            <li><b>Perbudakan</b> — status budak menghalangi hak waris (sudah tidak relevan pada masa kini).</li>
+          </ul>
+        </div></div>
+
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Ahli Waris Pihak Laki-Laki</h3><div class="chev">+</div></div><div class="card-body">
+          <p>Terdapat 15 golongan ahli waris laki-laki menurut fiqih klasik, di antaranya:</p>
+          <ul class="detail-list">
+            <li>Anak laki-laki & cucu laki-laki (dari anak laki-laki)</li>
+            <li>Ayah & kakek (dari pihak ayah)</li>
+            <li>Saudara laki-laki (kandung, seayah, atau seibu)</li>
+            <li>Anak laki-laki dari saudara laki-laki (keponakan)</li>
+            <li>Paman (kandung/seayah dengan ayah) & anak laki-lakinya</li>
+            <li>Suami</li>
+          </ul>
+        </div></div>
+
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Ahli Waris Pihak Perempuan</h3><div class="chev">+</div></div><div class="card-body">
+          <p>Terdapat 10 golongan ahli waris perempuan menurut fiqih klasik, di antaranya:</p>
+          <ul class="detail-list">
+            <li>Anak perempuan & cucu perempuan (dari anak laki-laki)</li>
+            <li>Ibu & nenek (dari pihak ayah maupun ibu)</li>
+            <li>Saudara perempuan (kandung, seayah, atau seibu)</li>
+            <li>Istri</li>
+          </ul>
+        </div></div>
+
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Ashabul Furudh (Bagian yang Ditetapkan)</h3><div class="chev">+</div></div><div class="card-body">
+          <p>Ahli waris tertentu memperoleh bagian pasti (fardh) sesuai ketentuan Al-Qur'an:</p>
+          <div class="subgrid" style="grid-template-columns:1fr 1fr;">
+            <div class="chip"><b>1/2</b>Anak/cucu perempuan tunggal, saudara perempuan tunggal, atau suami (tanpa anak)</div>
+            <div class="chip"><b>1/4</b>Suami (ada anak) atau istri (tanpa anak)</div>
+            <div class="chip"><b>1/8</b>Istri (bila ada anak)</div>
+            <div class="chip"><b>2/3</b>Dua anak perempuan atau lebih, dua saudara perempuan atau lebih</div>
+            <div class="chip"><b>1/3</b>Ibu (tanpa anak/cucu) atau dua saudara seibu atau lebih</div>
+            <div class="chip"><b>1/6</b>Ayah/ibu (bila ada anak), nenek, atau saudara seibu tunggal</div>
+          </div>
+        </div></div>
+
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Ashabah (Sisa Harta)</h3><div class="chev">+</div></div><div class="card-body">
+          <p>Ashabah adalah ahli waris yang menerima sisa harta setelah bagian ashabul furudh dibagikan, seperti anak laki-laki, ayah (dalam kondisi tertentu), dan saudara laki-laki kandung. Jika tidak ada ashabah, sisa harta dikembalikan (radd) kepada ashabul furudh sesuai proporsi bagiannya.</p>
+          <p style="margin-top:10px;font-size:.78rem;color:var(--ink-soft);">*Perhitungan pembagian waris pada kasus nyata sebaiknya dikonsultasikan kepada ahli faraidh atau lembaga yang berkompeten, karena bisa melibatkan kombinasi ahli waris yang rumit ('aul, radd, hijab, dsb).</p>
+        </div></div>
+      </div>
+
       <div class="sub-screen" id="more-akhirat">
         <div class="back-row" data-back>‹ Kembali ke Lainnya</div>
         <div class="subhead" style="margin-top:0;">Tingkatan Surga</div>
@@ -1558,14 +1780,53 @@
       <div class="sub-screen" id="more-haji">
         <div class="back-row" data-back>‹ Kembali ke Lainnya</div>
 
-        <div class="subhead" style="margin-top:0;">Jenis Pelaksanaan Haji</div>
+        <div class="subhead" style="margin-top:0;">Persiapan Haji & Umrah</div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Persiapan Fisik & Mental</h3><div class="chev">+</div></div><div class="card-body">
+          <ul class="detail-list">
+            <li>Menjaga kesehatan dan stamina jauh-jauh hari, mengingat rangkaian ibadah menuntut banyak berjalan kaki.</li>
+            <li>Mempelajari manasik (tata cara ibadah) sebelum berangkat agar tidak bingung di lapangan.</li>
+            <li>Menyelesaikan urusan dan utang-piutang di rumah, serta meminta maaf & restu keluarga.</li>
+            <li>Melatih kesabaran, karena akan bertemu jutaan jamaah dari berbagai negara dalam kondisi padat.</li>
+          </ul>
+        </div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Persiapan Administrasi & Perlengkapan</h3><div class="chev">+</div></div><div class="card-body">
+          <ul class="detail-list">
+            <li>Melengkapi dokumen perjalanan: paspor, visa haji/umrah, sertifikat vaksin yang disyaratkan.</li>
+            <li>Menyiapkan pakaian ihram (2 helai kain putih tanpa jahitan untuk laki-laki) dan perlengkapan pribadi.</li>
+            <li>Membawa obat-obatan pribadi dan menjaga kecukupan bekal selama perjalanan.</li>
+          </ul>
+        </div></div>
+
+        <div class="subhead">Miqat (Batas Mulai Ihram)</div>
+        <div class="subgrid" style="grid-template-columns:1fr;">
+          <div class="chip"><b>Dzul Hulaifah</b>Miqat jamaah dari arah Madinah</div>
+          <div class="chip"><b>Al-Juhfah</b>Miqat jamaah dari arah Syam/Mesir</div>
+          <div class="chip"><b>Qarnul Manazil</b>Miqat jamaah dari arah Najd</div>
+          <div class="chip"><b>Yalamlam</b>Miqat jamaah dari arah Yaman</div>
+          <div class="chip"><b>Dzatu 'Irq</b>Miqat jamaah dari arah Irak</div>
+          <div class="chip"><b>Miqat Zamani</b>Batas waktu ihram haji: mulai Syawal hingga terbit fajar 10 Dzulhijjah</div>
+        </div>
+
+        <div class="subhead">Jenis Pelaksanaan Haji</div>
         <div class="subgrid" style="grid-template-columns:1fr;">
           <div class="chip"><b>Ifrad</b>Hanya berihram untuk haji saja.</div>
           <div class="chip"><b>Tamattu</b>Berihram umrah lebih dulu di bulan haji, tahallul, lalu berihram haji. Wajib membayar dam.</div>
           <div class="chip"><b>Qiran</b>Berihram haji dan umrah sekaligus dalam satu niat. Wajib membayar dam.</div>
         </div>
 
-        <div class="subhead">Urutan Manasik</div>
+        <div class="subhead">Fiqih Haji: Rukun, Wajib & Sunnah</div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Rukun Haji (Wajib, Tak Bisa Diganti Dam)</h3><div class="chev">+</div></div><div class="card-body">
+          <ul class="detail-list"><li>Ihram disertai niat</li><li>Wukuf di Arafah</li><li>Tawaf Ifadah</li><li>Sa'i</li><li>Tahallul (mencukur/memendekkan rambut)</li><li>Tertib (berurutan)</li></ul>
+        </div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Wajib Haji (Boleh Diganti Dam Bila Tertinggal)</h3><div class="chev">+</div></div><div class="card-body">
+          <ul class="detail-list"><li>Ihram dari miqat</li><li>Mabit di Muzdalifah</li><li>Mabit di Mina</li><li>Melontar jumrah</li><li>Tawaf Wada</li><li>Menjauhi larangan ihram</li></ul>
+        </div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Dam (Denda) dalam Haji</h3><div class="chev">+</div></div><div class="card-body">
+          <p>Dam adalah kewajiban menyembelih hewan (umumnya kambing) atau berpuasa sebagai ganti bila ada rukun/wajib haji yang tidak terpenuhi, seperti pada haji tamattu dan qiran, atau meninggalkan salah satu wajib haji.</p>
+          <ul class="detail-list"><li>Dam tamattu/qiran: menyembelih kambing, atau puasa 3 hari saat haji + 7 hari setelah pulang.</li><li>Dam pelanggaran larangan ihram: menyembelih, bersedekah, atau berpuasa sesuai jenis pelanggaran.</li></ul>
+        </div></div>
+
+        <div class="subhead">Urutan Manasik Haji</div>
         <div class="card" data-card><div class="card-head" data-toggle><div class="num">1</div><h3>Miqat & Ihram</h3><div class="chev">+</div></div><div class="card-body"><p>Berniat ihram di miqat yang telah ditentukan, mengenakan pakaian ihram, serta menjauhi seluruh larangan ihram seperti memotong rambut/kuku, memakai wangi-wangian, dan berburu.</p></div></div>
         <div class="card" data-card><div class="card-head" data-toggle><div class="num">2</div><h3>Tawaf Qudum</h3><div class="chev">+</div></div><div class="card-body"><p>Tawaf penyambutan mengelilingi Ka'bah sebanyak 7 kali bagi jamaah yang baru tiba, umumnya dilakukan pada haji ifrad atau qiran.</p></div></div>
         <div class="card" data-card><div class="card-head" data-toggle><div class="num">3</div><h3>Sa'i</h3><div class="chev">+</div></div><div class="card-body"><p>Berjalan dan berlari-lari kecil antara bukit Safa dan Marwah sebanyak 7 kali, mengenang perjuangan Siti Hajar mencari air untuk Nabi Ismail.</p></div></div>
@@ -1576,6 +1837,46 @@
         <div class="card" data-card><div class="card-head" data-toggle><div class="num">8</div><h3>Tawaf Ifadah</h3><div class="chev">+</div></div><div class="card-body"><p>Tawaf mengelilingi Ka'bah 7 kali sebagai salah satu rukun haji, dilaksanakan setelah wukuf di Arafah.</p></div></div>
         <div class="card" data-card><div class="card-head" data-toggle><div class="num">9</div><h3>Mabit di Mina</h3><div class="chev">+</div></div><div class="card-body"><p>Bermalam di Mina selama hari-hari tasyrik sembari melanjutkan pelontaran jumrah tiap harinya.</p></div></div>
         <div class="card" data-card><div class="card-head" data-toggle><div class="num">10</div><h3>Tawaf Wada</h3><div class="chev">+</div></div><div class="card-body"><p>Tawaf perpisahan yang dilakukan sebelum meninggalkan Makkah, menjadi penutup seluruh rangkaian ibadah haji.</p></div></div>
+
+        <div class="subhead">Fiqih & Tata Cara Umrah</div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Rukun Umrah</h3><div class="chev">+</div></div><div class="card-body">
+          <ul class="detail-list"><li>Ihram disertai niat</li><li>Tawaf mengelilingi Ka'bah 7 kali</li><li>Sa'i antara Safa dan Marwah</li><li>Tahallul (mencukur/memendekkan rambut)</li><li>Tertib (berurutan)</li></ul>
+          <p style="margin-top:8px;">Umrah lebih sederhana dari haji karena tidak ada wukuf di Arafah, mabit, maupun lontar jumrah, dan bisa dikerjakan kapan saja sepanjang tahun (kecuali sedang berhaji).</p>
+        </div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">1</div><h3>Ihram dari Miqat</h3><div class="chev">+</div></div><div class="card-body"><p>Berniat umrah di miqat, mengenakan pakaian ihram, dan menjauhi larangan ihram sejak niat diucapkan.</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">2</div><h3>Tawaf</h3><div class="chev">+</div></div><div class="card-body"><p>Mengelilingi Ka'bah sebanyak 7 kali berlawanan arah jarum jam, dimulai dan diakhiri di sejajar Hajar Aswad.</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">3</div><h3>Sa'i</h3><div class="chev">+</div></div><div class="card-body"><p>Berjalan/berlari kecil antara Safa dan Marwah sebanyak 7 kali, dimulai dari Safa dan diakhiri di Marwah.</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">4</div><h3>Tahallul</h3><div class="chev">+</div></div><div class="card-body"><p>Mencukur atau memendekkan rambut sebagai penutup rangkaian umrah, setelah itu larangan ihram sudah tidak berlaku.</p></div></div>
+
+        <div class="subhead">Doa-Doa Haji & Umrah</div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Talbiyah</h3><div class="chev">+</div></div><div class="card-body">
+          <div class="arabic">لَبَّيْكَ اللَّهُمَّ لَبَّيْكَ، لَبَّيْكَ لَا شَرِيكَ لَكَ لَبَّيْكَ، إِنَّ الْحَمْدَ وَالنِّعْمَةَ لَكَ وَالْمُلْكَ، لَا شَرِيكَ لَكَ</div>
+          <p>"Aku penuhi panggilan-Mu ya Allah, aku penuhi panggilan-Mu. Aku penuhi panggilan-Mu, tiada sekutu bagi-Mu, aku penuhi panggilan-Mu. Sesungguhnya segala puji, nikmat, dan kerajaan adalah milik-Mu, tiada sekutu bagi-Mu."</p>
+          <div class="dalil"><span class="src">HR. Bukhari & Muslim — dibaca berulang sejak ihram hingga mulai tawaf/lontar jumrah</span></div>
+        </div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Doa Masuk Kota Makkah</h3><div class="chev">+</div></div><div class="card-body">
+          <div class="arabic">اللَّهُمَّ هَذَا حَرَمُكَ وَأَمْنُكَ فَحَرِّمْنِي عَلَى النَّارِ</div>
+          <p>"Ya Allah, ini adalah tanah suci dan tempat aman-Mu, maka jauhkanlah diriku dari api neraka."</p>
+        </div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Doa Saat Tawaf</h3><div class="chev">+</div></div><div class="card-body">
+          <div class="arabic">رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ</div>
+          <p>"Ya Tuhan kami, berilah kami kebaikan di dunia dan kebaikan di akhirat, dan peliharalah kami dari siksa neraka." (dibaca terutama di antara Rukun Yamani dan Hajar Aswad)</p>
+          <div class="dalil"><span class="src">QS. Al-Baqarah: 201 <button class="play-verse" data-surah="2" data-ayah="201">🔊</button></span></div>
+        </div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Doa di Bukit Safa & Marwah (Sa'i)</h3><div class="chev">+</div></div><div class="card-body">
+          <div class="arabic">إِنَّ الصَّفَا وَالْمَرْوَةَ مِنْ شَعَائِرِ اللَّهِ</div>
+          <p>"Sesungguhnya Safa dan Marwah termasuk syiar-syiar (agama) Allah." — dibaca saat memulai sa'i, dilanjutkan dzikir dan doa bebas di setiap putaran.</p>
+          <div class="dalil"><span class="src">QS. Al-Baqarah: 158</span></div>
+        </div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Doa Wukuf di Arafah</h3><div class="chev">+</div></div><div class="card-body">
+          <div class="arabic">لَا إِلَٰهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ</div>
+          <p>"Tiada Tuhan selain Allah semata, tiada sekutu bagi-Nya, bagi-Nya kerajaan dan segala puji, dan Dia Maha Kuasa atas segala sesuatu." — sebaik-baik doa hari Arafah, diperbanyak sepanjang wukuf.</p>
+          <div class="dalil"><span class="src">HR. Tirmidzi</span></div>
+        </div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Doa Setelah Melontar Jumrah</h3><div class="chev">+</div></div><div class="card-body">
+          <div class="arabic">اللَّهُ أَكْبَرُ</div>
+          <p>Diucapkan setiap kali melempar satu kerikil, kemudian dilanjutkan doa dan dzikir bebas setelah menyelesaikan lontaran di tiap jumrah (kecuali di Jumrah Aqabah pada 10 Dzulhijjah).</p>
+        </div></div>
       </div>
 
       <div class="sub-screen" id="more-zakat">
@@ -1931,7 +2232,7 @@
   function playAllAhStep(){
     if(!isPlayingAllAh || ahQueueIndex >= asmaul.length){
       isPlayingAllAh = false;
-      document.getElementById('btnPlayAllAh').textContent = '▶ Putar 99 Nama Berurutan';
+      document.getElementById('btnPlayAllAh').innerHTML = SVG_PLAY + ' Putar 99 Nama Berurutan';
       return;
     }
     const el = ahGrid.children[ahQueueIndex];
@@ -1947,12 +2248,12 @@
     if(isPlayingAllAh){
       isPlayingAllAh = false;
       speechSynthesis.cancel();
-      document.getElementById('btnPlayAllAh').textContent = '▶ Putar 99 Nama Berurutan';
+      document.getElementById('btnPlayAllAh').innerHTML = SVG_PLAY + ' Putar 99 Nama Berurutan';
       return;
     }
     isPlayingAllAh = true;
     ahQueueIndex = 0;
-    document.getElementById('btnPlayAllAh').textContent = '❚❚ Berhenti';
+    document.getElementById('btnPlayAllAh').innerHTML = SVG_PAUSE + ' Berhenti';
     playAllAhStep();
   });
   document.getElementById('ahSearch').addEventListener('input', e=>{
@@ -2044,15 +2345,15 @@
     isPlayingAll = false;
     ayahQueue = [];
     if(currentAudio){ currentAudio.pause(); currentAudio.onended = null; currentAudio = null; }
-    if(currentPlayBtn){ currentPlayBtn.classList.remove('playing'); currentPlayBtn.textContent='▶'; currentPlayBtn=null; }
+    if(currentPlayBtn){ currentPlayBtn.classList.remove('playing'); currentPlayBtn.innerHTML=SVG_PLAY; currentPlayBtn=null; }
     const allBtn = document.getElementById('btnPlayAll');
-    if(allBtn) allBtn.textContent = '▶ Putar Semua Ayat';
+    if(allBtn) allBtn.innerHTML = SVG_PLAY + ' Putar Semua Ayat';
   }
 
   function playQueueStep(){
     if(!isPlayingAll || queueIndex >= ayahQueue.length){ stopAudio(); return; }
     const item = ayahQueue[queueIndex];
-    if(currentPlayBtn){ currentPlayBtn.classList.remove('playing'); currentPlayBtn.textContent='▶'; }
+    if(currentPlayBtn){ currentPlayBtn.classList.remove('playing'); currentPlayBtn.innerHTML=SVG_PLAY; }
     currentAudio = new Audio(item.audio);
     currentPlayBtn = item.btn;
     if(currentPlayBtn){ currentPlayBtn.classList.add('playing'); currentPlayBtn.textContent='❚❚'; }
@@ -2069,7 +2370,7 @@
     ayahQueue = buttons.map(b=>({audio:b.dataset.audio, btn:b}));
     queueIndex = 0;
     isPlayingAll = true;
-    document.getElementById('btnPlayAll').textContent = '❚❚ Berhenti';
+    document.getElementById('btnPlayAll').innerHTML = SVG_PAUSE + ' Berhenti';
     playQueueStep();
   }
   document.getElementById('btnPlayAll').addEventListener('click', playAllAyat);
@@ -2095,7 +2396,7 @@
         el.innerHTML = `
           <div class="ayah-top">
             <div class="ayah-num-badge">${ayah.numberInSurah}</div>
-            <button class="play-btn" data-audio="${audioEd.ayahs[i].audio}">▶</button>
+            <button class="play-btn" data-audio="${audioEd.ayahs[i].audio}">${SVG_PLAY}</button>
           </div>
           <div class="ayah-arabic arabic">${ayah.text}</div>
           <div class="ayah-translit">${translitEd.ayahs[i].text}</div>
@@ -2119,14 +2420,14 @@
       fetch(`https://api.alquran.cloud/v1/ayah/${s}:${a}/ar.alafasy`)
         .then(r=>r.json())
         .then(json=>{
-          playVerse.textContent = '🔊';
+          playVerse.innerHTML = SVG_SPEAKER;
           currentAudio = new Audio(json.data.audio);
           currentAudio.play();
           currentPlayBtn = playVerse;
           playVerse.classList.add('playing');
           currentAudio.addEventListener('ended', stopAudio);
         })
-        .catch(()=>{ playVerse.textContent = '🔊'; });
+        .catch(()=>{ playVerse.innerHTML = SVG_SPEAKER; });
       return;
     }
     const ahItem = e.target.closest('.ah-item');
@@ -2149,7 +2450,7 @@
       currentAudio.play();
       currentPlayBtn = playBtn;
       playBtn.classList.add('playing');
-      playBtn.textContent = '❚❚';
+      playBtn.innerHTML = SVG_PAUSE;
       currentAudio.addEventListener('ended', stopAudio);
       return;
     }
@@ -2308,6 +2609,44 @@
     const el = document.getElementById('hijriDateHome');
     if(el) el.textContent = `${h.d} ${hijriMonths[h.m-1]} ${h.y} H`;
   })();
+
+  // ---- Auto-inject voice buttons on all Arabic text + unify speaker icons ----
+  const SVG_SPEAKER = '<svg viewBox="0 0 24 24"><path d="M4 9v6h4l5 5V4L8 9H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/><path d="M19 6a8.5 8.5 0 0 1 0 12"/></svg>';
+  const SVG_PLAY = '<svg viewBox="0 0 24 24"><path d="M6 4l14 8-14 8V4z" fill="currentColor" stroke="none"/></svg>';
+  const SVG_PAUSE = '<svg viewBox="0 0 24 24"><rect x="5" y="4" width="5" height="16" fill="currentColor" stroke="none"/><rect x="14" y="4" width="5" height="16" fill="currentColor" stroke="none"/></svg>';
+
+  function injectArabicVoiceButtons(){
+    document.querySelectorAll('.arabic').forEach(el=>{
+      if(el.closest('#ayahList')) return;
+      if(el.id === 'ahDetailArabic') return;
+      if(el.id === 'iqraPreview') return;
+      if(el.dataset.voiceAdded) return;
+      el.dataset.voiceAdded = '1';
+      const btn = document.createElement('button');
+      btn.className = 'arabic-voice-btn';
+      btn.innerHTML = SVG_SPEAKER;
+      btn.setAttribute('aria-label', 'Dengarkan');
+      btn.addEventListener('click', (e)=>{
+        e.stopPropagation();
+        document.querySelectorAll('.arabic-voice-btn.speaking').forEach(b=>b.classList.remove('speaking'));
+        btn.classList.add('speaking');
+        speakArabic(el.textContent, ()=> btn.classList.remove('speaking'));
+      });
+      el.insertAdjacentElement('afterend', btn);
+    });
+  }
+  injectArabicVoiceButtons();
+
+  // Unify existing manual voice/play buttons with clean SVG icons
+  ['btnSyahadatVoice','btnAhVoice','btnIqraBunyikan'].forEach(id=>{
+    const b = document.getElementById(id);
+    if(b){ b.innerHTML = SVG_SPEAKER + ' ' + b.textContent.replace(/^\S+\s*/, ''); }
+  });
+  document.querySelectorAll('.play-verse').forEach(b=>{ b.innerHTML = SVG_SPEAKER; });
+  const playAllAhBtn = document.getElementById('btnPlayAllAh');
+  if(playAllAhBtn) playAllAhBtn.innerHTML = SVG_PLAY + ' Putar 99 Nama Berurutan';
+  const playAllQuranBtn = document.getElementById('btnPlayAll');
+  if(playAllQuranBtn) playAllQuranBtn.innerHTML = SVG_PLAY + ' Putar Semua Ayat';
 
   // ---- Splash screen ----
   window.addEventListener('load', ()=>{
