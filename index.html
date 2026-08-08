@@ -336,20 +336,26 @@
     background:var(--splash-bg-2);
     display:flex;align-items:center;justify-content:center;
     transition:opacity .6s ease, visibility .6s ease;
-    padding:24px;
   }
   #splash.hide{opacity:0;visibility:hidden;pointer-events:none;}
   .arch-shape{
     position:relative;
-    width:min(300px, 78vw);
-    aspect-ratio:280/380;
-    background:linear-gradient(180deg, var(--splash-bg-1) 0%, var(--splash-bg-2) 100%);
-    border-radius:50% 50% 6px 6px / 38% 38% 6px 6px;
-    box-shadow:0 0 60px rgba(63,174,106,.18);
+    width:100%;
+    height:100%;
     overflow:hidden;
     display:flex;flex-direction:column;align-items:center;justify-content:center;
     text-align:center;
-    padding:20px;
+  }
+  .splash-img-full{
+    position:absolute;inset:0;
+    width:100%;height:100%;
+    object-fit:cover;
+    z-index:1;
+  }
+  .splash-fallback-overlay{
+    position:relative;z-index:2;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    width:100%;height:100%;
   }
   .arch-pattern{
     position:absolute;inset:0;opacity:.35;
@@ -405,17 +411,19 @@
 
 <div id="splash">
   <div class="arch-shape" id="splashArch">
-    <div class="arch-pattern"></div>
-    <img id="splashImg" class="splash-img" alt="Silmikaffah" onerror="this.style.display='none'; document.getElementById('splashFallback').style.display='flex';">
-    <div id="splashFallback" class="splash-logo" style="display:none;"><svg viewBox="0 0 36 36"><path d="M9 10h16l-16 9h16"/><path d="M9 26h16"/><path d="M9 10v16"/></svg></div>
-    <h1 class="splash-title">SILMIKAFFAH</h1>
-    <p class="splash-tagline">Islam Secara Menyeluruh</p>
-    <div class="splash-loader"><div class="splash-loader-bar"></div></div>
-    <div class="arch-skyline">
-      <svg viewBox="0 0 300 100" preserveAspectRatio="none">
-        <path d="M0,100 L0,70 L15,70 L15,55 L25,55 L25,70 L40,70 L40,40 Q40,25 55,25 Q70,25 70,40 L70,70 L85,70 L85,58 L95,58 L95,70 L115,70 L115,45 Q115,20 150,15 Q185,20 185,45 L185,70 L205,70 L205,58 L215,58 L215,70 L230,70 L230,40 Q230,25 245,25 Q260,25 260,40 L260,70 L275,70 L275,55 L285,55 L285,70 L300,70 L300,100 Z"/>
-        <circle cx="150" cy="10" r="2.4" fill="var(--night-2)" stroke="none"/>
-      </svg>
+    <img id="splashImg" class="splash-img-full" alt="Silmikaffah" onerror="this.style.display='none'; document.getElementById('splashFallback').style.display='flex';">
+    <div id="splashFallback" class="splash-fallback-overlay" style="display:none;">
+      <div class="arch-pattern"></div>
+      <div class="splash-logo"><svg viewBox="0 0 36 36"><path d="M9 10h16l-16 9h16"/><path d="M9 26h16"/><path d="M9 10v16"/></svg></div>
+      <h1 class="splash-title">SILMIKAFFAH</h1>
+      <p class="splash-tagline">Islam Secara Menyeluruh</p>
+      <div class="splash-loader"><div class="splash-loader-bar"></div></div>
+      <div class="arch-skyline">
+        <svg viewBox="0 0 300 100" preserveAspectRatio="none">
+          <path d="M0,100 L0,70 L15,70 L15,55 L25,55 L25,70 L40,70 L40,40 Q40,25 55,25 Q70,25 70,40 L70,70 L85,70 L85,58 L95,58 L95,70 L115,70 L115,45 Q115,20 150,15 Q185,20 185,45 L185,70 L205,70 L205,58 L215,58 L215,70 L230,70 L230,40 Q230,25 245,25 Q260,25 260,40 L260,70 L275,70 L275,55 L285,55 L285,70 L300,70 L300,100 Z"/>
+          <circle cx="150" cy="10" r="2.4" fill="var(--night-2)" stroke="none"/>
+        </svg>
+      </div>
     </div>
   </div>
 </div>
@@ -1564,15 +1572,15 @@
 
       <div class="sub-screen" id="more-walisongo">
         <div class="back-row" data-back>‹ Kembali ke Lainnya</div>
-        <div class="card" data-card><div class="card-head" data-toggle><div class="num">1</div><h3>Sunan Gresik</h3><div class="chev">+</div></div><div class="card-body"><p>Maulana Malik Ibrahim, dianggap perintis dakwah Islam di tanah Jawa. Dikenal ramah dan mengajarkan ilmu pertanian serta perdagangan sembari berdakwah kepada masyarakat.</p></div></div>
-        <div class="card" data-card><div class="card-head" data-toggle><div class="num">2</div><h3>Sunan Ampel</h3><div class="chev">+</div></div><div class="card-body"><p>Raden Rahmat, mendirikan pesantren di Ampel Denta, Surabaya. Dikenal dengan ajaran "Moh Limo" — menolak lima perbuatan tercela: berjudi, mabuk, memakai candu, mencuri, dan berzina.</p></div></div>
-        <div class="card" data-card><div class="card-head" data-toggle><div class="num">3</div><h3>Sunan Bonang</h3><div class="chev">+</div></div><div class="card-body"><p>Raden Makdum Ibrahim, berdakwah melalui kesenian gamelan dan tembang. Salah satu pencipta tembang macapat yang memuat nilai-nilai keislaman.</p></div></div>
-        <div class="card" data-card><div class="card-head" data-toggle><div class="num">4</div><h3>Sunan Drajat</h3><div class="chev">+</div></div><div class="card-body"><p>Raden Qasim, dikenal peduli pada kesejahteraan sosial masyarakat. Mengajarkan sikap dermawan dan semangat gotong royong dalam kehidupan sehari-hari.</p></div></div>
-        <div class="card" data-card><div class="card-head" data-toggle><div class="num">5</div><h3>Sunan Kudus</h3><div class="chev">+</div></div><div class="card-body"><p>Ja'far Shadiq, berdakwah dengan pendekatan toleran terhadap tradisi Hindu-Buddha yang berkembang di masyarakat setempat, salah satunya dikenal lewat kebijaksanaan menghormati kepercayaan lokal.</p></div></div>
-        <div class="card" data-card><div class="card-head" data-toggle><div class="num">6</div><h3>Sunan Giri</h3><div class="chev">+</div></div><div class="card-body"><p>Raden Paku, mendirikan pesantren Giri Kedaton yang menjadi pusat pendidikan dan penyebaran Islam. Juga dikenal menciptakan beberapa permainan tradisional anak yang bernuansa Islami.</p></div></div>
-        <div class="card" data-card><div class="card-head" data-toggle><div class="num">7</div><h3>Sunan Kalijaga</h3><div class="chev">+</div></div><div class="card-body"><p>Raden Said, berdakwah melalui seni wayang dan budaya lokal Jawa. Dikenal dengan pendekatan dakwah yang membumi dan mudah diterima masyarakat.</p></div></div>
-        <div class="card" data-card><div class="card-head" data-toggle><div class="num">8</div><h3>Sunan Muria</h3><div class="chev">+</div></div><div class="card-body"><p>Raden Umar Said, putra Sunan Kalijaga. Berdakwah di daerah pegunungan dan pedesaan dengan pendekatan yang sederhana dan dekat dengan rakyat kecil.</p></div></div>
-        <div class="card" data-card><div class="card-head" data-toggle><div class="num">9</div><h3>Sunan Gunung Jati</h3><div class="chev">+</div></div><div class="card-body"><p>Syarif Hidayatullah, berdakwah di wilayah Cirebon dan Banten. Juga dikenal sebagai pendiri Kesultanan Cirebon yang berperan besar dalam penyebaran Islam di Jawa Barat.</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">1</div><div class="card-head-text"><h3>Sunan Gresik</h3><div class="card-preview">Perintis dakwah Islam di Jawa</div></div><div class="card-icon"><svg viewBox="0 0 24 24"><path d="M4 21v-7l3-3 3 3v7"/><path d="M14 21v-7l3-3 3 3v7"/><path d="M10 21v-9a2 2 0 0 1 4 0v9"/><line x1="2" y1="21" x2="22" y2="21"/><circle cx="12" cy="4" r="1.2"/></svg></div><div class="chev">+</div></div><div class="card-body"><p>Maulana Malik Ibrahim, dianggap perintis dakwah Islam di tanah Jawa. Dikenal ramah dan mengajarkan ilmu pertanian serta perdagangan sembari berdakwah kepada masyarakat.</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">2</div><div class="card-head-text"><h3>Sunan Ampel</h3><div class="card-preview">Ajaran Moh Limo, pendiri pesantren Ampel</div></div><div class="card-icon"><svg viewBox="0 0 24 24"><path d="M4 21v-7l3-3 3 3v7"/><path d="M14 21v-7l3-3 3 3v7"/><path d="M10 21v-9a2 2 0 0 1 4 0v9"/><line x1="2" y1="21" x2="22" y2="21"/><circle cx="12" cy="4" r="1.2"/></svg></div><div class="chev">+</div></div><div class="card-body"><p>Raden Rahmat, mendirikan pesantren di Ampel Denta, Surabaya. Dikenal dengan ajaran "Moh Limo" — menolak lima perbuatan tercela: berjudi, mabuk, memakai candu, mencuri, dan berzina.</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">3</div><div class="card-head-text"><h3>Sunan Bonang</h3><div class="card-preview">Berdakwah lewat gamelan & tembang</div></div><div class="card-icon"><svg viewBox="0 0 24 24"><path d="M4 21v-7l3-3 3 3v7"/><path d="M14 21v-7l3-3 3 3v7"/><path d="M10 21v-9a2 2 0 0 1 4 0v9"/><line x1="2" y1="21" x2="22" y2="21"/><circle cx="12" cy="4" r="1.2"/></svg></div><div class="chev">+</div></div><div class="card-body"><p>Raden Makdum Ibrahim, berdakwah melalui kesenian gamelan dan tembang. Salah satu pencipta tembang macapat yang memuat nilai-nilai keislaman.</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">4</div><div class="card-head-text"><h3>Sunan Drajat</h3><div class="card-preview">Peduli kesejahteraan sosial</div></div><div class="card-icon"><svg viewBox="0 0 24 24"><path d="M4 21v-7l3-3 3 3v7"/><path d="M14 21v-7l3-3 3 3v7"/><path d="M10 21v-9a2 2 0 0 1 4 0v9"/><line x1="2" y1="21" x2="22" y2="21"/><circle cx="12" cy="4" r="1.2"/></svg></div><div class="chev">+</div></div><div class="card-body"><p>Raden Qasim, dikenal peduli pada kesejahteraan sosial masyarakat. Mengajarkan sikap dermawan dan semangat gotong royong dalam kehidupan sehari-hari.</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">5</div><div class="card-head-text"><h3>Sunan Kudus</h3><div class="card-preview">Toleran terhadap tradisi lokal</div></div><div class="card-icon"><svg viewBox="0 0 24 24"><path d="M4 21v-7l3-3 3 3v7"/><path d="M14 21v-7l3-3 3 3v7"/><path d="M10 21v-9a2 2 0 0 1 4 0v9"/><line x1="2" y1="21" x2="22" y2="21"/><circle cx="12" cy="4" r="1.2"/></svg></div><div class="chev">+</div></div><div class="card-body"><p>Ja'far Shadiq, berdakwah dengan pendekatan toleran terhadap tradisi Hindu-Buddha yang berkembang di masyarakat setempat, salah satunya dikenal lewat kebijaksanaan menghormati kepercayaan lokal.</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">6</div><div class="card-head-text"><h3>Sunan Giri</h3><div class="card-preview">Pendiri pesantren Giri Kedaton</div></div><div class="card-icon"><svg viewBox="0 0 24 24"><path d="M4 21v-7l3-3 3 3v7"/><path d="M14 21v-7l3-3 3 3v7"/><path d="M10 21v-9a2 2 0 0 1 4 0v9"/><line x1="2" y1="21" x2="22" y2="21"/><circle cx="12" cy="4" r="1.2"/></svg></div><div class="chev">+</div></div><div class="card-body"><p>Raden Paku, mendirikan pesantren Giri Kedaton yang menjadi pusat pendidikan dan penyebaran Islam. Juga dikenal menciptakan beberapa permainan tradisional anak yang bernuansa Islami.</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">7</div><div class="card-head-text"><h3>Sunan Kalijaga</h3><div class="card-preview">Dakwah lewat wayang & budaya Jawa</div></div><div class="card-icon"><svg viewBox="0 0 24 24"><path d="M4 21v-7l3-3 3 3v7"/><path d="M14 21v-7l3-3 3 3v7"/><path d="M10 21v-9a2 2 0 0 1 4 0v9"/><line x1="2" y1="21" x2="22" y2="21"/><circle cx="12" cy="4" r="1.2"/></svg></div><div class="chev">+</div></div><div class="card-body"><p>Raden Said, berdakwah melalui seni wayang dan budaya lokal Jawa. Dikenal dengan pendekatan dakwah yang membumi dan mudah diterima masyarakat.</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">8</div><div class="card-head-text"><h3>Sunan Muria</h3><div class="card-preview">Dakwah di pegunungan & pedesaan</div></div><div class="card-icon"><svg viewBox="0 0 24 24"><path d="M4 21v-7l3-3 3 3v7"/><path d="M14 21v-7l3-3 3 3v7"/><path d="M10 21v-9a2 2 0 0 1 4 0v9"/><line x1="2" y1="21" x2="22" y2="21"/><circle cx="12" cy="4" r="1.2"/></svg></div><div class="chev">+</div></div><div class="card-body"><p>Raden Umar Said, putra Sunan Kalijaga. Berdakwah di daerah pegunungan dan pedesaan dengan pendekatan yang sederhana dan dekat dengan rakyat kecil.</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">9</div><div class="card-head-text"><h3>Sunan Gunung Jati</h3><div class="card-preview">Pendiri Kesultanan Cirebon</div></div><div class="card-icon"><svg viewBox="0 0 24 24"><path d="M4 21v-7l3-3 3 3v7"/><path d="M14 21v-7l3-3 3 3v7"/><path d="M10 21v-9a2 2 0 0 1 4 0v9"/><line x1="2" y1="21" x2="22" y2="21"/><circle cx="12" cy="4" r="1.2"/></svg></div><div class="chev">+</div></div><div class="card-body"><p>Syarif Hidayatullah, berdakwah di wilayah Cirebon dan Banten. Juga dikenal sebagai pendiri Kesultanan Cirebon yang berperan besar dalam penyebaran Islam di Jawa Barat.</p></div></div>
       </div>
 
       <div class="sub-screen" id="more-sirah">
@@ -1589,11 +1597,12 @@
 
       <div class="sub-screen" id="more-perang">
         <div class="back-row" data-back>‹ Kembali ke Lainnya</div>
-        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Perang Badar (2 H)</h3><div class="chev">+</div></div><div class="card-body"><p>Kemenangan pertama umat Islam melawan pasukan Quraisy yang jumlahnya jauh lebih besar. Menjadi titik balik penting yang menguatkan posisi dakwah Islam di Madinah.</p></div></div>
-        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Perang Uhud (3 H)</h3><div class="chev">+</div></div><div class="card-body"><p>Pasukan muslim awalnya unggul, namun keadaan berbalik setelah sebagian pasukan pemanah meninggalkan pos mereka. Menjadi pelajaran penting tentang disiplin dan ketaatan pada perintah pemimpin.</p></div></div>
-        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Perang Khandaq (5 H)</h3><div class="chev">+</div></div><div class="card-body"><p>Kota Madinah dikepung pasukan gabungan suku-suku Arab dan Yahudi, namun berhasil dipertahankan berkat strategi penggalian parit (khandaq) yang diusulkan Salman Al-Farisi.</p></div></div>
-        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Perang Hunain (8 H)</h3><div class="chev">+</div></div><div class="card-body"><p>Terjadi tak lama setelah Fathu Makkah. Pasukan muslim sempat terdesak di awal pertempuran karena kejutan serangan musuh, namun akhirnya meraih kemenangan.</p></div></div>
-        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Perang Tabuk (9 H)</h3><div class="chev">+</div></div><div class="card-body"><p>Ekspedisi besar-besaran ke perbatasan utara Jazirah Arab tanpa terjadi pertempuran langsung. Menunjukkan kesiapan dan kekuatan umat Islam yang semakin besar.</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><div class="card-head-text"><h3>Perang Badar (2 H)</h3><div class="card-preview">Kemenangan pertama umat Islam</div></div><div class="card-icon"><svg viewBox="0 0 24 24"><line x1="5" y1="19" x2="17" y2="7"/><path d="M13 3l6 6-2 2-6-6z"/><line x1="4" y1="20" x2="7" y2="17"/></svg></div><div class="chev">+</div></div><div class="card-body"><p>Kemenangan pertama umat Islam melawan pasukan Quraisy yang jumlahnya jauh lebih besar. Menjadi titik balik penting yang menguatkan posisi dakwah Islam di Madinah.</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><div class="card-head-text"><h3>Perang Uhud (3 H)</h3><div class="card-preview">Pelajaran disiplin & ketaatan</div></div><div class="card-icon"><svg viewBox="0 0 24 24"><line x1="5" y1="19" x2="17" y2="7"/><path d="M13 3l6 6-2 2-6-6z"/><line x1="4" y1="20" x2="7" y2="17"/></svg></div><div class="chev">+</div></div><div class="card-body"><p>Pasukan muslim awalnya unggul, namun keadaan berbalik setelah sebagian pasukan pemanah meninggalkan pos mereka. Menjadi pelajaran penting tentang disiplin dan ketaatan pada perintah pemimpin.</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><div class="card-head-text"><h3>Perang Khandaq (5 H)</h3><div class="card-preview">Strategi parit pertahanan Madinah</div></div><div class="card-icon"><svg viewBox="0 0 24 24"><line x1="5" y1="19" x2="17" y2="7"/><path d="M13 3l6 6-2 2-6-6z"/><line x1="4" y1="20" x2="7" y2="17"/></svg></div><div class="chev">+</div></div><div class="card-body"><p>Kota Madinah dikepung pasukan gabungan suku-suku Arab dan Yahudi, namun berhasil dipertahankan berkat strategi penggalian parit (khandaq) yang diusulkan Salman Al-Farisi.</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><div class="card-head-text"><h3>Perang Khaibar (7 H)</h3><div class="card-preview">Penaklukan benteng kaum Yahudi</div></div><div class="card-icon"><svg viewBox="0 0 24 24"><line x1="5" y1="19" x2="17" y2="7"/><path d="M13 3l6 6-2 2-6-6z"/><line x1="4" y1="20" x2="7" y2="17"/></svg></div><div class="chev">+</div></div><div class="card-body"><p>Ekspedisi ke Khaibar, kawasan benteng kaum Yahudi di utara Madinah, setelah mereka terlibat dalam upaya-upaya memusuhi kaum muslimin. Benteng-benteng Khaibar berhasil ditaklukkan satu per satu, dengan peran menonjol Ali bin Abi Thalib dalam penaklukan benteng terkuat.</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><div class="card-head-text"><h3>Perang Hunain (8 H)</h3><div class="card-preview">Terdesak lalu meraih kemenangan</div></div><div class="card-icon"><svg viewBox="0 0 24 24"><line x1="5" y1="19" x2="17" y2="7"/><path d="M13 3l6 6-2 2-6-6z"/><line x1="4" y1="20" x2="7" y2="17"/></svg></div><div class="chev">+</div></div><div class="card-body"><p>Terjadi tak lama setelah Fathu Makkah. Pasukan muslim sempat terdesak di awal pertempuran karena kejutan serangan musuh, namun akhirnya meraih kemenangan.</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><div class="card-head-text"><h3>Perang Tabuk (9 H)</h3><div class="card-preview">Ekspedisi tanpa pertempuran</div></div><div class="card-icon"><svg viewBox="0 0 24 24"><line x1="5" y1="19" x2="17" y2="7"/><path d="M13 3l6 6-2 2-6-6z"/><line x1="4" y1="20" x2="7" y2="17"/></svg></div><div class="chev">+</div></div><div class="card-body"><p>Ekspedisi besar-besaran ke perbatasan utara Jazirah Arab tanpa terjadi pertempuran langsung. Menunjukkan kesiapan dan kekuatan umat Islam yang semakin besar.</p></div></div>
       </div>
 
       <div class="sub-screen" id="more-sholatpengertian">
