@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" data-theme="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
 <style>
-  :root{
+  :root, html[data-theme="dark"]{
     --paper:#000000;
     --paper-2:#0A0A0A;
     --ink:#EDEAE2;
@@ -19,12 +19,44 @@
     --line:#232323;
     --card:#0A0A0A;
     --app-h:100dvh;
+    --splash-bg-1:#0D1F14;
+    --splash-bg-2:#000000;
+  }
+  html[data-theme="teal"]{
+    --paper:#0B2B22;
+    --paper-2:#0F3A2E;
+    --ink:#F2F5F1;
+    --ink-soft:#A9C4B8;
+    --night:#08201A;
+    --night-2:#0C2C22;
+    --gold:#E0B25A;
+    --clay:#4FCB86;
+    --line:#1C4536;
+    --card:#123A2E;
+    --app-h:100dvh;
+    --splash-bg-1:#0F3A2E;
+    --splash-bg-2:#08201A;
+  }
+  html[data-theme="light"]{
+    --paper:#FFFFFF;
+    --paper-2:#F1F5F2;
+    --ink:#182420;
+    --ink-soft:#5C6B62;
+    --night:#0F3A2E;
+    --night-2:#12473A;
+    --gold:#B8862E;
+    --clay:#1FA35E;
+    --line:#DDE5E0;
+    --card:#FFFFFF;
+    --app-h:100dvh;
+    --splash-bg-1:#F1F5F2;
+    --splash-bg-2:#FFFFFF;
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
   html,body{height:100%;}
   body{
     margin:0;
-    background:#000000;
+    background:var(--splash-bg-2);
     color:var(--ink);
     font-family:'Inter',sans-serif;
     line-height:1.55;
@@ -39,7 +71,8 @@
   #app{
     width:100%;
     max-width:430px;
-    height:var(--app-h);
+    height:100vh;
+    height:100dvh;
     background:var(--paper);
     display:flex;
     flex-direction:column;
@@ -49,7 +82,7 @@
   }
   @media (min-width:460px){
     body{align-items:center;padding:24px 0;}
-    #app{height:min(860px, 96dvh);border-radius:28px;}
+    #app{height:min(860px, 96vh);height:min(860px, 96dvh);border-radius:28px;}
   }
 
   /* TOP APP BAR */
@@ -74,9 +107,15 @@
   .appbar h1{font-size:1.08rem;margin:0;color:#F5F0E1;}
   .appbar .sub{font-size:.7rem;color:#8A8478;margin-top:1px;}
   .appbar .iconbtn{background:none;border:none;color:#EDE7D6;font-size:1.1rem;cursor:pointer;padding:6px;}
+  .theme-switch{display:flex;gap:8px;align-items:center;}
+  .theme-dot{width:20px;height:20px;border-radius:50%;border:2px solid rgba(255,255,255,.25);cursor:pointer;padding:0;}
+  .theme-dot.active{border-color:#fff;box-shadow:0 0 0 2px var(--clay);}
+  .theme-dot-teal{background:#0F3A2E;}
+  .theme-dot-dark{background:#000000;}
+  .theme-dot-light{background:#FFFFFF;}
 
   /* SCREENS */
-  .screens{flex:1 1 auto;overflow:hidden;position:relative;}
+  .screens{flex:1 1 auto;min-height:0;overflow:hidden;position:relative;}
   .screen{
     position:absolute;inset:0;
     overflow-y:auto;
@@ -110,6 +149,7 @@
     padding:10px 8px;cursor:pointer;transition:.15s;
   }
   .quick-tile:active{transform:scale(.97);background:var(--paper-2);}
+  .ic svg, .sicon svg{width:60%;height:60%;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
   .quick-tile .ic{}
   .quick-tile b{display:block;font-family:'Fraunces',serif;font-size:.78rem;line-height:1.2;}
   .quick-tile span{font-size:.66rem;color:var(--ink-soft);display:block;margin-top:2px;line-height:1.2;}
@@ -130,6 +170,11 @@
   /* CARD ACCORDION (shared) */
   .card{background:var(--card);border:1px solid var(--line);border-radius:14px;margin-bottom:10px;overflow:hidden;}
   .card-head{display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;user-select:none;}
+  .card-head-text{flex:1;min-width:0;}
+  .card-head-text h3{margin:0;font-size:.98rem;}
+  .card-preview{font-size:.76rem;color:var(--ink-soft);margin-top:2px;}
+  .card-icon{width:34px;height:34px;border-radius:10px;background:rgba(63,174,106,.14);display:flex;align-items:center;justify-content:center;flex:0 0 auto;color:var(--clay);}
+  .card-icon svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
   .num{font-family:'Fraunces',serif;font-weight:700;font-size:1.05rem;color:var(--gold);min-width:26px;}
   .card-head h3{margin:0;font-size:.98rem;flex:1;}
   .chev{transition:transform .25s;color:var(--ink-soft);font-size:1rem;}
@@ -147,6 +192,9 @@
   ul.detail-list li{margin-bottom:5px;}
   .subgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;}
   .chip{background:var(--paper-2);padding:9px 10px;border-radius:8px;font-size:.78rem;}
+  .arabic-num{font-family:'Amiri',serif;font-size:1.6rem !important;line-height:1.4;}
+  [data-hijaiyah]{cursor:pointer;}
+  [data-hijaiyah]:active{background:rgba(63,174,106,.2);}
   .chip b{display:block;font-family:'Fraunces',serif;font-size:.86rem;margin-bottom:1px;}
 
   /* IMAN theme override inside its screen */
@@ -280,38 +328,61 @@
 
   .sub-screen{display:none;}
   .sub-screen.active{display:block;}
-  .back-row{display:flex;align-items:center;gap:8px;margin-bottom:16px;cursor:pointer;color:var(--ink-soft);font-size:.85rem;}  /* SPLASH SCREEN */
+  .back-row{display:flex;align-items:center;gap:8px;margin-bottom:16px;cursor:pointer;color:var(--ink-soft);font-size:.85rem;}
+
+  /* SPLASH SCREEN — mihrab arch style */
   #splash{
     position:fixed;inset:0;z-index:999;
-    background:radial-gradient(circle at 50% 30%, #0D1F14 0%, #000000 70%);
+    background:var(--splash-bg-2);
     display:flex;align-items:center;justify-content:center;
     transition:opacity .6s ease, visibility .6s ease;
+    padding:24px;
   }
   #splash.hide{opacity:0;visibility:hidden;pointer-events:none;}
-  .splash-inner{text-align:center;position:relative;}
-  .splash-pattern{
-    position:absolute;inset:-120px;z-index:-1;
-    background-image:
-      radial-gradient(1px 1px at 10% 20%, rgba(63,174,106,.5) 0, transparent 60%),
-      radial-gradient(1px 1px at 30% 70%, rgba(63,174,106,.4) 0, transparent 60%),
-      radial-gradient(1.5px 1.5px at 50% 15%, rgba(63,174,106,.5) 0, transparent 60%),
-      radial-gradient(1px 1px at 70% 55%, rgba(63,174,106,.4) 0, transparent 60%),
-      radial-gradient(1.5px 1.5px at 85% 30%, rgba(63,174,106,.5) 0, transparent 60%),
-      radial-gradient(1px 1px at 20% 85%, rgba(216,169,78,.4) 0, transparent 60%),
-      radial-gradient(1px 1px at 90% 80%, rgba(216,169,78,.4) 0, transparent 60%);
+  .arch-shape{
+    position:relative;
+    width:min(300px, 78vw);
+    aspect-ratio:280/380;
+    background:linear-gradient(180deg, var(--splash-bg-1) 0%, var(--splash-bg-2) 100%);
+    border-radius:50% 50% 6px 6px / 38% 38% 6px 6px;
+    box-shadow:0 0 60px rgba(63,174,106,.18);
+    overflow:hidden;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;
+    padding:20px;
   }
+  .arch-pattern{
+    position:absolute;inset:0;opacity:.35;
+    background-image:
+      radial-gradient(1px 1px at 15% 15%, var(--clay) 0, transparent 55%),
+      radial-gradient(1px 1px at 80% 20%, var(--clay) 0, transparent 55%),
+      radial-gradient(1px 1px at 30% 35%, var(--gold) 0, transparent 55%),
+      radial-gradient(1px 1px at 65% 40%, var(--clay) 0, transparent 55%),
+      radial-gradient(1px 1px at 45% 12%, var(--gold) 0, transparent 55%);
+  }
+  .arch-skyline{
+    position:absolute;left:0;right:0;bottom:0;height:34%;
+    opacity:.9;
+  }
+  .arch-skyline svg{width:100%;height:100%;display:block;}
+  .arch-skyline path{fill:var(--night-2);}
+  .splash-img{max-width:70%;max-height:34%;object-fit:contain;position:relative;z-index:2;margin-bottom:10px;}
+  .logo-img{width:100%;height:100%;object-fit:contain;border-radius:8px;}
   .splash-logo{
-    width:88px;height:88px;border-radius:24px;margin:0 auto 18px;
-    background:linear-gradient(135deg,var(--gold),var(--clay));
+    width:66px;height:66px;border-radius:16px;margin:0 auto 14px;
+    background:linear-gradient(135deg,var(--clay),var(--gold));
     display:flex;align-items:center;justify-content:center;
-    font-family:'Fraunces',serif;font-weight:700;color:#000;font-size:2.6rem;
-    box-shadow:0 0 40px rgba(63,174,106,.35);
+    position:relative;z-index:2;
+    box-shadow:0 6px 24px rgba(63,174,106,.35);
     animation:splashPop .7s ease;
   }
+  .splash-logo svg{width:36px;height:36px;stroke:#04140D;stroke-width:2.4;fill:none;stroke-linecap:round;stroke-linejoin:round;}
   @keyframes splashPop{0%{transform:scale(.6);opacity:0;}100%{transform:scale(1);opacity:1;}}
-  .splash-title{font-family:'Fraunces',serif;font-weight:700;font-size:2rem;color:#F5F0E1;margin:0 0 6px;letter-spacing:.01em;}
-  .splash-tagline{color:var(--clay);font-size:.85rem;margin:0 0 30px;letter-spacing:.03em;}
-  .splash-loader{width:120px;height:3px;background:#1A1A1A;border-radius:3px;margin:0 auto;overflow:hidden;}
+  .splash-title{font-family:'Fraunces',serif;font-weight:700;font-size:1.5rem;color:var(--ink);margin:0 0 6px;letter-spacing:.04em;position:relative;z-index:2;}
+  .splash-tagline{color:var(--gold);font-size:.62rem;margin:0 0 22px;letter-spacing:.15em;position:relative;z-index:2;
+    display:flex;align-items:center;gap:8px;text-transform:uppercase;}
+  .splash-tagline::before,.splash-tagline::after{content:'◆';font-size:.5rem;}
+  .splash-loader{width:90px;height:2.5px;background:rgba(255,255,255,.12);border-radius:3px;margin:0 auto;overflow:hidden;position:relative;z-index:2;}
   .splash-loader-bar{width:40%;height:100%;background:linear-gradient(90deg,var(--clay),var(--gold));border-radius:3px;animation:splashLoad 1.1s ease-in-out infinite;}
   @keyframes splashLoad{0%{transform:translateX(-100%);}100%{transform:translateX(340%);}}
 
@@ -333,12 +404,19 @@
 <body>
 
 <div id="splash">
-  <div class="splash-inner">
-    <div class="splash-pattern"></div>
-    <div class="splash-logo">۩</div>
-    <h1 class="splash-title">Silmikaffah</h1>
-    <p class="splash-tagline">Islam Kaffah, Satu Genggaman</p>
+  <div class="arch-shape" id="splashArch">
+    <div class="arch-pattern"></div>
+    <img id="splashImg" class="splash-img" alt="Silmikaffah" onerror="this.style.display='none'; document.getElementById('splashFallback').style.display='flex';">
+    <div id="splashFallback" class="splash-logo" style="display:none;"><svg viewBox="0 0 36 36"><path d="M9 10h16l-16 9h16"/><path d="M9 26h16"/><path d="M9 10v16"/></svg></div>
+    <h1 class="splash-title">SILMIKAFFAH</h1>
+    <p class="splash-tagline">Islam Secara Menyeluruh</p>
     <div class="splash-loader"><div class="splash-loader-bar"></div></div>
+    <div class="arch-skyline">
+      <svg viewBox="0 0 300 100" preserveAspectRatio="none">
+        <path d="M0,100 L0,70 L15,70 L15,55 L25,55 L25,70 L40,70 L40,40 Q40,25 55,25 Q70,25 70,40 L70,70 L85,70 L85,58 L95,58 L95,70 L115,70 L115,45 Q115,20 150,15 Q185,20 185,45 L185,70 L205,70 L205,58 L215,58 L215,70 L230,70 L230,40 Q230,25 245,25 Q260,25 260,40 L260,70 L275,70 L275,55 L285,55 L285,70 L300,70 L300,100 Z"/>
+        <circle cx="150" cy="10" r="2.4" fill="var(--night-2)" stroke="none"/>
+      </svg>
+    </div>
   </div>
 </div>
 
@@ -346,11 +424,19 @@
 
   <div class="appbar">
     <div class="title">
-      <div class="logo">۩</div>
+      <div class="logo" id="appLogoBadge">
+        <img id="logoImg" class="logo-img" alt="Silmikaffah" onerror="this.style.display='none'; document.getElementById('logoFallback').style.display='flex';">
+        <svg id="logoFallback" viewBox="0 0 36 36" style="width:20px;height:20px;display:none;"><path d="M9 10h16l-16 9h16" fill="none" stroke="#04140D" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 26h16" stroke="#04140D" stroke-width="3" stroke-linecap="round"/><path d="M9 10v16" stroke="#04140D" stroke-width="3" stroke-linecap="round"/></svg>
+      </div>
       <div>
         <h1 id="appbarTitle">Silmikaffah</h1>
         <div class="sub" id="appbarSub">Panduan Iman & Islam</div>
       </div>
+    </div>
+    <div class="theme-switch">
+      <button class="theme-dot theme-dot-teal" data-theme-pick="teal" aria-label="Tema Hijau Teal"></button>
+      <button class="theme-dot theme-dot-dark" data-theme-pick="dark" aria-label="Tema Hitam AMOLED"></button>
+      <button class="theme-dot theme-dot-light" data-theme-pick="light" aria-label="Tema Putih Terang"></button>
     </div>
   </div>
 
@@ -427,7 +513,7 @@
       </div>
 
       <div class="card" data-card>
-        <div class="card-head" data-toggle><div class="num">01</div><h3>Iman kepada Allah</h3><div class="chev">+</div></div>
+        <div class="card-head" data-toggle><div class="num">01</div><div class="card-head-text"><h3>Iman kepada Allah</h3><div class="card-preview">Allah Maha Esa, satu-satunya yang berhak disembah</div></div><div class="card-icon"><svg viewBox="0 0 24 24"><path d="M12 2v6M12 16v6M2 12h6M16 12h6M4.5 4.5l4 4M15.5 15.5l4 4M19.5 4.5l-4 4M8.5 15.5l-4 4"/></svg></div><div class="chev">+</div></div>
         <div class="card-body">
           <p>Meyakini dengan sepenuh hati bahwa Allah ada, Esa dalam dzat, sifat, dan perbuatan-Nya, serta satu-satunya yang berhak disembah tanpa sekutu.</p>
           <div class="dalil"><div class="arabic" style="font-size:1.1rem;">قُلْ هُوَ اللَّهُ أَحَدٌ</div>"Katakanlah: Dialah Allah, Yang Maha Esa."<span class="src">QS. Al-Ikhlas: 1 <button class="play-verse" data-surah="112" data-ayah="1">🔊</button></span></div>
@@ -440,7 +526,7 @@
       </div>
 
       <div class="card" data-card>
-        <div class="card-head" data-toggle><div class="num">02</div><h3>Iman kepada Malaikat</h3><div class="chev">+</div></div>
+        <div class="card-head" data-toggle><div class="num">02</div><div class="card-head-text"><h3>Iman kepada Malaikat</h3><div class="card-preview">Makhluk gaib dari cahaya, selalu taat kepada Allah</div></div><div class="card-icon"><svg viewBox="0 0 24 24"><path d="M12 2v6M12 16v6M2 12h6M16 12h6M4.5 4.5l4 4M15.5 15.5l4 4M19.5 4.5l-4 4M8.5 15.5l-4 4"/></svg></div><div class="chev">+</div></div>
         <div class="card-body">
           <p>Meyakini malaikat sebagai makhluk gaib dari cahaya, selalu taat kepada Allah, dan tidak memiliki hawa nafsu. Ketuk salah satu nama di bawah untuk membaca penjelasan lengkap tugasnya.</p>
           <div class="subnav-list">
@@ -457,7 +543,7 @@
       </div>
 
       <div class="card" data-card>
-        <div class="card-head" data-toggle><div class="num">03</div><h3>Iman kepada Kitab-Kitab Allah</h3><div class="chev">+</div></div>
+        <div class="card-head" data-toggle><div class="num">03</div><div class="card-head-text"><h3>Iman kepada Kitab-Kitab Allah</h3><div class="card-preview">Taurat, Zabur, Injil, dan Al-Qur'an sebagai penutup</div></div><div class="card-icon"><svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M20 18H6.5A2.5 2.5 0 0 0 4 20.5"/></svg></div><div class="chev">+</div></div>
         <div class="card-body">
           <p>Meyakini Allah menurunkan kitab sebagai petunjuk melalui para rasul; Al-Qur'an adalah penutup dan penyempurna.</p>
           <div class="subgrid">
@@ -470,7 +556,7 @@
       </div>
 
       <div class="card" data-card>
-        <div class="card-head" data-toggle><div class="num">04</div><h3>Iman kepada Rasul-Rasul</h3><div class="chev">+</div></div>
+        <div class="card-head" data-toggle><div class="num">04</div><div class="card-head-text"><h3>Iman kepada Rasul-Rasul</h3><div class="card-preview">25 nabi & rasul, Muhammad ﷺ penutup kenabian</div></div><div class="card-icon"><svg viewBox="0 0 24 24"><path d="M6 4h11a2 2 0 0 1 2 2v13a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2V6a2 2 0 0 1 2-2z"/><path d="M15 8h-6"/><path d="M15 12h-6"/></svg></div><div class="chev">+</div></div>
         <div class="card-body">
           <p>Meyakini bahwa Allah mengutus para rasul kepada umat manusia untuk membimbing ke jalan yang benar, menyampaikan tauhid, dan menjadi teladan hidup. Wajib diketahui secara rinci 25 nabi dan rasul, dengan Nabi Muhammad ﷺ sebagai penutup para nabi.</p>
           <ul class="detail-list">
@@ -510,7 +596,7 @@
       </div>
 
       <div class="card" data-card>
-        <div class="card-head" data-toggle><div class="num">05</div><h3>Iman kepada Hari Akhir</h3><div class="chev">+</div></div>
+        <div class="card-head" data-toggle><div class="num">05</div><div class="card-head-text"><h3>Iman kepada Hari Akhir</h3><div class="card-preview">Kebangkitan, hisab, serta surga atau neraka</div></div><div class="card-icon"><svg viewBox="0 0 24 24"><path d="M6 3h12"/><path d="M6 21h12"/><path d="M6 3c0 5 6 6 6 9s-6 4-6 9"/><path d="M18 3c0 5-6 6-6 9s6 4 6 9"/></svg></div><div class="chev">+</div></div>
         <div class="card-body">
           <p>Meyakini dunia akan berakhir, diikuti kebangkitan, hisab, serta balasan surga atau neraka.</p>
           <ul class="detail-list">
@@ -549,7 +635,7 @@
       </div>
 
       <div class="card" data-card>
-        <div class="card-head" data-toggle><div class="num">06</div><h3>Iman kepada Qada & Qadar</h3><div class="chev">+</div></div>
+        <div class="card-head" data-toggle><div class="num">06</div><div class="card-head-text"><h3>Iman kepada Qada & Qadar</h3><div class="card-preview">Segala sesuatu terjadi atas ketetapan Allah</div></div><div class="card-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M15 9l-2 6-6 2 2-6z"/></svg></div><div class="chev">+</div></div>
         <div class="card-body">
           <p>Meyakini segala sesuatu terjadi atas ketetapan Allah, tanpa menghilangkan kewajiban manusia untuk berikhtiar.</p>
           <div class="dalil"><div class="arabic" style="font-size:1.05rem;">إِنَّا كُلَّ شَيْءٍ خَلَقْنَاهُ بِقَدَرٍ</div>"Sesungguhnya Kami menciptakan segala sesuatu menurut ukuran (takdir)."<span class="src">QS. Al-Qamar: 49 <button class="play-verse" data-surah="54" data-ayah="49">🔊</button></span></div>
@@ -566,7 +652,7 @@
       </div>
 
       <div class="card" data-card>
-        <div class="card-head" data-toggle><div class="num">01</div><h3>Syahadat</h3><div class="chev">+</div></div>
+        <div class="card-head" data-toggle><div class="num">01</div><div class="card-head-text"><h3>Syahadat</h3><div class="card-preview">Dua kalimat kesaksian, pintu masuk keislaman</div></div><div class="card-icon"><svg viewBox="0 0 24 24"><path d="M4 21v-7l3-3 3 3v7"/><path d="M14 21v-7l3-3 3 3v7"/><path d="M10 21v-9a2 2 0 0 1 4 0v9"/><line x1="2" y1="21" x2="22" y2="21"/><circle cx="12" cy="4" r="1.2"/></svg></div><div class="chev">+</div></div>
         <div class="card-body">
           <p>Dua kalimat kesaksian, pintu masuk keislaman: bersaksi tiada Tuhan selain Allah, dan Muhammad utusan Allah.</p>
           <div class="arabic">أَشْهَدُ أَنْ لَا إِلَٰهَ إِلَّا اللَّهُ وَأَشْهَدُ أَنَّ مُحَمَّدًا رَسُولُ اللَّهِ</div>
@@ -580,7 +666,7 @@
       </div>
 
       <div class="card" data-card>
-        <div class="card-head" data-toggle><div class="num">02</div><h3>Sholat</h3><div class="chev">+</div></div>
+        <div class="card-head" data-toggle><div class="num">02</div><div class="card-head-text"><h3>Sholat</h3><div class="card-preview">Ibadah wajib 5 waktu, tiang agama</div></div><div class="card-icon"><svg viewBox="0 0 24 24"><path d="M4 21V9l8-6 8 6v12"/><path d="M9 21v-7h6v7"/></svg></div><div class="chev">+</div></div>
         <div class="card-body">
           <p>Ibadah wajib lima waktu, tiang agama, amal pertama yang dihisab. Ketuk tiap waktu sholat untuk melihat niat dan urutan lengkapnya.</p>
 
@@ -612,9 +698,10 @@
           </div>
           <p style="font-size:.78rem;color:var(--ink-soft);margin-top:8px;">Ilustrasi sederhana urutan gerakan — bacaan lengkap tiap waktu ada di bawah.</p>
           <div class="subnav-list">
-            <div class="subnav-btn" data-goto="more-sholat"><div class="sicon">📖</div><div class="stext"><b>Tata Cara Sholat Lengkap</b><span>Niat sampai salam, per gerakan</span></div><div class="sarrow">›</div></div>
-            <div class="subnav-btn" data-goto="more-wudhu"><div class="sicon">💧</div><div class="stext"><b>Wudhu & Tayamum</b><span>Tata cara bersuci</span></div><div class="sarrow">›</div></div>
-            <div class="subnav-btn" data-goto="more-sunnah"><div class="sicon">🌟</div><div class="stext"><b>Sholat Sunnah</b><span>Dhuha, Tahajud, Witir, dll</span></div><div class="sarrow">›</div></div>
+            <div class="subnav-btn" data-goto="more-wudhu"><div class="sicon">💧</div><div class="stext"><b>1. Thaharah</b><span>Wudhu, tayamum, mandi</span></div><div class="sarrow">›</div></div>
+            <div class="subnav-btn" data-goto="more-sholatpengertian"><div class="sicon">📘</div><div class="stext"><b>2. Sholat (Pengertian)</b><span>Rukun & pembatal</span></div><div class="sarrow">›</div></div>
+            <div class="subnav-btn" data-goto="more-sholat"><div class="sicon">📖</div><div class="stext"><b>3. Sholat Wajib</b><span>Gerakan, qunut, sujud sahwi</span></div><div class="sarrow">›</div></div>
+            <div class="subnav-btn" data-goto="more-sunnah"><div class="sicon">🌟</div><div class="stext"><b>4. Sholat Sunnah</b><span>19 macam sholat sunnah</span></div><div class="sarrow">›</div></div>
           </div>
 
           <div class="card" data-card style="margin-top:10px;">
@@ -700,7 +787,7 @@
       </div>
 
       <div class="card" data-card>
-        <div class="card-head" data-toggle><div class="num">03</div><h3>Zakat</h3><div class="chev">+</div></div>
+        <div class="card-head" data-toggle><div class="num">03</div><div class="card-head-text"><h3>Zakat</h3><div class="card-preview">Menyisihkan harta yang mencapai nisab</div></div><div class="card-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9 9c0-1.5 1.3-2.5 3-2.5s3 1 3 2.2c0 3-6 1.5-6 4.6 0 1.4 1.3 2.4 3 2.4s3-1 3-2.4"/><line x1="12" y1="5" x2="12" y2="19"/></svg></div><div class="chev">+</div></div>
         <div class="card-body">
           <p>Kewajiban menyisihkan harta yang mencapai nisab, penyucian harta & kepedulian sosial.</p>
           <div class="subgrid">
@@ -718,7 +805,7 @@
       </div>
 
       <div class="card" data-card>
-        <div class="card-head" data-toggle><div class="num">04</div><h3>Puasa Ramadhan</h3><div class="chev">+</div></div>
+        <div class="card-head" data-toggle><div class="num">04</div><div class="card-head-text"><h3>Puasa Ramadhan</h3><div class="card-preview">Menahan diri dari fajar hingga terbenam matahari</div></div><div class="card-icon"><svg viewBox="0 0 24 24"><path d="M21 12.5A9 9 0 1 1 11.5 3 7 7 0 0 0 21 12.5z"/></svg></div><div class="chev">+</div></div>
         <div class="card-body">
           <p>Menahan makan, minum, dan pembatal puasa dari fajar hingga terbenam matahari selama Ramadhan.</p>
           <div class="arabic" style="font-size:1.05rem;">نَوَيْتُ صَوْمَ غَدٍ عَنْ أَدَاءِ فَرْضِ شَهْرِ رَمَضَانَ هَذِهِ السَّنَةِ لِلَّهِ تَعَالَى</div>
@@ -738,7 +825,7 @@
       </div>
 
       <div class="card" data-card>
-        <div class="card-head" data-toggle><div class="num">05</div><h3>Haji</h3><div class="chev">+</div></div>
+        <div class="card-head" data-toggle><div class="num">05</div><div class="card-head-text"><h3>Haji</h3><div class="card-preview">Berkunjung ke Baitullah bagi yang mampu</div></div><div class="card-icon"><svg viewBox="0 0 24 24"><path d="M4 21V9l8-6 8 6v12"/><path d="M9 21v-7h6v7"/></svg></div><div class="chev">+</div></div>
         <div class="card-body">
           <p>Berkunjung ke Baitullah, wajib sekali seumur hidup bagi yang mampu (istitha'ah).</p>
           <ul class="detail-list">
@@ -780,7 +867,17 @@
       </div>
 
       <div id="more-hub">
-        <div class="subhead" style="margin-top:0;">Kisah & Sejarah</div>
+        <div class="subhead" style="margin-top:0;">Pengaturan</div>
+        <div class="calc-card">
+          <p style="margin:0 0 10px;font-size:.85rem;color:var(--ink-soft);">Tema Aplikasi</p>
+          <div style="display:flex;gap:10px;">
+            <button class="theme-dot theme-dot-teal" data-theme-pick="teal" style="width:32px;height:32px;" aria-label="Tema Hijau Teal"></button>
+            <button class="theme-dot theme-dot-dark" data-theme-pick="dark" style="width:32px;height:32px;" aria-label="Tema Hitam AMOLED"></button>
+            <button class="theme-dot theme-dot-light" data-theme-pick="light" style="width:32px;height:32px;" aria-label="Tema Putih Terang"></button>
+          </div>
+        </div>
+
+        <div class="subhead">Kisah & Sejarah</div>
         <div class="more-item" data-sub="more-nabi"><div class="ic">📜</div><div><b>Kisah 25 Nabi & Rasul</b><span>Ringkasan kisah tiap nabi</span></div><div class="arrow">›</div></div>
         <div class="more-item" data-sub="more-sahabat"><div class="ic">🧕</div><div><b>Kisah Sahabat Nabi</b><span>12 sahabat utama Nabi ﷺ</span></div><div class="arrow">›</div></div>
         <div class="more-item" data-sub="more-walisongo"><div class="ic">🕌</div><div><b>Wali Songo</b><span>9 penyebar Islam di tanah Jawa</span></div><div class="arrow">›</div></div>
@@ -794,9 +891,10 @@
         <div class="more-item" data-sub="more-tajwid"><div class="ic">🔤</div><div><b>Ilmu Tajwid</b><span>Hukum bacaan setelah lulus Iqra'</span></div><div class="arrow">›</div></div>
 
         <div class="subhead">Sholat & Puasa</div>
-        <div class="more-item" data-sub="more-sholat"><div class="ic">🕋</div><div><b>Tata Cara Sholat Lengkap</b><span>Niat sampai salam, per gerakan</span></div><div class="arrow">›</div></div>
-        <div class="more-item" data-sub="more-wudhu"><div class="ic">💧</div><div><b>Wudhu & Tayamum</b><span>Tata cara bersuci sebelum sholat</span></div><div class="arrow">›</div></div>
-        <div class="more-item" data-sub="more-sunnah"><div class="ic">🌟</div><div><b>Sholat Sunnah</b><span>Dhuha, Tahajud, Witir, & lainnya</span></div><div class="arrow">›</div></div>
+        <div class="more-item" data-sub="more-wudhu"><div class="ic">💧</div><div><b>1. Thaharah</b><span>Wudhu, tayamum, mandi wajib/sunnah</span></div><div class="arrow">›</div></div>
+        <div class="more-item" data-sub="more-sholatpengertian"><div class="ic">🕋</div><div><b>2. Sholat (Pengertian)</b><span>Rukun, pembatal, urutan gerakan</span></div><div class="arrow">›</div></div>
+        <div class="more-item" data-sub="more-sholat"><div class="ic">🕋</div><div><b>3. Sholat Wajib</b><span>Niat, qunut, sujud sahwi, Jumat, jenazah</span></div><div class="arrow">›</div></div>
+        <div class="more-item" data-sub="more-sunnah"><div class="ic">🌟</div><div><b>4. Sholat Sunnah</b><span>19 macam, niat & tata cara</span></div><div class="arrow">›</div></div>
         <div class="more-item" data-sub="more-puasasunnah"><div class="ic">🌙</div><div><b>Puasa Sunnah</b><span>Senin-Kamis, Daud, Syawal, Arafah, & lainnya</span></div><div class="arrow">›</div></div>
         <div class="more-item" data-sub="more-kiblat"><div class="ic">🧭</div><div><b>Arah Kiblat</b><span>Berdasarkan lokasimu saat ini</span></div><div class="arrow">›</div></div>
 
@@ -908,8 +1006,39 @@
         <p style="font-size:.85rem;color:var(--ink-soft);margin-top:0;">Dasar iqra' dan ilmu tajwid untuk membaca Al-Qur'an dengan benar.</p>
 
         <div class="card" data-card><div class="card-head" data-toggle><div class="num">1</div><h3>Huruf Hijaiyah & Harakat</h3><div class="chev">+</div></div><div class="card-body">
-          <p>Huruf hijaiyah berjumlah 28-29 huruf, dasar dari seluruh tulisan Arab dan Al-Qur'an. Setiap huruf dapat diberi harakat (tanda baca) yang mengubah bunyinya.</p>
-          <ul class="detail-list">
+          <p>Huruf hijaiyah berjumlah 28-29 huruf, dasar dari seluruh tulisan Arab dan Al-Qur'an. Setiap huruf dapat diberi harakat (tanda baca) yang mengubah bunyinya. Ketuk huruf mana pun untuk mendengar bunyinya.</p>
+          <div class="subgrid" style="grid-template-columns:repeat(4,1fr);gap:6px;">
+            <div class="chip arabic-num" style="text-align:center;padding:10px 4px;" data-hijaiyah="ا">ا<br><span style="font-size:.6rem;font-family:'Inter',sans-serif;">alif</span></div>
+            <div class="chip arabic-num" style="text-align:center;padding:10px 4px;" data-hijaiyah="ب">ب<br><span style="font-size:.6rem;font-family:'Inter',sans-serif;">ba</span></div>
+            <div class="chip arabic-num" style="text-align:center;padding:10px 4px;" data-hijaiyah="ت">ت<br><span style="font-size:.6rem;font-family:'Inter',sans-serif;">ta</span></div>
+            <div class="chip arabic-num" style="text-align:center;padding:10px 4px;" data-hijaiyah="ث">ث<br><span style="font-size:.6rem;font-family:'Inter',sans-serif;">tsa</span></div>
+            <div class="chip arabic-num" style="text-align:center;padding:10px 4px;" data-hijaiyah="ج">ج<br><span style="font-size:.6rem;font-family:'Inter',sans-serif;">jim</span></div>
+            <div class="chip arabic-num" style="text-align:center;padding:10px 4px;" data-hijaiyah="ح">ح<br><span style="font-size:.6rem;font-family:'Inter',sans-serif;">ha</span></div>
+            <div class="chip arabic-num" style="text-align:center;padding:10px 4px;" data-hijaiyah="خ">خ<br><span style="font-size:.6rem;font-family:'Inter',sans-serif;">kha</span></div>
+            <div class="chip arabic-num" style="text-align:center;padding:10px 4px;" data-hijaiyah="د">د<br><span style="font-size:.6rem;font-family:'Inter',sans-serif;">dal</span></div>
+            <div class="chip arabic-num" style="text-align:center;padding:10px 4px;" data-hijaiyah="ذ">ذ<br><span style="font-size:.6rem;font-family:'Inter',sans-serif;">dzal</span></div>
+            <div class="chip arabic-num" style="text-align:center;padding:10px 4px;" data-hijaiyah="ر">ر<br><span style="font-size:.6rem;font-family:'Inter',sans-serif;">ra</span></div>
+            <div class="chip arabic-num" style="text-align:center;padding:10px 4px;" data-hijaiyah="ز">ز<br><span style="font-size:.6rem;font-family:'Inter',sans-serif;">zai</span></div>
+            <div class="chip arabic-num" style="text-align:center;padding:10px 4px;" data-hijaiyah="س">س<br><span style="font-size:.6rem;font-family:'Inter',sans-serif;">sin</span></div>
+            <div class="chip arabic-num" style="text-align:center;padding:10px 4px;" data-hijaiyah="ش">ش<br><span style="font-size:.6rem;font-family:'Inter',sans-serif;">syin</span></div>
+            <div class="chip arabic-num" style="text-align:center;padding:10px 4px;" data-hijaiyah="ص">ص<br><span style="font-size:.6rem;font-family:'Inter',sans-serif;">shad</span></div>
+            <div class="chip arabic-num" style="text-align:center;padding:10px 4px;" data-hijaiyah="ض">ض<br><span style="font-size:.6rem;font-family:'Inter',sans-serif;">dhad</span></div>
+            <div class="chip arabic-num" style="text-align:center;padding:10px 4px;" data-hijaiyah="ط">ط<br><span style="font-size:.6rem;font-family:'Inter',sans-serif;">tha</span></div>
+            <div class="chip arabic-num" style="text-align:center;padding:10px 4px;" data-hijaiyah="ظ">ظ<br><span style="font-size:.6rem;font-family:'Inter',sans-serif;">zha</span></div>
+            <div class="chip arabic-num" style="text-align:center;padding:10px 4px;" data-hijaiyah="ع">ع<br><span style="font-size:.6rem;font-family:'Inter',sans-serif;">'ain</span></div>
+            <div class="chip arabic-num" style="text-align:center;padding:10px 4px;" data-hijaiyah="غ">غ<br><span style="font-size:.6rem;font-family:'Inter',sans-serif;">ghain</span></div>
+            <div class="chip arabic-num" style="text-align:center;padding:10px 4px;" data-hijaiyah="ف">ف<br><span style="font-size:.6rem;font-family:'Inter',sans-serif;">fa</span></div>
+            <div class="chip arabic-num" style="text-align:center;padding:10px 4px;" data-hijaiyah="ق">ق<br><span style="font-size:.6rem;font-family:'Inter',sans-serif;">qaf</span></div>
+            <div class="chip arabic-num" style="text-align:center;padding:10px 4px;" data-hijaiyah="ك">ك<br><span style="font-size:.6rem;font-family:'Inter',sans-serif;">kaf</span></div>
+            <div class="chip arabic-num" style="text-align:center;padding:10px 4px;" data-hijaiyah="ل">ل<br><span style="font-size:.6rem;font-family:'Inter',sans-serif;">lam</span></div>
+            <div class="chip arabic-num" style="text-align:center;padding:10px 4px;" data-hijaiyah="م">م<br><span style="font-size:.6rem;font-family:'Inter',sans-serif;">mim</span></div>
+            <div class="chip arabic-num" style="text-align:center;padding:10px 4px;" data-hijaiyah="ن">ن<br><span style="font-size:.6rem;font-family:'Inter',sans-serif;">nun</span></div>
+            <div class="chip arabic-num" style="text-align:center;padding:10px 4px;" data-hijaiyah="و">و<br><span style="font-size:.6rem;font-family:'Inter',sans-serif;">wau</span></div>
+            <div class="chip arabic-num" style="text-align:center;padding:10px 4px;" data-hijaiyah="ه">ه<br><span style="font-size:.6rem;font-family:'Inter',sans-serif;">ha</span></div>
+            <div class="chip arabic-num" style="text-align:center;padding:10px 4px;" data-hijaiyah="ء">ء<br><span style="font-size:.6rem;font-family:'Inter',sans-serif;">hamzah</span></div>
+            <div class="chip arabic-num" style="text-align:center;padding:10px 4px;" data-hijaiyah="ي">ي<br><span style="font-size:.6rem;font-family:'Inter',sans-serif;">ya</span></div>
+          </div>
+          <ul class="detail-list" style="margin-top:14px;">
             <li><b>Fathah ( َ )</b> — berbunyi "a", contoh: بَ dibaca "ba".</li>
             <li><b>Kasrah ( ِ )</b> — berbunyi "i", contoh: بِ dibaca "bi".</li>
             <li><b>Dhammah ( ُ )</b> — berbunyi "u", contoh: بُ dibaca "bu".</li>
@@ -968,20 +1097,28 @@
         </div></div>
 
         <div class="subhead">Angka Arab</div>
-        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Penulisan Angka 0-10 dalam Arab</h3><div class="chev">+</div></div><div class="card-body">
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Penulisan Angka Arab</h3><div class="chev">+</div></div><div class="card-body">
           <p>Angka Arab (disebut juga angka Hindi-Arab) ditulis dan dibaca dari kiri ke kanan, berbeda dengan huruf Arab yang dibaca kanan ke kiri.</p>
           <div class="subgrid" style="grid-template-columns:1fr 1fr;">
-            <div class="chip"><b>٠</b>Sifr (0)</div>
-            <div class="chip"><b>١</b>Wahid (1)</div>
-            <div class="chip"><b>٢</b>Itsnan (2)</div>
-            <div class="chip"><b>٣</b>Tsalatsah (3)</div>
-            <div class="chip"><b>٤</b>Arba'ah (4)</div>
-            <div class="chip"><b>٥</b>Khamsah (5)</div>
-            <div class="chip"><b>٦</b>Sittah (6)</div>
-            <div class="chip"><b>٧</b>Sab'ah (7)</div>
-            <div class="chip"><b>٨</b>Tsamaniyah (8)</div>
-            <div class="chip"><b>٩</b>Tis'ah (9)</div>
-            <div class="chip"><b>١٠</b>'Asyarah (10)</div>
+            <div class="chip"><b class="arabic-num">٠</b>Sifr (0)</div>
+            <div class="chip"><b class="arabic-num">١</b>Wahid (1)</div>
+            <div class="chip"><b class="arabic-num">٢</b>Itsnan (2)</div>
+            <div class="chip"><b class="arabic-num">٣</b>Tsalatsah (3)</div>
+            <div class="chip"><b class="arabic-num">٤</b>Arba'ah (4)</div>
+            <div class="chip"><b class="arabic-num">٥</b>Khamsah (5)</div>
+            <div class="chip"><b class="arabic-num">٦</b>Sittah (6)</div>
+            <div class="chip"><b class="arabic-num">٧</b>Sab'ah (7)</div>
+            <div class="chip"><b class="arabic-num">٨</b>Tsamaniyah (8)</div>
+            <div class="chip"><b class="arabic-num">٩</b>Tis'ah (9)</div>
+            <div class="chip"><b class="arabic-num">١٠</b>'Asyarah (10)</div>
+            <div class="chip"><b class="arabic-num">١١</b>Ahada 'asyar (11)</div>
+            <div class="chip"><b class="arabic-num">١٢</b>Itsnaa 'asyar (12)</div>
+            <div class="chip"><b class="arabic-num">١٥</b>Khamsata 'asyar (15)</div>
+            <div class="chip"><b class="arabic-num">٢٠</b>'Isyruun (20)</div>
+            <div class="chip"><b class="arabic-num">٣٠</b>Tsalaatsuun (30)</div>
+            <div class="chip"><b class="arabic-num">٥٠</b>Khamsuun (50)</div>
+            <div class="chip"><b class="arabic-num">١٠٠</b>Mi'ah (100)</div>
+            <div class="chip"><b class="arabic-num">١٠٠٠</b>Alf (1000)</div>
           </div>
         </div></div>
 
@@ -1459,9 +1596,40 @@
         <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Perang Tabuk (9 H)</h3><div class="chev">+</div></div><div class="card-body"><p>Ekspedisi besar-besaran ke perbatasan utara Jazirah Arab tanpa terjadi pertempuran langsung. Menunjukkan kesiapan dan kekuatan umat Islam yang semakin besar.</p></div></div>
       </div>
 
+      <div class="sub-screen" id="more-sholatpengertian">
+        <div class="back-row" data-back>‹ Kembali ke Lainnya</div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Pengertian Sholat</h3><div class="chev">+</div></div><div class="card-body"><p>Sholat secara bahasa berarti doa. Secara syariat, sholat adalah ibadah yang terdiri dari ucapan dan gerakan tertentu, dimulai dengan takbiratul ihram dan diakhiri dengan salam, sesuai syarat dan rukun yang telah ditetapkan. Sholat adalah rukun Islam kedua dan tiang agama.</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Rukun Sholat</h3><div class="chev">+</div></div><div class="card-body">
+          <ul class="detail-list">
+            <li>Niat</li><li>Berdiri bagi yang mampu</li><li>Takbiratul ihram</li><li>Membaca Al-Fatihah tiap rakaat</li>
+            <li>Ruku dengan tuma'ninah</li><li>I'tidal dengan tuma'ninah</li><li>Sujud dua kali dengan tuma'ninah</li>
+            <li>Duduk di antara dua sujud dengan tuma'ninah</li><li>Duduk tasyahud akhir</li><li>Membaca tasyahud akhir</li>
+            <li>Membaca sholawat kepada Nabi ﷺ</li><li>Salam pertama</li><li>Tertib (berurutan)</li>
+          </ul>
+        </div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Yang Membatalkan Sholat</h3><div class="chev">+</div></div><div class="card-body">
+          <ul class="detail-list">
+            <li>Berhadas, baik kecil maupun besar.</li>
+            <li>Terkena najis yang tidak dimaafkan.</li>
+            <li>Berbicara dengan sengaja di luar bacaan sholat.</li>
+            <li>Bergerak berlebihan/banyak yang bukan gerakan sholat.</li>
+            <li>Makan atau minum dengan sengaja.</li>
+            <li>Meninggalkan salah satu rukun sholat tanpa menggantinya.</li>
+            <li>Tertawa terbahak-bahak.</li>
+            <li>Murtad (keluar dari Islam).</li>
+          </ul>
+        </div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Urutan Gerakan Sholat</h3><div class="chev">+</div></div><div class="card-body">
+          <p>Ringkasan urutan: niat → takbiratul ihram → doa iftitah & Al-Fatihah → ruku → i'tidal → sujud → duduk antara dua sujud → sujud kedua → (ulangi untuk rakaat berikutnya) → tasyahud akhir → salam.</p>
+          <div class="subnav-list">
+            <div class="subnav-btn" data-goto="more-sholat"><div class="sicon">📖</div><div class="stext"><b>Lihat Detail per Gerakan</b><span>Bacaan lengkap tiap posisi</span></div><div class="sarrow">›</div></div>
+          </div>
+        </div></div>
+      </div>
+
       <div class="sub-screen" id="more-sholat">
         <div class="back-row" data-back>‹ Kembali ke Lainnya</div>
-        <p style="font-size:.85rem;color:var(--ink-soft);margin-top:0;">Urutan gerakan dan bacaan pokok dalam satu rakaat sholat.</p>
+        <p style="font-size:.85rem;color:var(--ink-soft);margin-top:0;">Sholat fardhu (wajib) 5 waktu — niat tiap waktu ada di menu Rukun Islam → Sholat. Berikut urutan gerakan dan bacaan pokok dalam satu rakaat, beserta ketentuan tambahan.</p>
         <div class="card" data-card><div class="card-head" data-toggle><div class="num">1</div><h3>Niat</h3><div class="chev">+</div></div><div class="card-body"><p>Diucapkan dalam hati sesuai jenis sholat yang akan dikerjakan, disertai kesengajaan karena Allah semata.</p></div></div>
         <div class="card" data-card><div class="card-head" data-toggle><div class="num">2</div><h3>Takbiratul Ihram</h3><div class="chev">+</div></div><div class="card-body"><div class="arabic">اللَّهُ أَكْبَرُ</div><p>Mengangkat kedua tangan sejajar bahu atau telinga sambil mengucap "Allahu Akbar", menandai dimulainya sholat.</p></div></div>
         <div class="card" data-card><div class="card-head" data-toggle><div class="num">3</div><h3>Doa Iftitah & Al-Fatihah</h3><div class="chev">+</div></div><div class="card-body"><p>Membaca doa pembuka (iftitah), dilanjutkan Surah Al-Fatihah yang wajib dibaca pada setiap rakaat, kemudian disunnahkan menambah surah pendek pada dua rakaat pertama.</p></div></div>
@@ -1474,8 +1642,9 @@
         <div class="subhead">Bacaan & Ketentuan Tambahan</div>
         <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Tuma'ninah</h3><div class="chev">+</div></div><div class="card-body"><p>Diam sejenak dengan tenang pada setiap gerakan sholat (ruku, i'tidal, sujud, duduk) sebelum berpindah ke gerakan berikutnya. Tuma'ninah termasuk rukun sholat — tanpanya, sholat tidak sah.</p></div></div>
         <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Qunut Subuh</h3><div class="chev">+</div></div><div class="card-body">
-          <div class="arabic">اللَّهُمَّ اهْدِنِي فِيمَنْ هَدَيْتَ وَعَافِنِي فِيمَنْ عَافَيْتَ</div>
-          <p>"Ya Allah, berilah aku petunjuk sebagaimana orang yang telah Engkau beri petunjuk, dan berilah aku keselamatan sebagaimana orang yang telah Engkau beri keselamatan..."</p>
+          <div class="arabic">اللَّهُمَّ اهْدِنِي فِيمَنْ هَدَيْتَ، وَعَافِنِي فِيمَنْ عَافَيْتَ، وَتَوَلَّنِي فِيمَنْ تَوَلَّيْتَ، وَبَارِكْ لِي فِيمَا أَعْطَيْتَ، وَقِنِي شَرَّ مَا قَضَيْتَ، فَإِنَّكَ تَقْضِي وَلَا يُقْضَى عَلَيْكَ، وَإِنَّهُ لَا يَذِلُّ مَنْ وَالَيْتَ، وَلَا يَعِزُّ مَنْ عَادَيْتَ، تَبَارَكْتَ رَبَّنَا وَتَعَالَيْتَ، فَلَكَ الْحَمْدُ عَلَى مَا قَضَيْتَ، أَسْتَغْفِرُكَ وَأَتُوبُ إِلَيْكَ، وَصَلَّى اللَّهُ عَلَى سَيِّدِنَا مُحَمَّدٍ النَّبِيِّ الْأُمِّيِّ وَعَلَى آلِهِ وَصَحْبِهِ وَسَلَّمَ</div>
+          <p style="font-family:'Fraunces',serif;font-style:italic;margin-top:2px;">Allaahummahdinii fiiman hadaiit, wa 'aafinii fiiman 'aafaiit, wa tawallanii fiiman tawallaiit, wa baarik lii fiimaa a'thaiit, wa qinii syarra maa qadhaiit, fa innaka taqdhii wa laa yuqdhaa 'alaiik, wa innahu laa yadzillu man waalaiit, wa laa ya'izzu man 'aadaiit, tabaarakta rabbanaa wa ta'aalaiit, falakal hamdu 'alaa maa qadhaiit, astaghfiruka wa atuubu ilaiik, wa shallallaahu 'alaa sayyidinaa muhammadinin nabiyyil ummiyyi wa 'alaa aalihii wa shahbihii wa sallam.</p>
+          <p>"Ya Allah, berilah aku petunjuk sebagaimana orang yang telah Engkau beri petunjuk, berilah aku keselamatan sebagaimana orang yang telah Engkau beri keselamatan, uruslah aku sebagaimana orang yang telah Engkau urus, berkahilah untukku apa yang telah Engkau berikan, dan lindungilah aku dari keburukan yang telah Engkau tetapkan. Sesungguhnya Engkaulah yang menetapkan dan tidak ada yang menetapkan atas-Mu. Sesungguhnya tidak akan hina orang yang Engkau bela, dan tidak akan mulia orang yang Engkau musuhi. Maha Berkah Engkau wahai Tuhan kami dan Maha Tinggi Engkau. Segala puji bagi-Mu atas apa yang telah Engkau tetapkan, aku memohon ampun dan bertaubat kepada-Mu. Semoga Allah melimpahkan rahmat dan salam kepada junjungan kami Nabi Muhammad ﷺ beserta keluarga dan sahabatnya."</p>
           <p style="margin-top:6px;">Dibaca pada i'tidal rakaat kedua sholat Subuh (mazhab Syafi'i), sebagai doa memohon petunjuk dan perlindungan.</p>
         </div></div>
         <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Sujud Sahwi</h3><div class="chev">+</div></div><div class="card-body">
@@ -1500,6 +1669,12 @@
             <li>Takbir 4: membaca doa penutup, lalu salam.</li>
           </ul>
         </div></div>
+
+        <div class="subhead">Dzikir Setelah Sholat</div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Istighfar 3x</h3><div class="chev">+</div></div><div class="card-body"><div class="arabic">أَسْتَغْفِرُ اللَّهَ (× ٣)</div><p>"Aku memohon ampun kepada Allah", dibaca tiga kali segera setelah salam.</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Doa Keselamatan</h3><div class="chev">+</div></div><div class="card-body"><div class="arabic">اللَّهُمَّ أَنْتَ السَّلَامُ وَمِنْكَ السَّلَامُ تَبَارَكْتَ يَا ذَا الْجَلَالِ وَالْإِكْرَامِ</div><p>"Ya Allah, Engkaulah As-Salam (Yang Maha Sejahtera) dan dari-Mu segala kesejahteraan, Maha Berkah Engkau, wahai Pemilik keagungan dan kemuliaan."</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Ayat Kursi</h3><div class="chev">+</div></div><div class="card-body"><p>Dibaca setelah sholat fardhu sebagai bentuk perlindungan diri dan penegasan tauhid.</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Tasbih, Tahmid & Takbir 33x</h3><div class="chev">+</div></div><div class="card-body"><p>Membaca Subhanallah, Alhamdulillah, dan Allahu Akbar masing-masing 33 kali, ditutup dengan kalimat tauhid yang menyempurnakan hitungan seratus.</p></div></div>
       </div>
 
       <div class="sub-screen" id="more-wudhu">
@@ -1548,26 +1723,26 @@
 
       <div class="sub-screen" id="more-sunnah">
         <div class="back-row" data-back>‹ Kembali ke Lainnya</div>
-        <p style="font-size:.85rem;color:var(--ink-soft);margin-top:0;">Sholat sunnah adalah ibadah tambahan di luar 5 waktu wajib, dianjurkan untuk menyempurnakan kekurangan pada sholat fardhu.</p>
-        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Sholat Rawatib</h3><div class="chev">+</div></div><div class="card-body"><p>Sholat sunnah yang mengiringi sholat wajib, dikerjakan sebelum (qabliyah) atau sesudah (ba'diyah) sholat fardhu, umumnya 2 rakaat tiap kesempatan.</p></div></div>
-        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Sholat Mutlaq</h3><div class="chev">+</div></div><div class="card-body"><p>Sholat sunnah bebas yang boleh dikerjakan kapan saja tanpa sebab atau waktu khusus, selama bukan pada waktu-waktu terlarang sholat.</p></div></div>
-        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Sholat Hajat</h3><div class="chev">+</div></div><div class="card-body"><p>Dikerjakan 2 rakaat atau lebih untuk memohon kepada Allah agar suatu hajat/keinginan dikabulkan atau dimudahkan.</p></div></div>
-        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Sholat Tahajud</h3><div class="chev">+</div></div><div class="card-body"><p>Dikerjakan pada sepertiga malam terakhir setelah tidur terlebih dahulu, minimal 2 rakaat. Termasuk sholat sunnah yang sangat dianjurkan.</p></div></div>
-        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Sholat Tarawih</h3><div class="chev">+</div></div><div class="card-body"><p>Sholat malam khusus bulan Ramadhan, dikerjakan berjamaah setelah Isya dengan jumlah rakaat yang bervariasi (8 atau 20 rakaat) tergantung tradisi masing-masing.</p></div></div>
-        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Sholat Witir</h3><div class="chev">+</div></div><div class="card-body"><p>Sholat penutup ibadah malam dengan jumlah rakaat ganjil (1, 3, 5, atau lebih), biasa dikerjakan setelah tarawih atau tahajud.</p></div></div>
-        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Sholat Idul Fitri</h3><div class="chev">+</div></div><div class="card-body"><p>Dikerjakan 2 rakaat berjamaah pada pagi 1 Syawal, diawali 7 takbir tambahan di rakaat pertama dan 5 takbir di rakaat kedua, tanpa azan dan iqamah.</p></div></div>
-        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Sholat Idul Adha</h3><div class="chev">+</div></div><div class="card-body"><p>Dikerjakan 2 rakaat berjamaah pada pagi 10 Dzulhijjah dengan tata cara serupa Idul Fitri, dilanjutkan penyembelihan hewan qurban.</p></div></div>
-        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Sholat Dhuha</h3><div class="chev">+</div></div><div class="card-body"><p>Dikerjakan 2 hingga 12 rakaat pada pagi hari setelah matahari naik sepenggalah hingga menjelang zuhur. Diyakini terkait dengan kelapangan rezeki.</p></div></div>
-        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Sholat Tahiyatul Masjid</h3><div class="chev">+</div></div><div class="card-body"><p>Dikerjakan 2 rakaat sebagai penghormatan sesaat setelah memasuki masjid, sebelum duduk.</p></div></div>
-        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Sholat Istikharah</h3><div class="chev">+</div></div><div class="card-body"><p>Dikerjakan 2 rakaat untuk memohon petunjuk terbaik dari Allah ketika menghadapi pilihan atau keputusan penting.</p></div></div>
-        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Sholat Taubat</h3><div class="chev">+</div></div><div class="card-body"><p>Dikerjakan 2 rakaat atau lebih disertai penyesalan sungguh-sungguh dan permohonan ampun atas dosa yang telah diperbuat.</p></div></div>
-        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Sholat Gerhana (Kusuf/Khusuf)</h3><div class="chev">+</div></div><div class="card-body"><p>Dikerjakan berjamaah saat terjadi gerhana matahari (kusuf) atau gerhana bulan (khusuf), dengan tata cara khusus: tiap rakaat memiliki dua kali ruku'.</p></div></div>
-        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Sholat Istisqa</h3><div class="chev">+</div></div><div class="card-body"><p>Dikerjakan berjamaah untuk memohon turunnya hujan di masa kekeringan, disertai khutbah dan doa memohon hujan.</p></div></div>
-        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Sholat Sunnah Wudhu</h3><div class="chev">+</div></div><div class="card-body"><p>Dikerjakan 2 rakaat segera setelah berwudhu, sebagai bentuk syukur telah menyempurnakan bersuci.</p></div></div>
-        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Sholat Tasbih</h3><div class="chev">+</div></div><div class="card-body"><p>Dikerjakan 4 rakaat dengan memperbanyak bacaan tasbih (300 kali) di setiap rakaatnya pada posisi-posisi tertentu, sebagai sarana memohon ampunan.</p></div></div>
-        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Sholat Qabliyah Jumat</h3><div class="chev">+</div></div><div class="card-body"><p>Dikerjakan sebelum sholat Jumat dimulai, sebagai pengisi waktu menunggu sekaligus penambah pahala.</p></div></div>
-        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Sholat Syuruq</h3><div class="chev">+</div></div><div class="card-body"><p>Dikerjakan 2 rakaat sesaat setelah matahari terbit sempurna (sekitar 15-20 menit setelahnya), umumnya dilakukan setelah duduk berzikir sejak Subuh.</p></div></div>
-        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Sholat Awwabin</h3><div class="chev">+</div></div><div class="card-body"><p>Dikerjakan antara Maghrib dan Isya, umumnya 2-6 rakaat, sebagai bentuk kembali (awwab) kepada Allah di waktu senja.</p></div></div>
+        <p style="font-size:.85rem;color:var(--ink-soft);margin-top:0;">Sholat sunnah adalah ibadah tambahan di luar 5 waktu wajib, dianjurkan untuk menyempurnakan kekurangan pada sholat fardhu. Niat di bawah ini adalah lafal umum yang biasa diajarkan; niat inti sesungguhnya cukup di dalam hati.</p>
+<div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Sholat Rawatib</h3><div class="chev">+</div></div><div class="card-body"><p>Sholat sunnah yang mengiringi sholat wajib, dikerjakan sebelum (qabliyah) atau sesudah (ba'diyah) sholat fardhu, umumnya 2 rakaat tiap kesempatan.</p><div class="arabic" style="font-size:1.05rem;">أُصَلِّي سُنَّةَ كَذَا رَكْعَتَيْنِ لِلَّهِ تَعَالَى</div><p style="font-family:'Fraunces',serif;font-style:italic;margin-top:2px;">Ushallii sunnata kadzaa rak'ataini lillaahi ta'aalaa.</p><p>"Aku niat sholat sunnah (sebelum/sesudah sholat fardhu) dua rakaat karena Allah Ta'ala."</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Sholat Mutlaq</h3><div class="chev">+</div></div><div class="card-body"><p>Sholat sunnah bebas yang boleh dikerjakan kapan saja tanpa sebab atau waktu khusus, selama bukan pada waktu-waktu terlarang sholat.</p><div class="arabic" style="font-size:1.05rem;">أُصَلِّي سُنَّةً رَكْعَتَيْنِ لِلَّهِ تَعَالَى</div><p style="font-family:'Fraunces',serif;font-style:italic;margin-top:2px;">Ushallii sunnatan rak'ataini lillaahi ta'aalaa.</p><p>"Aku niat sholat sunnah dua rakaat karena Allah Ta'ala."</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Sholat Hajat</h3><div class="chev">+</div></div><div class="card-body"><p>Dikerjakan 2 rakaat atau lebih untuk memohon kepada Allah agar suatu hajat/keinginan dikabulkan atau dimudahkan.</p><div class="arabic" style="font-size:1.05rem;">أُصَلِّي سُنَّةَ الْحَاجَةِ رَكْعَتَيْنِ لِلَّهِ تَعَالَى</div><p style="font-family:'Fraunces',serif;font-style:italic;margin-top:2px;">Ushallii sunnatal haajati rak'ataini lillaahi ta'aalaa.</p><p>"Aku niat sholat sunnah hajat dua rakaat karena Allah Ta'ala."</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Sholat Tahajud</h3><div class="chev">+</div></div><div class="card-body"><p>Dikerjakan pada sepertiga malam terakhir setelah tidur terlebih dahulu, minimal 2 rakaat. Termasuk sholat sunnah yang sangat dianjurkan.</p><div class="arabic" style="font-size:1.05rem;">أُصَلِّي سُنَّةَ التَّهَجُّدِ رَكْعَتَيْنِ لِلَّهِ تَعَالَى</div><p style="font-family:'Fraunces',serif;font-style:italic;margin-top:2px;">Ushallii sunnatat tahajjudi rak'ataini lillaahi ta'aalaa.</p><p>"Aku niat sholat sunnah tahajud dua rakaat karena Allah Ta'ala."</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Sholat Tarawih</h3><div class="chev">+</div></div><div class="card-body"><p>Sholat malam khusus bulan Ramadhan, dikerjakan berjamaah setelah Isya dengan jumlah rakaat yang bervariasi (8 atau 20 rakaat) tergantung tradisi masing-masing.</p><div class="arabic" style="font-size:1.05rem;">أُصَلِّي سُنَّةَ التَّرَاوِيحِ رَكْعَتَيْنِ لِلَّهِ تَعَالَى</div><p style="font-family:'Fraunces',serif;font-style:italic;margin-top:2px;">Ushallii sunnatat taraawiihi rak'ataini lillaahi ta'aalaa.</p><p>"Aku niat sholat sunnah tarawih dua rakaat karena Allah Ta'ala."</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Sholat Witir</h3><div class="chev">+</div></div><div class="card-body"><p>Sholat penutup ibadah malam dengan jumlah rakaat ganjil (1, 3, 5, atau lebih), biasa dikerjakan setelah tarawih atau tahajud.</p><div class="arabic" style="font-size:1.05rem;">أُصَلِّي سُنَّةَ الْوِتْرِ رَكْعَةً لِلَّهِ تَعَالَى</div><p style="font-family:'Fraunces',serif;font-style:italic;margin-top:2px;">Ushallii sunnatal witri rak'atan lillaahi ta'aalaa.</p><p>"Aku niat sholat sunnah witir (satu rakaat/ganjil) karena Allah Ta'ala."</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Sholat Idul Fitri</h3><div class="chev">+</div></div><div class="card-body"><p>Dikerjakan 2 rakaat berjamaah pada pagi 1 Syawal, diawali 7 takbir tambahan di rakaat pertama dan 5 takbir di rakaat kedua, tanpa azan dan iqamah.</p><div class="arabic" style="font-size:1.05rem;">أُصَلِّي سُنَّةً لِعِيدِ الْفِطْرِ رَكْعَتَيْنِ لِلَّهِ تَعَالَى</div><p style="font-family:'Fraunces',serif;font-style:italic;margin-top:2px;">Ushallii sunnatan li'iidil fithri rak'ataini lillaahi ta'aalaa.</p><p>"Aku niat sholat sunnah Idul Fitri dua rakaat karena Allah Ta'ala."</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Sholat Idul Adha</h3><div class="chev">+</div></div><div class="card-body"><p>Dikerjakan 2 rakaat berjamaah pada pagi 10 Dzulhijjah dengan tata cara serupa Idul Fitri, dilanjutkan penyembelihan hewan qurban.</p><div class="arabic" style="font-size:1.05rem;">أُصَلِّي سُنَّةً لِعِيدِ الْأَضْحَى رَكْعَتَيْنِ لِلَّهِ تَعَالَى</div><p style="font-family:'Fraunces',serif;font-style:italic;margin-top:2px;">Ushallii sunnatan li'iidil adh-haa rak'ataini lillaahi ta'aalaa.</p><p>"Aku niat sholat sunnah Idul Adha dua rakaat karena Allah Ta'ala."</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Sholat Dhuha</h3><div class="chev">+</div></div><div class="card-body"><p>Dikerjakan 2 hingga 12 rakaat pada pagi hari setelah matahari naik sepenggalah hingga menjelang zuhur. Diyakini terkait dengan kelapangan rezeki.</p><div class="arabic" style="font-size:1.05rem;">أُصَلِّي سُنَّةَ الضُّحَى رَكْعَتَيْنِ لِلَّهِ تَعَالَى</div><p style="font-family:'Fraunces',serif;font-style:italic;margin-top:2px;">Ushallii sunnatadh dhuhaa rak'ataini lillaahi ta'aalaa.</p><p>"Aku niat sholat sunnah Dhuha dua rakaat karena Allah Ta'ala."</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Sholat Tahiyatul Masjid</h3><div class="chev">+</div></div><div class="card-body"><p>Dikerjakan 2 rakaat sebagai penghormatan sesaat setelah memasuki masjid, sebelum duduk.</p><div class="arabic" style="font-size:1.05rem;">أُصَلِّي سُنَّةَ تَحِيَّةِ الْمَسْجِدِ رَكْعَتَيْنِ لِلَّهِ تَعَالَى</div><p style="font-family:'Fraunces',serif;font-style:italic;margin-top:2px;">Ushallii sunnata tahiyyatil masjidi rak'ataini lillaahi ta'aalaa.</p><p>"Aku niat sholat sunnah tahiyatul masjid dua rakaat karena Allah Ta'ala."</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Sholat Istikharah</h3><div class="chev">+</div></div><div class="card-body"><p>Dikerjakan 2 rakaat untuk memohon petunjuk terbaik dari Allah ketika menghadapi pilihan atau keputusan penting.</p><div class="arabic" style="font-size:1.05rem;">أُصَلِّي سُنَّةَ الِاسْتِخَارَةِ رَكْعَتَيْنِ لِلَّهِ تَعَالَى</div><p style="font-family:'Fraunces',serif;font-style:italic;margin-top:2px;">Ushallii sunnatal istikhaarati rak'ataini lillaahi ta'aalaa.</p><p>"Aku niat sholat sunnah istikharah dua rakaat karena Allah Ta'ala."</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Sholat Taubat</h3><div class="chev">+</div></div><div class="card-body"><p>Dikerjakan 2 rakaat atau lebih disertai penyesalan sungguh-sungguh dan permohonan ampun atas dosa yang telah diperbuat.</p><div class="arabic" style="font-size:1.05rem;">أُصَلِّي سُنَّةَ التَّوْبَةِ رَكْعَتَيْنِ لِلَّهِ تَعَالَى</div><p style="font-family:'Fraunces',serif;font-style:italic;margin-top:2px;">Ushallii sunnatat taubati rak'ataini lillaahi ta'aalaa.</p><p>"Aku niat sholat sunnah taubat dua rakaat karena Allah Ta'ala."</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Sholat Gerhana (Kusuf/Khusuf)</h3><div class="chev">+</div></div><div class="card-body"><p>Dikerjakan berjamaah saat terjadi gerhana matahari (kusuf) atau gerhana bulan (khusuf), dengan tata cara khusus: tiap rakaat memiliki dua kali ruku'.</p><div class="arabic" style="font-size:1.05rem;">أُصَلِّي سُنَّةَ الْكُسُوفِ رَكْعَتَيْنِ لِلَّهِ تَعَالَى</div><p style="font-family:'Fraunces',serif;font-style:italic;margin-top:2px;">Ushallii sunnatal kusuufi rak'ataini lillaahi ta'aalaa.</p><p>"Aku niat sholat sunnah gerhana dua rakaat karena Allah Ta'ala."</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Sholat Istisqa</h3><div class="chev">+</div></div><div class="card-body"><p>Dikerjakan berjamaah untuk memohon turunnya hujan di masa kekeringan, disertai khutbah dan doa memohon hujan.</p><div class="arabic" style="font-size:1.05rem;">أُصَلِّي سُنَّةَ الِاسْتِسْقَاءِ رَكْعَتَيْنِ لِلَّهِ تَعَالَى</div><p style="font-family:'Fraunces',serif;font-style:italic;margin-top:2px;">Ushallii sunnatal istisqaa'i rak'ataini lillaahi ta'aalaa.</p><p>"Aku niat sholat sunnah istisqa dua rakaat karena Allah Ta'ala."</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Sholat Sunnah Wudhu</h3><div class="chev">+</div></div><div class="card-body"><p>Dikerjakan 2 rakaat segera setelah berwudhu, sebagai bentuk syukur telah menyempurnakan bersuci.</p><div class="arabic" style="font-size:1.05rem;">أُصَلِّي سُنَّةَ الْوُضُوءِ رَكْعَتَيْنِ لِلَّهِ تَعَالَى</div><p style="font-family:'Fraunces',serif;font-style:italic;margin-top:2px;">Ushallii sunnatal wudhuu'i rak'ataini lillaahi ta'aalaa.</p><p>"Aku niat sholat sunnah wudhu dua rakaat karena Allah Ta'ala."</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Sholat Tasbih</h3><div class="chev">+</div></div><div class="card-body"><p>Dikerjakan 4 rakaat dengan memperbanyak bacaan tasbih (300 kali) di setiap rakaatnya pada posisi-posisi tertentu, sebagai sarana memohon ampunan.</p><div class="arabic" style="font-size:1.05rem;">أُصَلِّي سُنَّةَ التَّسْبِيحِ رَكْعَتَيْنِ لِلَّهِ تَعَالَى</div><p style="font-family:'Fraunces',serif;font-style:italic;margin-top:2px;">Ushallii sunnatat tasbiihi rak'ataini lillaahi ta'aalaa.</p><p>"Aku niat sholat sunnah tasbih (dua rakaat, diulang hingga 4 rakaat) karena Allah Ta'ala."</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Sholat Qabliyah Jumat</h3><div class="chev">+</div></div><div class="card-body"><p>Dikerjakan sebelum sholat Jumat dimulai, sebagai pengisi waktu menunggu sekaligus penambah pahala.</p><div class="arabic" style="font-size:1.05rem;">أُصَلِّي سُنَّةَ الْجُمُعَةِ رَكْعَتَيْنِ لِلَّهِ تَعَالَى</div><p style="font-family:'Fraunces',serif;font-style:italic;margin-top:2px;">Ushallii sunnatal jumu'ati rak'ataini lillaahi ta'aalaa.</p><p>"Aku niat sholat sunnah sebelum Jumat dua rakaat karena Allah Ta'ala."</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Sholat Syuruq</h3><div class="chev">+</div></div><div class="card-body"><p>Dikerjakan 2 rakaat sesaat setelah matahari terbit sempurna (sekitar 15-20 menit setelahnya), umumnya dilakukan setelah duduk berzikir sejak Subuh.</p><div class="arabic" style="font-size:1.05rem;">أُصَلِّي سُنَّةَ الشُّرُوقِ رَكْعَتَيْنِ لِلَّهِ تَعَالَى</div><p style="font-family:'Fraunces',serif;font-style:italic;margin-top:2px;">Ushallii sunnatasy syuruuqi rak'ataini lillaahi ta'aalaa.</p><p>"Aku niat sholat sunnah syuruq dua rakaat karena Allah Ta'ala."</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Sholat Awwabin</h3><div class="chev">+</div></div><div class="card-body"><p>Dikerjakan antara Maghrib dan Isya, umumnya 2-6 rakaat, sebagai bentuk kembali (awwab) kepada Allah di waktu senja.</p><div class="arabic" style="font-size:1.05rem;">أُصَلِّي سُنَّةَ الْأَوَّابِينَ رَكْعَتَيْنِ لِلَّهِ تَعَالَى</div><p style="font-family:'Fraunces',serif;font-style:italic;margin-top:2px;">Ushallii sunnatal awwaabiina rak'ataini lillaahi ta'aalaa.</p><p>"Aku niat sholat sunnah awwabin dua rakaat karena Allah Ta'ala."</p></div></div>
       </div>
 
       <div class="sub-screen" id="more-kiblat">
@@ -1636,6 +1811,20 @@
         <div class="card" data-card><div class="card-head" data-toggle><div class="num">28</div><h3>Balasan Sesuai Amal</h3><div class="chev">+</div></div><div class="card-body"><p>Barang siapa berniat melakukan kebaikan namun belum sempat mengerjakannya, tetap dicatat satu kebaikan penuh baginya; dan jika ia kerjakan, dicatat sepuluh hingga tujuh ratus kali lipat. (HR. Bukhari & Muslim)</p></div></div>
         <div class="card" data-card><div class="card-head" data-toggle><div class="num">29</div><h3>Wasiat Takwa & Amal Terbaik</h3><div class="chev">+</div></div><div class="card-body"><p>Sesungguhnya Allah mewajibkan berbuat baik (ihsan) dalam segala hal, termasuk ketika menyembelih hewan hendaklah dengan cara yang baik dan tidak menyakiti. (HR. Muslim)</p></div></div>
         <div class="card" data-card><div class="card-head" data-toggle><div class="num">30</div><h3>Kunci Surga</h3><div class="chev">+</div></div><div class="card-body"><p>Barang siapa bersaksi tiada Tuhan selain Allah dan Muhammad adalah utusan-Nya dengan keyakinan tulus dari hatinya, Allah mengharamkan neraka baginya. (HR. Bukhari & Muslim)</p></div></div>
+
+        <div class="subhead">Dari Kitab & Sumber Lain</div>
+        <p style="font-size:.78rem;color:var(--ink-soft);margin-top:0;">Ringkasan makna dari hadits-hadits masyhur di kitab-kitab lain, sebagai pelengkap 30 hadits Arbain di atas.</p>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">31</div><h3>Keutamaan Menuntut Ilmu</h3><div class="chev">+</div></div><div class="card-body"><p>Siapa menempuh jalan untuk mencari ilmu, Allah akan memudahkan baginya jalan menuju surga. (HR. Muslim, juga dimuat dalam Riyadhus Shalihin)</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">32</div><h3>Sebaik-Baik Manusia</h3><div class="chev">+</div></div><div class="card-body"><p>Sebaik-baik manusia adalah yang paling bermanfaat bagi manusia lainnya. (HR. Ad-Daruquthni & Ath-Thabrani, dinilai hasan oleh sebagian ulama hadits)</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">33</div><h3>Larangan Berlebihan dalam Beragama</h3><div class="chev">+</div></div><div class="card-body"><p>Jauhilah sikap berlebih-lebihan dalam beragama, karena umat sebelum kalian binasa akibat sikap berlebihan dalam beragama. (HR. An-Nasa'i & Ibnu Majah)</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">34</div><h3>Amalan yang Dicintai Allah</h3><div class="chev">+</div></div><div class="card-body"><p>Amalan yang paling dicintai Allah adalah yang dikerjakan secara rutin/istiqamah, sekalipun sedikit. (HR. Muwatta Imam Malik & Bukhari-Muslim)</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">35</div><h3>Timbangan Amal Paling Berat</h3><div class="chev">+</div></div><div class="card-body"><p>Tidak ada yang lebih berat dalam timbangan amal seorang hamba pada hari kiamat selain akhlak yang baik. (HR. Abu Dawud & Tirmidzi, dimuat dalam Riyadhus Shalihin)</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">36</div><h3>Kebersihan Sebagian dari Iman</h3><div class="chev">+</div></div><div class="card-body"><p>Kesucian/kebersihan adalah sebagian dari iman. (HR. Muslim, juga diriwayatkan Ad-Darimi dalam Sunan-nya)</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">37</div><h3>Menahan Lisan</h3><div class="chev">+</div></div><div class="card-body"><p>Barang siapa menjaga apa yang ada di antara dua rahang (lisan) dan dua kakinya (kemaluan), aku jamin surga baginya. (HR. Bukhari)</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">38</div><h3>Ancaman bagi yang Menyakiti Tetangga</h3><div class="chev">+</div></div><div class="card-body"><p>Tidak beriman seseorang yang tetangganya tidak merasa aman dari gangguannya. (HR. Bukhari, juga diriwayatkan Ibnu Hibban dalam Shahih-nya)</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">39</div><h3>Doa yang Tidak Ditolak</h3><div class="chev">+</div></div><div class="card-body"><p>Tiga doa yang mustajab tanpa keraguan: doa orang tua, doa musafir, dan doa orang yang terzalimi. (HR. Abu Dawud & Tirmidzi, dinilai shahih dalam Al-Mustadrak Al-Hakim)</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">40</div><h3>Kedudukan Sholat Berjamaah</h3><div class="chev">+</div></div><div class="card-body"><p>Sholat berjamaah lebih utama dua puluh tujuh derajat dibanding sholat sendirian. (HR. Bukhari & Muslim, juga diriwayatkan Ibnu Khuzaimah dalam Shahih-nya)</p></div></div>
+        <p style="font-size:.72rem;color:var(--ink-soft);margin-top:10px;">*Ringkasan di atas mengambil makna inti dari sumber-sumber yang disebut. Untuk teks lengkap dan sanad, disarankan merujuk langsung ke kitab aslinya atau ulama yang berkompeten.</p>
       </div>
 
       <div class="sub-screen" id="more-mazhab">
@@ -1644,6 +1833,11 @@
         <div class="card" data-card><div class="card-head" data-toggle><div class="num">2</div><h3>Maliki</h3><div class="chev">+</div></div><div class="card-body"><p>Didirikan oleh Imam Malik bin Anas di Madinah. Banyak merujuk pada amalan penduduk Madinah sebagai sumber hukum. Mayoritas dianut di Afrika Utara dan Afrika Barat.</p></div></div>
         <div class="card" data-card><div class="card-head" data-toggle><div class="num">3</div><h3>Syafi'i</h3><div class="chev">+</div></div><div class="card-body"><p>Didirikan oleh Imam Muhammad bin Idris Asy-Syafi'i. Menggabungkan metode Hanafi dan Maliki secara lebih sistematis dalam ilmu ushul fiqih. Mayoritas dianut di Indonesia, Malaysia, dan Mesir.</p></div></div>
         <div class="card" data-card><div class="card-head" data-toggle><div class="num">4</div><h3>Hambali</h3><div class="chev">+</div></div><div class="card-body"><p>Didirikan oleh Imam Ahmad bin Hanbal. Dikenal sangat berpegang teguh pada hadits dan berhati-hati dalam penggunaan rasio. Mayoritas dianut di Arab Saudi.</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Qurratul 'Uyun</h3><div class="chev">+</div></div><div class="card-body">
+          <p>Qurratul 'Uyun (lengkapnya "Qurratul 'Uyun bi Syarhi Nazham Ibni Yamun") adalah kitab klasik berbahasa Arab karya Syekh Muhammad At-Tihami, berbentuk syarah (penjelasan) atas nazham (syair) karya Ibnu Yamun tentang fiqih pernikahan.</p>
+          <p style="margin-top:8px;">Kitab ini banyak diajarkan di pesantren sebagai materi fiqih munakahat, membahas hak dan kewajiban suami istri, adab pergaulan dalam rumah tangga, serta hukum-hukum seputar pernikahan menurut mazhab Syafi'i.</p>
+          <p style="margin-top:8px;font-size:.78rem;color:var(--ink-soft);">*Aku tidak mengutip bait-bait nazham-nya secara langsung di sini karena tidak punya salinan teks aslinya yang bisa dipertanggungjawabkan keakuratannya — untuk isi lengkapnya, sebaiknya rujuk kitab aslinya atau pengajar yang mengampu kitab ini.</p>
+        </div></div>
       </div>
 
       <div class="sub-screen" id="more-faraidh">
@@ -2410,6 +2604,8 @@
   }
 
   document.addEventListener('click', (e)=>{
+    const hijaiyahChip = e.target.closest('[data-hijaiyah]');
+    if(hijaiyahChip){ speakArabic(hijaiyahChip.dataset.hijaiyah); return; }
     const playVerse = e.target.closest('.play-verse');
     if(playVerse){
       e.stopPropagation();
@@ -2602,6 +2798,33 @@
     speakArabic(document.getElementById('iqraPreview').textContent);
   });
 
+  // ---- Theme switcher (Teal / Dark / Light) ----
+  const THEME_ASSETS = {
+    teal:  {splash: 'shijau.jpg', logo: 'lhijau.png'},
+    dark:  {splash: 'shitam.jpg', logo: 'lhitam.png'},
+    light: {splash: 'sputih.jpg', logo: 'lputih.png'}
+  };
+  function applyTheme(theme){
+    document.documentElement.setAttribute('data-theme', theme);
+    document.querySelectorAll('.theme-dot').forEach(d=>{
+      d.classList.toggle('active', d.dataset.themePick === theme);
+    });
+    const assets = THEME_ASSETS[theme] || THEME_ASSETS.dark;
+    const splashImg = document.getElementById('splashImg');
+    const logoImg = document.getElementById('logoImg');
+    const splashFallback = document.getElementById('splashFallback');
+    const logoFallback = document.getElementById('logoFallback');
+    if(splashImg){ splashImg.style.display=''; splashImg.src = assets.splash; if(splashFallback) splashFallback.style.display='none'; }
+    if(logoImg){ logoImg.style.display=''; logoImg.src = assets.logo; if(logoFallback) logoFallback.style.display='none'; }
+    try{ localStorage.setItem('silmikaffah-theme', theme); }catch(e){}
+  }
+  document.querySelectorAll('[data-theme-pick]').forEach(btn=>{
+    btn.addEventListener('click', ()=> applyTheme(btn.dataset.themePick));
+  });
+  let savedTheme = 'dark';
+  try{ savedTheme = localStorage.getItem('silmikaffah-theme') || 'dark'; }catch(e){}
+  applyTheme(savedTheme);
+
   // ---- Auto Hijri date on Home ----
   (function(){
     const today = new Date();
@@ -2635,6 +2858,46 @@
       el.insertAdjacentElement('afterend', btn);
     });
   }
+  // ---- Replace emoji menu icons with minimalist green line-icons ----
+  const ICONS = {
+    moon: '<svg viewBox="0 0 24 24"><path d="M21 12.5A9 9 0 1 1 11.5 3 7 7 0 0 0 21 12.5z"/></svg>',
+    kaaba: '<svg viewBox="0 0 24 24"><path d="M4 21V9l8-6 8 6v12"/><path d="M9 21v-7h6v7"/></svg>',
+    book: '<svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M20 18H6.5A2.5 2.5 0 0 0 4 20.5"/></svg>',
+    letters: '<svg viewBox="0 0 24 24"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="15" y2="12"/><line x1="4" y1="17" x2="18" y2="17"/></svg>',
+    scroll: '<svg viewBox="0 0 24 24"><path d="M6 4h11a2 2 0 0 1 2 2v13a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2V6a2 2 0 0 1 2-2z"/><path d="M15 8h-6"/><path d="M15 12h-6"/></svg>',
+    people: '<svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.3"/><path d="M15.5 12.3c2.6.3 4.5 2.5 4.5 5.2"/></svg>',
+    mosque: '<svg viewBox="0 0 24 24"><path d="M4 21v-7l3-3 3 3v7"/><path d="M14 21v-7l3-3 3 3v7"/><path d="M10 21v-9a2 2 0 0 1 4 0v9"/><line x1="2" y1="21" x2="22" y2="21"/><circle cx="12" cy="4" r="1.2"/></svg>',
+    sword: '<svg viewBox="0 0 24 24"><line x1="5" y1="19" x2="17" y2="7"/><path d="M13 3l6 6-2 2-6-6z"/><line x1="4" y1="20" x2="7" y2="17"/></svg>',
+    gift: '<svg viewBox="0 0 24 24"><rect x="4" y="9" width="16" height="11"/><line x1="4" y1="13" x2="20" y2="13"/><path d="M12 9v11"/><path d="M9 9c-1.5 0-3-1-3-2.5S7.5 4 9 4c1.5 0 3 2 3 5"/><path d="M15 9c1.5 0 3-1 3-2.5S16.5 4 15 4c-1.5 0-3 2-3 5"/></svg>',
+    calendar: '<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="3" x2="8" y2="7"/><line x1="16" y1="3" x2="16" y2="7"/></svg>',
+    droplet: '<svg viewBox="0 0 24 24"><path d="M12 3s7 7.5 7 12a7 7 0 0 1-14 0c0-4.5 7-12 7-12z"/></svg>',
+    compass: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M15 9l-2 6-6 2 2-6z"/></svg>',
+    sparkle: '<svg viewBox="0 0 24 24"><path d="M12 2v6M12 16v6M2 12h6M16 12h6M4.5 4.5l4 4M15.5 15.5l4 4M19.5 4.5l-4 4M8.5 15.5l-4 4"/></svg>',
+    flower: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2.4"/><circle cx="12" cy="6" r="3"/><circle cx="12" cy="18" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="12" r="3"/></svg>',
+    hourglass: '<svg viewBox="0 0 24 24"><path d="M6 3h12"/><path d="M6 21h12"/><path d="M6 3c0 5 12 5 12 0-5" /><path d="M6 3c0 5 6 6 6 9s-6 4-6 9"/><path d="M18 3c0 5-6 6-6 9s6 4 6 9"/></svg>',
+    heart: '<svg viewBox="0 0 24 24"><path d="M12 20s-7-4.5-9.5-9C1 7.5 3 4 6.5 4 9 4 11 6 12 7.5 13 6 15 4 17.5 4 21 4 23 7.5 21.5 11 19 15.5 12 20 12 20z"/></svg>',
+    beads: '<svg viewBox="0 0 24 24"><circle cx="6" cy="7" r="1.6"/><circle cx="10" cy="4.5" r="1.6"/><circle cx="15" cy="5" r="1.6"/><circle cx="18.5" cy="8" r="1.6"/><circle cx="19" cy="13" r="1.6"/><circle cx="16" cy="17" r="1.6"/><circle cx="11" cy="19" r="1.6"/><circle cx="6.5" cy="16" r="1.6"/><circle cx="4" cy="11" r="1.6"/></svg>',
+    scale: '<svg viewBox="0 0 24 24"><line x1="12" y1="3" x2="12" y2="21"/><line x1="5" y1="7" x2="19" y2="7"/><path d="M3 7l3-4 3 4-3 5z"/><path d="M15 7l3-4 3 4-3 5z"/><line x1="8" y1="21" x2="16" y2="21"/></svg>',
+    coin: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9 9c0-1.5 1.3-2.5 3-2.5s3 1 3 2.2c0 3-6 1.5-6 4.6 0 1.4 1.3 2.4 3 2.4s3-1 3-2.4"/><line x1="12" y1="5" x2="12" y2="19"/></svg>',
+    calc: '<svg viewBox="0 0 24 24"><rect x="4" y="2.5" width="16" height="19" rx="2"/><line x1="7" y1="6.5" x2="17" y2="6.5"/><circle cx="7.5" cy="11" r="1"/><circle cx="12" cy="11" r="1"/><circle cx="16.5" cy="11" r="1"/><circle cx="7.5" cy="15" r="1"/><circle cx="12" cy="15" r="1"/><circle cx="16.5" cy="15" r="1"/><circle cx="7.5" cy="19" r="1"/><circle cx="12" cy="19" r="1"/><circle cx="16.5" cy="19" r="1"/></svg>',
+  };
+  const EMOJI_MAP = {
+    '🌙':'moon','🕋':'kaaba','📖':'book','🔡':'letters','🔤':'letters','📜':'scroll','🧕':'people',
+    '🕌':'mosque','⚔️':'sword','🐑':'gift','🗓️':'calendar','💧':'droplet','🧭':'compass','📅':'calendar',
+    '🕊️':'sparkle','✨':'sparkle','🕯️':'sparkle','🌸':'flower','⏳':'hourglass','🤍':'heart','🤲':'heart',
+    '📿':'beads','📗':'book','⚖️':'scale','📘':'book','🌟':'sparkle','💰':'coin','🧮':'calc'
+  };
+  function replaceEmojiIcons(){
+    document.querySelectorAll('.ic, .sicon').forEach(el=>{
+      const key = el.textContent.trim();
+      if(ICONS[EMOJI_MAP[key]]){
+        el.innerHTML = ICONS[EMOJI_MAP[key]];
+        el.style.color = 'var(--clay)';
+      }
+    });
+  }
+  replaceEmojiIcons();
+
   injectArabicVoiceButtons();
 
   // Unify existing manual voice/play buttons with clean SVG icons
