@@ -107,6 +107,8 @@
   .appbar h1{font-size:1.08rem;margin:0;color:#F5F0E1;}
   .appbar .sub{font-size:.7rem;color:#8A8478;margin-top:1px;}
   .appbar .iconbtn{background:none;border:none;color:#EDE7D6;font-size:1.1rem;cursor:pointer;padding:6px;}
+  .appbar .iconbtn.speaking{color:var(--clay);}
+  .mini-remove{background:none;border:none;color:var(--ink-soft);cursor:pointer;font-size:.9rem;padding:4px;flex:0 0 auto;}
   .theme-switch{display:flex;gap:8px;align-items:center;}
   .theme-dot{width:20px;height:20px;border-radius:50%;border:2px solid rgba(255,255,255,.25);cursor:pointer;padding:0;}
   .theme-dot.active{border-color:#fff;box-shadow:0 0 0 2px var(--clay);}
@@ -225,6 +227,11 @@
   }
 
   /* QURAN LIST */
+  .quran-mode-tabs{display:flex;gap:8px;margin-bottom:14px;}
+  .quran-mode-btn{flex:1;padding:9px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink-soft);font-size:.85rem;cursor:pointer;}
+  .quran-mode-btn.active{background:var(--clay);color:#04140D;border-color:var(--clay);font-weight:600;}
+  .juz-item{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:8px;cursor:pointer;}
+  .juz-item .surah-num{background:var(--paper-2);}
   .surah-item{
     display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);
     border-radius:12px;padding:11px 14px;margin-bottom:8px;cursor:pointer;
@@ -250,6 +257,22 @@
 
   /* ZAKAT CALC */
   .calc-card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:16px;}
+  .hijri-cal-card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:16px;}
+  .hijri-cal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+  .hijri-nav{width:32px;height:32px;border-radius:50%;border:1px solid var(--line);background:var(--paper-2);color:var(--ink);font-size:1.1rem;cursor:pointer;}
+  .hijri-cal-title{text-align:center;}
+  .hijri-cal-month{font-family:'Fraunces',serif;font-weight:600;font-size:1rem;}
+  .hijri-cal-range{font-size:.72rem;color:var(--clay);}
+  .hijri-cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;}
+  .hijri-cal-dow{text-align:center;font-size:.68rem;color:var(--ink-soft);padding-bottom:6px;}
+  .hijri-cal-cell{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:10px;position:relative;}
+  .hijri-cal-cell.empty{visibility:hidden;}
+  .hijri-cal-cell .hd{font-size:.82rem;font-weight:600;}
+  .hijri-cal-cell .gd{font-size:.55rem;color:var(--ink-soft);}
+  .hijri-cal-cell .dot{position:absolute;bottom:3px;width:4px;height:4px;border-radius:50%;background:var(--clay);}
+  .hijri-cal-cell.today{background:var(--clay);}
+  .hijri-cal-cell.today .hd,.hijri-cal-cell.today .gd{color:#04140D;}
+  .hijri-cal-cell.today .dot{background:#04140D;}
   .field{margin-bottom:12px;}
   .field label{display:block;font-size:.8rem;color:var(--ink-soft);margin-bottom:5px;}
   .field input{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px;font-size:.9rem;font-family:'Inter',sans-serif;}
@@ -449,10 +472,15 @@
         <div class="sub" id="appbarSub">Panduan Iman & Islam</div>
       </div>
     </div>
-    <div class="theme-switch">
-      <button class="theme-dot theme-dot-teal" data-theme-pick="teal" aria-label="Tema Hijau Teal"></button>
-      <button class="theme-dot theme-dot-dark" data-theme-pick="dark" aria-label="Tema Hitam AMOLED"></button>
-      <button class="theme-dot theme-dot-light" data-theme-pick="light" aria-label="Tema Putih Terang"></button>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <button class="iconbtn" id="btnBookmarkPage" aria-label="Simpan ke Koleksi">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4.5A2.5 2.5 0 0 1 8.5 2h7A2.5 2.5 0 0 1 18 4.5V21l-6-3.7L6 21V4.5Z"/></svg>
+      </button>
+      <div class="theme-switch">
+        <button class="theme-dot theme-dot-teal" data-theme-pick="teal" aria-label="Tema Hijau Teal"></button>
+        <button class="theme-dot theme-dot-dark" data-theme-pick="dark" aria-label="Tema Hitam AMOLED"></button>
+        <button class="theme-dot theme-dot-light" data-theme-pick="light" aria-label="Tema Putih Terang"></button>
+      </div>
     </div>
   </div>
 
@@ -473,50 +501,18 @@
         <button class="btn-loc" id="btnLoc">📍 Gunakan Lokasi Saya</button>
       </div>
 
+      <div class="subhead" style="margin-top:6px;">Menu Utama</div>
       <div class="quick-grid">
-        <div class="quick-tile" data-goto="more-asmaul"><span class="ic">✨</span><b>Asmaul Husna</b><span>99 nama + Sifat 20</span></div>
-        <div class="quick-tile" data-goto="iman"><span class="ic">🌙</span><b>Rukun Iman</b><span>6 perkara keyakinan</span></div>
         <div class="quick-tile" data-goto="islam"><span class="ic">🕋</span><b>Rukun Islam</b><span>5 tiang amal</span></div>
-      </div>
-
-      <div class="subhead" style="margin-top:6px;">Belajar Al-Qur'an</div>
-      <div class="quick-grid">
-        <div class="quick-tile" data-goto="quran"><span class="ic">📖</span><b>Al-Qur'an</b><span>114 surah + audio</span></div>
-        <div class="quick-tile" data-goto="more-iqra"><span class="ic">🔡</span><b>Iqra' 6 Jilid</b><span>Belajar baca bertahap</span></div>
-        <div class="quick-tile" data-goto="more-tajwid"><span class="ic">🔤</span><b>Ilmu Tajwid</b><span>Hukum bacaan Qur'an</span></div>
-      </div>
-
-      <div class="subhead">Kisah & Sejarah</div>
-      <div class="quick-grid">
-        <div class="quick-tile" data-goto="more-nabi"><span class="ic">📜</span><b>25 Nabi & Rasul</b><span>Kisah + sirah tiap nabi</span></div>
-        <div class="quick-tile" data-goto="more-sahabat"><span class="ic">🧕</span><b>Sahabat Nabi</b><span>40 sahabat, terkategori</span></div>
-        <div class="quick-tile" data-goto="more-walisongo"><span class="ic">🕌</span><b>Wali Songo</b><span>9 penyebar Islam Jawa</span></div>
-        <div class="quick-tile" data-goto="more-sirah"><span class="ic">🌙</span><b>Sirah Nabawiyah</b><span>Kronologi hidup Nabi</span></div>
-        <div class="quick-tile" data-goto="more-perang"><span class="ic">⚔️</span><b>Perang Besar</b><span>10 peperangan lengkap</span></div>
-        <div class="quick-tile" data-goto="more-qurban"><span class="ic">🐑</span><b>Sejarah Qurban</b><span>Asal-usul Idul Adha</span></div>
-        <div class="quick-tile" data-goto="more-peristiwa"><span class="ic">🗓️</span><b>Peristiwa Penting</b><span>Isra Mi'raj, Hijrah, dll</span></div>
-      </div>
-
-      <div class="subhead">Wudhu, Kiblat & Kalender</div>
-      <div class="quick-grid">
-        <div class="quick-tile" data-goto="more-wudhu"><span class="ic">💧</span><b>Wudhu & Tayamum</b><span>Tata cara bersuci</span></div>
-        <div class="quick-tile" data-goto="more-kiblat"><span class="ic">🧭</span><b>Arah Kiblat</b><span>Dari lokasimu</span></div>
-        <div class="quick-tile" data-goto="more-hijriyah"><span class="ic">📅</span><b>Kalender Hijriyah</b><span>Konversi tanggal</span></div>
-      </div>
-
-      <div class="subhead">Aqidah</div>
-      <div class="quick-grid">
-        <div class="quick-tile" data-goto="more-malaikat"><span class="ic">🕊️</span><b>Malaikat & Tugasnya</b><span>10 malaikat</span></div>
-        <div class="quick-tile" data-goto="more-mazhab"><span class="ic">⚖️</span><b>4 Mazhab Fiqih</b><span>Hanafi, Maliki, Syafi'i, Hambali</span></div>
-        <div class="quick-tile" data-goto="more-faraidh"><span class="ic">📜</span><b>Faraidh</b><span>Ilmu waris</span></div>
-        <div class="quick-tile" data-goto="more-adab"><span class="ic">🤍</span><b>Adab Harian</b><span>Makan, tidur, bertetangga</span></div>
-      </div>
-
-      <div class="subhead">Dzikir, Doa & Hadits</div>
-      <div class="quick-grid">
-        <div class="quick-tile" data-goto="more-doa"><span class="ic">🤲</span><b>Doa Harian</b><span>±40 doa + pencarian</span></div>
-        <div class="quick-tile" data-goto="more-zikir"><span class="ic">📿</span><b>Zikir Pagi & Petang</b><span>Amalan rutin</span></div>
-        <div class="quick-tile" data-goto="more-hadits"><span class="ic">📗</span><b>Hadits Pilihan</b><span>30 hadits Arbain Nawawi</span></div>
+        <div class="quick-tile" data-goto="iman"><span class="ic">🌙</span><b>Rukun Iman</b><span>6 perkara keyakinan</span></div>
+        <div class="quick-tile" data-goto="more-catilmu"><span class="ic">📖</span><b>Ilmu & Belajar</b><span>Qur'an, Iqra, Tajwid, dll</span></div>
+        <div class="quick-tile" data-goto="more-catkeluarga"><span class="ic">💍</span><b>Keluarga & Muamalah</b><span>Faraidh, nikah, muamalah</span></div>
+        <div class="quick-tile" data-goto="more-catakhlak"><span class="ic">✨</span><b>Akhlak & Adab</b><span>Budi pekerti sehari-hari</span></div>
+        <div class="quick-tile" data-goto="more-catsejarah"><span class="ic">📜</span><b>Sejarah & Peristiwa</b><span>Nabi, sahabat, perang, dll</span></div>
+        <div class="quick-tile" data-goto="more-catkitab"><span class="ic">📗</span><b>Kitab</b><span>Hadits, mazhab, referensi</span></div>
+        <div class="quick-tile" data-goto="more-catdoa"><span class="ic">🤲</span><b>Doa & Dzikir</b><span>Doa, zikir, Asmaul Husna</span></div>
+        <div class="quick-tile" data-goto="more-catalat"><span class="ic">🧭</span><b>Alat Muslim</b><span>Kiblat, kalender, kalkulator</span></div>
+        <div class="quick-tile" data-goto="more-catreferensi"><span class="ic">🔖</span><b>Referensi & Koleksi</b><span>Koleksi & pengaturan</span></div>
       </div>
     </div>
 
@@ -864,11 +860,20 @@
         <p id="quranSub">Ketuk surah untuk membaca teks & mendengarkan murottal per ayat.</p>
       </div>
       <div id="surahListView">
-        <div class="searchbar"><input type="text" id="quranSearch" placeholder="Cari surah, misal: Al-Baqarah atau sapi..."></div>
-        <div id="surahList"></div>
+        <div class="quran-mode-tabs">
+          <button class="quran-mode-btn active" id="btnModeSurah">Surah</button>
+          <button class="quran-mode-btn" id="btnModeJuz">Juz</button>
+        </div>
+        <div id="surahModeView">
+          <div class="searchbar"><input type="text" id="quranSearch" placeholder="Cari surah, misal: Al-Baqarah atau sapi..."></div>
+          <div id="surahList"></div>
+        </div>
+        <div id="juzModeView" style="display:none;">
+          <div id="juzList"></div>
+        </div>
       </div>
       <div id="surahDetailView" style="display:none;">
-        <div class="back-row" id="backToSurahList">‹ Kembali ke daftar surah</div>
+        <div class="back-row" id="backToSurahList">‹ Kembali ke daftar</div>
         <div id="ayahStatus" style="font-size:.85rem;color:var(--ink-soft);"></div>
         <button class="btn-primary" id="btnPlayAll" style="margin:10px 0 14px;">▶ Putar Semua Ayat</button>
         <div id="ayahList"></div>
@@ -912,6 +917,7 @@
         <div class="more-item" data-sub="more-sholat"><div class="ic">🕋</div><div><b>3. Sholat Wajib</b><span>Niat, qunut, sujud sahwi, Jumat, jenazah</span></div><div class="arrow">›</div></div>
         <div class="more-item" data-sub="more-sunnah"><div class="ic">🌟</div><div><b>4. Sholat Sunnah</b><span>19 macam, niat & tata cara</span></div><div class="arrow">›</div></div>
         <div class="more-item" data-sub="more-puasasunnah"><div class="ic">🌙</div><div><b>Puasa Sunnah</b><span>Senin-Kamis, Daud, Syawal, Arafah, & lainnya</span></div><div class="arrow">›</div></div>
+        <div class="more-item" data-sub="more-ramadhan"><div class="ic">🌙</div><div><b>Ramadhan</b><span>Keutamaan, Lailatul Qadar, & amalan</span></div><div class="arrow">›</div></div>
         <div class="more-item" data-sub="more-kiblat"><div class="ic">🧭</div><div><b>Arah Kiblat</b><span>Berdasarkan lokasimu saat ini</span></div><div class="arrow">›</div></div>
 
         <div class="subhead">Zakat & Haji</div>
@@ -937,6 +943,145 @@
         <div class="more-item" data-sub="more-qurratul"><div class="ic">💍</div><div><b>Qurratul 'Uyun</b><span>Kitab fiqih pernikahan klasik</span></div><div class="arrow">›</div></div>
         <div class="more-item" data-sub="more-adab"><div class="ic">🤍</div><div><b>Adab Harian</b><span>Makan, tidur, bertetangga, & lainnya</span></div><div class="arrow">›</div></div>
         <div class="more-item" data-sub="more-hijriyah"><div class="ic">📅</div><div><b>Kalender Hijriyah</b><span>Konversi tanggal Masehi ke Hijriyah</span></div><div class="arrow">›</div></div>
+      </div>
+
+      <div class="sub-screen" id="more-catilmu">
+        <div class="back-row" data-back>‹ Kembali ke Beranda</div>
+        <div class="more-item" data-goto="quran"><div class="ic">📖</div><div><b>Al-Qur'an</b><span>114 surah + mode Juz, teks & audio</span></div><div class="arrow">›</div></div>
+        <div class="more-item" data-sub="more-iqra"><div class="ic">🔡</div><div><b>Iqra' 6 Jilid</b><span>Belajar baca Al-Qur'an bertahap</span></div><div class="arrow">›</div></div>
+        <div class="more-item" data-sub="more-tajwid"><div class="ic">🔤</div><div><b>Ilmu Tajwid</b><span>Hukum bacaan, angka Arab, kamus</span></div><div class="arrow">›</div></div>
+        <div class="more-item" data-sub="more-sifat20"><div class="ic">🕯️</div><div><b>Sifat-Sifat Allah</b><span>20 sifat wajib bagi Allah</span></div><div class="arrow">›</div></div>
+        <div class="more-item" data-sub="more-ulumulquran"><div class="ic">📖</div><div><b>Ulumul Qur'an</b><span>Ilmu-ilmu Al-Qur'an dasar</span></div><div class="arrow">›</div></div>
+        <div class="more-item" data-sub="more-ushulfikih"><div class="ic">⚖️</div><div><b>Ushul Fikih</b><span>Dasar-dasar penetapan hukum Islam</span></div><div class="arrow">›</div></div>
+      </div>
+
+      <div class="sub-screen" id="more-catkeluarga">
+        <div class="back-row" data-back>‹ Kembali ke Beranda</div>
+        <div class="more-item" data-sub="more-qurratul"><div class="ic">💍</div><div><b>Qurratul 'Uyun</b><span>Kitab fiqih pernikahan klasik</span></div><div class="arrow">›</div></div>
+        <div class="more-item" data-sub="more-faraidh"><div class="ic">📜</div><div><b>Faraidh (Ilmu Waris)</b><span>Ahli waris, syarat, & pembagian</span></div><div class="arrow">›</div></div>
+        <div class="more-item" data-sub="more-muamalah"><div class="ic">🤝</div><div><b>Muamalah</b><span>Jual beli, utang piutang, riba, & lainnya</span></div><div class="arrow">›</div></div>
+      </div>
+
+      <div class="sub-screen" id="more-catakhlak">
+        <div class="back-row" data-back>‹ Kembali ke Beranda</div>
+        <div class="more-item" data-sub="more-akhlak"><div class="ic">✨</div><div><b>Akhlak Terpuji & Tercela</b><span>Sifat yang dianjurkan & dijauhi</span></div><div class="arrow">›</div></div>
+        <div class="more-item" data-sub="more-adab"><div class="ic">🤍</div><div><b>Adab Harian</b><span>Makan, tidur, bertetangga, & lainnya</span></div><div class="arrow">›</div></div>
+      </div>
+
+      <div class="sub-screen" id="more-catsejarah">
+        <div class="back-row" data-back>‹ Kembali ke Beranda</div>
+        <div class="more-item" data-sub="more-nabi"><div class="ic">📜</div><div><b>Kisah 25 Nabi & Rasul</b><span>Ringkasan kisah tiap nabi</span></div><div class="arrow">›</div></div>
+        <div class="more-item" data-sub="more-sahabat"><div class="ic">🧕</div><div><b>Kisah Sahabat Nabi</b><span>40 sahabat, terkategori</span></div><div class="arrow">›</div></div>
+        <div class="more-item" data-sub="more-walisongo"><div class="ic">🕌</div><div><b>Wali Songo</b><span>9 penyebar Islam di tanah Jawa</span></div><div class="arrow">›</div></div>
+        <div class="more-item" data-sub="more-sirah"><div class="ic">🌙</div><div><b>Sirah Nabawiyah</b><span>Kronologi hidup Nabi Muhammad ﷺ</span></div><div class="arrow">›</div></div>
+        <div class="more-item" data-sub="more-perang"><div class="ic">⚔️</div><div><b>Perang dalam Islam</b><span>10 peperangan, kronologi lengkap</span></div><div class="arrow">›</div></div>
+        <div class="more-item" data-sub="more-qurban"><div class="ic">🐑</div><div><b>Sejarah Qurban & Idul Adha</b><span>Asal-usul, hukum, dan tata cara</span></div><div class="arrow">›</div></div>
+        <div class="more-item" data-sub="more-peristiwa"><div class="ic">🗓️</div><div><b>Peristiwa Penting dalam Islam</b><span>Nuzulul Qur'an, Isra Mi'raj, Hijrah, dll</span></div><div class="arrow">›</div></div>
+      </div>
+
+      <div class="sub-screen" id="more-catkitab">
+        <div class="back-row" data-back>‹ Kembali ke Beranda</div>
+        <div class="more-item" data-sub="more-hadits"><div class="ic">📗</div><div><b>Hadits Pilihan</b><span>40 hadits dari berbagai kitab sahih</span></div><div class="arrow">›</div></div>
+        <div class="more-item" data-sub="more-mazhab"><div class="ic">⚖️</div><div><b>4 Mazhab Fiqih</b><span>Hanafi, Maliki, Syafi'i, Hambali</span></div><div class="arrow">›</div></div>
+        <div class="more-item" data-sub="more-qurratul"><div class="ic">💍</div><div><b>Qurratul 'Uyun</b><span>Kitab fiqih pernikahan klasik</span></div><div class="arrow">›</div></div>
+      </div>
+
+      <div class="sub-screen" id="more-catdoa">
+        <div class="back-row" data-back>‹ Kembali ke Beranda</div>
+        <div class="more-item" data-sub="more-doa"><div class="ic">🤲</div><div><b>Doa Harian</b><span>±60 doa terkategori + pencarian</span></div><div class="arrow">›</div></div>
+        <div class="more-item" data-sub="more-zikir"><div class="ic">📿</div><div><b>Zikir Pagi & Petang</b><span>Amalan rutin harian</span></div><div class="arrow">›</div></div>
+        <div class="more-item" data-sub="more-asmaul"><div class="ic">✨</div><div><b>Asmaul Husna</b><span>99 nama Allah + suara</span></div><div class="arrow">›</div></div>
+        <div class="more-item" data-sub="more-ramadhan"><div class="ic">🌙</div><div><b>Ramadhan</b><span>Keutamaan, Lailatul Qadar, & amalan</span></div><div class="arrow">›</div></div>
+      </div>
+
+      <div class="sub-screen" id="more-catalat">
+        <div class="back-row" data-back>‹ Kembali ke Beranda</div>
+        <div class="more-item" data-sub="more-kiblat"><div class="ic">🧭</div><div><b>Arah Kiblat</b><span>Berdasarkan lokasimu saat ini</span></div><div class="arrow">›</div></div>
+        <div class="more-item" data-sub="more-hijriyah"><div class="ic">📅</div><div><b>Kalender Hijriyah</b><span>Kalender bulanan + histori Islam</span></div><div class="arrow">›</div></div>
+        <div class="more-item" data-sub="more-zakat"><div class="ic">🧮</div><div><b>Kalkulator Zakat</b><span>Hitung zakat maal kamu</span></div><div class="arrow">›</div></div>
+      </div>
+
+      <div class="sub-screen" id="more-catreferensi">
+        <div class="back-row" data-back>‹ Kembali ke Beranda</div>
+        <div class="more-item" id="goKoleksiFromRef"><div class="ic">🔖</div><div><b>Koleksi & Favorit</b><span>Materi yang kamu simpan</span></div><div class="arrow">›</div></div>
+        <div class="more-item" id="goPengaturanFromRef"><div class="ic">⚙️</div><div><b>Pengaturan</b><span>Tema & preferensi aplikasi</span></div><div class="arrow">›</div></div>
+      </div>
+
+      <div class="sub-screen" id="more-koleksi">
+        <div class="back-row" data-back>‹ Kembali ke Beranda</div>
+        <p style="font-size:.85rem;color:var(--ink-soft);margin-top:0;">Simpan halaman yang sering kamu buka. Ketuk ikon 🔖 di judul suatu materi untuk menambahkannya ke sini.</p>
+        <div id="koleksiEmpty" class="calc-card" style="text-align:center;color:var(--ink-soft);">Belum ada koleksi tersimpan.</div>
+        <div id="koleksiList"></div>
+      </div>
+
+      <div class="sub-screen" id="more-pengaturan">
+        <div class="back-row" data-back>‹ Kembali ke Beranda</div>
+        <div class="subhead" style="margin-top:0;">Tampilan</div>
+        <div class="calc-card">
+          <p style="margin:0 0 10px;font-size:.85rem;color:var(--ink-soft);">Tema Aplikasi</p>
+          <div style="display:flex;gap:10px;">
+            <button class="theme-dot theme-dot-teal" data-theme-pick="teal" style="width:32px;height:32px;" aria-label="Tema Hijau Teal"></button>
+            <button class="theme-dot theme-dot-dark" data-theme-pick="dark" style="width:32px;height:32px;" aria-label="Tema Hitam AMOLED"></button>
+            <button class="theme-dot theme-dot-light" data-theme-pick="light" style="width:32px;height:32px;" aria-label="Tema Putih Terang"></button>
+          </div>
+        </div>
+        <div class="subhead">Ibadah</div>
+        <div class="more-item" data-goto="more-hijriyah"><div class="ic">📅</div><div><b>Kalender Hijriyah</b><span>Lihat kalender & konversi tanggal</span></div><div class="arrow">›</div></div>
+        <div class="more-item" data-goto="more-kiblat"><div class="ic">🧭</div><div><b>Arah Kiblat</b><span>Hitung ulang arah kiblat</span></div><div class="arrow">›</div></div>
+        <div class="subhead">Tentang</div>
+        <div class="calc-card">
+          <p style="margin:0;font-size:.85rem;"><b>Silmikaffah</b> — Islam Secara Menyeluruh</p>
+          <p style="margin:6px 0 0;font-size:.78rem;color:var(--ink-soft);">Versi 1.0 · Aplikasi referensi Islam yang dibuat untuk penggunaan pribadi. Konten disusun sebaik mungkin, namun untuk kajian mendalam disarankan tetap merujuk ulama dan kitab aslinya.</p>
+        </div>
+      </div>
+
+      <div class="sub-screen" id="more-akhlak">
+        <div class="back-row" data-back>‹ Kembali ke Lainnya</div>
+        <div class="subhead" style="margin-top:0;">Akhlak Terpuji (Mahmudah)</div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Jujur (Shidq)</h3><div class="chev">+</div></div><div class="card-body"><p>Berkata dan bertindak sesuai kenyataan. Kejujuran mengantarkan pada kebaikan, dan kebaikan mengantarkan ke surga.</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Amanah</h3><div class="chev">+</div></div><div class="card-body"><p>Menjaga kepercayaan yang diberikan, baik berupa harta, tanggung jawab, maupun rahasia orang lain.</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Sabar</h3><div class="chev">+</div></div><div class="card-body"><p>Menahan diri dari keluh kesah saat menghadapi kesulitan, musibah, atau godaan berbuat maksiat.</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Syukur</h3><div class="chev">+</div></div><div class="card-body"><p>Mengakui dan berterima kasih atas nikmat Allah, baik dengan hati, lisan, maupun perbuatan.</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Tawadhu</h3><div class="chev">+</div></div><div class="card-body"><p>Rendah hati dan tidak merasa lebih tinggi dari orang lain, meski memiliki banyak kelebihan.</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Ikhlas</h3><div class="chev">+</div></div><div class="card-body"><p>Melakukan amal semata-mata karena Allah, tanpa mengharap pujian atau balasan dari manusia.</p></div></div>
+
+        <div class="subhead">Akhlak Tercela (Madzmumah)</div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Dusta</h3><div class="chev">+</div></div><div class="card-body"><p>Berkata tidak sesuai kenyataan, termasuk perbuatan yang sangat dilarang dan mengantarkan pada dosa besar.</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Sombong (Takabbur)</h3><div class="chev">+</div></div><div class="card-body"><p>Merasa diri lebih unggul dari orang lain dan menolak kebenaran karena keangkuhan.</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Hasad (Iri Dengki)</h3><div class="chev">+</div></div><div class="card-body"><p>Tidak suka melihat nikmat orang lain dan berharap nikmat itu hilang darinya.</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Ghibah</h3><div class="chev">+</div></div><div class="card-body"><p>Membicarakan keburukan atau aib orang lain di belakangnya, meski hal itu benar adanya.</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Riya</h3><div class="chev">+</div></div><div class="card-body"><p>Beramal dengan tujuan dilihat dan dipuji manusia, bukan karena Allah semata.</p></div></div>
+      </div>
+
+      <div class="sub-screen" id="more-muamalah">
+        <div class="back-row" data-back>‹ Kembali ke Lainnya</div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Pengertian Muamalah</h3><div class="chev">+</div></div><div class="card-body"><p>Muamalah adalah aturan Islam yang mengatur hubungan sosial dan ekonomi antar manusia, seperti jual beli, utang piutang, sewa-menyewa, dan kerja sama usaha.</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Jual Beli</h3><div class="chev">+</div></div><div class="card-body"><p>Sah apabila memenuhi rukun: penjual, pembeli, barang/jasa yang jelas, dan ijab-kabul (kesepakatan), serta terhindar dari unsur penipuan atau paksaan.</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Riba</h3><div class="chev">+</div></div><div class="card-body"><p>Tambahan yang disyaratkan dalam transaksi utang-piutang atau pertukaran barang sejenis, hukumnya haram karena mengandung unsur kezaliman.</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Utang Piutang</h3><div class="chev">+</div></div><div class="card-body"><p>Dianjurkan dicatat dan disaksikan, serta wajib dilunasi sesuai kesepakatan. Menunda pembayaran utang padahal mampu termasuk kezaliman.</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Sewa-Menyewa (Ijarah)</h3><div class="chev">+</div></div><div class="card-body"><p>Akad pemanfaatan barang atau jasa dengan imbalan tertentu dalam jangka waktu yang disepakati.</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Syirkah (Kerja Sama Usaha)</h3><div class="chev">+</div></div><div class="card-body"><p>Kerja sama antara dua pihak atau lebih dalam suatu usaha, dengan pembagian keuntungan dan risiko yang disepakati bersama sejak awal.</p></div></div>
+      </div>
+
+      <div class="sub-screen" id="more-ulumulquran">
+        <div class="back-row" data-back>‹ Kembali ke Lainnya</div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Pengertian Ulumul Qur'an</h3><div class="chev">+</div></div><div class="card-body"><p>Ilmu yang membahas seluk-beluk Al-Qur'an: cara turunnya wahyu, sebab turun ayat, susunan surah, hingga metode memahami maknanya.</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Makkiyah & Madaniyah</h3><div class="chev">+</div></div><div class="card-body"><p>Pengelompokan ayat berdasarkan tempat turunnya: sebelum hijrah (Makkiyah, umumnya tentang akidah) atau sesudah hijrah (Madaniyah, umumnya tentang hukum & muamalah).</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Asbabun Nuzul</h3><div class="chev">+</div></div><div class="card-body"><p>Sebab atau latar belakang peristiwa yang melatarbelakangi turunnya suatu ayat, membantu memahami konteks maknanya.</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Tafsir & Takwil</h3><div class="chev">+</div></div><div class="card-body"><p>Tafsir adalah penjelasan makna ayat berdasarkan dalil yang jelas; takwil adalah pengalihan makna ke arti lain yang mungkin dengan alasan tertentu.</p></div></div>
+      </div>
+
+      <div class="sub-screen" id="more-ushulfikih">
+        <div class="back-row" data-back>‹ Kembali ke Lainnya</div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Pengertian Ushul Fikih</h3><div class="chev">+</div></div><div class="card-body"><p>Ilmu tentang kaidah dan metode yang digunakan untuk menggali hukum syariat dari dalil-dalilnya.</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Empat Sumber Hukum Utama</h3><div class="chev">+</div></div><div class="card-body">
+          <ul class="detail-list">
+            <li><b>Al-Qur'an</b> — sumber hukum utama dan tertinggi.</li>
+            <li><b>Sunnah</b> — perkataan, perbuatan, dan ketetapan Nabi ﷺ.</li>
+            <li><b>Ijma'</b> — kesepakatan para ulama dalam suatu masalah.</li>
+            <li><b>Qiyas</b> — analogi hukum pada kasus baru yang memiliki kesamaan sebab dengan kasus yang sudah ada hukumnya.</li>
+          </ul>
+        </div></div>
       </div>
 
       <div class="sub-screen" id="more-iqra">
@@ -1167,11 +1312,68 @@
         <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Ungkapan Islami Umum</h3><div class="chev">+</div></div><div class="card-body">
           <div class="subgrid" style="grid-template-columns:1fr;">
             <div class="chip"><b>السَّلَامُ عَلَيْكُمْ</b>Assalamu'alaikum — semoga keselamatan atasmu (salam)</div>
+            <div class="chip"><b>وَعَلَيْكُمُ السَّلَامُ</b>Wa'alaikumussalam — jawaban salam</div>
             <div class="chip"><b>جَزَاكَ اللَّهُ خَيْرًا</b>Jazakallahu khairan — semoga Allah membalasmu dengan kebaikan</div>
             <div class="chip"><b>بَارَكَ اللَّهُ فِيكَ</b>Barakallahu fiik — semoga Allah memberkahimu</div>
             <div class="chip"><b>إِنْ شَاءَ اللَّهُ</b>Insya Allah — jika Allah menghendaki</div>
             <div class="chip"><b>مَا شَاءَ اللَّهُ</b>Masya Allah — sungguh Allah telah berkehendak (kekaguman)</div>
             <div class="chip"><b>سُبْحَانَ اللَّهُ</b>Subhanallah — Maha Suci Allah</div>
+            <div class="chip"><b>الْحَمْدُ لِلَّهِ</b>Alhamdulillah — segala puji bagi Allah</div>
+            <div class="chip"><b>اللَّهُ أَكْبَرُ</b>Allahu Akbar — Allah Maha Besar</div>
+            <div class="chip"><b>أَسْتَغْفِرُ اللَّهَ</b>Astaghfirullah — aku memohon ampun kepada Allah</div>
+            <div class="chip"><b>لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ</b>Laa haula wa laa quwwata illaa billaah — tiada daya & kekuatan kecuali dengan Allah</div>
+            <div class="chip"><b>رَحِمَهُ اللَّهُ</b>Rahimahullah — semoga Allah merahmatinya (untuk yang wafat)</div>
+            <div class="chip"><b>عَلَيْهِ السَّلَامُ</b>'Alaihissalam — untuknya keselamatan (gelar nabi)</div>
+            <div class="chip"><b>رَضِيَ اللَّهُ عَنْهُ</b>Radhiyallahu 'anhu — semoga Allah meridainya (gelar sahabat)</div>
+            <div class="chip"><b>صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ</b>Shallallahu 'alaihi wasallam — sholawat untuk Nabi ﷺ</div>
+            <div class="chip"><b>جَزَاكِ اللَّهُ خَيْرًا</b>Jazakillahu khairan — versi untuk perempuan</div>
+          </div>
+        </div></div>
+
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Kata Kerja Dasar</h3><div class="chev">+</div></div><div class="card-body">
+          <div class="subgrid" style="grid-template-columns:1fr 1fr;">
+            <div class="chip"><b>ذَهَبَ</b>Dzahaba — pergi</div>
+            <div class="chip"><b>جَاءَ</b>Jaa'a — datang</div>
+            <div class="chip"><b>أَكَلَ</b>Akala — makan</div>
+            <div class="chip"><b>شَرِبَ</b>Syariba — minum</div>
+            <div class="chip"><b>كَتَبَ</b>Kataba — menulis</div>
+            <div class="chip"><b>قَرَأَ</b>Qara'a — membaca</div>
+            <div class="chip"><b>سَمِعَ</b>Sami'a — mendengar</div>
+            <div class="chip"><b>رَأَى</b>Ra'aa — melihat</div>
+            <div class="chip"><b>عَلِمَ</b>'Alima — mengetahui</div>
+            <div class="chip"><b>فَهِمَ</b>Fahima — memahami</div>
+            <div class="chip"><b>عَمِلَ</b>'Amila — bekerja/beramal</div>
+            <div class="chip"><b>صَلَّى</b>Shallaa — sholat</div>
+          </div>
+        </div></div>
+
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Tempat & Alam</h3><div class="chev">+</div></div><div class="card-body">
+          <div class="subgrid" style="grid-template-columns:1fr 1fr;">
+            <div class="chip"><b>أَرْضٌ</b>Ardh — bumi</div>
+            <div class="chip"><b>سَمَاءٌ</b>Samaa' — langit</div>
+            <div class="chip"><b>جَبَلٌ</b>Jabal — gunung</div>
+            <div class="chip"><b>بَحْرٌ</b>Bahr — laut</div>
+            <div class="chip"><b>نَهْرٌ</b>Nahr — sungai</div>
+            <div class="chip"><b>شَجَرَةٌ</b>Syajarah — pohon</div>
+            <div class="chip"><b>حَدِيقَةٌ</b>Hadiqah — taman/kebun</div>
+            <div class="chip"><b>طَرِيقٌ</b>Thariq — jalan</div>
+            <div class="chip"><b>مَدِينَةٌ</b>Madinah — kota</div>
+            <div class="chip"><b>قَرْيَةٌ</b>Qaryah — desa</div>
+          </div>
+        </div></div>
+
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Angka & Waktu</h3><div class="chev">+</div></div><div class="card-body">
+          <div class="subgrid" style="grid-template-columns:1fr 1fr;">
+            <div class="chip"><b>سَاعَةٌ</b>Saa'ah — jam/waktu</div>
+            <div class="chip"><b>دَقِيقَةٌ</b>Daqiqah — menit</div>
+            <div class="chip"><b>أُسْبُوعٌ</b>Usbu' — minggu</div>
+            <div class="chip"><b>شَهْرٌ</b>Syahr — bulan</div>
+            <div class="chip"><b>سَنَةٌ</b>Sanah — tahun</div>
+            <div class="chip"><b>صَبَاحٌ</b>Shabah — pagi</div>
+            <div class="chip"><b>مَسَاءٌ</b>Masaa' — sore/petang</div>
+            <div class="chip"><b>لَيْلٌ</b>Lail — malam</div>
+            <div class="chip"><b>أَمْسِ</b>Amsi — kemarin</div>
+            <div class="chip"><b>غَدًا</b>Ghadan — besok</div>
           </div>
         </div></div>
       </div>
@@ -1185,6 +1387,60 @@
         <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Puasa Tarwiyah</h3><div class="chev">+</div></div><div class="card-body"><p>Dikerjakan sehari sebelum Arafah, tepatnya pada 8 Dzulhijjah, sebagai bagian dari amalan menyambut hari-hari awal Dzulhijjah yang penuh keutamaan.</p></div></div>
         <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Puasa Asyura & Tasu'a</h3><div class="chev">+</div></div><div class="card-body"><p>Dikerjakan pada 10 Muharram (Asyura), dianjurkan digabung dengan puasa 9 Muharram (Tasu'a) agar berbeda dari kebiasaan kaum Yahudi yang hanya berpuasa di hari kesepuluh.</p></div></div>
         <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Puasa Ayyamul Bidh</h3><div class="chev">+</div></div><div class="card-body"><p>Dikerjakan pada tanggal 13, 14, dan 15 setiap bulan Hijriyah (hari-hari bulan purnama), sesuai anjuran Nabi ﷺ untuk berpuasa tiga hari setiap bulan.</p></div></div>
+      </div>
+
+      <div class="sub-screen" id="more-ramadhan">
+        <div class="back-row" data-back>‹ Kembali ke Lainnya</div>
+
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Pengertian Ramadhan</h3><div class="chev">+</div></div><div class="card-body">
+          <p>Ramadhan adalah bulan ke-9 dalam kalender Hijriyah, bulan diwajibkannya puasa bagi seluruh umat Islam yang mampu, serta bulan diturunkannya Al-Qur'an pertama kali kepada Nabi Muhammad ﷺ.</p>
+          <div class="dalil"><div class="arabic" style="font-size:1.05rem;">شَهْرُ رَمَضَانَ الَّذِي أُنزِلَ فِيهِ الْقُرْآنُ</div>"Bulan Ramadhan adalah bulan yang di dalamnya diturunkan Al-Qur'an."<span class="src">QS. Al-Baqarah: 185 <button class="play-verse" data-surah="2" data-ayah="185">🔊</button></span></div>
+        </div></div>
+
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Keutamaan Ramadhan</h3><div class="chev">+</div></div><div class="card-body">
+          <ul class="detail-list">
+            <li>Bulan diturunkannya Al-Qur'an (Nuzulul Qur'an), tepatnya malam 17 Ramadhan.</li>
+            <li>Pintu-pintu surga dibuka, pintu neraka ditutup, dan setan-setan dibelenggu.</li>
+            <li>Terdapat malam Lailatul Qadar, malam yang lebih baik dari seribu bulan.</li>
+            <li>Doa orang yang berpuasa termasuk doa yang mustajab, terutama menjelang berbuka.</li>
+            <li>Pahala amal saleh dilipatgandakan sepanjang bulan ini.</li>
+          </ul>
+        </div></div>
+
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Lailatul Qadar</h3><div class="chev">+</div></div><div class="card-body">
+          <p>Malam yang nilainya lebih baik dari seribu bulan, diyakini jatuh pada salah satu malam ganjil di sepuluh hari terakhir Ramadhan (21, 23, 25, 27, atau 29).</p>
+          <div class="dalil"><div class="arabic" style="font-size:1.1rem;">لَيْلَةُ الْقَدْرِ خَيْرٌ مِنْ أَلْفِ شَهْرٍ</div>"Malam kemuliaan itu lebih baik dari seribu bulan."<span class="src">QS. Al-Qadr: 3 <button class="play-verse" data-surah="97" data-ayah="3">🔊</button></span></div>
+          <p style="margin-top:10px;"><b>Doa Malam Lailatul Qadar</b></p>
+          <div class="arabic" style="font-size:1.1rem;">اللَّهُمَّ إِنَّكَ عَفُوٌّ تُحِبُّ الْعَفْوَ فَاعْفُ عَنِّي</div>
+          <p style="font-family:'Fraunces',serif;font-style:italic;margin-top:2px;">Allaahumma innaka 'afuwwun tuhibbul 'afwa fa'fu 'annii.</p>
+          <p>"Ya Allah, sesungguhnya Engkau Maha Pemaaf dan menyukai maaf, maka maafkanlah aku."</p>
+          <div class="dalil"><span class="src">HR. Tirmidzi & Ibnu Majah, diajarkan Nabi ﷺ kepada Aisyah RA</span></div>
+          <ul class="detail-list" style="margin-top:10px;">
+            <li>Tanda-tanda yang disebutkan dalam hadits: malam yang tenang, tidak terlalu panas atau dingin, dan matahari terbit keesokan harinya tanpa sinar menyengat.</li>
+            <li>Dianjurkan memperbanyak i'tikaf (berdiam di masjid), sholat malam, dan doa pada sepuluh malam terakhir.</li>
+          </ul>
+        </div></div>
+
+        <div class="subhead">Amalan Utama Ramadhan</div>
+        <div class="subnav-list">
+          <div class="subnav-btn" data-goto="more-puasasunnah"><div class="sicon">🌙</div><div class="stext"><b>Puasa Ramadhan & Sunnah</b><span>Niat, syarat, dan puasa sunnah terkait</span></div><div class="sarrow">›</div></div>
+          <div class="subnav-btn" data-goto="more-sunnah"><div class="sicon">🌟</div><div class="stext"><b>Sholat Tarawih & Witir</b><span>Sholat malam khusus Ramadhan</span></div><div class="sarrow">›</div></div>
+          <div class="subnav-btn" data-goto="more-doa"><div class="sicon">🤲</div><div class="stext"><b>Doa Berbuka Puasa</b><span>Ada di menu Doa Harian</span></div><div class="sarrow">›</div></div>
+          <div class="subnav-btn" data-goto="more-zakatjenis"><div class="sicon">💰</div><div class="stext"><b>Zakat Fitrah</b><span>Wajib ditunaikan sebelum Idul Fitri</span></div><div class="sarrow">›</div></div>
+        </div>
+
+        <div class="subhead">Sahur & Berbuka</div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Doa Sahur</h3><div class="chev">+</div></div><div class="card-body">
+          <div class="arabic">نَوَيْتُ صَوْمَ غَدٍ عَنْ أَدَاءِ فَرْضِ شَهْرِ رَمَضَانَ هَذِهِ السَّنَةِ لِلَّهِ تَعَالَى</div>
+          <p style="font-family:'Fraunces',serif;font-style:italic;margin-top:2px;">Nawaitu shauma ghadin 'an adaa'i fardhi syahri ramadhaana haadzihis sanati lillaahi ta'aalaa.</p>
+          <p>"Aku niat berpuasa esok hari untuk menunaikan fardhu bulan Ramadhan tahun ini karena Allah Ta'ala." Dibaca pada malam hari atau saat sahur, sebelum terbit fajar.</p>
+        </div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">✦</div><h3>Doa Berbuka Puasa</h3><div class="chev">+</div></div><div class="card-body">
+          <div class="arabic">ذَهَبَ الظَّمَأُ وَابْتَلَّتِ الْعُرُوقُ وَثَبَتَ الْأَجْرُ إِنْ شَاءَ اللَّهُ</div>
+          <p style="font-family:'Fraunces',serif;font-style:italic;margin-top:2px;">Dzahabazh zhama'u wabtallatil 'uruuqu wa tsabatal ajru insyaa Allaah.</p>
+          <p>"Telah hilang dahaga, urat-urat telah basah, dan pahala telah ditetapkan insya Allah."</p>
+          <div class="dalil"><span class="src">HR. Abu Dawud</span></div>
+        </div></div>
       </div>
 
       <div class="sub-screen" id="more-sifat20">
@@ -1926,6 +2182,20 @@
 
       <div class="sub-screen" id="more-hijriyah">
         <div class="back-row" data-back>‹ Kembali ke Lainnya</div>
+
+        <div class="hijri-cal-card">
+          <div class="hijri-cal-head">
+            <button class="hijri-nav" id="hijriPrev">‹</button>
+            <div class="hijri-cal-title">
+              <div class="hijri-cal-month" id="hijriCalMonth">Muharram 1447</div>
+              <div class="hijri-cal-range" id="hijriCalRange">— 2026</div>
+            </div>
+            <button class="hijri-nav" id="hijriNext">›</button>
+          </div>
+          <div class="hijri-cal-grid" id="hijriCalGrid"></div>
+          <p style="font-size:.72rem;color:var(--ink-soft);margin:10px 0 0;">Angka besar = tanggal Hijriyah, angka kecil = tanggal Masehi. <span style="color:var(--clay);">●</span> menandai hari ini/bertanda khusus.</p>
+        </div>
+
         <div class="calc-card">
           <h3 style="margin-top:0;font-size:1rem;">Konversi Tanggal Masehi → Hijriyah</h3>
           <div class="field" style="margin-top:12px;">
@@ -1936,6 +2206,20 @@
           <div id="hijriyahResult" style="margin-top:14px;"></div>
           <p style="font-size:.76rem;color:var(--ink-soft);margin-top:10px;margin-bottom:0;">*Hasil konversi bersifat perkiraan aritmetik dan dapat berbeda 1 hari dari penetapan rukyat resmi.</p>
         </div>
+
+        <div class="subhead" style="margin-top:0;">Hari & Tanggal Bersejarah per Bulan Hijriyah</div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">1</div><h3>Muharram</h3><div class="chev">+</div></div><div class="card-body"><ul class="detail-list"><li><b>1 Muharram</b> — Tahun Baru Hijriyah, awal kalender Islam.</li><li><b>10 Muharram</b> — Hari Asyura, dianjurkan berpuasa; juga diperingati sebagai hari diselamatkannya Nabi Musa AS dari Fir'aun.</li></ul></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">2</div><h3>Safar</h3><div class="chev">+</div></div><div class="card-body"><p>Tidak ada peristiwa besar yang secara khusus diperingati pada bulan ini dalam sejarah Islam.</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">3</div><h3>Rabiul Awal</h3><div class="chev">+</div></div><div class="card-body"><ul class="detail-list"><li><b>12 Rabiul Awal</b> — Diperingati sebagian besar umat Islam sebagai Maulid Nabi Muhammad ﷺ (hari kelahiran beliau), meski tanggal pastinya diperselisihkan ulama.</li></ul></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">4</div><h3>Rabiul Akhir</h3><div class="chev">+</div></div><div class="card-body"><p>Tidak ada peristiwa besar yang secara khusus diperingati pada bulan ini.</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">5</div><h3>Jumadil Awal</h3><div class="chev">+</div></div><div class="card-body"><p>Tidak ada peristiwa besar yang secara khusus diperingati pada bulan ini.</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">6</div><h3>Jumadil Akhir</h3><div class="chev">+</div></div><div class="card-body"><p>Tidak ada peristiwa besar yang secara khusus diperingati pada bulan ini.</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">7</div><h3>Rajab</h3><div class="chev">+</div></div><div class="card-body"><ul class="detail-list"><li><b>27 Rajab</b> — Peringatan Isra Mi'raj, perjalanan malam Nabi ﷺ dan turunnya perintah sholat 5 waktu.</li></ul></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">8</div><h3>Sya'ban</h3><div class="chev">+</div></div><div class="card-body"><ul class="detail-list"><li><b>15 Sya'ban</b> — Nisfu Sya'ban, sebagian umat Islam mengisinya dengan doa dan zikir menyambut Ramadhan.</li></ul></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">9</div><h3>Ramadhan</h3><div class="chev">+</div></div><div class="card-body"><ul class="detail-list"><li><b>1 Ramadhan</b> — Awal bulan puasa wajib.</li><li><b>17 Ramadhan</b> — Nuzulul Qur'an, peringatan turunnya wahyu pertama.</li><li><b>21, 23, 25, 27, 29 Ramadhan</b> — Malam-malam ganjil yang berpotensi menjadi Lailatul Qadar.</li></ul></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">10</div><h3>Syawal</h3><div class="chev">+</div></div><div class="card-body"><ul class="detail-list"><li><b>1 Syawal</b> — Hari Raya Idul Fitri, penutup bulan Ramadhan.</li><li><b>2-7 Syawal</b> — Waktu yang dianjurkan untuk puasa sunnah 6 hari Syawal.</li></ul></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">11</div><h3>Dzulqa'dah</h3><div class="chev">+</div></div><div class="card-body"><p>Termasuk salah satu dari 4 bulan haram (suci) dalam Islam, di mana peperangan sangat dilarang. Menjadi awal persiapan musim haji.</p></div></div>
+        <div class="card" data-card><div class="card-head" data-toggle><div class="num">12</div><h3>Dzulhijjah</h3><div class="chev">+</div></div><div class="card-body"><ul class="detail-list"><li><b>1-9 Dzulhijjah</b> — Hari-hari yang sangat dianjurkan memperbanyak amal saleh.</li><li><b>8 Dzulhijjah</b> — Hari Tarwiyah, awal rangkaian ibadah haji.</li><li><b>9 Dzulhijjah</b> — Wukuf di Arafah, puncak ibadah haji; dianjurkan puasa Arafah bagi yang tidak berhaji.</li><li><b>10 Dzulhijjah</b> — Hari Raya Idul Adha & penyembelihan hewan qurban.</li><li><b>11-13 Dzulhijjah</b> — Hari Tasyrik, dilarang berpuasa, dianjurkan memperbanyak takbir.</li></ul></div></div>
       </div>
 
       <div class="sub-screen" id="more-zikir">
@@ -2291,20 +2575,20 @@
       <span>Beranda</span>
     </button>
     <button class="navbtn" data-tab="iman">
-      <svg viewBox="0 0 24 24"><path d="M21 12.5A9 9 0 1 1 11.5 3 7 7 0 0 0 21 12.5z"/></svg>
-      <span>Iman</span>
+      <svg viewBox="0 0 24 24"><path d="M20.8 8.8c0 5.1-8.8 10.2-8.8 10.2S3.2 13.9 3.2 8.8A4.8 4.8 0 0 1 12 6.1a4.8 4.8 0 0 1 8.8 2.7Z"/></svg>
+      <span>Rukun Iman</span>
     </button>
     <button class="navbtn" data-tab="islam">
       <svg viewBox="0 0 24 24"><path d="M4 21V9l8-6 8 6v12"/><path d="M9 21v-7h6v7"/></svg>
-      <span>Islam</span>
+      <span>Rukun Islam</span>
     </button>
-    <button class="navbtn" data-tab="quran">
-      <svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M20 18H6.5A2.5 2.5 0 0 0 4 20.5"/></svg>
-      <span>Qur'an</span>
+    <button class="navbtn" id="navKoleksi">
+      <svg viewBox="0 0 24 24"><path d="M6 4.5A2.5 2.5 0 0 1 8.5 2h7A2.5 2.5 0 0 1 18 4.5V21l-6-3.7L6 21V4.5Z"/></svg>
+      <span>Koleksi</span>
     </button>
-    <button class="navbtn" data-tab="more">
-      <svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="19" cy="12" r="1.4"/></svg>
-      <span>Lainnya</span>
+    <button class="navbtn" id="navPengaturan">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-1.8 1.8-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6v.2h-2.5V20a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1-1.8-1.8.1-.1A1.7 1.7 0 0 0 8.1 15a1.7 1.7 0 0 0-1.6-1H6v-2.5h.5a1.7 1.7 0 0 0 1.6-1A1.7 1.7 0 0 0 7.8 9l-.1-.1 1.8-1.8.1.1a1.7 1.7 0 0 0 1.9.3 1.7 1.7 0 0 0 1-1.6v-.2H15v.2a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1 1.8 1.8-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.6 1h.2V14h-.2a1.7 1.7 0 0 0-1.6 1Z"/></svg>
+      <span>Pengaturan</span>
     </button>
   </div>
 
@@ -2323,15 +2607,36 @@
   function renderTab(tab){
     document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
     document.getElementById('screen-'+tab).classList.add('active');
-    document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('active', b.dataset.tab===tab));
     document.getElementById('appbarTitle').textContent = titles[tab][0];
     document.getElementById('appbarSub').textContent = titles[tab][1];
     document.getElementById('screen-'+tab).scrollTop = 0;
   }
+  function updateNavActive(state){
+    document.querySelectorAll('.navbtn').forEach(b=>b.classList.remove('active'));
+    if(state.tab==='more' && state.sub==='more-koleksi'){ document.getElementById('navKoleksi').classList.add('active'); return; }
+    if(state.tab==='more' && state.sub==='more-pengaturan'){ document.getElementById('navPengaturan').classList.add('active'); return; }
+    document.querySelectorAll('.navbtn[data-tab]').forEach(b=>b.classList.toggle('active', b.dataset.tab===state.tab));
+  }
+  const SUB_TITLES = {
+    'more-koleksi':['Koleksi','Favorit & referensi tersimpan'],
+    'more-pengaturan':['Pengaturan','Atur tampilan & preferensi'],
+    'more-catilmu':['Ilmu & Belajar','Qur\'an, Iqra, Tajwid, & lainnya'],
+    'more-catkeluarga':['Keluarga & Muamalah','Faraidh, pernikahan, & muamalah'],
+    'more-catakhlak':['Akhlak & Adab','Budi pekerti & adab harian'],
+    'more-catsejarah':['Sejarah & Peristiwa','Nabi, sahabat, & peristiwa Islam'],
+    'more-catkitab':['Kitab','Hadits, mazhab, & referensi kitab'],
+    'more-catdoa':['Doa & Dzikir','Kumpulan doa & zikir harian'],
+    'more-catalat':['Alat Muslim','Kiblat, kalender, & kalkulator'],
+    'more-catreferensi':['Referensi & Koleksi','Kumpulan & preferensi kamu']
+  };
   function renderSub(sub){
     document.getElementById('more-hub').style.display = sub ? 'none' : 'block';
     document.querySelectorAll('.sub-screen').forEach(s=>s.classList.remove('active'));
     if(sub){ document.getElementById(sub).classList.add('active'); }
+    if(sub && SUB_TITLES[sub]){
+      document.getElementById('appbarTitle').textContent = SUB_TITLES[sub][0];
+      document.getElementById('appbarSub').textContent = SUB_TITLES[sub][1];
+    }
   }
   function renderAh(index){
     if(index===null || index===undefined){
@@ -2373,10 +2678,14 @@
   function applyState(state){
     state = state || {tab:'home'};
     renderTab(state.tab || 'home');
+    updateNavActive(state);
     if(state.tab === 'more'){ renderSub(state.sub || null); }
     if(state.tab === 'more' && state.sub === 'more-asmaul'){ renderAh(state.ah!==undefined ? state.ah : null); }
+    if(state.tab === 'more' && state.sub === 'more-koleksi'){ renderKoleksiList(); }
     if(state.tab === 'quran'){ renderSurah(state.surah || null); }
     if(state.open){ setTimeout(()=> openCardById(state.open), 30); }
+    lastNavState = state;
+    refreshBookmarkBtn();
   }
   function navigate(state){
     history.pushState(state, '');
@@ -2385,8 +2694,14 @@
   window.addEventListener('popstate', (e)=>{ applyState(e.state); });
   history.replaceState({tab:'home'}, '');
 
-  document.querySelectorAll('.navbtn').forEach(b=>{
+  document.querySelectorAll('.navbtn[data-tab]').forEach(b=>{
     b.addEventListener('click', ()=> navigate({tab:b.dataset.tab}));
+  });
+  document.getElementById('navKoleksi').addEventListener('click', ()=> navigate({tab:'more', sub:'more-koleksi'}));
+  document.getElementById('navPengaturan').addEventListener('click', ()=> navigate({tab:'more', sub:'more-pengaturan'}));
+  document.addEventListener('click', (e)=>{
+    if(e.target.closest('#goKoleksiFromRef')){ navigate({tab:'more', sub:'more-koleksi'}); }
+    if(e.target.closest('#goPengaturanFromRef')){ navigate({tab:'more', sub:'more-pengaturan'}); }
   });
   document.querySelectorAll('[data-goto]').forEach(el=>{
     el.addEventListener('click', ()=>{
@@ -2794,6 +3109,70 @@
     }
   }
 
+  async function openJuzInner(number){
+    stopAudio();
+    document.getElementById('surahListView').style.display='none';
+    document.getElementById('surahDetailView').style.display='block';
+    document.getElementById('quranHeading').textContent = `Juz ${number}`;
+    document.getElementById('quranSub').textContent = 'Ayat lintas surah dalam juz ini';
+    const ayahList = document.getElementById('ayahList');
+    const status = document.getElementById('ayahStatus');
+    ayahList.innerHTML='';
+    status.textContent = 'Memuat ayat...';
+    try{
+      const res = await fetch(`https://api.alquran.cloud/v1/juz/${number}/editions/quran-uthmani,en.transliteration,id.indonesian,ar.alafasy`);
+      const json = await res.json();
+      const [arabicEd, translitEd, idEd, audioEd] = json.data;
+      status.textContent = `${arabicEd.ayahs.length} ayat dalam Juz ${number}`;
+      let lastSurah = null;
+      arabicEd.ayahs.forEach((ayah, i)=>{
+        if(ayah.surah && ayah.surah.number !== lastSurah){
+          lastSurah = ayah.surah.number;
+          const label = document.createElement('div');
+          label.className = 'subhead';
+          label.style.marginTop = i===0 ? '0' : '20px';
+          label.textContent = `${ayah.surah.englishName} — ${ayah.surah.name}`;
+          ayahList.appendChild(label);
+        }
+        const el = document.createElement('div');
+        el.className='ayah-card';
+        el.innerHTML = `
+          <div class="ayah-top">
+            <div class="ayah-num-badge">${ayah.numberInSurah}</div>
+            <button class="play-btn" data-audio="${audioEd.ayahs[i].audio}">${SVG_PLAY}</button>
+          </div>
+          <div class="ayah-arabic arabic">${ayah.text}</div>
+          <div class="ayah-translit">${translitEd.ayahs[i].text}</div>
+          <div class="ayah-translation">${idEd.ayahs[i].text}</div>
+        `;
+        ayahList.appendChild(el);
+      });
+    }catch(err){
+      status.textContent = 'Gagal memuat ayat. Pastikan koneksi internet aktif, lalu coba lagi.';
+    }
+  }
+
+  const juzListEl = document.getElementById('juzList');
+  for(let j=1;j<=30;j++){
+    const el = document.createElement('div');
+    el.className = 'juz-item';
+    el.dataset.juz = j;
+    el.innerHTML = `<div class="surah-num">${j}</div><div class="surah-info"><b>Juz ${j}</b><span>Ketuk untuk membaca</span></div>`;
+    juzListEl.appendChild(el);
+  }
+  document.getElementById('btnModeSurah').addEventListener('click', ()=>{
+    document.getElementById('btnModeSurah').classList.add('active');
+    document.getElementById('btnModeJuz').classList.remove('active');
+    document.getElementById('surahModeView').style.display='block';
+    document.getElementById('juzModeView').style.display='none';
+  });
+  document.getElementById('btnModeJuz').addEventListener('click', ()=>{
+    document.getElementById('btnModeJuz').classList.add('active');
+    document.getElementById('btnModeSurah').classList.remove('active');
+    document.getElementById('surahModeView').style.display='none';
+    document.getElementById('juzModeView').style.display='block';
+  });
+
   document.addEventListener('click', (e)=>{
     const hijaiyahChip = e.target.closest('[data-hijaiyah]');
     if(hijaiyahChip){ speakArabic(hijaiyahChip.dataset.hijaiyah); return; }
@@ -2821,6 +3200,13 @@
     if(ahItem){ navigate({tab:'more', sub:'more-asmaul', ah:Number(ahItem.dataset.ahIndex)}); return; }
     const ahBack = e.target.closest('#backToAhList');
     if(ahBack){ navigate({tab:'more', sub:'more-asmaul', ah:null}); return; }
+    const juzItem = e.target.closest('.juz-item');
+    if(juzItem){
+      document.getElementById('surahListView').style.display='none';
+      document.getElementById('surahDetailView').style.display='block';
+      openJuzInner(Number(juzItem.dataset.juz));
+      return;
+    }
     const item = e.target.closest('.surah-item');
     if(item){
       const idx = Array.from(surahList.children).indexOf(item);
@@ -2894,6 +3280,100 @@
     const h = gregorianToHijri(y,m,d);
     box.innerHTML = `<div class="calc-result kena">Tanggal Hijriyah:<b>${h.d} ${hijriMonths[h.m-1]} ${h.y} H</b></div>`;
   });
+
+  // ---- Hijri month grid calendar ----
+  const hijriEventDays = {
+    1:{10:1}, 3:{12:1}, 7:{27:1}, 8:{15:1}, 9:{1:1,17:1,21:1,23:1,25:1,27:1,29:1},
+    10:{1:1}, 12:{8:1,9:1,10:1,11:1,12:1,13:1}
+  };
+  function toJD(y,m,d){
+    if (m < 3) { y -= 1; m += 12; }
+    const a = Math.floor(y/100), b = 2 - a + Math.floor(a/4);
+    return Math.floor(365.25*(y+4716)) + Math.floor(30.6001*(m+1)) + d + b - 1524;
+  }
+  function fromJD(jd){
+    // JD -> Gregorian (proleptic Gregorian calendar algorithm)
+    let a = jd + 32044;
+    let b = Math.floor((4*a+3)/146097);
+    let c = a - Math.floor((146097*b)/4);
+    let dd = Math.floor((4*c+3)/1461);
+    let e = c - Math.floor((1461*dd)/4);
+    let m = Math.floor((5*e+2)/153);
+    const day = e - Math.floor((153*m+2)/5) + 1;
+    const month = m + 3 - 12*Math.floor(m/10);
+    const year = 100*b + dd - 4800 + Math.floor(m/10);
+    return {y:year, m:month, d:day};
+  }
+  function hijriMonthStartGregorian(hy, hm){
+    // estimate then linear-search for exact match (self-consistent with gregorianToHijri)
+    const approxJD = Math.round((hy-1)*354.36707 + (hm-1)*29.5) + 1948440 - 1;
+    let g = fromJD(approxJD);
+    for(let tries=0; tries<40; tries++){
+      const h = gregorianToHijri(g.y, g.m, g.d);
+      if(h.y===hy && h.m===hm && h.d===1) return g;
+      let diff;
+      if(h.y!==hy) diff = (hy-h.y)*354 + (hm-h.m)*29.5 + (1-h.d);
+      else diff = (hm-h.m)*29.5 + (1-h.d);
+      const jd = toJD(g.y,g.m,g.d) + Math.round(diff);
+      g = fromJD(jd);
+    }
+    return g;
+  }
+  let calHY, calHM;
+  const dowNames = ['Min','Sen','Sel','Rab','Kam','Jum','Sab'];
+  function renderHijriCal(hy, hm){
+    calHY = hy; calHM = hm;
+    document.getElementById('hijriCalMonth').textContent = `${hijriMonths[hm-1]} ${hy} H`;
+    const startG = hijriMonthStartGregorian(hy, hm);
+    const nextStartG = hijriMonthStartGregorian(hm===12?hy+1:hy, hm===12?1:hm+1);
+    const startJD = toJD(startG.y, startG.m, startG.d);
+    const nextJD = toJD(nextStartG.y, nextStartG.m, nextStartG.d);
+    const daysInMonth = nextJD - startJD;
+    const gMonthNames = ["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Agu","Sep","Okt","Nov","Des"];
+    const endG = fromJD(nextJD-1);
+    document.getElementById('hijriCalRange').textContent =
+      (startG.m===endG.m ? `${gMonthNames[startG.m-1]} ${startG.y}` : `${gMonthNames[startG.m-1]}-${gMonthNames[endG.m-1]} ${endG.y}`);
+    const startDow = new Date(startG.y, startG.m-1, startG.d).getDay();
+    const today = new Date();
+    const todayH = gregorianToHijri(today.getFullYear(), today.getMonth()+1, today.getDate());
+    const grid = document.getElementById('hijriCalGrid');
+    grid.innerHTML = '';
+    dowNames.forEach(dn=>{
+      const el = document.createElement('div');
+      el.className = 'hijri-cal-dow';
+      el.textContent = dn;
+      grid.appendChild(el);
+    });
+    for(let i=0;i<startDow;i++){
+      const el = document.createElement('div');
+      el.className = 'hijri-cal-cell empty';
+      grid.appendChild(el);
+    }
+    for(let hd=1; hd<=daysInMonth; hd++){
+      const gDate = fromJD(startJD + hd - 1);
+      const isToday = todayH.y===hy && todayH.m===hm && todayH.d===hd;
+      const hasEvent = hijriEventDays[hm] && hijriEventDays[hm][hd];
+      const el = document.createElement('div');
+      el.className = 'hijri-cal-cell' + (isToday ? ' today' : '');
+      el.innerHTML = `<span class="hd">${hd}</span><span class="gd">${gDate.d}</span>` + (hasEvent||isToday ? '<span class="dot"></span>' : '');
+      grid.appendChild(el);
+    }
+  }
+  document.getElementById('hijriPrev').addEventListener('click', ()=>{
+    let hy=calHY, hm=calHM-1;
+    if(hm<1){ hm=12; hy--; }
+    renderHijriCal(hy,hm);
+  });
+  document.getElementById('hijriNext').addEventListener('click', ()=>{
+    let hy=calHY, hm=calHM+1;
+    if(hm>12){ hm=1; hy++; }
+    renderHijriCal(hy,hm);
+  });
+  (function initHijriCal(){
+    const today = new Date();
+    const h = gregorianToHijri(today.getFullYear(), today.getMonth()+1, today.getDate());
+    renderHijriCal(h.y, h.m);
+  })();
 
   // ---- Prayer times (Aladhan API + geolocation) ----
   document.getElementById('btnLoc').addEventListener('click', ()=>{
@@ -3015,6 +3495,70 @@
   let savedTheme = 'dark';
   try{ savedTheme = localStorage.getItem('silmikaffah-theme') || 'dark'; }catch(e){}
   applyTheme(savedTheme);
+
+  // ---- Koleksi (bookmark) system ----
+  function getKoleksi(){
+    try{ return JSON.parse(localStorage.getItem('silmikaffah-koleksi') || '[]'); }catch(e){ return []; }
+  }
+  function saveKoleksi(list){
+    try{ localStorage.setItem('silmikaffah-koleksi', JSON.stringify(list)); }catch(e){}
+  }
+  function currentPageKey(state){
+    if(!state) return null;
+    if(state.tab==='more' && state.sub) return 'more:'+state.sub;
+    if(state.tab && state.tab!=='more') return 'tab:'+state.tab;
+    return null;
+  }
+  function currentPageTitle(){
+    return document.getElementById('appbarTitle').textContent + ' — ' + document.getElementById('appbarSub').textContent;
+  }
+  let lastNavState = {tab:'home'};
+  function refreshBookmarkBtn(){
+    const key = currentPageKey(lastNavState);
+    const btn = document.getElementById('btnBookmarkPage');
+    if(!btn) return;
+    if(!key || key==='tab:home' || key==='more:more-koleksi' || key==='more:more-pengaturan'){
+      btn.style.display = 'none'; return;
+    }
+    btn.style.display = '';
+    const saved = getKoleksi().some(k=>k.key===key);
+    btn.classList.toggle('speaking', saved);
+  }
+  function renderKoleksiList(){
+    const list = getKoleksi();
+    const empty = document.getElementById('koleksiEmpty');
+    const wrap = document.getElementById('koleksiList');
+    if(!wrap) return;
+    if(list.length===0){ empty.style.display='block'; wrap.innerHTML=''; return; }
+    empty.style.display='none';
+    wrap.innerHTML = list.map(k=>`<div class="more-item" data-koleksi-key="${k.key}"><div class="ic">🔖</div><div><b>${k.title}</b><span>Ketuk untuk membuka</span></div><button class="mini-remove" data-koleksi-remove="${k.key}" aria-label="Hapus">✕</button></div>`).join('');
+  }
+  document.getElementById('btnBookmarkPage').addEventListener('click', ()=>{
+    const key = currentPageKey(lastNavState);
+    if(!key) return;
+    let list = getKoleksi();
+    const idx = list.findIndex(k=>k.key===key);
+    if(idx>=0){ list.splice(idx,1); }
+    else{ list.push({key, title: currentPageTitle(), state: lastNavState}); }
+    saveKoleksi(list);
+    refreshBookmarkBtn();
+  });
+  document.addEventListener('click', (e)=>{
+    const removeBtn = e.target.closest('[data-koleksi-remove]');
+    if(removeBtn){
+      e.stopPropagation();
+      const key = removeBtn.dataset.koleksiRemove;
+      saveKoleksi(getKoleksi().filter(k=>k.key!==key));
+      renderKoleksiList();
+      return;
+    }
+    const item = e.target.closest('[data-koleksi-key]');
+    if(item){
+      const key = item.dataset.koleksiKey;
+      const found = getKoleksi().find(k=>k.key===key);
+      if(found && found.state) navigate(found.state);
+    }
+  });
 
   // ---- Auto Hijri date on Home ----
   (function(){
