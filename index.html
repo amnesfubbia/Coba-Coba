@@ -644,6 +644,471 @@ footer.app-foot{text-align:center;color:var(--text-3);font-size:calc(10.5px * va
 }
 
 </style>
+
+<style id="silmi-ui-aligned">
+/* ============================================================
+   SILMIKAFFAH — UI ALIGNMENT LAYER
+   Selaras dengan design language ALFABASA:
+   Material 3 · Inter · AMOLED #000 · Indigo · compact cards
+   HOME CONTENT PRESERVED: tanggal, jadwal sholat, carousel Hari Ini
+   tidak diubah oleh layer ini.
+   ============================================================ */
+
+:root{
+  --font-ui:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --r-s:8px; --r-m:12px; --r-l:16px; --r-xl:24px;
+  --t-fast:.18s ease;
+  --t-med:.3s cubic-bezier(.4,0,.2,1);
+  --elev-1:0 1px 2px rgba(0,0,0,.30),0 1px 3px 1px rgba(0,0,0,.15);
+  --elev-2:0 1px 2px rgba(0,0,0,.30),0 2px 6px 2px rgba(0,0,0,.20);
+}
+html[data-theme="dark"]{
+  --bg:#000000;
+  --bg-soft:#0A0A0A;
+  --surface:#0A0A0A;
+  --surface-2:#151515;
+  --surface-3:#202020;
+  --text:#FFFFFF;
+  --text-2:#B8B8B8;
+  --text-3:#777777;
+  --accent:#8C9EFF;
+  --accent-strong:#9BA8FF;
+  --accent-soft:#202A5C;
+  --accent-text:#AAB4FF;
+  --border:#292929;
+  --chip-bg:#151515;
+  --chip-border:#292929;
+  --danger:#FFB4AB;
+  --success:#9CE0A7;
+  --warn:#F6C85F;
+  --info:#8FC7EF;
+  --shadow:0 1px 2px rgba(0,0,0,.5),0 2px 8px rgba(0,0,0,.35);
+  --shadow-lg:0 6px 22px rgba(0,0,0,.65);
+}
+html[data-theme="light"]{
+  --bg:#FFFFFF;
+  --bg-soft:#F8F9FC;
+  --surface:#F8F9FC;
+  --surface-2:#EEF0F7;
+  --surface-3:#E2E5EE;
+  --text:#171717;
+  --text-2:#5F6368;
+  --text-3:#80838A;
+  --accent:#3F51B5;
+  --accent-strong:#3344A0;
+  --accent-soft:#E0E7FF;
+  --accent-text:#3F51B5;
+  --border:#DADCE5;
+  --chip-bg:#EEF0F7;
+  --chip-border:#DADCE5;
+  --danger:#C62828;
+  --success:#2E7D32;
+  --warn:#8A6400;
+  --info:#2A648C;
+  --shadow:0 1px 2px rgba(16,24,40,.05),0 2px 8px rgba(16,24,40,.05);
+  --shadow-lg:0 6px 20px rgba(16,24,40,.10);
+}
+
+/* Global shell */
+body{
+  font-family:var(--font-ui);
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.5;
+  font-size:15px;
+}
+button,input,select,textarea{font-family:inherit}
+a{color:var(--accent-text)}
+::selection{background:var(--accent-soft);color:var(--text)}
+
+/* Header — compact, flat, like a modern knowledge app */
+.app-header{
+  background:color-mix(in srgb,var(--bg) 88%,transparent) !important;
+  border-bottom:1px solid var(--border) !important;
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+}
+.header-inner{max-width:1120px !important;padding:0 16px !important}
+.brand-btn{
+  padding:6px 8px !important;
+  border-radius:10px !important;
+}
+.brand-text{
+  font-size:16px !important;
+  font-weight:800 !important;
+  letter-spacing:.06em !important;
+  color:var(--text) !important;
+}
+.icon-btn{
+  width:40px !important;height:40px !important;
+  border-radius:12px !important;
+  color:var(--text-2) !important;
+}
+.icon-btn:hover{background:var(--surface-2) !important;color:var(--text) !important}
+
+/* Main content width/spacing */
+.app-main{
+  max-width:1120px !important;
+  padding:16px 16px 92px !important;
+}
+@media (min-width:1024px){
+  .app-main{
+    margin-left:248px !important;
+    max-width:calc(1120px - 190px) !important;
+    padding:18px 22px 40px !important;
+  }
+}
+
+/* Page hierarchy */
+.page{animation:pageIn .18s ease both}
+@keyframes pageIn{
+  from{opacity:0;transform:translateY(4px)}
+  to{opacity:1;transform:none}
+}
+.h1{
+  font-size:26px !important;
+  line-height:1.2 !important;
+  font-weight:800 !important;
+  letter-spacing:-.3px !important;
+}
+.h2{font-size:20px !important;font-weight:700 !important}
+.h3{font-size:16px !important;font-weight:700 !important}
+.section-title h2,
+.section-title h3{
+  font-size:17px !important;
+  font-weight:800 !important;
+  letter-spacing:-.2px;
+}
+.tiny,.small{color:var(--text-2)}
+
+/* Breadcrumbs */
+.crumbs{
+  display:flex !important;
+  align-items:center !important;
+  flex-wrap:wrap !important;
+  gap:6px !important;
+  margin-bottom:14px !important;
+  color:var(--text-2) !important;
+  font-size:13px !important;
+}
+.crumbs a{color:var(--text-2) !important}
+.crumbs a:hover{color:var(--accent-text) !important;text-decoration:none}
+
+/* Cards — ALFABASA-like: rounded, restrained border, no bulky green */
+.card,
+.list,
+.detail-card,
+.content-card,
+.callout{
+  background:var(--surface) !important;
+  border:1px solid var(--border) !important;
+  border-radius:16px !important;
+  box-shadow:none !important;
+}
+.card{padding:16px !important}
+.card:hover{
+  border-color:color-mix(in srgb,var(--accent) 65%,var(--border)) !important;
+}
+.card-hover{transition:var(--t-med)}
+.card-hover:hover{transform:translateY(-2px);box-shadow:var(--elev-1) !important}
+
+/* Section spacing */
+.section-title{margin-top:24px !important;margin-bottom:12px !important}
+.section-title:first-child{margin-top:0 !important}
+
+/* Lists — clean row system */
+.list{overflow:hidden !important}
+.list-item{
+  min-height:64px !important;
+  padding:13px 16px !important;
+  gap:14px !important;
+  background:var(--surface) !important;
+  border-bottom:1px solid var(--border) !important;
+  transition:background var(--t-fast),border-color var(--t-fast) !important;
+}
+.list-item:hover{background:var(--surface-2) !important}
+.list-item:last-child{border-bottom:none !important}
+.list-item .li-title{
+  font-size:15px !important;
+  font-weight:700 !important;
+}
+.list-item .li-sub{
+  font-size:12.5px !important;
+  color:var(--text-2) !important;
+}
+.list-item .ms.chev{color:var(--text-2) !important}
+
+/* Material/submateri cards */
+.material-grid,
+.sub-grid,
+.entry-grid,
+.menu-grid{
+  gap:12px !important;
+}
+.material-card,
+.sub-card,
+.entry-card,
+.menu-card{
+  background:var(--surface) !important;
+  border:1px solid var(--border) !important;
+  border-radius:16px !important;
+  transition:var(--t-med) !important;
+}
+.material-card:hover,
+.sub-card:hover,
+.entry-card:hover,
+.menu-card:hover{
+  transform:translateY(-2px);
+  border-color:var(--accent) !important;
+  box-shadow:var(--elev-1) !important;
+}
+
+/* Generic clickable blocks frequently used by the content renderer */
+[data-nav],
+[data-content-category],
+[data-entry],
+[data-material],
+[data-submateri]{
+  -webkit-tap-highlight-color:transparent;
+}
+[data-nav]:not(button):hover,
+[data-content-category]:hover{
+  border-color:var(--accent);
+}
+
+/* Chips / filters */
+.chip-row{
+  display:flex !important;
+  gap:8px !important;
+  overflow-x:auto !important;
+  padding:4px 0 8px !important;
+  scrollbar-width:none;
+}
+.chip{
+  flex-shrink:0 !important;
+  height:38px !important;
+  padding:0 16px !important;
+  border-radius:19px !important;
+  background:var(--chip-bg) !important;
+  border:1px solid var(--chip-border) !important;
+  color:var(--text-2) !important;
+  font-size:13px !important;
+  font-weight:600 !important;
+}
+.chip:hover,.chip.active{
+  color:var(--accent) !important;
+  border-color:var(--accent) !important;
+  background:var(--accent-soft) !important;
+}
+
+/* Buttons — pill language-app feel */
+.btn{
+  min-height:44px !important;
+  height:44px !important;
+  padding:0 18px !important;
+  border-radius:22px !important;
+  font-size:14px !important;
+  font-weight:700 !important;
+}
+.btn-primary{
+  background:var(--accent) !important;
+  color:#fff !important;
+  border-color:transparent !important;
+}
+html[data-theme="dark"] .btn-primary{color:#10142A !important}
+.btn-ghost,
+.btn-outline{
+  background:transparent !important;
+  border:1px solid var(--border) !important;
+  color:var(--text) !important;
+}
+.btn-ghost:hover,.btn-outline:hover{
+  background:var(--surface-2) !important;
+  border-color:var(--accent) !important;
+  color:var(--accent-text) !important;
+}
+
+/* Arabic / Quran — keep content readable but UI remains compact */
+.arabic-text{
+  font-family:"Noto Naskh Arabic","Amiri","Scheherazade New",serif !important;
+  color:var(--text) !important;
+}
+.arabic-translation{
+  color:var(--text-2) !important;
+}
+.arabic-meta{
+  color:var(--text-3) !important;
+}
+.q-speaker,
+.small-ar-audio{
+  background:var(--accent-soft) !important;
+  color:var(--accent-text) !important;
+  border-radius:9px !important;
+}
+.q-speaker:hover,.small-ar-audio:hover{
+  background:var(--accent) !important;
+  color:#fff !important;
+}
+
+/* Audio: compact speaker-only treatment */
+.audio-box{
+  background:transparent !important;
+  border:0 !important;
+  padding:0 !important;
+  margin:0 !important;
+  box-shadow:none !important;
+}
+.audio-info,.audio-progress{display:none !important}
+.audio-btn{
+  width:30px !important;
+  height:30px !important;
+  border-radius:9px !important;
+  background:var(--accent-soft) !important;
+  color:var(--accent-text) !important;
+}
+.audio-btn:hover{background:var(--accent) !important;color:#fff !important}
+
+/* Tabs */
+.tabs{
+  gap:4px !important;
+  border-bottom:1px solid var(--border) !important;
+}
+.tab{
+  padding:10px 14px !important;
+  font-size:13px !important;
+  color:var(--text-2) !important;
+}
+.tab.active{
+  color:var(--accent) !important;
+  border-bottom-color:var(--accent) !important;
+}
+
+/* Search */
+.searchbar,
+.search-box,
+.search-wrap{
+  background:var(--surface-2) !important;
+  border:1px solid var(--border) !important;
+  border-radius:24px !important;
+}
+.searchbar:focus-within,
+.search-wrap:focus-within{
+  border-color:var(--accent) !important;
+  background:var(--surface) !important;
+}
+
+/* Progress */
+.progress-track{background:var(--surface-2) !important}
+.progress-fill{background:var(--accent) !important}
+
+/* Iqra */
+.iqra-viewport{
+  background:var(--surface) !important;
+  border:1px solid var(--border) !important;
+  border-radius:16px !important;
+}
+.iqra-page{background:var(--surface) !important}
+.iqra-line{
+  font-size:calc(34px * var(--font-scale)) !important;
+  color:var(--text) !important;
+}
+.iqra-btn{
+  background:var(--surface-2) !important;
+  border:1px solid var(--border) !important;
+  border-radius:10px !important;
+}
+.iqra-dots .dot.active{background:var(--accent) !important}
+
+/* Prayer/home cards: preserve content, harmonize surfaces */
+.date-card,
+.prayer-card{
+  background:var(--surface) !important;
+  border-color:var(--border) !important;
+}
+.date-card{border-left-color:var(--accent) !important}
+.date-hijri{color:var(--accent-text) !important}
+.prayer-item.next{
+  background:var(--accent) !important;
+  color:#fff !important;
+}
+html[data-theme="dark"] .prayer-item.next{color:#10142A !important}
+
+/* Settings rows */
+.set-group h3{
+  font-size:15px !important;
+  font-weight:800 !important;
+  margin-bottom:10px !important;
+}
+.set-row{
+  min-height:58px !important;
+  border-bottom:1px solid var(--border) !important;
+}
+.set-row:last-child{border-bottom:0 !important}
+.sr-t{font-size:14px !important;font-weight:700 !important}
+.sr-d{font-size:12px !important;color:var(--text-2) !important}
+
+/* Empty/error states */
+.empty-state,
+.state-box{
+  background:var(--surface) !important;
+  border:1px solid var(--border) !important;
+  border-radius:16px !important;
+}
+.empty-state svg,.state-box .st-icon{color:var(--accent) !important}
+
+/* Bottom navigation — same visual language */
+.bottom-nav{
+  height:68px !important;
+  background:color-mix(in srgb,var(--surface) 94%,transparent) !important;
+  border-top:1px solid var(--border) !important;
+  box-shadow:var(--elev-2) !important;
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+}
+.bn-item{
+  color:var(--text-2) !important;
+  font-size:11px !important;
+  font-weight:600 !important;
+}
+.bn-item.active{color:var(--accent) !important}
+.bn-item svg{width:23px !important;height:23px !important}
+
+/* Desktop sidebar */
+@media (min-width:1024px){
+  .sidebar{
+    background:var(--surface) !important;
+    border-right:1px solid var(--border) !important;
+  }
+  .sidebar-link{
+    padding:9px 12px !important;
+    border-radius:10px !important;
+    color:var(--text-2) !important;
+  }
+  .sidebar-link:hover{background:var(--surface-2) !important;color:var(--text) !important}
+  .sidebar-link.active{
+    background:var(--accent-soft) !important;
+    color:var(--accent-text) !important;
+  }
+}
+
+/* Accessibility */
+:focus-visible{
+  outline:2px solid var(--accent) !important;
+  outline-offset:2px !important;
+}
+
+/* Mobile density */
+@media (max-width:639px){
+  .app-main{padding-left:14px !important;padding-right:14px !important}
+  .h1{font-size:24px !important}
+  .card{padding:14px !important}
+  .section-title{margin-top:22px !important}
+}
+
+/* Do not visually introduce a splash screen */
+#splash,.splash,.splash-screen{display:none !important}
+</style>
+
 </head>
 <body>
 
@@ -830,7 +1295,7 @@ DB.MENUS = [
   {id:2, num:"02", name:"Rukun Iman", icon:"iman", short:"Enam rukun iman",
    desc:"Iman kepada Allah, Malaikat, Kitab, Rasul, Hari Akhir, Qada & Qadar.",
    materials:[
-     {id:"iman-kepada-allah", name:"Iman kepada Allah", subs:[["tauhid","Tauhid"],["asmaul-husna","Asmaul Husna"],["sifat","Sifat Allah"]]},
+     {id:"iman-kepada-allah", name:"Iman kepada Allah", subs:[["tauhid","Tauhid"],["asmaul-husna","Asmaul Husna"],["sifat","Sifat Allah"],["sifat-jaiz","Sifat Jaiz Allah"]]},
      {id:"iman-kepada-malaikat", name:"Iman kepada Malaikat"},
      {id:"iman-kepada-kitab", name:"Iman kepada Kitab"},
      {id:"iman-kepada-rasul", name:"Iman kepada Rasul"},
@@ -1996,7 +2461,7 @@ ASMA.forEach((a,i)=>{
   addEntry({
     id:"asma-"+(i+1), menu:2, material:"iman-kepada-allah", sub:"asmaul-husna", type:"asmaul",
     title:a[1]+(dupe?" ("+a[0]+")":""), summary:a[2]+" — nama Allah yang ke-"+(i+1),
-    arabic:{text:a[0], translit:a[1], arti:a[2], audio:"", audio_src:"", source:"QS. Thaha 20:8, HR. Bukhari no. 2736"},
+    arabic:{text:a[0], translit:a[1], arti:a[2], audio:"", audio_src:"", source:"QS. Thaha 20:8, HR. Bukhari no. 2736"}, method:"Hijjaz",
     body:[
       {h:"Makna", p:["Allah adalah "+a[2].toLowerCase()+". Mengimani nama ini berarti menetapkan kesempurnaan Allah sesuai maknanya, tanpa menyerupakan-Nya dengan makhluk."]},
       {h:"Pengamalan", p:["Menyebut dan berdoa dengan nama ini sesuai konteksnya — \"Dan Allah memiliki Asmaul Husna (nama-nama yang terbaik), maka bermohonlah kepada-Nya dengan menyebutnya.\" (QS. Al-A'raf 7:180)."]}
@@ -2009,7 +2474,8 @@ addEntry({
   title:"Asmaul Husna", summary:"99 nama Allah yang terbaik — setiap nama adalah entri tersendiri di sini.",
   body:[
     {h:"Dalil", p:["\"Allah memiliki Asmaul Husna (nama-nama yang terbaik), maka bermohonlah kepada-Nya dengan menyebutnya.\" (QS. Al-A'raf 7:180). Rasulullah ﷺ bersabda: \"Sesungguhnya Allah memiliki 99 nama — barang siapa menghafalnya, masuk surga.\" (HR. Bukhari no. 2736, Muslim no. 2677)."]},
-    {h:"Catatan", p:["Penjelasan makna disusun ringkas; untuk pendalaman (terutama nama yang memiliki perbedaan pemahaman seperti sifat-sifat Allah), rujuk kitab syarah yang mu'tabar. Audio setiap nama menyusul."]}
+    {h:"Metode bacaan", p:["Sediakan pilihan pembelajaran Asmaul Husna dengan metode bacaan Hijjaz. Karena rekaman Hijjaz merupakan karya audio berhak cipta, aplikasi tidak menyalin audio/teks liriknya secara lokal tanpa izin; gunakan tautan atau sumber audio yang memang berlisensi/diizinkan."]},
+    {h:"Catatan", p:["Setiap nama mempunyai tombol suara kecil untuk pelafalan. Tombol di bagian atas digunakan untuk membaca seluruh 99 nama dengan suara perangkat; jika sumber audio Hijjaz yang berlisensi tersedia, tombol metode Hijjaz dapat diarahkan ke sumber tersebut."]}
   ],
   sources:["quran","bukhari","muslim"], related:["asma-1","asma-99","asma-wa-sifat"], tags:["asmaul husna","akidah"]
 });
@@ -2931,7 +3397,14 @@ addEntry({id:"sifat-allah", menu:2, material:"iman-kepada-allah", sub:"sifat", t
   body:[{h:"Pendekatan Ahlus Sunnah", p:["Menetapkan nama dan sifat yang Allah tetapkan dalam Al-Qur'an dan sunnah, tanpa takyif (menanyakan hakikat) dan tamtsil (menyerupakan): \"...tidak ada sesuatu pun yang serupa dengan Dia.\" (QS. Asy-Syura 42:11)."]},
   {h:"Pendekatan ilmu tauhid (maturidiyah/asya'irah)", p:["Merangkum sifat wajib bagi Allah: wujud (ada), qidam (dahulu), baqa' (kekal), mukhalafatuhu lil hawadits (berbeda dari makhluk), qiyamuhu binafsihi (berdiri sendiri), wahdaniyah (esa), qudrat (kuasa), iradat (berkehendak), ilmu, hayat (hidup), sam' (mendengar), bashar (melihat), dan kalam (berfirman)."]},
   {h:"Catatan", p:["Kedua pendekatan memiliki dalil dan metode masing-masing. Aplikasi menampilkan secara informatif tanpa klaim sepihak; pendalaman sebaiknya bersama guru/kitab akidah yang mu'tabar."]}],
-  sources:["quran","app"], related:["asma-wa-sifat","tauhid"], tags:["akidah","sifat allah"]});
+  sources:["quran","app"], related:["asma-wa-sifat","tauhid","sifat-jaiz-allah"], tags:["akidah","sifat allah"]});
+addEntry({id:"sifat-jaiz-allah", menu:2, material:"iman-kepada-allah", sub:"sifat-jaiz", type:"article", title:"Sifat Jaiz Allah", summary:"Allah bebas melakukan atau meninggalkan perkara yang mungkin sesuai kehendak-Nya; dalam rumusan ilmu tauhid yang masyhur disebut satu sifat jaiz.",
+  body:[
+    {h:"Pengertian", p:["Sifat jaiz Allah menjelaskan bahwa Allah berkehendak melakukan atau tidak melakukan sesuatu yang secara zatnya mungkin terjadi. Dalam rumusan ilmu tauhid yang masyhur, sifat jaiz Allah diringkas menjadi satu." ]},
+    {h:"Rumusan", p:["Fi'lu kulli mumkinin au tarkuhu — Allah dapat melakukan sesuatu yang mungkin atau meninggalkannya, sesuai kehendak-Nya."]},
+    {h:"Catatan", p:["Pembahasan sifat jaiz merupakan istilah dalam ilmu tauhid/kalam. Aplikasi menampilkannya sebagai materi pembelajaran dan tidak menyamakan istilah ini dengan daftar Asmaul Husna."]}
+  ],
+  sources:["quran","app"], related:["sifat-allah","asma-wa-sifat","iman-kepada-allah"], tags:["akidah","sifat allah","sifat jaiz"]});
 addEntry({id:"dalil-malaikat", menu:2, material:"iman-kepada-malaikat", type:"article", title:"Dalil Iman kepada Malaikat", summary:"Dalil keberadaan dan tugas malaikat.",
   body:[{h:"Dalil", list:["QS. Al-Baqarah 2:285 — \"Rasul beriman kepada apa yang diturunkan kepadanya dari Tuhannya, demikian pula orang-orang yang beriman; semuanya beriman kepada Allah, malaikat-malaikat-Nya, kitab-kitab-Nya, dan rasul-rasul-Nya.\"","QS. At-Tahrim 66:6 — malaikat yang keras dan taat.","Hadis Jibril (HR. Muslim no. 8)."]}],
   sources:["quran","muslim"], related:["iman-kepada-malaikat"], tags:["akidah","malaikat"]});
@@ -3276,20 +3749,19 @@ patch("rukun-shalat", e=>{
   e.body.push({h:"Ilustrasi gerakan", p:["Ilustrasi pose tersedia pada entri gerakan di bawah materi ini (berdiri, rukuk, sujud, duduk)."]});
 });
 
-/* ================= 5) IMAN KEPADA MALAIKAT — PER NAMA ================= */
-const MALAIKAT = [
-  {id:"malaikat-jibril", name:"Jibril", tugas:"Menyampaikan wahyu kepada para nabi dan rasul.", dalil:"QS. Asy-Syu'ara' 26:193-194; hadis Jibril (HR. Muslim no. 8)."},
-  {id:"malaikat-mikail", name:"Mikail", tugas:"Mengatur rezeki, hujan, dan tumbuhan dengan izin Allah.", dalil:"QS. Al-Baqarah 2:98 — disebut bersama Jibril."},
-  {id:"malaikat-israfil", name:"Israfil", tugas:"Meniup sangkakala (shur) pada hari kiamat.", dalil:"Disebut dalam hadis tentang tiupan sangkakala (HR. Muslim no. 2941)."},
-  {id:"malaikat-maut", name:"Malaikat Maut (Izrail)", tugas:"Mencabut nyawa dengan izin Allah.", dalil:"QS. As-Sajdah 32:11 — \"Malaikat maut yang diserahi (tugas) untuk mencabut nyawamu akan mematikanmu.\""},
-  {id:"malaikat-munkar-nakir", name:"Munkar & Nakir", tugas:"Menanyai manusia di alam kubur.", dalil:"HR. Tirmidzi no. 1071 (hasan sahih)."},
-  {id:"malaikat-raqib-atid", name:"Raqib & Atid", tugas:"Mencatat amal baik dan buruk setiap manusia.", dalil:"QS. Qaf 50:17-18."},
-  {id:"malaikat-malik", name:"Malik", tugas:"Penjaga neraka.", dalil:"QS. Az-Zukhruf 43:77."},
-  {id:"malaikat-ridwan", name:"Ridwan", tugas:"Penjaga surga.", dalil:"Disebut dalam atsar tentang penjaga surga; nama ini masyhur di kalangan ulama tafsir."}
+/* ================= 5) IMAN KEPADA MALAIKAT — SATU SUMBER KEBENARAN ================= */
+const MALAIKAT_MASTER = [
+  {id:"malaikat-jibril", name:"Malaikat Jibril", tugas:"Menyampaikan wahyu kepada para nabi dan rasul.", dalil:"QS. Asy-Syu'ara 26:193-194; Hadis Jibril (HR. Muslim no. 8)."},
+  {id:"malaikat-mikail", name:"Malaikat Mikail", tugas:"Mikail disebut bersama Jibril dalam QS. Al-Baqarah 2:98. Rincian tugas yang tidak tegas dalam sumber tidak dipaksakan sebagai fakta.", dalil:"QS. Al-Baqarah 2:98."},
+  {id:"malaikat-israfil", name:"Malaikat Israfil", tugas:"Malaikat yang dikaitkan dengan tiupan sangkakala dalam hadis-hadis tentang kiamat.", dalil:"Hadis tentang sangkakala; rincian sumber ditampilkan bila tersedia."},
+  {id:"malaikat-maut", name:"Malaikat Maut", tugas:"Malaikat yang ditugaskan mencabut nyawa manusia.", dalil:"QS. As-Sajdah 32:11."},
+  {id:"malaikat-munkar-nakir", name:"Malaikat Munkar & Nakir", tugas:"Nama yang dikenal dalam hadis terkait pertanyaan di alam kubur.", dalil:"Hadis tentang fitnah/pertanyaan kubur; tampilkan referensi sesuai database hadis."},
+  {id:"malaikat-raqib-atid", name:"Raqib & Atid", tugas:"Istilah yang terdapat dalam QS. Qaf 50:17-18 untuk malaikat yang berada di kanan dan kiri manusia dan mencatat perkataan/perbuatan. Jangan menyederhanakannya sebagai nama diri tanpa catatan.", dalil:"QS. Qaf 50:17-18."},
+  {id:"malaikat-malik", name:"Malaikat Malik", tugas:"Penjaga Jahannam.", dalil:"QS. Az-Zukhruf 43:77."}
 ];
-MALAIKAT.forEach((m,i)=>{
-  addEntry({id:m.id, menu:2, material:"iman-kepada-malaikat", type:"article", title:"Malaikat "+m.name, order:5+i, summary:m.tugas,
-    body:[{h:"Tugas", p:[m.tugas]},{h:"Dalil", p:[m.dalil]}],
+MALAIKAT_MASTER.forEach((m,i)=>{
+  addEntry({id:m.id, menu:2, material:"iman-kepada-malaikat", type:"article", title:m.name, order:5+i, summary:m.tugas,
+    body:[{h:"Tugas / Penjelasan",p:[m.tugas]},{h:"Dalil / Sumber",p:[m.dalil]},{h:"Catatan Verifikasi",p:["Data ini sengaja tidak menambahkan nama atau tugas yang tidak tegas sumbernya. Untuk nama populer seperti Izrail/Ridwan, aplikasi tidak menuliskannya sebagai fakta pasti tanpa sumber yang kuat."]}],
     sources:["quran","muslim"], related:["iman-kepada-malaikat"], tags:["akidah","malaikat"]});
 });
 
@@ -4602,7 +5074,10 @@ function asmaulView(){
   let h = '<div class="page">'+crumbs([{label:"Home",href:"#/home"},{label:"Rukun Iman",href:"#/menu/2"},{label:"Asmaul Husna"}])
     + '<h1 class="h1">Asmaul Husna</h1>'
     + '<p class="muted" style="margin-top:4px">99 nama Allah — setiap nama adalah entri tersendiri dengan Arab, makna, dalil, dan suara.</p>'
-    + '<div class="chips" style="margin:10px 0"><button class="chip active" data-action="asmaul-tts">'+icon("audio",14)+' Putar semua nama (suara perangkat)</button></div>'
+    + '<div class="chips" style="margin:10px 0">'
+    + '<button class="chip active" data-action="asmaul-tts">'+icon("audio",14)+' Putar 99 nama</button>'
+    + '<a class="chip" href="https://www.youtube.com/watch?v=KXKVScknukQ" target="_blank" rel="noopener noreferrer">'+icon("external",14)+' Referensi bacaan Hijjaz</a>'
+    + '</div>'
     + '<div class="card-grid">';
   list.forEach(e=>{
     h += '<div class="card menu-card tappable" data-nav="#/entry/'+e.id+'">'
@@ -4635,6 +5110,270 @@ function ziarahView(){
   return h;
 }
 
+</script>
+<script>
+/* ============================================================
+   SILMIKAFFAH — DEEP CONTENT AUDIT & ENRICHMENT v1
+   Audit seluruh 14 menu: menu → materi → submateri → entry → field.
+   Curated facts are conservative; uncertain/religious claims remain
+   NEEDS_REVIEW rather than being invented.
+   ============================================================ */
+(function(){
+  const DB=window.SILMIKAFFAH;
+  const add=(e)=>{ if(!DB.ENTRIES.some(x=>x.id===e.id)) { e.status=e.status||'ready'; e.tags=e.tags||[]; e.related=e.related||[]; e.sources=e.sources||[]; e.body=e.body||[]; e.updatedAt='2026-08-30'; DB.ENTRIES.push(e); } };
+  const mat=(mid,id)=>{const m=DB.MENUS.find(x=>x.id===mid); return m&&m.materials.find(x=>x.id===id)};
+  const merge=(mid,id,subs)=>{const m=mat(mid,id); if(!m)return; const a=Array.isArray(m.subs)?m.subs:[]; const seen=new Set(a.map(x=>x[0])); subs.forEach(x=>{if(!seen.has(x[0])){a.push(x);seen.add(x[0])}}); m.subs=a;};
+
+  /* ---------- 14 MENU SUBMATERIAL MASTER ---------- */
+  const S={
+   1:{
+    syahadat:[['pengertian','Pengertian Syahadat'],['tauhid','Syahadat Tauhid'],['rasul','Syahadat Rasul'],['konsekuensi','Konsekuensi Syahadat'],['bacaan','Bacaan Syahadat & Audio']],
+    haji:[['pengertian','Pengertian Haji & Umrah'],['haji','Haji'],['umrah','Umrah'],['manasik','Manasik & Tahapan'],['doa','Doa Haji & Umrah']]
+   },
+   2:{
+    'iman-kepada-malaikat':[['pengertian','Pengertian Iman kepada Malaikat'],['nama','Nama & Tugas Malaikat'],['sifat','Sifat Malaikat'],['dalil','Dalil tentang Malaikat'],['hikmah','Hikmah Beriman kepada Malaikat']],
+    'iman-kepada-kitab':[['pengertian','Pengertian Iman kepada Kitab'],['alquran','Al-Qur’an sebagai Kitab Allah'],['wahyu','Wahyu & Penjagaan Al-Qur’an'],['kedudukan','Kedudukan Al-Qur’an'],['pengamalan','Mengamalkan Al-Qur’an']],
+    'iman-kepada-rasul':[['pengertian','Pengertian Iman kepada Rasul'],['nabi-rasul','Nabi & Rasul'],['sifat','Sifat Rasul'],['mukjizat','Mukjizat'],['keteladanan','Keteladanan Rasul']],
+    'iman-kepada-hari-akhir':[['pengertian','Pengertian Hari Akhir'],['kematian','Kematian & Alam Barzakh'],['kiamat','Kiamat & Tanda-tandanya'],['kebangkitan','Kebangkitan & Hisab'],['surga-neraka','Surga & Neraka']],
+    'iman-kepada-qada-qadar':[['pengertian','Pengertian Qada & Qadar'],['ilmu-allah','Ilmu & Kehendak Allah'],['ikhtiar','Ikhtiar & Tawakal'],['hikmah','Hikmah Beriman kepada Qada & Qadar']]
+   },
+   3:{
+    mushaf:[['surah','114 Surah'],['ayat','Ayat & Nomor Ayat'],['mushaf','Mushaf & Halaman'],['juz','Juz & Pembagian Mushaf'],['audio','Audio Al-Qur’an']],
+    juz:[['juz-1-10','Juz 1–10'],['juz-11-20','Juz 11–20'],['juz-21-30','Juz 21–30'],['navigasi','Navigasi Juz → Surah → Ayat']],
+    'juz-amma':[['pengenalan','Pengenalan Juz ‘Amma'],['surah','Daftar Surah'],['hafalan','Panduan Hafalan'],['audio','Audio Juz ‘Amma']],
+    tajwid:[['makhraj','Makharijul Huruf'],['sifat','Sifat Huruf'],['nun-tanwin','Nun Sukun & Tanwin'],['mim','Mim Sukun'],['mad','Mad'],['qalqalah','Qalqalah'],['ghunnah','Ghunnah'],['waqaf','Waqaf & Ibtida'],['latihan','Contoh & Latihan']],
+    tafsir:[['pengertian','Pengertian Tafsir'],['sumber','Sumber & Metode Tafsir'],['tafsir-ayat','Tafsir per Ayat'],['tafsir-surah','Tafsir per Surah'],['ulumul-quran','Ulumul Qur’an'],['asbab-nuzul','Asbabun Nuzul'],['muhkam-mutasyabih','Muhkam & Mutasyabih']]
+   },
+   4:{
+    hadis:[['pengertian','Pengertian Hadis'],['koleksi','Koleksi Hadis'],['tema','Tema Hadis'],['perawi','Perawi'],['derajat','Derajat Hadis'],['pencarian','Pencarian Hadis']],
+    sunnah:[['pengertian','Pengertian Sunnah'],['sunnah-qauliyah','Sunnah Qauliyah'],['sunnah-filiyah','Sunnah Fi’liyah'],['sunnah-taqririyah','Sunnah Taqririyah'],['kedudukan','Kedudukan Sunnah']],
+    'ulumul-hadis':[['sanad','Sanad'],['matan','Matan'],['rawi','Rawi'],['shahih-hasan','Shahih, Hasan & Dhaif'],['jarh-tadil','Jarh wa Ta’dil']],
+    'syarah-hadis':[['pengertian','Pengertian Syarah'],['memahami-hadis','Cara Memahami Hadis'],['konteks','Konteks & Penggabungan Dalil'],['contoh','Contoh Syarah'],['rujukan','Kitab Syarah']]
+   },
+   5:{
+    thaharah:[['pengertian','Pengertian Thaharah'],['wudhu','Wudhu'],['mandi','Mandi Wajib'],['tayamum','Tayamum'],['najis','Najis'],['hadats','Hadats'],['istinja','Istinja'],['air','Jenis Air']],
+    'fiqih-ibadah':[['shalat','Fiqih Shalat'],['puasa','Fiqih Puasa'],['zakat','Fiqih Zakat'],['haji','Fiqih Haji & Umrah'],['qurban','Qurban/Udhiyah'],['jenazah','Fiqih Jenazah']],
+    'fiqih-muamalah':[['akad','Akad'],['jual-beli','Jual Beli'],['utang','Utang Piutang'],['riba','Riba'],['sewa','Ijarah'],['syirkah','Syirkah'],['transaksi-digital','Transaksi Digital']],
+    'fiqih-keluarga':[['nikah','Pernikahan'],['khitbah','Khitbah'],['mahar','Mahar'],['nafkah','Nafkah'],['talak','Talak'],['rujuk','Rujuk'],['hak-anak','Hak Anak']],
+    waris:[['pengertian','Pengertian Waris'],['sebab','Sebab & Penghalang Waris'],['ahli-waris','Ahli Waris'],['bagian','Bagian Waris'],['perhitungan','Contoh Perhitungan']],
+    'fiqih-kontemporer':[['pengertian','Pengertian Fiqih Kontemporer'],['teknologi','Teknologi'],['keuangan','Keuangan Modern'],['medis','Isu Medis'],['lingkungan','Lingkungan']],
+    'ushul-fiqih':[['dalil','Dalil Hukum'],['ijma','Ijma’'],['qiyas','Qiyas'],['ijtihad','Ijtihad'],['maslahah','Maslahah'],['urf','‘Urf']],
+    'kaidah-fiqih':[['niat','Al-Umur bi Maqasidiha'],['yaqin','Al-Yaqin la Yazulu bi asy-Syakk'],['masyaqqah','Al-Masyaqqah Tajlib at-Taysir'],['dharar','Adh-Dharar Yuzal'],['adat','Al-‘Adah Muhakkamah']],
+    maqashid:[['pengertian','Pengertian Maqashid'],['daruriyyat','Daruriyyat'],['hajiyyat','Hajiyyat'],['tahsiniyyat','Tahsiniyyat'],['lima-tujuan','Lima Tujuan Pokok']]
+   },
+   6:{
+    doa:[['harian','Doa Harian'],['tidur','Doa Tidur'],['makan','Doa Makan'],['belajar','Doa Belajar'],['perjalanan','Doa Perjalanan'],['keluarga','Doa Keluarga'],['perlindungan','Doa Perlindungan'],['masjid','Doa Masjid'],['kesulitan','Doa Kesulitan & Kesehatan'],['setelah-shalat','Doa setelah Shalat'],['ramadan','Doa Ramadan'],['haji-umrah','Doa Haji & Umrah']],
+    dzikir:[['pagi','Dzikir Pagi'],['petang','Dzikir Petang'],['setelah-shalat','Dzikir setelah Shalat'],['tidur','Dzikir sebelum Tidur'],['istighfar','Istighfar'],['shalawat','Shalawat']]
+   },
+   7:{
+    akhlak:[['terpuji','Akhlak Terpuji'],['tercela','Akhlak Tercela'],['ikhlas','Ikhlas'],['sabar','Sabar'],['syukur','Syukur'],['jujur','Jujur'],['amanah','Amanah'],['tawakal','Tawakal']],
+    adab:[['allah','Adab kepada Allah'],['rasul','Adab kepada Rasul'],['orang-tua','Adab kepada Orang Tua'],['guru','Adab kepada Guru'],['sesama','Adab kepada Sesama'],['belajar','Adab Belajar'],['makan','Adab Makan'],['tidur','Adab Tidur'],['bertamu','Adab Bertamu'],['berbicara','Adab Berbicara'],['media','Adab Bermedia']],
+    tazkiyah:[['taubat','Taubat'],['muhasabah','Muhasabah'],['penyakit-hati','Penyakit Hati'],['pembinaan','Pembinaan Diri'],['ikhlas','Ikhlas & Niat'],['sabar','Sabar & Pengendalian Diri']]
+   },
+   8:{
+    'masa-sebelum-islam':[['arabia','Arabia Pra-Islam'],['makkah','Makkah Sebelum Kenabian'],['kaum','Kondisi Sosial & Keagamaan'],['kelahiran','Kelahiran Nabi Muhammad ﷺ']],
+    'sirah-nabi':[['makkah','Periode Makkah'],['wahyu','Turunnya Wahyu'],['dakwah','Dakwah Makkah'],['hijrah','Hijrah'],['madinah','Periode Madinah'],['fathu','Fathu Makkah'],['haji-wada','Haji Wada’'],['wafat','Wafat Nabi ﷺ']],
+    sahabat:[['khulafa','Khulafaur Rasyidin'],['muhajirin','Muhajirin'],['ansar','Ansar'],['generasi-awal','Generasi Awal Islam']],
+    perang:[['badar','Badar'],['uhud','Uhud'],['khandaq','Khandaq/Ahzab'],['hudaibiyah','Hudaibiyah'],['fathu','Fathu Makkah']],
+    'sejarah-islam':[['khulafa','Masa Khulafaur Rasyidin'],['dinasti','Dinasti Islam'],['andalusia','Islam di Andalusia'],['utsmani','Kesultanan Utsmani'],['nusantara','Islam di Nusantara']],
+    peristiwa:[['isra-miraj','Isra’ Mi’raj'],['hijrah','Hijrah'],['badar','Perang Badar'],['hudaibiyah','Perjanjian Hudaibiyah'],['fathu','Fathu Makkah'],['wafat','Wafat Nabi ﷺ']],
+    ziarah:[['pengertian','Pengertian Ziarah'],['ziarah-kubur','Ziarah Kubur'],['adab','Adab Ziarah'],['doa','Doa Ziarah Kubur'],['tempat','Tempat Ziarah Bersejarah'],['hukum','Hukum & Batasan Ziarah']]
+   },
+   9:{
+    'sahabat-tabiin':[['abu-bakar','Abu Bakar'],['umar','Umar bin Khattab'],['utsman','Utsman bin Affan'],['ali','Ali bin Abi Thalib'],['bilal','Bilal bin Rabah'],['tabiin','Tokoh Tabi’in']],
+    ulama:[['imam-madzhab','Imam Mazhab'],['bukhari','Imam Bukhari'],['muslim','Imam Muslim'],['nawawi','Imam an-Nawawi'],['ibnu-hajar','Ibnu Hajar']],
+    ilmuwan:[['ibnu-sina','Ibnu Sina'],['al-khwarizmi','Al-Khwarizmi'],['ibnu-haitsam','Ibnu al-Haytham'],['al-biruni','Al-Biruni'],['ibnu-khaldun','Ibnu Khaldun']],
+    'tokoh-perempuan':[['khadijah','Khadijah binti Khuwailid'],['aisyah','Aisyah r.a.'],['fatimah','Fatimah az-Zahra'],['ummu-salamah','Ummu Salamah']],
+    nusantara:[['walisongo','Wali Songo'],['nawawi-banten','Syekh Nawawi al-Bantani'],['ahmad-dahlan','Ahmad Dahlan'],['hasyim-asyari','Hasyim Asy’ari'],['hamka','Hamka']]
+   },
+   10:{
+    'hari-ini':[['tanggal','Tanggal Hijriah Hari Ini'],['masehi','Tanggal Masehi'],['shalat','Jadwal Shalat'],['peristiwa','Peristiwa Hari Ini']],
+    'kalender-bulanan':[['tampilan','Kalender Satu Bulan'],['navigasi','Bulan Sebelumnya & Berikutnya'],['penanda','Penanda Hari Besar'],['sejarah','Sejarah Berdasarkan Tanggal']],
+    'detail-tanggal':[['tanggal-hijriah','Tanggal Hijriah'],['tanggal-masehi','Tanggal Masehi'],['hari','Nama Hari'],['peristiwa','Peristiwa Terkait']],
+    'informasi-hari-ini':[['libur','Libur/Peringatan'],['hari-besar','Hari Besar Islam'],['catatan','Catatan Kalender']],
+    'sejarah-bulan-ini':[['peristiwa','Peristiwa Sejarah'],['daftar-tanggal','Daftar Tanggal'],['tautan','Tautan ke Sirah & Sejarah']]
+   },
+   11:{
+    'pendidikan-islam':[['tujuan','Tujuan Pendidikan Islam'],['adab-ilmu','Adab Menuntut Ilmu'],['metode','Metode Belajar'],['anak','Pendidikan Anak'],['guru','Peran Guru'],['literasi','Literasi Islam']],
+    dakwah:[['pengertian','Pengertian Dakwah'],['metode','Metode Dakwah'],['hikmah','Dakwah dengan Hikmah'],['etika','Etika Dakwah'],['digital','Dakwah Digital']]
+   },
+   12:{
+    'bahasa-arab-dasar':[['huruf','Huruf Hijaiyah'],['harakat','Harakat'],['kosakata','Kosakata Dasar'],['kalimat','Kalimat Dasar'],['pelafalan','Pelafalan Arab']],
+    nahwu:[['kalimah','Kalimah'],['isim','Isim'],['fiil','Fi’il'],['harf','Harf'],['jumlah','Jumlah Ismiyah & Fi’liyah']],
+    sharaf:[['akar','Akar Kata'],['wazan','Wazan'],['tasrif','Tasrif'],['kata-kerja','Perubahan Fi’il']],
+    balaghah:[['pengertian','Pengertian Balaghah'],['maani','Ilmu Ma’ani'],['bayan','Ilmu Bayan'],['badi','Ilmu Badi’']],
+    'kamus-islam':[['aqidah','Istilah Akidah'],['ibadah','Istilah Ibadah'],['quran','Istilah Al-Qur’an'],['hadis','Istilah Hadis'],['fiqih','Istilah Fiqih']]
+   },
+   13:{
+    'kota-islam':[['makkah','Makkah'],['madinah','Madinah'],['baghdad','Baghdad'],['kairo','Kairo'],['cordoba','Cordoba']],
+    'masjid-bersejarah':[['masjidil-haram','Masjidil Haram'],['masjid-nabawi','Masjid Nabawi'],['al-aqsa','Masjid Al-Aqsa'],['masjid-bersejarah','Masjid Bersejarah Dunia']],
+    'pendidikan-peradaban':[['baitul-hikmah','Baitul Hikmah'],['madrasah','Madrasah'],['perpustakaan','Perpustakaan'],['ilmuwan','Ilmuwan & Karya']],
+    'ekonomi-peradaban':[['perdagangan','Perdagangan'],['pasar','Pasar'],['wakaf','Wakaf'],['baitul-mal','Baitul Mal']],
+    'seni-peradaban':[['arsitektur','Arsitektur'],['kaligrafi','Kaligrafi'],['manuskrip','Manuskrip'],['seni','Seni Islam']]
+   },
+   14:{
+    'teknologi-kontemporer':[['teknologi','Teknologi'],['ai','AI'],['internet','Internet'],['otomasi','Otomasi'],['privasi','Privasi Data']],
+    'media-digital':[['media-sosial','Media Sosial'],['tabayyun','Tabayyun Informasi'],['hoaks','Hoaks & Fitnah'],['privasi','Privasi'],['komunikasi','Etika Komunikasi']],
+    'ekonomi-modern':[['fintech','Fintech'],['ecommerce','E-commerce'],['investasi','Investasi'],['utang','Utang Digital'],['bisnis','Etika Bisnis']],
+    'kesehatan-lingkungan':[['kesehatan','Kesehatan'],['kebersihan','Kebersihan'],['pencegahan','Pencegahan Penyakit'],['lingkungan','Lingkungan'],['amanah','Menjaga Lingkungan']],
+    masyarakat:[['keluarga','Keluarga'],['tetangga','Tetangga'],['kerja','Dunia Kerja'],['pendidikan','Pendidikan'],['kewargaan','Kehidupan Bermasyarakat']]
+   }
+  };
+  Object.keys(S).forEach(mid=>Object.keys(S[mid]).forEach(id=>merge(+mid,id,S[mid][id])));
+
+  /* ---------- CURATED DEEP ENTRIES: PRIORITY DOMAINS ---------- */
+  const E=(id,menu,material,sub,title,summary,body,sources,tags=[],extra={})=>add(Object.assign({id,menu,material,sub,type:'article',title,summary,body,sources,tags},extra));
+  const ar=(text,translit,arti)=>({text,translit,arti,audio:'',audio_src:'',source:''});
+
+  // Hadis: structure is explicit; no invented hadith text.
+  E('hadis-pengertian',4,'hadis','pengertian','Pengertian Hadis','Definisi hadis dan unsur yang menyertainya.',[
+    {h:'Pengertian',p:['Hadis adalah segala sesuatu yang dinisbatkan kepada Nabi Muhammad ﷺ berupa perkataan, perbuatan, persetujuan (taqrir), dan sifat beliau menurut definisi yang digunakan dalam ilmu hadis.']},
+    {h:'Unsur',list:['Sanad: rangkaian periwayat.','Matan: teks atau isi riwayat.','Rawi: orang yang meriwayatkan hadis.']},
+    {h:'Field',list:['collection','book/chapter bila tersedia','number','narrator','Arabic text','translation','grade','source']}],['app'],['hadis','ulumul-hadis']);
+  E('hadis-tema',4,'hadis','tema','Tema Hadis','Tema adalah tag/filter untuk menemukan hadis berdasarkan pokok bahasan, bukan hadis baru.',[
+    {h:'Contoh tema',list:['Akidah','Shalat','Puasa','Zakat','Haji','Doa','Akhlak','Keluarga','Muamalah','Ilmu','Ramadan','Akhirat']},
+    {h:'Aturan',p:['Satu hadis boleh memiliki beberapa tema. Tema tidak boleh menggandakan entry hadis.']}],['app'],['hadis','tema']);
+  E('hadis-derajat',4,'hadis','derajat','Derajat Hadis','Penjelasan ringkas kategori penilaian hadis dan pentingnya mengikuti penilaian sumber.',[
+    {h:'Kategori umum',list:['Shahih','Hasan','Dhaif','Maudhu’ (palsu) sebagai kategori yang harus dihindari dari penyajian sebagai hadis Nabi.']},
+    {h:'Aturan database',p:['SILMIKAFFAH harus menampilkan derajat sesuai sumber yang dipakai. Jangan membuat penilaian sendiri tanpa rujukan.']}],['app'],['hadis','verifikasi']);
+
+  // Doa: add real Qur'anic/Prophetic supplications only where wording is well established.
+  E('doa-rabbana-atina',6,'doa','harian','Doa Rabbana Atina','Doa memohon kebaikan dunia dan akhirat.',[
+    {h:'Arab',p:['رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ']},
+    {h:'Arti',p:['Ya Tuhan kami, berilah kami kebaikan di dunia dan kebaikan di akhirat, dan lindungilah kami dari azab neraka.']},
+    {h:'Sumber',p:['QS. Al-Baqarah 2:201']}],['quran'],['doa','quran'],{arabic:ar('رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ','Rabbana atina fid-dunya hasanatan wa fil-akhirati hasanatan wa qina azaban-nar','Ya Tuhan kami, berilah kami kebaikan di dunia dan kebaikan di akhirat, dan lindungilah kami dari azab neraka.')});
+  E('doa-rabbighfirli',6,'doa','setelah-shalat','Doa Rabbighfirli','Doa memohon ampun yang dibaca dalam shalat, antara dua sujud.',[
+    {h:'Arab',p:['رَبِّ اغْفِرْ لِي']},
+    {h:'Arti',p:['Ya Tuhanku, ampunilah aku.']},
+    {h:'Catatan',p:['Lafaz ini merupakan bagian dari doa yang diriwayatkan dalam hadis tentang doa antara dua sujud.']}],['bukhari','muslim'],['doa','shalat'],{arabic:ar('رَبِّ اغْفِرْ لِي','Rabbighfir li','Ya Tuhanku, ampunilah aku.')});
+  E('doa-rabbana-zulm',6,'doa','kesulitan','Doa Rabbana Zalamna','Doa Nabi Adam dan Hawa yang disebut dalam Al-Qur’an.',[
+    {h:'Arab',p:['رَبَّنَا ظَلَمْنَا أَنْفُسَنَا وَإِنْ لَمْ تَغْفِرْ لَنَا وَتَرْحَمْنَا لَنَكُونَنَّ مِنَ الْخَاسِرِينَ']},
+    {h:'Arti',p:['Ya Tuhan kami, kami telah menzalimi diri kami. Jika Engkau tidak mengampuni kami dan memberi rahmat kepada kami, niscaya kami termasuk orang-orang yang rugi.']},
+    {h:'Sumber',p:['QS. Al-A’raf 7:23']}],['quran'],['doa','taubat'],{arabic:ar('رَبَّنَا ظَلَمْنَا أَنْفُسَنَا وَإِنْ لَمْ تَغْفِرْ لَنَا وَتَرْحَمْنَا لَنَكُونَنَّ مِنَ الْخَاسِرِينَ','Rabbana zalamna anfusana wa illam taghfir lana wa tarhamna lanakunanna minal-khasirin','Ya Tuhan kami, kami telah menzalimi diri kami. Jika Engkau tidak mengampuni kami dan memberi rahmat kepada kami, niscaya kami termasuk orang-orang yang rugi.')});
+
+  // Fiqih: curated core entries.
+  E('fiqih-qurban',5,'fiqih-ibadah','qurban','Qurban / Udhiyah','Ibadah menyembelih hewan ternak tertentu pada waktu yang ditentukan dalam rangka mendekatkan diri kepada Allah.',[
+    {h:'Pengertian',p:['Qurban (udhiyah) adalah penyembelihan hewan ternak yang dilakukan pada waktu Idul Adha dan hari-hari tasyrik sebagai ibadah.']},
+    {h:'Waktu',p:['Penyembelihan dilakukan setelah shalat Id bagi yang mengikuti ketentuan tersebut dan berlangsung sampai akhir hari tasyrik menurut pendapat yang masyhur.']},
+    {h:'Hewan',list:['Unta','Sapi/kerbau','Kambing/domba'],},
+    {h:'Catatan',p:['Rincian hukum, usia hewan, pembagian daging, dan perbedaan pendapat harus ditampilkan bersama rujukan fiqih yang digunakan.']}],['quran','bukhari','muslim','fiqihsunnah','alfiqh'],['fiqih','qurban']);
+  E('fiqih-wudhu-detail',5,'thaharah','wudhu','Wudhu','Bersuci menggunakan air pada anggota tubuh tertentu dengan tata cara yang ditetapkan syariat.',[
+    {h:'Rukun/anggota',list:['Membasuh wajah','Membasuh kedua tangan sampai siku','Mengusap kepala','Membasuh kedua kaki sampai mata kaki']},
+    {h:'Prinsip',p:['Rincian rukun, urutan, niat, pembatal, dan sunnah wudhu mengikuti mazhab/rujukan yang dipilih. Aplikasi harus menandai perbedaan pendapat bila ada.']},
+    {h:'Praktik',p:['Sediakan ilustrasi anggota tubuh dan langkah satu per satu, bukan hanya paragraf.']}],['quran','bukhari','muslim','alfiqh'],['thaharah','wudhu']);
+  E('fiqih-muamalah-riba',5,'fiqih-muamalah','riba','Riba','Tambahan yang dilarang dalam transaksi tertentu; pembahasan harus dibedakan antara riba dan keuntungan jual beli yang sah.',[
+    {h:'Pengertian',p:['Al-Qur’an melarang riba dan membedakannya dari jual beli.']},
+    {h:'Jenis',list:['Riba dalam utang/piutang','Riba dalam pertukaran barang ribawi — rincian mengikuti hadis dan fiqih.']},
+    {h:'Konteks modern',p:['Untuk produk keuangan modern, jangan langsung memberi vonis tanpa menjelaskan akad, struktur transaksi, dan pendapat ulama yang dirujuk.']}],['quran','bukhari','muslim','alfiqh'],['fiqih','muamalah']);
+  E('fiqih-maqashid-pengertian',5,'maqashid','pengertian','Maqashid Syariah','Tujuan-tujuan yang menjadi pertimbangan penting dalam memahami hikmah dan kemaslahatan syariat.',[
+    {h:'Tingkat kebutuhan',list:['Daruriyyat — kebutuhan primer yang sangat mendasar.','Hajiyyat — kebutuhan yang menghilangkan kesulitan.','Tahsiniyyat — penyempurna kemaslahatan dan adab.']},
+    {h:'Catatan',p:['Rincian maqashid adalah bidang ushul fiqih; aplikasi harus menyebutkan kitab/ulama rujukan dan tidak menjadikan maqashid sebagai alasan bebas untuk mengabaikan nash.']}],['alfiqh','app'],['maqashid','ushul-fiqih']);
+
+  // Sirah & Ziarah.
+  E('sirah-hijrah',8,'sirah-nabi','hijrah','Hijrah ke Madinah','Perpindahan Nabi Muhammad ﷺ dan para sahabat dari Makkah menuju Madinah yang menjadi titik penting sejarah Islam.',[
+    {h:'Latar',p:['Hijrah berlangsung setelah tekanan dan penindasan di Makkah serta adanya dukungan penduduk Yatsrib melalui Baiat Aqabah.']},
+    {h:'Perjalanan',p:['Nabi ﷺ berhijrah bersama Abu Bakar r.a.; perjalanan dan persinggahan harus dijelaskan berdasarkan riwayat sirah yang dirujuk.']},
+    {h:'Dampak',list:['Terbentuknya masyarakat Muslim di Madinah','Pembangunan Masjid Nabawi','Persaudaraan Muhajirin dan Ansar','Perubahan fase dakwah dari Makkah ke Madinah']}],['sirah','quran','bukhari','muslim'],['sirah','hijrah']);
+  E('sirah-fathu-makkah',8,'sirah-nabi','fathu','Fathu Makkah','Pembukaan Makkah pada tahun 8 H setelah pelanggaran terhadap Perjanjian Hudaibiyah.',[
+    {h:'Latar',p:['Peristiwa berkaitan dengan pelanggaran terhadap perjanjian antara kaum Muslimin dan Quraisy serta sekutunya.']},
+    {h:'Peristiwa',p:['Nabi ﷺ memasuki Makkah bersama pasukan Muslim dan terjadi perubahan besar dalam keadaan kota tanpa pertempuran besar di seluruh wilayah.']},
+    {h:'Pelajaran',list:['Kekuatan disertai pengampunan','Menjaga perjanjian','Membersihkan Ka’bah dari praktik syirik']}],['sirah','bukhari','muslim'],['sirah','makkah']);
+  E('ziarah-pengertian',8,'ziarah','pengertian','Pengertian Ziarah','Kunjungan ke tempat tertentu untuk tujuan yang dibenarkan syariat, termasuk ziarah kubur dengan adabnya.',[
+    {h:'Ziarah kubur',p:['Ziarah kubur bertujuan mengingat kematian dan mendoakan penghuni kubur.']},
+    {h:'Batasan',p:['Jangan menjadikan ziarah sebagai sarana meminta kepada orang yang telah wafat. Praktik dan doa diarahkan kepada Allah.']},
+    {h:'Adab',list:['Mengucapkan salam','Mendoakan penghuni kubur','Menjaga sopan santun','Tidak melakukan perbuatan yang dilarang']}],['bukhari','muslim'],['ziarah','adab']);
+
+  // Tokoh: conservative biographies, not fabricated family details.
+  const people=[
+   ['tokoh-abu-bakar', 'Abu Bakar ash-Shiddiq','Sahabat Nabi dan khalifah pertama setelah wafat Nabi ﷺ.',['sahabat','khulafa']],
+   ['tokoh-umar','Umar bin Khattab','Sahabat Nabi dan khalifah kedua; dikenal dalam riwayat sejarah karena kepemimpinan dan ketegasan.',['sahabat','khulafa']],
+   ['tokoh-utsman','Utsman bin Affan','Sahabat Nabi dan khalifah ketiga; termasuk al-Khulafa ar-Rasyidun.',['sahabat','khulafa']],
+   ['tokoh-ali','Ali bin Abi Thalib','Sepupu dan menantu Nabi ﷺ serta khalifah keempat menurut urutan al-Khulafa ar-Rasyidun.',['sahabat','khulafa']],
+   ['tokoh-khadijah','Khadijah binti Khuwailid','Istri pertama Nabi Muhammad ﷺ dan orang pertama yang beriman kepada beliau menurut riwayat sirah yang masyhur.',['perempuan','keluarga']],
+   ['tokoh-aisyah','Aisyah r.a.','Istri Nabi Muhammad ﷺ dan perawi hadis yang sangat banyak; dikenal sebagai salah satu sumber ilmu bagi generasi setelahnya.',['perempuan','hadis']],
+   ['tokoh-bukhari','Imam al-Bukhari','Muhammad bin Ismail al-Bukhari, penyusun Shahih al-Bukhari dan salah satu imam besar dalam ilmu hadis.',['ulama','hadis']],
+   ['tokoh-muslim','Imam Muslim','Muslim bin al-Hajjaj, penyusun Shahih Muslim dan salah satu imam besar ilmu hadis.',['ulama','hadis']],
+   ['tokoh-nawawi','Imam an-Nawawi','Ulama Syafi’iyah yang dikenal melalui karya-karya hadis dan fiqih seperti Riyadhus Shalihin dan Al-Arba’in.',['ulama','fiqih']],
+   ['tokoh-ibn-sina','Ibnu Sina','Ilmuwan Muslim yang terkenal dalam sejarah kedokteran dan filsafat.',['ilmuwan','kedokteran']],
+   ['tokoh-khwarizmi','Al-Khwarizmi','Ilmuwan yang berpengaruh dalam perkembangan matematika, khususnya aljabar dan metode perhitungan.',['ilmuwan','matematika']],
+   ['tokoh-ibn-khaldun','Ibnu Khaldun','Sejarawan dan pemikir yang dikenal melalui Muqaddimah dan kajiannya tentang masyarakat serta sejarah.',['ilmuwan','sejarah']],
+  ];
+  people.forEach(([id,title,summary,tags])=>E(id,9,tags[0]==='sahabat'?'sahabat-tabiin':tags[0]==='ulama'?'ulama':tags[0]==='perempuan'?'tokoh-perempuan':'ilmuwan',tags[0],title,summary,[{h:'Profil',p:[summary]},{h:'Field',list:['nama','biografi','kontribusi','karya/peristiwa penting bila ada','sumber']},{h:'Catatan Verifikasi',p:['Tanggal lahir/wafat, keluarga, guru, murid, dan detail lainnya hanya boleh ditampilkan bila sumber yang dipilih mendukungnya.']}],['app'],tags));
+
+  // Tajwid.
+  const taj=[
+   ['tajwid-makharij','makhraj','Makharijul Huruf','Tempat keluarnya huruf ketika dilafalkan.'],
+   ['tajwid-nun-tanwin','nun-tanwin','Nun Sukun & Tanwin','Hukum nun sukun dan tanwin secara bertahap: izhar, idgham, iqlab, dan ikhfa.'],
+   ['tajwid-mim','mim','Mim Sukun','Hukum mim sukun: ikhfa syafawi, idgham mimi, dan izhar syafawi.'],
+   ['tajwid-mad','mad','Mad','Pemanjangan suara pada huruf mad dan cabang-cabangnya sesuai kaidah tajwid.'],
+   ['tajwid-qalqalah','qalqalah','Qalqalah','Pantulan suara pada huruf qalqalah ketika memenuhi kondisi bacaannya.'],
+   ['tajwid-ghunnah','ghunnah','Ghunnah','Dengung pada tempat-tempat yang ditentukan dalam bacaan.'],
+   ['tajwid-waqaf','waqaf','Waqaf & Ibtida','Berhenti dan memulai bacaan dengan mempertimbangkan makna dan tanda waqaf.'],
+  ];
+  taj.forEach(([id,sub,title,summary])=>E(id,3,'tajwid',sub,title,summary,[{h:'Pengertian',p:[summary]},{h:'Pembelajaran',list:['Definisi','Cara membaca','Contoh Arab','Kesalahan umum','Latihan']},{h:'Tampilan',p:['Huruf Arab harus besar, harakat jelas, dan contoh dapat diputar dengan audio bila tersedia.']}],['quran','app'],['tajwid',sub]));
+
+  // Tafsir & Ulumul Qur'an.
+  E('tafsir-pengertian',3,'tafsir','pengertian','Pengertian Tafsir','Ilmu untuk memahami makna ayat Al-Qur’an berdasarkan bahasa, konteks, dan sumber tafsir yang dapat dipertanggungjawabkan.',[
+    {h:'Tujuan',p:['Membantu pembaca memahami makna ayat dengan merujuk kepada tafsir yang diakui, bukan sekadar terjemahan.']},
+    {h:'Prinsip',list:['Bedakan teks ayat dengan penafsiran.','Cantumkan nama tafsir dan sumber.','Jangan membuat kutipan tafsir yang tidak ada dalam sumber.']}],['quran','tafsir'],['tafsir','ulumul-quran']);
+  E('tafsir-asbab-nuzul',3,'tafsir','asbab-nuzul','Asbabun Nuzul','Riwayat mengenai sebab atau konteks turunnya ayat tertentu.',[
+    {h:'Penting',p:['Tidak semua ayat mempunyai riwayat sebab turun yang khusus. Aplikasi harus menandai bila riwayatnya kuat, diperselisihkan, atau tidak tersedia.']},
+    {h:'Field',list:['ayat','riwayat','perawi/sumber','penilaian riwayat','tafsir terkait']}],['tafsir','quran'],['tafsir','asbabun-nuzul']);
+  E('tafsir-muhkam-mutasyabih',3,'tafsir','muhkam-mutasyabih','Muhkam & Mutasyabih','Pembahasan klasifikasi ayat yang muhkam dan mutasyabih dalam Ulumul Qur’an.',[
+    {h:'Dasar',p:['QS. Ali Imran 3:7 menyebut adanya ayat-ayat muhkam sebagai pokok Al-Kitab dan ayat mutasyabih.']},
+    {h:'Catatan',p:['Rincian definisi dan metode penanganan mutasyabih mempunyai pembahasan ulama yang luas; tampilkan sumber tafsir/ulumul Qur’an yang digunakan.']}],['quran','tafsir'],['tafsir','ulumul-quran']);
+
+  // Iqra: make real page schema, but original educational content—not scans.
+  const iqra=[1,2,3,4,5,6];
+  iqra.forEach(level=>{
+    const id='iqra-'+level+'-halaman';
+    E(id,3,'iqra','level','Iqra '+level+' — Halaman Pembelajaran','Kumpulan halaman pembelajaran original untuk level Iqra '+level+'.',[
+      {h:'Struktur',list:['Halaman pembelajaran','Contoh bacaan','Latihan','Evaluasi','Progress halaman']},
+      {h:'Field',list:['level','page','objective','arabic','audio','exercise','evaluation','source']},
+      {h:'Hak cipta',p:['Jangan menyalin scan atau tata letak buku Iqra komersial tanpa izin. Gunakan materi original atau aset yang memang berlisensi.']}
+    ],['app'],['iqra','belajar'],{type:'lesson',pages:Array.from({length:12},(_,i)=>({page:i+1,title:'Iqra '+level+' — Halaman '+(i+1),objective:'Latihan membaca bertahap',status:'original'}))});
+  });
+
+  /* ---------- DOMAIN FIELD ENRICHMENT ---------- */
+  const fields={
+    hadith:['id','menu','material','sub','collection','book','chapter','number','arabic.text','translation','narrator','grade','topic','sources','related','status','updatedAt'],
+    doa:['id','menu','material','sub','arabic.text','arabic.translit','arabic.arti','audio','occasion','sources','related','status','updatedAt'],
+    dzikir:['id','menu','material','sub','arabic.text','transliteration','translation','audio','time','count','sources','related','status','updatedAt'],
+    lesson:['id','menu','material','sub','level','pages','objective','exercise','evaluation','audio','sources','status','updatedAt'],
+    person:['id','menu','material','sub','name','birth','death','family','teachers','students','works','contribution','events','sources','status','updatedAt'],
+    quran:['id','menu','material','sub','surah','verse','juz','page','arabic','translation','audio','tafsir','sources','status','updatedAt']
+  };
+  DB.ENTRIES.forEach(e=>{
+    if(e.type==='hadith')e.fieldSpec=fields.hadith;
+    if(e.type==='doa')e.fieldSpec=fields.doa;
+    if(e.type==='dzikir')e.fieldSpec=fields.dzikir;
+    if(e.type==='lesson')e.fieldSpec=fields.lesson;
+    if(e.type==='person')e.fieldSpec=fields.person;
+    if(e.type==='quran')e.fieldSpec=fields.quran;
+    e.audit={
+      hasBody:Array.isArray(e.body)&&e.body.length>0,
+      hasSummary:!!e.summary,
+      hasSource:Array.isArray(e.sources)&&e.sources.length>0,
+      hasParent:!!e.parentId,
+      arabicComplete:!e.arabic || (!!e.arabic.text&&!!e.arabic.translit&&!!e.arabic.arti),
+      audioStatus:e.arabic?(e.arabic.audio?'available':'needs-audio-or-tts'):'not-applicable'
+    };
+  });
+
+  /* ---------- FINAL DEEP AUDIT ---------- */
+  const audit={menus:[],missingMaterials:[],missingSubs:[],duplicateIds:[],orphanEntries:[],weakEntries:[],needsReview:[]};
+  const ids=new Set();
+  DB.ENTRIES.forEach(e=>{if(ids.has(e.id))audit.duplicateIds.push(e.id);ids.add(e.id);if(!DB.MENUS.some(m=>m.id===e.menu))audit.orphanEntries.push(e.id);if(!e.summary||!e.body?.length||!e.sources?.length)audit.weakEntries.push(e.id);if(e.status==='needs-review')audit.needsReview.push(e.id);});
+  DB.MENUS.forEach(m=>{
+    const row={id:m.id,name:m.name,materials:0,submaterials:0,entries:0};
+    m.materials.forEach(x=>{row.materials++;if(!x.subs?.length)audit.missingMaterials.push(m.id+':'+x.id);(x.subs||[]).forEach(([s])=>{row.submaterials++;if(!DB.ENTRIES.some(e=>e.menu===m.id&&e.material===x.id&&e.sub===s))audit.missingSubs.push(m.id+':'+x.id+':'+s);});});
+    row.entries=DB.ENTRIES.filter(e=>e.menu===m.id).length;audit.menus.push(row);
+  });
+  audit.total={menus:DB.MENUS.length,materials:DB.MENUS.reduce((n,m)=>n+m.materials.length,0),submaterials:DB.MENUS.reduce((n,m)=>n+m.materials.reduce((a,x)=>a+(x.subs||[]).length,0),0),entries:DB.ENTRIES.length};
+  audit.pass=audit.missingMaterials.length===0&&audit.missingSubs.length===0&&audit.duplicateIds.length===0&&audit.orphanEntries.length===0;
+  DB.DEEP_AUDIT=audit;
+  DB.DEEP_AUDIT_VERSION='2026-08-30-deep-v1';
+})();
 </script>
 <script>
 /* ============================================================
@@ -4843,7 +5582,7 @@ function audioUI(url, src, label){
       +'<div class="audio-progress"><i></i></div>'
       +'<div class="audio-src">'+(src?esc(src):"")+'</div></div></div>';
   }
-  return '<div class="audio-unavail">'+icon("audio",16)+'<span>Audio belum tersedia — konten audio memerlukan sumber berlisensi.</span></div>';
+  return '';
 }
 
 /* ---------- Breadcrumb ---------- */
@@ -4884,9 +5623,9 @@ function entryView(id){
   addRecent(e.id);
   const menu = DB.MENUS.find(m=>m.id===e.menu);
   const mat = menu ? menu.materials.find(m=>m.id===e.material) : null;
-  let cr = [{label:"Home", href:"#/home"},{label:menu?menu.name:"", href:menu?"#/menu/"+menu.id:null}];
-  let backHref = "#/menu/"+menu.id;
-  let backLabel = menu ? menu.name : "";
+  let cr = [{label:"Home", href:"#/home"},{label:menu?menu.name:"Jelajah", href:menu?"#/menu/"+menu.id:"#/jelajah"}];
+  let backHref = menu ? "#/menu/"+menu.id : "#/jelajah";
+  let backLabel = menu ? menu.name : "Jelajah";
   if(mat){
     cr.push({label:mat.name, href:"#/material/"+menu.id+"/"+mat.id});
     backHref = "#/material/"+menu.id+"/"+mat.id; backLabel = mat.name;
@@ -4952,7 +5691,7 @@ function subLabel(e){
   const map = {
     "wajib":"Wajib","sunnah":"Sunnah","tata-cara":"Tata Cara","gerakan":"Gerakan","bacaan":"Bacaan",
     "ketentuan":"Ketentuan","kondisi-khusus":"Kondisi Khusus","jenis":"Jenis","fitur":"Fitur","level":"Tahap",
-    "tauhid":"Tauhid","asmaul-husna":"Asmaul Husna","sifat":"Sifat Allah","sub":"Submateri",
+    "tauhid":"Tauhid","asmaul-husna":"Asmaul Husna","sifat":"Sifat Allah","sifat-jaiz":"Sifat Jaiz Allah","sub":"Submateri",
     "syarat-wajib":"Syarat Wajib","syarat-sah":"Syarat Sah","rukun":"Rukun Shalat","wajib-hukum":"Wajib Shalat",
     "sunnah-hukum":"Sunnah Shalat","makruh":"Makruh Shalat","pembatal":"Pembatal Shalat","jamaah":"Shalat Berjamaah",
     "perjalanan":"Shalat dalam Perjalanan","harian":"Doa Harian","tidur":"Doa Tidur","makan":"Doa Makan",
@@ -5351,8 +6090,8 @@ function router(){
       default: html = homeView();
     }
   }catch(err){
-    console.error(err);
-    html = errorView("Terjadi kesalahan saat memuat halaman.");
+    console.error("SILMIKAFFAH ROUTER ERROR", {route:r.raw, error:err});
+    html = errorView("Halaman tidak dapat dimuat. Silakan kembali satu tingkat lalu buka kembali entry tersebut.");
   }
   main.innerHTML = html;
   bindActions();
@@ -5702,11 +6441,7 @@ NABI25.forEach((n,i)=>{
 const originalRowEntry=rowEntry;
 rowEntry=function(e,href){ if(e && e.hidden) return ""; return originalRowEntry(e,href); };
 
-/* ---------- Iman kepada malaikat: individual entries ---------- */
-const MALAIKAT_FINAL=[
- ["jibril","Jibril","Menyampaikan wahyu kepada para nabi dan rasul."],["mikail","Mikail","Dikenal dalam hadis sebagai salah satu malaikat besar; rincian tugas tidak diperluas tanpa dalil."],["israfil","Israfil","Dikenal dalam riwayat sebagai malaikat yang meniup sangkakala; rincian harus merujuk hadis yang sahih."],["malik","Malik","Penjaga Jahannam; disebut dalam QS. Az-Zukhruf 43:77."],["munkar","Munkar","Nama yang dikenal dalam hadis tentang pertanyaan di alam kubur."],["nakir","Nakir","Nama yang dikenal dalam hadis tentang pertanyaan di alam kubur."],["raqib","Raqib","Istilah yang umum digunakan untuk malaikat pencatat amal; penjelasan harus dibedakan antara istilah Al-Qur'an dan nama populer."],["atid","Atid","Istilah yang umum digunakan bersama Raqib untuk pencatatan amal; detail harus dijelaskan berdasarkan sumber."],["malakul-maut","Malaikat Maut","Malaikat yang ditugaskan mencabut nyawa; Al-Qur'an menyebut Malakul Maut pada QS. As-Sajdah 32:11 tanpa memberikan nama Izrail."]
-];
-MALAIKAT_FINAL.forEach(m=>{const id="malaikat-"+m[0]; if(!getEntry(id)) addEntry({id,menu:2,material:"iman-kepada-malaikat",type:"article",title:m[1],summary:m[2],body:[{h:"Tugas",p:[m[2]]},{h:"Catatan",p:["Aplikasi hanya menampilkan rincian yang dapat ditautkan ke sumber; nama atau tugas yang tidak tegas sumbernya tidak dianggap pasti."]}],sources:["quran"],tags:["malaikat","iman"]});});
+/* ---------- Iman kepada malaikat: consolidated above ---------- */
 
 /* ---------- Surah ayah detail: add compact audio ---------- */
 function quranAyahView(key){
@@ -5785,8 +6520,8 @@ DB.ENTRIES.forEach(e=>{if(!SIDX.some(x=>x.id===e.id)){SIDX.push({id:e.id,type:"e
     haji:[['pengertian','Pengertian Haji & Umrah'],['syarat','Syarat Haji & Umrah'],['rukun-haji','Rukun Haji'],['rukun-umrah','Rukun Umrah'],['wajib','Wajib Haji & Umrah'],['manasik','Manasik'],['ihram','Ihram & Miqat'],['tawaf','Tawaf'],['sai','Sa’i'],['tahallul','Tahallul'],['larangan-ihram','Larangan Ihram'],['doa','Doa Haji & Umrah']]
    },
    2:{
-    'iman-kepada-allah':[['pengertian','Pengertian Iman kepada Allah'],['tauhid','Tauhid'],['asmaul-husna','Asmaul Husna'],['sifat','Sifat Allah'],['buah-iman','Buah Iman kepada Allah']],
-    'iman-kepada-malaikat':[['pengertian','Pengertian Iman kepada Malaikat'],['jibril','Malaikat Jibril'],['mikail','Malaikat Mikail'],['israfil','Malaikat Israfil'],['malik','Malaikat Malik'],['munkar-nakir','Munkar & Nakir'],['raqib-atid','Raqib & Atid'],['malaikat-maut','Malaikat Maut'],['tugas','Tugas Para Malaikat']],
+    'iman-kepada-allah':[['pengertian','Pengertian Iman kepada Allah'],['tauhid','Tauhid'],['asmaul-husna','Asmaul Husna'],['sifat','Sifat Allah'],['sifat-jaiz','Sifat Jaiz Allah'],['buah-iman','Buah Iman kepada Allah']],
+    'iman-kepada-malaikat':[['pengertian','Pengertian Iman kepada Malaikat'],['jibril','Malaikat Jibril'],['mikail','Malaikat Mikail'],['israfil','Malaikat Israfil'],['malaikat-maut','Malaikat Maut'],['munkar-nakir','Munkar & Nakir'],['raqib-atid','Raqib & Atid'],['malik','Malaikat Malik']],
     'iman-kepada-kitab':[['pengertian','Pengertian Iman kepada Kitab'],['alquran','Al-Qur’an'],['wahyu','Wahyu & Penurunan Al-Qur’an'],['fungsi','Fungsi Al-Qur’an'],['adab','Adab terhadap Al-Qur’an']],
     'iman-kepada-rasul':[['pengertian','Pengertian Iman kepada Rasul'],['sifat-rasul','Sifat Para Rasul'],['nabi-rasul','Nabi & Rasul'],['mukjizat','Mukjizat'],['ulul-azmi','Ulul Azmi']],
     'iman-kepada-hari-akhir':[['pengertian','Pengertian Hari Akhir'],['alam-barzakh','Alam Barzakh'],['kiamat','Hari Kiamat'],['kebangkitan','Kebangkitan'],['hisab','Hisab & Catatan Amal'],['mizan','Mizan'],['shirath','Shirath'],['surga','Surga'],['neraka','Neraka']],
@@ -5987,6 +6722,133 @@ DB.ENTRIES.forEach(e=>{if(!SIDX.some(x=>x.id===e.id)){SIDX.push({id:e.id,type:"e
   if(!DB.ENTRIES.some(e=>e.menu===9&&e.material==="sahabat-tabiin"&&e.sub==="sahabat")) addEntry({id:"master-9-sahabat-tabiin-sahabat",menu:9,material:"sahabat-tabiin",sub:"sahabat",type:"person",title:"Sahabat Nabi",summary:"Generasi yang bertemu dan beriman kepada Nabi Muhammad ﷺ serta menjadi sumber penting dalam transmisi ilmu Islam.",body:[{h:"Pengertian",p:["Sahabat adalah orang yang bertemu Nabi Muhammad ﷺ dalam keadaan beriman dan wafat dalam Islam menurut definisi yang digunakan ulama hadis." ]},{h:"Ruang Lingkup",list:["Khalifah dan sahabat utama.","Muhajirin dan Anshar.","Perawi hadis dari kalangan sahabat."]},{h:"Catatan",p:["Biografi setiap tokoh ditempatkan sebagai entry tersendiri dan tidak dicampur dengan Nabi/Rasul."]}],sources:["muslim"],tags:["tokoh","sahabat"],status:"ready"});
   if(!DB.ENTRIES.some(e=>e.menu===9&&e.material==="tokoh-perempuan"&&e.sub==="istri-nabi")) addEntry({id:"master-9-tokoh-perempuan-istri-nabi",menu:9,material:"tokoh-perempuan",sub:"istri-nabi",type:"person",title:"Keluarga Nabi & Perempuan Teladan",summary:"Pembahasan perempuan teladan dalam keluarga Nabi dan sejarah Islam dengan pemisahan fakta, riwayat, dan sumber.",body:[{h:"Pengertian",p:["Materi ini membahas perempuan teladan yang memiliki kedudukan penting dalam sejarah Islam, terutama keluarga Nabi ﷺ." ]},{h:"Ruang Lingkup",list:["Istri-istri Nabi ﷺ.","Putri dan keluarga Nabi.","Perempuan sahabiyah dan tokoh teladan yang relevan."]},{h:"Catatan Sumber",p:["Detail biografi harus mengikuti sumber yang dapat ditelusuri; nama, tanggal, dan hubungan keluarga yang tidak pasti tidak boleh dipaksakan sebagai fakta."]}],sources:["muslim"],tags:["tokoh","perempuan"],status:"ready"});
 
+
+  /* ============================================================
+     SILMIKAFFAH — MASTER CONTENT COMPLETION 01–14
+     Tujuan: setiap material memiliki submateri; setiap submateri
+     memiliki entry nyata dengan field domain, isi inti, sumber,
+     relasi, media/audio state, dan status verifikasi.
+     ============================================================ */
+  const DOMAIN_FIELDS = {
+    article:['id','menu','material','sub','title','summary','body','sources','related','tags','status','updatedAt'],
+    quran:['surah','surahNumber','ayahNumber','juz','arabic.text','transliteration','translation','audio','tafsir','sources'],
+    lesson:['level','page','objective','material','exercise','evaluation','audio','sources'],
+    hadith:['collection','book','chapter','number','arabic.text','translation','narrator','grade','topic','sources'],
+    doa:['category','arabic.text','transliteration','translation','audio','occasion','sources'],
+    dzikir:['category','arabic.text','transliteration','translation','audio','time','count','sources'],
+    person:['name','kunyah','birth','death','family','teachers','students','contribution','events','sources'],
+    calendar:['hijriDate','gregorianDate','month','day','events','historyLinks','sources'],
+    place:['name','type','location','history','coordinates','related','sources']
+  };
+
+  function completionType(mid,mat,sub){
+    if(mid===3 && mat==='iqra') return 'lesson';
+    if(mid===3 && (mat==='mushaf'||mat==='juz'||mat==='juz-amma'||mat==='tafsir')) return 'quran';
+    if(mid===4 && mat==='hadis') return 'hadith';
+    if(mid===6 && mat==='doa') return 'doa';
+    if(mid===6 && mat==='dzikir') return 'dzikir';
+    if(mid===9) return 'person';
+    if(mid===10) return 'calendar';
+    return 'article';
+  }
+  function completionSource(mid){
+    if([1,2,3,4,5,6,7,8].includes(mid)) return ['quran','bukhari','muslim'];
+    if(mid===10) return ['kemenag','app'];
+    return ['app'];
+  }
+  function completionBody(menu, material, sub, title, type){
+    const m = menu.name;
+    const base = {
+      Pengertian:[title+' merupakan bagian dari '+m+' dalam SILMIKAFFAH. Entry ini menjadi rumah utama untuk topik tersebut agar pembahasan tidak diduplikasi di menu lain.'],
+      'Ruang Lingkup':['Definisi dan istilah utama.','Unsur, jenis, atau tahapan yang relevan dengan topik.','Hubungan topik dengan materi lain di SILMIKAFFAH.'],
+      'Isi Materi':['Pembahasan dimulai dari konsep dasar kemudian menuju rincian.','Contoh, langkah, atau penerapan ditampilkan sesuai jenis materi.','Perbedaan pendapat, riwayat, atau data yang belum pasti diberi label dan tidak dipaksakan sebagai fakta.'],
+      'Field Data':['ID dan parent menu/material/submateri.','Judul, ringkasan, body, tags, relasi, sumber, status, dan tanggal pembaruan.','Field khusus domain ditambahkan bila topik membutuhkan Arab, audio, nomor hadis, data kalender, atau data tokoh.'],
+      'Media & Audio':['Teks Arab, transliterasi, arti, dan audio disediakan bila memang relevan.','Tombol audio menggunakan ikon speaker kecil.','Jika sumber audio belum tersedia, entry ditandai NEEDS_AUDIO; URL audio tidak boleh dikarang.'],
+      'Relasi':['Related entries menghubungkan topik dengan materi yang benar-benar berkaitan.','Satu topik mempunyai satu rumah utama; menu lain menggunakan relasi.','Back navigation harus kembali ke parent sebelumnya.'],
+      'Sumber & Verifikasi':['Sumber dicatat pada entry.','Klaim agama, ayat, hadis, dan fakta sejarah harus dapat ditelusuri.','Status READY/NEEDS_REVIEW/NEEDS_AUDIO/NEEDS_SOURCE digunakan secara jujur.']
+    };
+    if(type==='quran'){
+      base['Isi Materi']=['Gunakan data Al-Qur’an dari API/sumber Qur’an yang sah dan terverifikasi.','Jangan membuat atau mengubah teks ayat, terjemahan, nomor ayat, pembagian juz, atau audio secara manual.','Relasikan surah, ayat, juz, tafsir, dan audio berdasarkan identifier sumber.'];
+      base['Field Data']=['surah, nomor surah, nomor ayat, juz, teks Arab, transliterasi/terjemahan bila tersedia, audio, tafsir, sumber.'];
+    }
+    if(type==='hadith'){
+      base['Isi Materi']=['Hadis ditampilkan bersama koleksi, kitab/bab, nomor, perawi, teks, dan derajat bila sumber menyediakannya.','Tema berfungsi sebagai tag/filter, bukan halaman hadis kedua.','Jangan mengarang teks, nomor, sanad, atau derajat hadis.'];
+      base['Field Data']=['collection, book, chapter, number, Arabic text, translation, narrator, grade, topic, source.'];
+    }
+    if(type==='lesson'){
+      base['Isi Materi']=['Materi disusun bertahap dari halaman pembelajaran menuju latihan dan evaluasi.','Setiap level memiliki urutan halaman dan progress.','Materi original aplikasi tidak menyalin scan buku berhak cipta tanpa hak penggunaan.'];
+      base['Field Data']=['level, page, objective, material, exercise, evaluation, audio, source.'];
+    }
+    if(type==='person'){
+      base['Isi Materi']=['Biografi dipisahkan dari Nabi & Rasul.','Data keluarga, guru, murid, karya, peristiwa, dan kontribusi hanya ditampilkan bila mempunyai sumber.','Tanggal yang tidak pasti diberi catatan ketidakpastian.'];
+      base['Field Data']=['name, birth/death bila diketahui, family, teachers, students, contribution, events, sources.'];
+    }
+    if(type==='calendar'){
+      base['Isi Materi']=['Tampilkan tanggal Hijriah dan Masehi, peristiwa yang terhubung, serta daftar sejarah berdasarkan tanggal.','Kalender bulanan harus dapat dinavigasi tanpa kehilangan bulan yang sedang dibuka.','Tanggal/peringatan yang diperselisihkan diberi catatan.'];
+      base['Field Data']=['hijriDate, gregorianDate, month, day, events, historyLinks, sources.'];
+    }
+    return Object.entries(base).map(([h,v])=>({h,p:v}));
+  }
+
+  /* Replace only placeholder/gap-filled entries. Existing curated entries remain intact. */
+  DB.MENUS.forEach(menu=>{
+    menu.materials.forEach(mat=>{
+      (mat.subs||[]).forEach(([sub,title])=>{
+        const id='master-'+menu.id+'-'+mat.id+'-'+sub.replace(/[^a-z0-9]+/gi,'-').toLowerCase();
+        let e=DB.ENTRIES.find(x=>x.id===id);
+        if(!e){
+          e={id,menu:menu.id,material:mat.id,sub,type:completionType(menu.id,mat.id,sub),title,summary:completionBody(menu,mat,sub,title,completionType(menu.id,mat.id,sub))[0].p[0],body:completionBody(menu,mat,sub,title,completionType(menu.id,mat.id,sub)),sources:completionSource(menu.id),related:[],tags:[menu.name,mat.name,title],status:'needs-review',updatedAt:'2026-08-30'};
+          addEntry(e);
+        } else if(e.id.startsWith('master-')) {
+          e.type=completionType(menu.id,mat.id,sub);
+          e.title=title;
+          e.summary=completionBody(menu,mat,sub,title,e.type)[0].p[0];
+          e.body=completionBody(menu,mat,sub,title,e.type);
+          e.sources=e.sources && e.sources.length ? e.sources : completionSource(menu.id);
+          e.related=e.related||[];
+          e.tags=Array.from(new Set([...(e.tags||[]),menu.name,mat.name,title]));
+          e.status=e.status||'needs-review';
+          e.updatedAt='2026-08-30';
+        }
+        e.fieldSpec = DOMAIN_FIELDS[e.type] || DOMAIN_FIELDS.article;
+        e.parentId='sub:'+menu.id+'/'+mat.id+'/'+sub;
+      });
+    });
+  });
+
+  /* Material roots: every material has one navigable parent entry. */
+  DB.MENUS.forEach(menu=>menu.materials.forEach(mat=>{
+    const id='master-'+menu.id+'-'+mat.id;
+    let e=DB.ENTRIES.find(x=>x.id===id);
+    if(!e){
+      const type=completionType(menu.id,mat.id,'');
+      e={id,menu:menu.id,material:mat.id,type,title:mat.name,summary:mat.name+' — materi induk dalam '+menu.name+'.',body:completionBody(menu,mat,'',mat.name,type),sources:completionSource(menu.id),related:[],tags:[menu.name,mat.name],status:'needs-review',updatedAt:'2026-08-30'};
+      addEntry(e);
+    }
+    e.fieldSpec=DOMAIN_FIELDS[e.type]||DOMAIN_FIELDS.article;
+    e.parentId='mat:'+menu.id+'/'+mat.id;
+  }));
+
+  /* Global integrity audit: no menu/material/sub without an entry. */
+  DB.CONTENT_AUDIT={menus:[],missingMaterials:[],missingSubmaterials:[],missingFields:[],duplicateIds:[],orphanEntries:[]};
+  const seenIds=new Set();
+  DB.ENTRIES.forEach(e=>{if(seenIds.has(e.id)) DB.CONTENT_AUDIT.duplicateIds.push(e.id); seenIds.add(e.id); if(!DB.MENUS.some(m=>m.id===e.menu)) DB.CONTENT_AUDIT.orphanEntries.push(e.id);});
+  DB.MENUS.forEach(menu=>{
+    const row={id:menu.id,name:menu.name,materials:0,submaterials:0,entries:0};
+    menu.materials.forEach(mat=>{
+      row.materials++;
+      if(!mat.subs || !mat.subs.length) DB.CONTENT_AUDIT.missingMaterials.push(menu.id+':'+mat.id);
+      (mat.subs||[]).forEach(([sub])=>{
+        row.submaterials++;
+        if(!DB.ENTRIES.some(e=>e.menu===menu.id&&e.material===mat.id&&e.sub===sub)) DB.CONTENT_AUDIT.missingSubmaterials.push(menu.id+':'+mat.id+':'+sub);
+      });
+    });
+    row.entries=DB.ENTRIES.filter(e=>e.menu===menu.id).length;
+    DB.CONTENT_AUDIT.menus.push(row);
+  });
+  DB.CONTENT_AUDIT.total={menus:14,materials:DB.MENUS.reduce((n,m)=>n+m.materials.length,0),submaterials:DB.MENUS.reduce((n,m)=>n+m.materials.reduce((a,x)=>a+(x.subs||[]).length,0),0),entries:DB.ENTRIES.length};
+  DB.CONTENT_AUDIT.pass=DB.CONTENT_AUDIT.missingMaterials.length===0&&DB.CONTENT_AUDIT.missingSubmaterials.length===0&&DB.CONTENT_AUDIT.duplicateIds.length===0&&DB.CONTENT_AUDIT.orphanEntries.length===0;
+
   /* Compact audit data accessible from console and About page. */
   DB.MASTER_AUDIT=DB.MENUS.map(m=>({
     menu:m.id,name:m.name,materials:m.materials.length,
@@ -5995,8 +6857,126 @@ DB.ENTRIES.forEach(e=>{if(!SIDX.some(x=>x.id===e.id)){SIDX.push({id:e.id,type:"e
     empty:DB.ENTRIES.filter(e=>e.menu===m.id && !e.body.length && !e.summary && !e.arabic).length
   }));
   DB.MASTER_AUDIT_TOTAL={menus:DB.MENUS.length,materials:DB.MENUS.reduce((n,m)=>n+m.materials.length,0),submaterials:DB.MASTER_AUDIT.reduce((n,m)=>n+m.submaterials,0),entries:DB.ENTRIES.length};
+  const idSeen=new Set(), duplicateIds=[];
+  DB.ENTRIES.forEach(e=>{if(idSeen.has(e.id)) duplicateIds.push(e.id); idSeen.add(e.id);});
+  DB.MASTER_AUDIT_TOTAL.duplicateIds=[...new Set(duplicateIds)];
+  DB.MASTER_AUDIT_TOTAL.orphanEntries=DB.ENTRIES.filter(e=>!DB.MENUS.some(m=>m.id===e.menu)).map(e=>e.id);
 })();
 
+
+
+/* ============================================================
+   SILMIKAFFAH — FINAL POST-COMPLETION AUDIT & CLEANUP
+   Jalankan SETELAH seluruh master completion agar audit benar-benar
+   menggambarkan keadaan database akhir.
+   ============================================================ */
+(function(){
+  const DB=window.SILMIKAFFAH;
+  // Fix duplicate generated ID without deleting either valid branch.
+  const seen=new Map();
+  DB.ENTRIES.forEach(e=>{
+    const n=seen.get(e.id)||0; seen.set(e.id,n+1);
+    if(n>0){ e.id=e.id+'-'+(n+1); e.slug=e.id; }
+  });
+  // Remove accidental undefined Nabi entry generated by an older patch.
+  DB.ENTRIES=DB.ENTRIES.filter(e=>!(e.id==='nabi-undefined'||e.title==null||e.title==='undefined'));
+
+  // Asmaul Husna: explicit Hijjaz listening mode metadata; do not embed copyrighted recording.
+  const ah=DB.ENTRIES.find(e=>e.id==='asmaul-husna');
+  if(ah){
+    ah.audioMode={
+      individual:'Pelafalan individual per nama',
+      collection:'Metode bacaan Hijjaz — rangkaian 99 nama',
+      provider:'Gunakan rekaman yang memang berlisensi/diizinkan; jangan menanam rekaman berhak cipta tanpa izin.',
+      fallback:'TTS perangkat untuk pelafalan individual bila audio sumber belum tersedia.'
+    };
+    ah.body=ah.body||[];
+    if(!ah.body.some(x=>x.h==='Metode Bacaan Hijjaz')) ah.body.push({h:'Metode Bacaan Hijjaz',p:['Sediakan tombol pemutar rangkaian 99 Asmaul Husna dengan metode bacaan Hijjaz hanya jika sumber rekamannya memiliki izin penggunaan. Tombol individual tetap berada di setiap nama.']});
+  }
+  // Sifat Jaiz Allah must remain under Iman kepada Allah and not duplicated elsewhere.
+  if(!DB.ENTRIES.some(e=>e.id==='sifat-jaiz-allah')){
+    DB.ENTRIES.push({id:'sifat-jaiz-allah',menu:2,material:'iman-kepada-allah',sub:'sifat-jaiz',type:'article',title:'Sifat Jaiz Allah',summary:'Pembahasan satu sifat jaiz Allah dalam istilah ilmu tauhid: Allah berbuat atau tidak berbuat terhadap perkara yang mumkin sesuai kehendak-Nya.',body:[{h:'Pengertian',p:['Dalam pembahasan ilmu tauhid, sifat jaiz Allah dirumuskan sebagai fi‘lu kulli mumkinin aw tarkuhu: Allah berbuat atau tidak berbuat terhadap perkara yang mumkin sesuai kehendak dan hikmah-Nya.']},{h:'Catatan',p:['Ini adalah istilah dalam ilmu kalam/tauhid. Aplikasi perlu menyebutkan kitab/mazhab rujukan yang digunakan karena rumusan dan pembagian sifat dapat berbeda dalam tradisi keilmuan.']}],sources:['app'],related:['iman-kepada-allah','sifat','asmaul-husna'],tags:['akidah','sifat-allah'],status:'needs-review',updatedAt:'2026-08-30'});
+  }
+
+  // Strengthen entries that were previously structurally weak.
+  const weakFix={
+    'bacaan-takbir':'Bacaan Takbiratul Ihram — lafaz pembuka shalat dan penjelasan penggunaannya.',
+    'bacaan-iftitah':'Doa Iftitah — bacaan yang dianjurkan pada awal shalat setelah takbiratul ihram.',
+    'bacaan-fatihah':'Surat Al-Fatihah — bacaan pokok dalam setiap rakaat shalat.',
+    'bacaan-rukuk':'Bacaan Rukuk — tasbih yang dibaca ketika rukuk.',
+    'bacaan-itidal':'Bacaan I’tidal — bacaan ketika bangkit dari rukuk.',
+    'bacaan-sujud':'Bacaan Sujud — tasbih yang dibaca ketika sujud.',
+    'bacaan-duduk':'Doa Duduk antara Dua Sujud — permohonan ampun dan kebaikan ketika duduk di antara dua sujud.',
+    'bacaan-tasyahud':'Tasyahud — bacaan tahiyyat dalam shalat.',
+    'bacaan-shalawat':'Shalawat Ibrahimiyah — bacaan shalawat dalam tasyahud akhir.',
+    'bacaan-salam':'Salam — penutup shalat dengan salam ke kanan dan kiri sesuai tata cara yang dipelajari.',
+    'talbiyah':'Talbiyah — bacaan yang diucapkan ketika ihram dalam manasik haji atau umrah.',
+    'doa-ziarah-kubur':'Doa Ziarah Kubur — salam dan doa untuk penghuni kubur yang bersumber dari hadis.',
+    'doa-setelah-shalat':'Doa setelah Shalat — doa yang diriwayatkan setelah salam, termasuk Allahumma antas-salam.',
+    'doa-ramadan':'Doa Berbuka Puasa — doa yang diriwayatkan ketika berbuka.',
+    'doa-qunut':'Doa Qunut — doa yang digunakan dalam konteks qunut sesuai praktik dan pendapat fiqih yang dirujuk.'
+  };
+  Object.keys(weakFix).forEach(id=>{const e=DB.ENTRIES.find(x=>x.id===id);if(e){e.summary=weakFix[id];e.fieldSpec=['id','menu','material','sub','title','summary','arabic.text','arabic.translit','arabic.arti','audio','source','sources','related','tags','status','updatedAt'];e.status=e.status||'ready';}});
+
+  // Add a small, verified starter set of hadith metadata; full collections remain API-driven.
+  const H=[
+    ['hadis-niat','Niat','Amal dinilai berdasarkan niat; rujukan utama Shahih al-Bukhari no. 1.','bukhari','1'],
+    ['hadis-lima-rukun','Islam dibangun di atas lima','Hadis tentang lima rukun Islam; Shahih al-Bukhari no. 8.','bukhari','8'],
+    ['hadis-jibril','Hadis Jibril','Hadis yang memuat penjelasan Islam, iman, ihsan, dan tanda-tanda kiamat; Shahih Muslim no. 8.','muslim','8'],
+    ['hadis-berkata-baik','Berkata Baik atau Diam','Ajaran menjaga ucapan dan menghormati tetangga serta tamu; Shahih al-Bukhari dan Muslim.','bukhari',''],
+    ['hadis-kebersihan','Bersuci','Hadis tentang bersuci dan keutamaannya; rujukan terdapat dalam Shahih Muslim.','muslim',''],
+    ['hadis-rahmat','Kasih Sayang','Hadis-hadis tentang rahmat kepada sesama dan makhluk; sumber dan nomor harus ditampilkan dari koleksi yang dipakai.','muslim',''],
+    ['hadis-ilmu','Menuntut Ilmu','Hadis tentang menempuh jalan mencari ilmu; tampilkan teks dan nomor dari koleksi API yang terverifikasi.','muslim',''],
+    ['hadis-amanah','Amanah','Hadis-hadis tentang amanah dan larangan khianat; tampilkan referensi koleksi secara spesifik.','bukhari','']
+  ];
+  H.forEach(([id,title,summary,src,num])=>{
+    if(!DB.ENTRIES.some(e=>e.id===id))DB.ENTRIES.push({id,menu:4,material:'hadis',sub:'tema',type:'hadith',title,summary,body:[{h:'Ringkasan',p:[summary]},{h:'Metadata',list:['Koleksi: '+(src==='bukhari'?'Shahih al-Bukhari':'Shahih Muslim'),num?('Nomor: '+num):'Nomor: dimuat dari sumber/API saat detail dibuka.']},{h:'Aturan',p:['Jangan menampilkan teks hadis penuh dari sumber yang tidak menyediakan izin penggunaan; ambil dari sumber/API yang sah dan tampilkan rujukan koleksi.']}],sources:[src],related:['hadis','tema-hadis'],tags:['hadis','sunnah'],status:num?'ready':'needs-review',updatedAt:'2026-08-30'});
+  });
+  if(DB.SOURCES && !DB.SOURCES.quranfoundation) DB.SOURCES.quranfoundation={id:'quranfoundation',title:'Quran Foundation Content API',type:'API',note:'Sumber API resmi untuk content Al-Qur’an; integrasi produksi memerlukan backend credentials.'};
+
+  // Enrich all remaining master-generated entries with domain-specific study guidance.
+  const domain={
+    1:{name:'Rukun Islam',sections:['Pengertian dan kedudukan','Syarat/rukun/wajib/sunnah bila relevan','Tata cara dan bacaan','Kesalahan umum','Dalil dan sumber']},
+    2:{name:'Rukun Iman',sections:['Pengertian akidah','Dalil Al-Qur’an dan hadis','Rincian konsep','Hikmah dan konsekuensi iman','Catatan perbedaan pendapat']},
+    3:{name:'Al-Qur’an',sections:['Pengertian dan ruang lingkup','Data mushaf/ayat','Cara membaca dan tajwid','Tafsir/Ulumul Qur’an','Sumber API atau kitab']},
+    4:{name:'Hadis & Sunnah',sections:['Definisi','Koleksi/kitab','Sanad, matan, rawi','Nomor dan derajat','Tema dan syarah']},
+    5:{name:'Fiqih',sections:['Pengertian hukum','Dalil','Syarat/rukun','Tata cara/contoh','Perbedaan pendapat dan rujukan']},
+    6:{name:'Doa & Dzikir',sections:['Situasi/waktu','Teks Arab','Transliterasi','Arti','Sumber dan audio']},
+    7:{name:'Akhlak, Adab & Tazkiyah',sections:['Pengertian','Dalil','Contoh perilaku','Latihan/penerapan','Catatan']},
+    8:{name:'Sirah & Sejarah Islam',sections:['Kronologi','Tokoh','Peristiwa','Dampak/pelajaran','Sumber primer/sekunder']},
+    9:{name:'Tokoh & Ulama',sections:['Biografi','Guru/murid bila diketahui','Karya','Kontribusi','Sumber dan ketidakpastian tanggal']},
+    10:{name:'Kalender Hijriah',sections:['Tanggal Hijriah','Konversi Masehi','Peristiwa/peringatan','Relasi ke sejarah','Sumber kalender']},
+    11:{name:'Pendidikan & Dakwah',sections:['Tujuan','Prinsip','Metode','Contoh penerapan','Etika']},
+    12:{name:'Bahasa Arab & Kamus Islam',sections:['Istilah','Pelafalan','Contoh','Tata bahasa','Latihan']},
+    13:{name:'Peradaban Islam',sections:['Latar sejarah','Tempat/lembaga','Ilmu/ekonomi/seni','Kontribusi','Sumber sejarah']},
+    14:{name:'Islam & Kehidupan Kontemporer',sections:['Masalah modern','Prinsip etika','Fakta dan konteks','Perbedaan pandangan','Sumber/rujukan']}
+  };
+  DB.ENTRIES.forEach(e=>{
+    if(!e.body||!e.body.length)e.body=[];
+    const d=domain[e.menu];
+    if(e.id.startsWith('master-') && d){
+      if(!e.body.some(x=>x.h==='Audit Materi')) e.body.push({h:'Audit Materi',list:d.sections});
+      if(!e.body.some(x=>x.h==='Status Isi')) e.body.push({h:'Status Isi',p:['Entry ini adalah bagian dari struktur master SILMIKAFFAH. Klaim yang memerlukan verifikasi sumber tetap diberi status NEEDS_REVIEW sampai sumbernya diperiksa.']});
+    }
+    e.fieldSpec=e.fieldSpec||['id','menu','material','sub','title','summary','body','sources','related','tags','status','updatedAt'];
+    e.parentId=e.parentId||(e.sub?('sub:'+e.menu+'/'+e.material+'/'+e.sub):('mat:'+e.menu+'/'+e.material));
+    e.updatedAt=e.updatedAt||'2026-08-30';
+  });
+
+  // Final audit AFTER completion.
+  const audit={menus:[],missingMaterials:[],missingSubmaterials:[],duplicateIds:[],orphanEntries:[],weakEntries:[],needsReview:[]};
+  const ids=new Set();
+  DB.ENTRIES.forEach(e=>{if(ids.has(e.id))audit.duplicateIds.push(e.id);ids.add(e.id);if(!DB.MENUS.some(m=>m.id===e.menu))audit.orphanEntries.push(e.id);if(!e.summary||!e.body?.length||!e.sources?.length)audit.weakEntries.push(e.id);if(e.status==='needs-review')audit.needsReview.push(e.id);});
+  DB.MENUS.forEach(m=>{
+    const row={id:m.id,name:m.name,materials:m.materials.length,submaterials:0,entries:0};
+    m.materials.forEach(x=>{if(!x.subs?.length)audit.missingMaterials.push(m.id+':'+x.id);(x.subs||[]).forEach(([s])=>{row.submaterials++;if(!DB.ENTRIES.some(e=>e.menu===m.id&&e.material===x.id&&e.sub===s))audit.missingSubmaterials.push(m.id+':'+x.id+':'+s);});});
+    row.entries=DB.ENTRIES.filter(e=>e.menu===m.id).length;audit.menus.push(row);
+  });
+  audit.total={menus:DB.MENUS.length,materials:DB.MENUS.reduce((n,m)=>n+m.materials.length,0),submaterials:DB.MENUS.reduce((n,m)=>n+m.materials.reduce((a,x)=>a+(x.subs||[]).length,0),0),entries:DB.ENTRIES.length};
+  audit.pass=!audit.missingMaterials.length&&!audit.missingSubmaterials.length&&!audit.duplicateIds.length&&!audit.orphanEntries.length;
+  audit.note='READY means curated/verified enough for current release; NEEDS_REVIEW means content exists but requires source/editorial review. Do not claim 100% verified while NEEDS_REVIEW remains.';
+  DB.FINAL_AUDIT=audit;
+})();
 
 /* ---------- Init ---------- */
 function init(){
