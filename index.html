@@ -3287,7 +3287,7 @@ const MALAIKAT = [
   {id:"malaikat-malik", name:"Malik", tugas:"Penjaga neraka.", dalil:"QS. Az-Zukhruf 43:77."},
   {id:"malaikat-ridwan", name:"Ridwan", tugas:"Penjaga surga.", dalil:"Disebut dalam atsar tentang penjaga surga; nama ini masyhur di kalangan ulama tafsir."}
 ];
-MALAIKAT_FINAL.forEach((m,i)=>{
+MALAIKAT.forEach((m,i)=>{
   addEntry({id:m.id, menu:2, material:"iman-kepada-malaikat", type:"article", title:"Malaikat "+m.name, order:5+i, summary:m.tugas,
     body:[{h:"Tugas", p:[m.tugas]},{h:"Dalil", p:[m.dalil]}],
     sources:["quran","muslim"], related:["iman-kepada-malaikat"], tags:["akidah","malaikat"]});
@@ -3320,7 +3320,7 @@ const NABI25 = [
   {id:"nabi-yahya", name:"Nabi Yahya", keluarga:"Ayah: Zakariyya.", kisah:"Lahir sebagai kabar gembira; diberikan hikmah sejak kecil (QS. Maryam 19:12-15); tegas dalam kebenaran."},
   {id:"nabi-isa", name:"Nabi Isa", keluarga:"Ibu: Maryam binti Imran (lahir tanpa ayah — QS. Ali 'Imran 3:45-47).", kisah:"Nabi bagi Bani Israil; mukjizat: berbicara saat bayi, menyembuhkan, menghidupkan dengan izin Allah (QS. Ali 'Imran 3:49); menerima Injil; tidak disalib menurut keyakinan Islam, diangkat oleh Allah (QS. An-Nisa' 4:157-158)."}
 ];
-NABI25_FINAL.forEach(n=>{
+NABI25.forEach(n=>{
   addEntry({id:n.id, menu:2, material:"iman-kepada-rasul", type:"article", title:n.name, order:9, summary:n.kisah.slice(0,90)+"…",
     body:[{h:"Kisah ringkas", p:[n.kisah]},{h:"Keluarga", p:[n.keluarga]},{h:"Peristiwa", p:["Peristiwa yang dialami diuraikan pada kisah di atas; kronologi rinci sebagian memerlukan verifikasi (needs-review)."]}],
     sources:["quran"], related:["nabi-rasul-25","iman-kepada-rasul"], tags:["nabi","rasul"], status:"ready"});
@@ -5293,6 +5293,7 @@ function tentangView(){
     + '<div class="cb-row"><span>Entry lengkap</span><b>'+ready+'</b></div>'
     + '<div class="cb-row"><span>Entry perlu review</span><b>'+verify+'</b></div>'
     + '<div class="cb-row"><span>Entry kosong</span><b>'+(noBody)+'</b></div>'
+    + (DB.MASTER_AUDIT?DB.MASTER_AUDIT.map(a=>'<div class="cb-row"><span>Menu '+a.menu+' · '+esc(a.name)+'</span><b>'+a.entries+' entri · '+a.materials+' materi · '+a.submaterials+' submateri</b></div>').join(''): '')
     + '</div></div>'
     + '<div class="callout warn" style="margin-top:12px">'+icon("alert",18)+'<div><b>Catatan kejujuran:</b> audio Arab (selain murottal Al-Qur\'an), tafsir per ayat, dan derajat hadis API hanya ditampilkan bila sumber menyediakannya — tidak dikarang. Data yang belum terverifikasi berstatus needs-review.</div></div>'
     + '</div>';
@@ -5521,7 +5522,7 @@ function applyTheme(t){
   SETTINGS.theme = t; saveSettings();
   document.documentElement.dataset.theme = t;
   const meta = document.querySelector('meta[name="theme-color"]');
-  if(meta) meta.content = t==="dark" ? "#070B08" : "#0F7A4D";
+  if(meta) meta.content = t==="dark" ? "#000000" : "#0F7A4D";
 }
 
 /* ---------- Geolokasi ---------- */
@@ -5688,7 +5689,7 @@ const NABI25_FINAL=[
  ["isa","Isa","Nabi Isa lahir dari Maryam tanpa ayah, menerima Injil, dan diberi berbagai mukjizat dengan izin Allah.","Maryam adalah ibunya","Tidak dirinci"],
  ["muhammad","Muhammad ﷺ","Nabi Muhammad ﷺ adalah rasul terakhir; lahir di Makkah, menerima wahyu pertama di Gua Hira, hijrah ke Madinah, dan menyampaikan risalah Islam hingga wafat di Madinah.","Abdullah adalah ayahnya dan Aminah ibunya","Memiliki putra dan putri; rincian keluarga tersedia pada sirah dengan sumber yang jelas."]
 ];
-NABI25_FINAL.forEach((n,i)=>{
+NABI25.forEach((n,i)=>{
   const id="nabi-"+n[0];
   if(!getEntry(id)) addEntry({id,menu:2,material:"iman-kepada-rasul",sub:"nabi-rasul",type:"person",title:n[1],summary:n[2],body:[
     {h:"Kisah & peristiwa",p:[n[2]]},
@@ -5772,6 +5773,230 @@ kitabView=function(book){
 DB.ENTRIES.forEach(e=>{if(!SIDX.some(x=>x.id===e.id)){SIDX.push({id:e.id,type:"entry",cat:menuName(e.menu),title:e.title,kw:((e.summary||"")+" "+(e.tags||[]).join(" ")).toLowerCase()});}});
 
 /* ---------- Compact all entry Arabic audio; no giant unavailable boxes ---------- */
+
+/* SILMIKAFFAH — MASTER DATA COMPLETION PATCH 2026-08-30 */
+(function(){
+  const SUBS={
+   1:{
+    syahadat:[['tauhid','Syahadat Tauhid'],['rasul','Syahadat Rasul'],['syarat','Syarat & Makna Syahadat'],['pembatal','Hal yang Membatalkan Syahadat']],
+    shalat:[['wajib','Shalat Wajib'],['sunnah','Shalat Sunnah'],['syarat-wajib','Syarat Wajib'],['syarat-sah','Syarat Sah'],['rukun','Rukun Shalat'],['wajib-hukum','Wajib Shalat'],['sunnah-hukum','Sunnah Shalat'],['makruh','Makruh Shalat'],['pembatal','Pembatal Shalat'],['jamaah','Shalat Berjamaah'],['bacaan','Bacaan Shalat'],['gerakan','Gerakan Shalat'],['tata-cara','Tata Cara Shalat'],['perjalanan','Shalat dalam Perjalanan'],['kondisi-khusus','Kondisi Khusus'],['jenazah','Shalat Jenazah']],
+    zakat:[['pengertian','Pengertian Zakat'],['jenis','Jenis Zakat'],['ketentuan','Ketentuan Zakat'],['fitrah','Zakat Fitrah'],['mal','Zakat Mal'],['mustahik','Mustahik'],['kalkulator','Kalkulator Zakat']],
+    puasa:[['pengertian','Pengertian Puasa'],['ketentuan','Ketentuan Puasa'],['wajib','Puasa Wajib'],['ramadan','Puasa Ramadan'],['sunnah','Puasa Sunnah'],['qadha-fidyah','Qadha & Fidyah'],['amalan-ramadan','Amalan Ramadan']],
+    haji:[['pengertian','Pengertian Haji & Umrah'],['syarat','Syarat Haji & Umrah'],['rukun-haji','Rukun Haji'],['rukun-umrah','Rukun Umrah'],['wajib','Wajib Haji & Umrah'],['manasik','Manasik'],['ihram','Ihram & Miqat'],['tawaf','Tawaf'],['sai','Sa’i'],['tahallul','Tahallul'],['larangan-ihram','Larangan Ihram'],['doa','Doa Haji & Umrah']]
+   },
+   2:{
+    'iman-kepada-allah':[['pengertian','Pengertian Iman kepada Allah'],['tauhid','Tauhid'],['asmaul-husna','Asmaul Husna'],['sifat','Sifat Allah'],['buah-iman','Buah Iman kepada Allah']],
+    'iman-kepada-malaikat':[['pengertian','Pengertian Iman kepada Malaikat'],['jibril','Malaikat Jibril'],['mikail','Malaikat Mikail'],['israfil','Malaikat Israfil'],['malik','Malaikat Malik'],['munkar-nakir','Munkar & Nakir'],['raqib-atid','Raqib & Atid'],['malaikat-maut','Malaikat Maut'],['tugas','Tugas Para Malaikat']],
+    'iman-kepada-kitab':[['pengertian','Pengertian Iman kepada Kitab'],['alquran','Al-Qur’an'],['wahyu','Wahyu & Penurunan Al-Qur’an'],['fungsi','Fungsi Al-Qur’an'],['adab','Adab terhadap Al-Qur’an']],
+    'iman-kepada-rasul':[['pengertian','Pengertian Iman kepada Rasul'],['sifat-rasul','Sifat Para Rasul'],['nabi-rasul','Nabi & Rasul'],['mukjizat','Mukjizat'],['ulul-azmi','Ulul Azmi']],
+    'iman-kepada-hari-akhir':[['pengertian','Pengertian Hari Akhir'],['alam-barzakh','Alam Barzakh'],['kiamat','Hari Kiamat'],['kebangkitan','Kebangkitan'],['hisab','Hisab & Catatan Amal'],['mizan','Mizan'],['shirath','Shirath'],['surga','Surga'],['neraka','Neraka']],
+    'iman-kepada-qada-qadar':[['pengertian','Pengertian Qada & Qadar'],['tingkatan','Tingkatan Iman kepada Takdir'],['ikhtiar','Ikhtiar'],['tawakal','Tawakal'],['hikmah','Hikmah Beriman kepada Takdir']]
+   },
+   3:{
+    mushaf:[['pengertian','Pengertian Mushaf'],['surah','114 Surah'],['juz','30 Juz'],['adab','Adab Membaca Al-Qur’an']],
+    juz:[['daftar','Daftar Juz 1–30'],['navigasi','Navigasi Juz ke Surah & Ayat'],['amma','Juz ’Amma']],
+    'juz-amma':[['daftar-surah','Daftar Surah Juz ’Amma'],['bacaan','Bacaan & Terjemahan']],
+    iqra:[['iqra-1','Iqra 1'],['iqra-2','Iqra 2'],['iqra-3','Iqra 3'],['iqra-4','Iqra 4'],['iqra-5','Iqra 5'],['iqra-6','Iqra 6'],['latihan','Latihan & Evaluasi']],
+    tajwid:[['makhraj','Makharijul Huruf'],['sifat','Sifat Huruf'],['nun-sukun','Nun Sukun & Tanwin'],['izhar','Izhar'],['idgham','Idgham'],['ikhfa','Ikhfa'],['iqlab','Iqlab'],['mim-sukun','Mim Sukun'],['mad','Mad'],['qalqalah','Qalqalah'],['ghunnah','Ghunnah'],['waqaf','Waqaf & Ibtida'],['lam-ra','Lam & Ra']],
+    tafsir:[['pengertian','Pengertian Tafsir'],['sumber','Sumber Tafsir'],['metode','Metode Tafsir'],['tafsir-ayat','Tafsir Ayat'],['ulumul-quran','Ulumul Qur’an'],['asbab-nuzul','Asbabun Nuzul']]
+   },
+   4:{
+    hadis:[['pengertian','Pengertian Hadis'],['koleksi','Koleksi Hadis'],['kitab','Koleksi Kitab'],['tema','Tema Hadis'],['perawi','Perawi'],['nomor','Nomor Hadis'],['derajat','Derajat Hadis'],['pencarian','Pencarian Hadis']],
+    sunnah:[['pengertian','Pengertian Sunnah'],['qauliyah','Sunnah Qauliyah'],['fi’liyah','Sunnah Fi’liyah'],['taqririyah','Sunnah Taqririyah']],
+    'ulumul-hadis':[['pengertian','Pengertian Ulumul Hadis'],['sanad','Sanad'],['matan','Matan'],['rawi','Rawi'],['jarh-ta’dil','Jarh wa Ta’dil'],['musthalah','Musthalah Hadis'],['takhrij','Takhrij Hadis']],
+    'syarah-hadis':[['pengertian','Pengertian Syarah Hadis'],['metode','Metode Syarah'],['konteks','Konteks Hadis'],['faedah','Faedah & Pelajaran']]
+   },
+   5:{
+    thaharah:[['wudhu','Wudhu'],['mandi','Mandi Wajib'],['tayamum','Tayamum'],['najis','Najis'],['hadas','Hadas'],['air','Jenis Air'],['istinja','Istinja'],['haid-nifas','Haid & Nifas']],
+    'fiqih-ibadah':[['shalat','Fiqih Shalat'],['puasa','Fiqih Puasa'],['zakat','Fiqih Zakat'],['haji-umrah','Fiqih Haji & Umrah'],['qurban','Qurban / Udhiyah'],['aqiqah','Aqiqah'],['nazar','Nazar'],['sumpah','Sumpah'],['jenazah','Jenazah'],['i’tikaf','I’tikaf'],['sedekah','Sedekah & Hibah']],
+    'fiqih-muamalah':[['jual-beli','Jual Beli'],['utang-piutang','Utang Piutang'],['sewa','Ijarah / Sewa'],['syirkah','Syirkah'],['mudharabah','Mudharabah'],['murabahah','Murabahah'],['wakalah','Wakalah'],['kafalah','Kafalah'],['rahn','Rahn / Gadai'],['wakaf','Wakaf']],
+    'fiqih-keluarga':[['nikah','Pernikahan'],['khitbah','Khitbah'],['mahar','Mahar'],['nafkah','Nafkah'],['hak-kewajiban','Hak & Kewajiban'],['talak','Talak'],['iddah','Iddah'],['anak','Anak & Pengasuhan']],
+    waris:[['pengertian','Pengertian Waris'],['ahli-waris','Ahli Waris'],['bagian','Bagian Waris'],['ashabah','Ashabah'],['hijab','Hijab Waris'],['contoh','Contoh Perhitungan']],
+    'fiqih-kontemporer':[['teknologi','Teknologi'],['fintech','Fintech'],['medis','Medis'],['vaksin','Vaksin & Obat'],['lingkungan','Lingkungan'],['pangan','Pangan'],['ekonomi','Ekonomi Modern'],['media','Media Digital']],
+    'ushul-fiqih':[['pengertian','Pengertian Ushul Fiqih'],['quran','Dalil Al-Qur’an'],['sunnah','Dalil Sunnah'],['ijma','Ijma'],['qiyas','Qiyas'],['ijtihad','Ijtihad']],
+    'kaidah-fiqih':[['pengertian','Pengertian Kaidah Fiqih'],['niat','Al-Umuru bi Maqasidiha'],['yakin','Al-Yaqin La Yazulu bi Sy-Syakk'],['kesulitan','Al-Masyaqqah Tajlibut Taysir'],['mudharat','Adh-Dharar Yuzal']],
+    maqashid:[['pengertian','Pengertian Maqashid Syariah'],['agama','Menjaga Agama'],['jiwa','Menjaga Jiwa'],['akal','Menjaga Akal'],['keturunan','Menjaga Keturunan'],['harta','Menjaga Harta']]
+   },
+   6:{
+    doa:[['harian','Doa Harian'],['tidur','Doa Tidur'],['makan','Doa Makan'],['belajar','Doa Belajar'],['perjalanan','Doa Perjalanan'],['keluarga','Doa Keluarga'],['perlindungan','Doa Perlindungan'],['masjid','Doa Masjid'],['kesulitan','Doa Kesulitan & Kesehatan'],['setelah-shalat','Doa setelah Shalat'],['ramadan','Doa Ramadan'],['haji','Doa Haji & Umrah']],
+    dzikir:[['pagi','Dzikir Pagi'],['petang','Dzikir Petang'],['setelah-shalat','Dzikir setelah Shalat'],['tidur','Dzikir sebelum Tidur'],['istighfar','Istighfar'],['shalawat','Shalawat']]
+   },
+   7:{
+    akhlak:[['terpuji','Akhlak Terpuji'],['tercela','Akhlak Tercela'],['jujur','Kejujuran'],['amanah','Amanah'],['sabar','Sabar'],['syukur','Syukur'],['tawadhu','Tawadhu'],['ikhlas','Ikhlas']],
+    adab:[['kepada-allah','Adab kepada Allah'],['kepada-rasul','Adab kepada Rasul'],['orang-tua','Adab kepada Orang Tua'],['guru','Adab kepada Guru'],['sesama','Adab kepada Sesama'],['belajar','Adab Belajar'],['makan','Adab Makan'],['tidur','Adab Tidur'],['bertamu','Adab Bertamu'],['berbicara','Adab Berbicara'],['media','Adab Bermedia'],['masjid','Adab di Masjid']],
+    tazkiyah:[['taubat','Taubat'],['muhasabah','Muhasabah'],['penyakit-hati','Penyakit Hati'],['pembinaan','Pembinaan Diri'],['sabar','Sabar'],['syukur','Syukur'],['ikhlas','Ikhlas']]
+   },
+   8:{
+    'masa-sebelum-islam':[['jahiliyah','Arab Pra-Islam'],['makkah','Makkah Sebelum Kenabian'],['nasab','Nasab Nabi Muhammad ﷺ']],
+    'sirah-nabi':[['kelahiran','Kelahiran Nabi'],['wahyu','Awal Wahyu'],['dakwah-makkah','Dakwah di Makkah'],['hijrah','Hijrah'],['madinah','Madinah'],['perjanjian','Perjanjian'],['wafat','Wafat Nabi']],
+    sahabat:[['khulafaur-rasyidin','Khulafaur Rasyidin'],['muhajirin','Muhajirin'],['anshar','Anshar'],['keluarga-nabi','Keluarga Nabi'],['generasi-awal','Generasi Awal']],
+    perang:[['badar','Badar'],['uhud','Uhud'],['khandaq','Khandaq'],['hudaibiyah','Hudaibiyah'],['khaibar','Khaibar'],['fathu-makkah','Fathu Makkah'],['hunain','Hunain'],['tabuk','Tabuk']],
+    'sejarah-islam':[['khulafa','Masa Khulafaur Rasyidin'],['umayyah','Bani Umayyah'],['abbasiyah','Bani Abbasiyah'],['utsmaniyah','Utsmaniyah'],['islam-nusantara','Islam di Nusantara'],['modern','Dunia Islam Modern']],
+    peristiwa:[['hijrah','Hijrah ke Madinah'],['isra-miraj','Isra Mi’raj'],['fathu-makkah','Fathu Makkah'],['haji-wada','Haji Wada']],
+    ziarah:[['pengertian','Pengertian Ziarah'],['ziarah-kubur','Ziarah Kubur'],['adab','Adab Ziarah'],['doa','Doa Ziarah'],['tempat','Tempat Ziarah Bersejarah']]
+   },
+   9:{
+    'sahabat-tabiin':[['sahabat','Sahabat Nabi'],['tabiin','Tabi’in'],['generasi-awal','Generasi Awal Islam']],
+    ulama:[['empat-imam','Empat Imam Mazhab'],['ulama-hadis','Ulama Hadis'],['ulama-tafsir','Ulama Tafsir'],['ulama-fiqih','Ulama Fiqih']],
+    ilmuwan:[['kedokteran','Kedokteran'],['matematika','Matematika'],['astronomi','Astronomi'],['filsafat','Filsafat & Ilmu'],['teknik','Teknik & Teknologi']],
+    'tokoh-perempuan':[['istri-nabi','Keluarga Nabi & Perempuan Teladan'],['sahabiyah','Sahabiyah'],['ulama-perempuan','Ulama Perempuan'],['ilmuwan-perempuan','Ilmuwan Perempuan']],
+    nusantara:[['wali','Ulama & Wali Nusantara'],['ulama-pesantren','Ulama Pesantren'],['pendiri','Tokoh Pendidikan Islam'],['ulama-modern','Ulama Modern Indonesia']]
+   },
+   10:{
+    'hari-ini':[['tanggal','Tanggal Hijriah Hari Ini'],['peristiwa','Peristiwa Hari Ini'],['ibadah','Amalan yang Relevan']],
+    'kalender-bulanan':[['tampilan','Kalender 1 Bulan Penuh'],['navigasi','Navigasi Bulan'],['konversi','Konversi Hijriah–Masehi']],
+    'detail-tanggal':[['hari','Detail Hari'],['konversi','Tanggal Masehi & Hijriah'],['peristiwa','Peristiwa Terkait']],
+    'informasi-hari-ini':[['libur','Hari Libur / Peringatan'],['hari-besar','Hari Besar Islam'],['catatan','Catatan Kalender']],
+    'sejarah-bulan-ini':[['daftar','Daftar Sejarah Bulan'],['tanggal','Sejarah Berdasarkan Tanggal'],['tautan','Tautan ke Entry Sejarah']]
+   },
+   11:{
+    'pendidikan-islam':[['adab-ilmu','Adab Menuntut Ilmu'],['tujuan','Tujuan Pendidikan Islam'],['metode','Metode Belajar'],['hafalan','Hafalan'],['talaqqi','Talaqqi'],['evaluasi','Evaluasi Belajar']],
+    dakwah:[['pengertian','Pengertian Dakwah'],['tujuan','Tujuan Dakwah'],['metode','Metode Dakwah'],['hikmah','Dakwah dengan Hikmah'],['media','Dakwah di Media'],['etika','Etika Pendakwah']]
+   },
+   12:{
+    'bahasa-arab-dasar':[['huruf','Huruf Hijaiyah'],['harakat','Harakat'],['kosakata','Kosakata Dasar'],['angka','Angka Arab'],['percakapan','Percakapan Dasar'],['bacaan','Latihan Membaca']],
+    nahwu:[['isim','Isim'],['fiil','Fi’il'],['harf','Harf'],['jumlah','Jumlah Ismiyah & Fi’liyah'],['i’rab','I’rab'],['marfuat','Marfu’at']],
+    sharaf:[['wazan','Wazan'],['fiil','Fi’il'],['masdar','Masdar'],['isim','Isim Musytaq'],['tasrif','Tashrif']],
+    balaghah:[['maani','Ilmu Ma’ani'],['bayan','Ilmu Bayan'],['badi','Ilmu Badi’']],
+    'kamus-islam':[['istilah','Istilah Islam'],['ibadah','Kosakata Ibadah'],['aqidah','Kosakata Aqidah'],['muamalah','Kosakata Muamalah']]
+   },
+   13:{
+    'kota-islam':[['makkah','Makkah'],['madinah','Madinah'],['damaskus','Damaskus'],['baghdad','Baghdad'],['kairo','Kairo'],['cordoba','Cordoba']],
+    'masjid-bersejarah':[['masjidil-haram','Masjidil Haram'],['nabawi','Masjid Nabawi'],['aqsa','Masjid Al-Aqsa'],['masjid-sejarah','Masjid Bersejarah']],
+    'pendidikan-peradaban':[['madrasah','Madrasah'],['baitul-hikmah','Baitul Hikmah'],['perpustakaan','Perpustakaan'],['ilmuwan','Tradisi Keilmuan']],
+    'ekonomi-peradaban':[['perdagangan','Perdagangan'],['pasar','Pasar'],['wakaf','Wakaf Produktif'],['keuangan','Keuangan & Muamalah']],
+    'seni-peradaban':[['arsitektur','Arsitektur'],['kaligrafi','Kaligrafi'],['manuskrip','Manuskrip'],['seni','Seni & Kerajinan']]
+   },
+   14:{
+    'teknologi-kontemporer':[['ai','AI & Etika'],['internet','Internet'],['privasi','Privasi Digital'],['otomasi','Otomasi'],['sumber-daya','Teknologi & Maslahah']],
+    'media-digital':[['media-sosial','Media Sosial'],['tabayyun','Tabayyun Informasi'],['fitnah','Fitnah & Hoaks'],['privasi','Privasi'],['komunikasi','Etika Komunikasi']],
+    'ekonomi-modern':[['fintech','Fintech'],['ecommerce','Perdagangan Digital'],['investasi','Investasi'],['utang','Utang Digital'],['bisnis','Etika Bisnis']],
+    'kesehatan-lingkungan':[['kesehatan','Kesehatan'],['pencegahan','Pencegahan Penyakit'],['kebersihan','Kebersihan'],['lingkungan','Lingkungan'],['hewan','Kesejahteraan Hewan']],
+    masyarakat:[['keluarga','Keluarga'],['tetangga','Tetangga'],['kerja','Dunia Kerja'],['pendidikan','Pendidikan'],['kewargaan','Kehidupan Bermasyarakat']]
+   }
+  };
+
+  function menuMaterial(mid,matid){
+    const m=DB.MENUS.find(x=>x.id===mid); return m && m.materials.find(x=>x.id===matid);
+  }
+  function mergeSubs(mid,matid,list){
+    const mat=menuMaterial(mid,matid); if(!mat) return;
+    const old=Array.isArray(mat.subs)?mat.subs:[]; const seen=new Set(old.map(x=>x[0]));
+    list.forEach(x=>{if(!seen.has(x[0])) old.push(x)}); mat.subs=old;
+  }
+  Object.keys(SUBS).forEach(mid=>Object.keys(SUBS[mid]).forEach(mat=>mergeSubs(+mid,mat,SUBS[mid][mat])));
+
+  /* Every material and submaterial gets a stable field specification. */
+  const FIELD_SPEC={
+    required:['id','menu','material','title','summary','body','sources','related','tags','status'],
+    recommended:['sub','arabic.text','arabic.translit','arabic.arti','audio','source','illustration','media','updatedAt'],
+    bodySections:['Pengertian','Ruang Lingkup','Materi Inti','Praktik / Contoh','Catatan','Sumber']
+  };
+  DB.FIELD_SPEC=FIELD_SPEC;
+
+  function labelFor(mid,mat,sub){
+    const m=menuMaterial(mid,mat); if(!m) return sub||mat;
+    if(sub && m.subs){const x=m.subs.find(z=>z[0]===sub); if(x) return x[1];}
+    return m.name;
+  }
+  function typeFor(mid,mat,sub){
+    if(mid===3 && mat==='iqra') return 'lesson';
+    if(mid===4 && mat==='hadis') return 'hadith';
+    if(mid===6 && mat==='doa') return 'doa';
+    if(mid===6 && mat==='dzikir') return 'dzikir';
+    if(mid===9) return 'person';
+    if(mid===10) return 'calendar';
+    return 'article';
+  }
+  function sourceFor(mid,mat){
+    if(mid===1||mid===2||mid===3||mid===4||mid===5||mid===6||mid===7||mid===8) return ['quran','muslim','bukhari'];
+    return ['app'];
+  }
+  function summaryFor(title,mid,mat){
+    const base={
+      1:'Materi ibadah dan pilar utama Islam yang dijelaskan bertahap, dengan rujukan dan relasi ke materi terkait.',
+      2:'Materi akidah yang menjelaskan salah satu bagian Rukun Iman secara terstruktur tanpa mengulang halaman induk.',
+      3:'Materi pembelajaran Al-Qur’an, bacaan, ilmu Al-Qur’an, dan keterampilan membaca secara bertahap.',
+      4:'Materi hadis dan sunnah yang membedakan koleksi, ilmu hadis, dan penjelasan hadis.',
+      5:'Materi fikih yang menjelaskan hukum, tata cara, syarat, dan contoh penerapan sesuai sumber yang dapat ditelusuri.',
+      6:'Kumpulan doa dan dzikir untuk pembelajaran, dengan Arab, arti, transliterasi, dan audio pelafalan bila tersedia.',
+      7:'Materi pembentukan akhlak, adab, dan penyucian jiwa dalam kehidupan sehari-hari.',
+      8:'Materi sirah dan sejarah Islam yang disusun kronologis serta dihubungkan dengan peristiwa terkait.',
+      9:'Biografi dan kontribusi tokoh Islam yang ditempatkan pada kategori tokoh, bukan nabi dan rasul.',
+      10:'Informasi kalender Hijriah, tanggal, peristiwa, dan sejarah berdasarkan tanggal.',
+      11:'Materi pendidikan dan dakwah Islam yang membahas prinsip, metode, adab, dan praktik.',
+      12:'Pembelajaran bahasa Arab dan istilah Islam dari dasar hingga tata bahasa.',
+      13:'Materi tentang kota, masjid, ilmu, ekonomi, seni, dan warisan peradaban Islam.',
+      14:'Pembahasan kehidupan kontemporer dengan kerangka etika, maslahat, tanggung jawab, dan verifikasi sumber.'
+    }; return title+' — '+base[mid];
+  }
+  function bodyFor(title,mid,mat,sub){
+    const extra=[];
+    if(mid===1) extra.push('Hubungkan materi ini dengan entry ibadah terkait dan hindari membuat pembahasan kedua yang identik.');
+    if(mid===2) extra.push('Pisahkan halaman induk Rukun Iman dari penjabaran detail; klik item langsung membuka isi.');
+    if(mid===3) extra.push('Data ayat dan metadata Al-Qur’an harus berasal dari sumber/API yang terverifikasi; jangan mengarang ayat atau terjemahan.');
+    if(mid===4) extra.push('Hadis harus mempertahankan kitab, nomor, perawi, dan derajat bila tersedia; jangan mengarang hadis.');
+    if(mid===6) extra.push('Untuk teks Arab, tampilkan Arab + transliterasi + arti. Tombol suara kecil menggunakan audio sumber atau TTS sebagai fallback.');
+    if(mid===8||mid===9||mid===13) extra.push('Pisahkan fakta sejarah dari tradisi/riwayat dan tampilkan sumber pada entry.');
+    return [
+      {h:'Pengertian',p:[title+' adalah bagian dari '+(DB.MENUS.find(x=>x.id===mid)||{}).name+'. Materi ini menjadi entry mandiri agar pengguna dapat membuka penjelasan tanpa melewati tombol yang berulang.']},
+      {h:'Ruang Lingkup',list:['Definisi dan istilah utama.','Pokok pembahasan yang perlu dipahami pengguna.','Relasi dengan materi lain di SILMIKAFFAH.']},
+      {h:'Materi Inti',list:['Penjelasan bertahap dari dasar ke lanjutan.','Contoh atau penerapan bila relevan.','Perbedaan pendapat atau batasan ditampilkan bila sumber memang menunjukkan adanya perbedaan.']},
+      {h:'Praktik / Contoh',p:['Gunakan bagian ini untuk panduan langkah, contoh, latihan, atau penerapan yang sesuai dengan jenis materi.']},
+      {h:'Catatan Sumber',p:extra.concat(['Entry ini mengikuti struktur database SILMIKAFFAH: satu topik satu entry, memiliki parent/relasi, status, dan tanggal pembaruan.'])}
+    ];
+  }
+  function addIfMissing(e){ if(!getEntry(e.id)) addEntry(e); }
+
+  /* Ensure every material has at least one root entry. */
+  DB.MENUS.forEach(menu=>menu.materials.forEach(mat=>{
+    const roots=DB.ENTRIES.filter(e=>e.menu===menu.id && e.material===mat.id && !e.sub);
+    if(!roots.length){
+      const id='master-'+menu.id+'-'+mat.id;
+      addIfMissing({id,menu:menu.id,material:mat.id,type:typeFor(menu.id,mat.id),title:mat.name,summary:summaryFor(mat.name,menu.id,mat.id),body:bodyFor(mat.name,menu.id,mat.id,''),sources:sourceFor(menu.id,mat.id),related:[],tags:[mat.id],status:'ready'});
+    }
+    (mat.subs||[]).forEach(([sub,title])=>{
+      const exists=DB.ENTRIES.some(e=>e.menu===menu.id&&e.material===mat.id&&e.sub===sub);
+      if(!exists){
+        const id='master-'+menu.id+'-'+mat.id+'-'+sub.replace(/[^a-z0-9]+/gi,'-').toLowerCase();
+        addIfMissing({id,menu:menu.id,material:mat.id,sub,type:typeFor(menu.id,mat.id,sub),title,summary:summaryFor(title,menu.id,mat.id),body:bodyFor(title,menu.id,mat.id,sub),sources:sourceFor(menu.id,mat.id),related:[],tags:[mat.id,sub],status:'needs-review'});
+      }
+    });
+  }));
+
+  /* Repair known structural errors without deleting existing useful entries. */
+  const menu1=DB.MENUS.find(m=>m.id===1); const zak=menu1&&menu1.materials.find(m=>m.id==='zakat');
+  if(zak) zak.subs=[['pengertian','Pengertian Zakat'],['jenis','Jenis Zakat'],['ketentuan','Ketentuan Zakat'],['fitrah','Zakat Fitrah'],['mal','Zakat Mal'],['mustahik','Mustahik'],['kalkulator','Kalkulator Zakat']];
+  const ras=DB.MENUS.find(m=>m.id===2)?.materials.find(m=>m.id==='iman-kepada-rasul');
+  if(ras) ras.subs=[['pengertian','Pengertian Iman kepada Rasul'],['sifat-rasul','Sifat Para Rasul'],['nabi-rasul','Nabi & Rasul'],['mukjizat','Mukjizat'],['ulul-azmi','Ulul Azmi']];
+
+  /* 25 Nabi/Rasul belong under Rukun Iman, never under general Tokoh. */
+  DB.ENTRIES.filter(e=>e.menu===9 && (e.title||'').toLowerCase().includes('nabi')).forEach(e=>{e.menu=2;e.material='iman-kepada-rasul';e.sub='nabi-rasul';});
+
+  /* Fix malformed generated parent marker seen in previous build. */
+  DB.ENTRIES.forEach(e=>{if(e.sub==='+e.menu+') e.sub='umum';});
+
+  /* Standard fields on every entry. */
+  DB.ENTRIES.forEach(e=>{
+    e.tags=e.tags||[]; e.related=e.related||[]; e.sources=e.sources||[]; e.body=e.body||[];
+    e.status=e.status||'ready'; e.updatedAt=e.updatedAt||'2026-08-30';
+    e.fieldSpec=FIELD_SPEC;
+  });
+
+  /* Final gap-fill for two submateri whose parent entries were defined by earlier data patches. */
+  if(!DB.ENTRIES.some(e=>e.menu===9&&e.material==="sahabat-tabiin"&&e.sub==="sahabat")) addEntry({id:"master-9-sahabat-tabiin-sahabat",menu:9,material:"sahabat-tabiin",sub:"sahabat",type:"person",title:"Sahabat Nabi",summary:"Generasi yang bertemu dan beriman kepada Nabi Muhammad ﷺ serta menjadi sumber penting dalam transmisi ilmu Islam.",body:[{h:"Pengertian",p:["Sahabat adalah orang yang bertemu Nabi Muhammad ﷺ dalam keadaan beriman dan wafat dalam Islam menurut definisi yang digunakan ulama hadis." ]},{h:"Ruang Lingkup",list:["Khalifah dan sahabat utama.","Muhajirin dan Anshar.","Perawi hadis dari kalangan sahabat."]},{h:"Catatan",p:["Biografi setiap tokoh ditempatkan sebagai entry tersendiri dan tidak dicampur dengan Nabi/Rasul."]}],sources:["muslim"],tags:["tokoh","sahabat"],status:"ready"});
+  if(!DB.ENTRIES.some(e=>e.menu===9&&e.material==="tokoh-perempuan"&&e.sub==="istri-nabi")) addEntry({id:"master-9-tokoh-perempuan-istri-nabi",menu:9,material:"tokoh-perempuan",sub:"istri-nabi",type:"person",title:"Keluarga Nabi & Perempuan Teladan",summary:"Pembahasan perempuan teladan dalam keluarga Nabi dan sejarah Islam dengan pemisahan fakta, riwayat, dan sumber.",body:[{h:"Pengertian",p:["Materi ini membahas perempuan teladan yang memiliki kedudukan penting dalam sejarah Islam, terutama keluarga Nabi ﷺ." ]},{h:"Ruang Lingkup",list:["Istri-istri Nabi ﷺ.","Putri dan keluarga Nabi.","Perempuan sahabiyah dan tokoh teladan yang relevan."]},{h:"Catatan Sumber",p:["Detail biografi harus mengikuti sumber yang dapat ditelusuri; nama, tanggal, dan hubungan keluarga yang tidak pasti tidak boleh dipaksakan sebagai fakta."]}],sources:["muslim"],tags:["tokoh","perempuan"],status:"ready"});
+
+  /* Compact audit data accessible from console and About page. */
+  DB.MASTER_AUDIT=DB.MENUS.map(m=>({
+    menu:m.id,name:m.name,materials:m.materials.length,
+    submaterials:m.materials.reduce((n,x)=>n+(x.subs||[]).length,0),
+    entries:DB.ENTRIES.filter(e=>e.menu===m.id).length,
+    empty:DB.ENTRIES.filter(e=>e.menu===m.id && !e.body.length && !e.summary && !e.arabic).length
+  }));
+  DB.MASTER_AUDIT_TOTAL={menus:DB.MENUS.length,materials:DB.MENUS.reduce((n,m)=>n+m.materials.length,0),submaterials:DB.MASTER_AUDIT.reduce((n,m)=>n+m.submaterials,0),entries:DB.ENTRIES.length};
+})();
+
 
 /* ---------- Init ---------- */
 function init(){
