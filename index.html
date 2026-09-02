@@ -15,7 +15,7 @@
 /* ---------- Design Tokens ---------- */
 :root{
   --font-ui: "Inter", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
-  --font-ar: "Scheherazade New", "Amiri", "Noto Naskh Arabic", "Traditional Arabic", serif;
+  --font-ar: "Scheherazade New", "Amiri", "KFGQPC Uthmanic Script HAFS", "Noto Naskh Arabic", "Noto Sans Arabic", "Geeza Pro", "Arabic Typesetting", "Traditional Arabic", sans-serif;
 
   --bg: #F7F8F7;
   --bg-soft: #EFF1EF;
@@ -1844,9 +1844,9 @@ addEntry({id:"puasa-daud", menu:1, material:"puasa", sub:"sunnah", type:"article
   sources:["bukhari","muslim"], related:["puasa-sunnah"], tags:["puasa sunnah"]});
 
 /* ========== MENU 01 · HAJI & UMRAH ========== */
-addEntry({
-  id:"haji", menu:1, material:"haji", type:"article",
+addEntry({id:"haji", menu:1, material:"haji", type:"article",
   title:"Haji", summary:"Rukun Islam kelima — berkunjung ke Baitullah pada musim haji untuk menunaikan ibadah yang telah ditetapkan.",
+  arabic:{text:"لَبَّيْكَ اللَّهُمَّ حَجًّا", translit:"Labbaikallahumma hajjan", arti:"Aku penuhi panggilan-Mu ya Allah, untuk berhaji.", audio:"", audio_src:"", source:"Lafaz niat ihram haji — diucapkan di miqat"},
   body:[
     {h:"Pengertian", p:["Haji adalah menyengaja Baitullah (Ka'bah) untuk menunaikan amalan tertentu (ihram, tawaf, sa'i, wukuf, dan lainnya) pada waktu tertentu, dengan syarat-syarat tertentu."]},
     {h:"Hukum", p:["Wajib sekali seumur hidup bagi yang mampu — QS. Ali 'Imran 3:97: \"...wajib bagi manusia (melakukan ibadah) haji ke Baitullah, yaitu bagi yang mampu mengadakan perjalanan ke sana.\""]},
@@ -1892,6 +1892,7 @@ addEntry({id:"dam", menu:1, material:"haji", type:"article", title:"Dam (Denda H
   body:[{h:"Catatan", p:["Jenis dan kadar dam diatur fikih (urutan: menyembelih kambing, atau puasa, atau sedekah, sesuai kasus). Ada perbedaan rincian antar mazhab — ikuti bimbingan pembimbing haji dan referensi fikih yang mu'tabar."]}],
   sources:["fiqihsunnah"], related:["haji","larangan-ihram"], tags:["haji","dam"]});
 addEntry({id:"umrah", menu:1, material:"haji", type:"article", title:"Umrah", summary:"Ziarah ke Baitullah dengan ihram, tawaf, sa'i, dan tahallul — dapat dilakukan kapan saja.",
+  arabic:{text:"لَبَّيْكَ اللَّهُمَّ عُمْرَةً", translit:"Labbaikallahumma 'umratan", arti:"Aku penuhi panggilan-Mu ya Allah, untuk berumrah.", audio:"", audio_src:"", source:"Lafaz niat ihram umrah — diucapkan di miqat"},
   body:[{h:"Rukun umrah", list:["Ihram (niat umrah)","Tawaf","Sa'i","Tahallul","Tertib"]},
   {h:"Hukum", p:["Wajib sekali seumur hidup menurut jumhur; sebagian ulama berpendapat sunnah muakkad."]},
   {h:"Tata cara ringkas", p:["Mandi, berpakaian ihram, niat di miqat, talbiyah, masuk Makkah, tawaf tujuh putaran, shalat dua rakaat di belakang Maqam Ibrahim bila memungkinkan, sa'i, lalu tahallul."]}],
@@ -2200,7 +2201,7 @@ addEntry({id:"thaharah", menu:5, material:"fiqih-ibadah", type:"article", title:
   body:[{h:"Dalil", p:["\"...Sesungguhnya Allah menyukai orang-orang yang tobat dan orang-orang yang menyucikan diri.\" (QS. Al-Baqarah 2:222)."]}],
   sources:["quran","fiqihsunnah"], related:["wudhu","tayamum","mandi","najis","hadats"], tags:["fiqih","thaharah"]});
 addEntry({id:"wudhu", menu:5, material:"fiqih-ibadah", type:"article", title:"Wudhu", summary:"Bersuci dari hadats kecil dengan air — syarat sah shalat.",
-  arabic:{text:"",translit:"",arti:"",audio:"",audio_src:"",source:""},
+  arabic:{text:"نَوَيْتُ الْوُضُوءَ لِرَفْعِ الْحَدَثِ الْأَصْغَرِ فَرْضًا لِلَّهِ تَعَالَى", translit:"Nawaitul wudhu-a liraf'il hadatsil ashghari fardhal lillahi ta'ala", arti:"Aku berniat wudu untuk menghilangkan hadats kecil, fardu karena Allah ta'ala.", audio:"", audio_src:"", source:"Lafaz umum — niat cukup dalam hati, melafalkan hanya untuk membantu menghadirkan niat"},
   body:[{h:"Rukun wudhu", list:["Niat","Membasuh wajah","Membasuh kedua tangan sampai siku","Mengusap sebagian kepala","Membasuh kedua kaki sampai mata kaki","Tertib"]},
   {h:"Pembatal wudhu", list:["Keluar sesuatu dari qubul/dubur","Hilang akal (tidur nyenyak, pingsan, mabuk)","Menyentuh kemaluan tanpa penghalang (menurut pendapat masyhur)","Murtad — na'udzubillah"]}],
   sources:["bukhari","muslim","fiqihsunnah"], related:["thaharah","hadats"], tags:["fiqih","wudhu"]});
@@ -2208,6 +2209,7 @@ addEntry({id:"tayamum", menu:5, material:"fiqih-ibadah", type:"article", title:"
   body:[{h:"Cara", list:["Niat tayamum.","Menepukkan kedua tangan ke debu suci, usap wajah, lalu usap kedua tangan sampai pergelangan.","Dalil: QS. Al-Ma'idah 5:6."]}],
   sources:["quran","bukhari"], related:["thaharah","wudhu"], tags:["fiqih","tayamum"]});
 addEntry({id:"mandi", menu:5, material:"fiqih-ibadah", type:"article", title:"Mandi Wajib (Janabah)", summary:"Bersuci dari hadats besar dengan mengguyur seluruh tubuh.",
+  arabic:{text:"نَوَيْتُ الْغُسْلَ لِرَفْعِ الْحَدَثِ الْأَكْبَرِ فَرْضًا لِلَّهِ تَعَالَى", translit:"Nawaitul ghusla liraf'il hadatsil akbari fardhal lillahi ta'ala", arti:"Aku berniat mandi untuk menghilangkan hadats besar, fardu karena Allah ta'ala.", audio:"", audio_src:"", source:"Lafaz umum — niat cukup dalam hati, melafalkan hanya untuk membantu menghadirkan niat"},
   body:[{h:"Sebab", list:["Keluar mani (sengaja/tidak)","Hubungan suami istri","Selesai haid dan nifas","Masuk Islam (pendapat sebagian ulama)"]},
   {h:"Rukun", p:["Niat + meratakan air ke seluruh tubuh. Mandi Jumat adalah sunnah, bukan pengganti mandi janabah."]}],
   sources:["bukhari","muslim"], related:["thaharah"], tags:["fiqih","mandi"]});
@@ -2584,14 +2586,31 @@ addEntry({id:"bahasa-arab", menu:12, material:"bahasa-arab-dasar", type:"article
   body:[{h:"Cakupan", list:["Huruf hijaiyah dan harakat.","Kosakata, angka, dan kalimat sederhana.","Nahwu (tata bahasa), sharaf (morfologi), balaghah (retorika)."]}],
   sources:["app"], related:["huruf-hijaiyah","harakat","nahwu","sharaf"], tags:["bahasa arab","belajar"]});
 addEntry({id:"huruf-hijaiyah", menu:12, material:"bahasa-arab-dasar", type:"article", title:"Huruf Hijaiyah", summary:"28 huruf dasar bahasa Arab (dengan hamzah dan lam-alif).",
-  body:[{h:"Huruf", list:["ا ب ت ث ج ح خ د ذ ر ز س ش ص ض ط ظ ع غ ف ق ك ل م ن و ه ي","Makhraj (tempat keluar huruf): tenggorokan, lidah, dua bibir, dan rongga hidung.","Belajar makhraj paling baik dengan guru (talaqqi)."]}],
-  sources:["app"], related:["bahasa-arab","harakat","iqra-1"], tags:["bahasa arab","huruf"]});
+  arabic:{text:"ا ب ت ث ج ح خ د ذ ر ز س ش ص ض ط ظ ع غ ف ق ك ل م ن و ه ي", translit:"alif, ba, ta, tsa, jim, ha, kha, dal, dzal, ra, zai, sin, syin, shad, dhad, tha, zha, 'ain, ghain, fa, qaf, kaf, lam, mim, nun, wau, ha, ya", arti:"28 huruf dasar hijaiyah berurutan sesuai susunan mushaf standar (bukan urutan abjad alfabetis).", audio:"", audio_src:"", source:""},
+  body:[
+    {h:"Tiga kelompok berdasarkan cara sambung", list:["Huruf yang bisa disambung dari dua sisi (awal & akhir): sebagian besar huruf hijaiyah, misalnya ب ت ث ج ح خ س ش ص ض ط ظ ع غ ف ق ك ل م ن ه ي.","Huruf yang HANYA bisa disambung dari sisi kanan (sebelum huruf), tidak menyambung ke huruf sesudahnya: ا د ذ ر ز و — inilah sebabnya kata yang mengandung huruf ini akan 'putus' sambungannya di tampilan tulisan.","Huruf hamzah (ء) sering dianggap huruf ke-29, muncul dalam berbagai bentuk tergantung posisi dan harakatnya (أ إ ؤ ئ ء)."]},
+    {h:"Tempat keluar huruf (makhraj)", p:["Setiap huruf hijaiyah punya tempat keluar (makhraj) yang berbeda: dari rongga dada/tenggorokan (ء ه ع ح غ خ), pangkal-tengah-ujung lidah (ق ك ج ش ي ض ل ن ر ط د ت ص ز س ظ ذ ث), dua bibir (ف و ب م), dan rongga hidung untuk dengung (ghunnah). Pelafalan yang tepat sangat menentukan makna kata — kesalahan makhraj bisa mengubah arti kata secara total."]},
+    {h:"Cara belajar", p:["Talaqqi (belajar langsung tatap muka dengan guru) adalah metode terbaik untuk menguasai makhraj huruf, karena perbedaan bunyi antar huruf sering sangat halus dan sulit dibedakan hanya lewat tulisan. Setelah mengenal bentuk huruf, langkah selanjutnya adalah mempelajari harakat (lihat materi Harakat) lalu berlatih membaca lewat Iqra jilid 1."]}
+  ],
+  sources:["app"], related:["bahasa-arab","harakat","iqra-1","makharijul-huruf-arab"], tags:["bahasa arab","huruf"]});
 addEntry({id:"harakat", menu:12, material:"bahasa-arab-dasar", type:"article", title:"Harakat", summary:"Tanda baca Arab: fathah, kasrah, dhammah, sukun, tanwin, tasydid.",
-  body:[{h:"Harakat", list:["Fathah (َ) — bunyi \"a\"","Kasrah (ِ) — bunyi \"i\"","Dhammah (ُ) — bunyi \"u\"","Sukun (ْ) — mematikan huruf","Tanwin (ً ٍ ٌ) — nun mati di akhir kata","Tasydid (ّ) — huruf ganda"]}],
-  sources:["app"], related:["bahasa-arab","iqra-2"], tags:["bahasa arab","harakat"]});
-addEntry({id:"kosakata", menu:12, material:"bahasa-arab-dasar", type:"article", title:"Kosakata & Angka", summary:"Kosakata dasar sehari-hari dan angka Arab.",
-  body:[{h:"Contoh", list:["Buku = كِتَابٌ (kitabun), masjid = مَسْجِدٌ (masjidun), rumah = بَيْتٌ (baitun).","Angka: ١ (1), ٢ (2), ٣ (3), ٤ (4), ٥ (5), ٦ (6), ٧ (7), ٨ (8), ٩ (9), ١٠ (10).","Salam: السَّلَامُ عَلَيْكُمْ (assalamu 'alaikum)."]}],
-  sources:["app"], related:["bahasa-arab"], tags:["bahasa arab","kosakata"]});
+  arabic:{text:"بَ بِ بُ بْ بً بٍ بٌ بّ", translit:"ba — bi — bu — b (mati) — ban — bin — bun — bb (ganda)", arti:"Contoh huruf ب (ba) dengan tiap jenis harakat, berurutan sesuai penjelasan di bawah.", audio:"", audio_src:"", source:""},
+  body:[{h:"Jenis harakat", list:["Fathah (contoh: بَ) — bunyi \"a\", ditulis garis miring kecil di atas huruf","Kasrah (contoh: بِ) — bunyi \"i\", ditulis garis miring kecil di bawah huruf","Dhammah (contoh: بُ) — bunyi \"u\", ditulis seperti huruf wau kecil di atas huruf","Sukun (contoh: بْ) — mematikan huruf (tanpa bunyi vokal), ditulis bulatan kecil di atas huruf","Tanwin — nun mati di akhir kata, ada tiga bentuk: fathatain بً (bunyi \"an\"), kasratain بٍ (bunyi \"in\"), dhammatain بٌ (bunyi \"un\")","Tasydid (contoh: بّ) — menandakan huruf ganda/ditekan, dibaca double (mis. بَّ dibaca \"bba\")"]},
+    {h:"Cara berlatih", p:["Setiap huruf hijaiyah bisa dipasangkan dengan keenam jenis harakat di atas. Latihan membaca kombinasi huruf+harakat inilah inti dari metode Iqra jilid 1-3. Belajar langsung dengan bimbingan guru (talaqqi) sangat dianjurkan agar bunyi harakat terdengar tepat, karena perbedaan fathah/kasrah/dhammah bisa mengubah arti kata secara total."]}],
+  sources:["app"], related:["bahasa-arab","iqra-2","huruf-hijaiyah"], tags:["bahasa arab","harakat"]});
+addEntry({id:"kosakata", menu:12, material:"bahasa-arab-dasar", type:"article", title:"Kosakata Dasar", summary:"Kosakata sehari-hari: benda, keluarga, anggota tubuh, waktu, warna, dan kata tanya.",
+  body:[
+    {h:"Benda & tempat sehari-hari", list:["كِتَابٌ (kitabun) — buku","بَيْتٌ (baitun) — rumah","مَسْجِدٌ (masjidun) — masjid","مَدْرَسَةٌ (madrasatun) — sekolah","قَلَمٌ (qalamun) — pena","بَابٌ (babun) — pintu","طَاوِلَةٌ (thawilatun) — meja","كُرْسِيٌّ (kursiyyun) — kursi","مَاءٌ (ma'un) — air","طَعَامٌ (tha'amun) — makanan","سُوقٌ (suqun) — pasar","شَارِعٌ (syari'un) — jalan"]},
+    {h:"Keluarga (Al-Usrah)", list:["أَبٌ (abun) — ayah","أُمٌّ (ummun) — ibu","أَخٌ (akhun) — saudara laki-laki","أُخْتٌ (ukhtun) — saudara perempuan","جَدٌّ (jaddun) — kakek","جَدَّةٌ (jaddatun) — nenek","ابْنٌ (ibnun) — anak laki-laki","بِنْتٌ (bintun) — anak perempuan","زَوْجٌ (zaujun) — suami","زَوْجَةٌ (zaujatun) — istri"]},
+    {h:"Anggota tubuh (A'dha' al-Jasad)", list:["رَأْسٌ (ra'sun) — kepala","عَيْنٌ (‘ainun) — mata","أَنْفٌ (anfun) — hidung","فَمٌ (famun) — mulut","أُذُنٌ (udzunun) — telinga","يَدٌ (yadun) — tangan","رِجْلٌ (rijlun) — kaki","قَلْبٌ (qalbun) — hati/jantung"]},
+    {h:"Waktu & hari (Al-Waqt wal-Ayyam)", list:["يَوْمٌ (yaumun) — hari","أُسْبُوعٌ (usbu'un) — minggu","شَهْرٌ (syahrun) — bulan","سَنَةٌ (sanatun) — tahun","صَبَاحٌ (shabahun) — pagi","مَسَاءٌ (masa'un) — sore/malam","الْيَوْمَ (al-yauma) — hari ini","غَدًا (ghadan) — besok","أَمْسِ (amsi) — kemarin","الأَحَد (al-ahad)–الاثنين (al-itsnain)–الثلاثاء (ats-tsulatsa')–الأربعاء (al-arbi'a')–الخميس (al-khamis)–الجمعة (al-jumu'ah)–السبت (as-sabt) — Ahad–Sabtu"]},
+    {h:"Warna (Al-Alwan)", list:["أَحْمَرُ (ahmaru) — merah","أَزْرَقُ (azraqu) — biru","أَصْفَرُ (ashfaru) — kuning","أَخْضَرُ (akhdharu) — hijau","أَسْوَدُ (aswadu) — hitam","أَبْيَضُ (abyadhu) — putih"]},
+    {h:"Kata ganti & kata tanya", list:["أَنَا (ana) — saya","أَنْتَ (anta) — kamu (lk)","أَنْتِ (anti) — kamu (pr)","هُوَ (huwa) — dia (lk)","هِيَ (hiya) — dia (pr)","نَحْنُ (nahnu) — kami/kita","مَنْ؟ (man?) — siapa?","مَاذَا؟ (madza?) — apa?","أَيْنَ؟ (aina?) — di mana?","مَتَى؟ (mata?) — kapan?","كَيْفَ؟ (kaifa?) — bagaimana?","لِمَاذَا؟ (limadza?) — mengapa?"]},
+    {h:"Angka 1–10", list:["١ وَاحِدٌ (wahidun)","٢ اثْنَانِ (itsnani)","٣ ثَلَاثَةٌ (tsalatsatun)","٤ أَرْبَعَةٌ (arba'atun)","٥ خَمْسَةٌ (khamsatun)","٦ سِتَّةٌ (sittatun)","٧ سَبْعَةٌ (sab'atun)","٨ ثَمَانِيَةٌ (tsamaniyatun)","٩ تِسْعَةٌ (tis'atun)","١٠ عَشَرَةٌ (‘asyaratun)"]},
+    {h:"Angka puluhan", list:["٢٠ عِشْرُونَ (‘isyrun) — 20","٣٠ ثَلَاثُونَ (tsalatsun) — 30","٤٠ أَرْبَعُونَ (arba'un) — 40","٥٠ خَمْسُونَ (khamsun) — 50","١٠٠ مِائَةٌ (mi'atun) — 100","١٠٠٠ أَلْفٌ (alfun) — 1000"]},
+    {h:"Salam & sapaan", list:["السَّلَامُ عَلَيْكُمْ (assalamu 'alaikum) — semoga keselamatan atasmu","كَيْفَ حَالُكَ؟ (kaifa haluka?) — bagaimana kabarmu? (kepada lk)","بِخَيْرٍ، الْحَمْدُ لِلَّهِ (bikhairin, alhamdulillah) — baik, alhamdulillah","شُكْرًا (syukran) — terima kasih","عَفْوًا (‘afwan) — sama-sama/maaf","مَعَ السَّلَامَةِ (ma'as-salamah) — sampai jumpa"]}
+  ],
+  sources:["app"], related:["bahasa-arab","nahwu"], tags:["bahasa arab","kosakata"]});
 addEntry({id:"nahwu", menu:12, material:"nahwu", type:"article", title:"Nahwu", summary:"Tata bahasa Arab: kedudukan kata dalam kalimat.",
   body:[{h:"Cakupan", list:["Isim (kata benda), fi'il (kata kerja), huruf (partikel).","Mubtada & khabar (subjek & predikat).","Fa'il (pelaku) & maf'ul (objek)."]}],
   sources:["app"], related:["bahasa-arab","isim","fil"], tags:["bahasa arab","nahwu"]});
@@ -4426,7 +4445,7 @@ DB.IQRA_PAGES = {
   "iqra-2": buildJilid({q:"i", letterPages:7, pairPages:10, wordPages:8, per:4,
     words:W2, ins:"Kasrah (i), dhammah (u), dan sukun (mati). Baca langsung tanpa mengeja."}),
   "iqra-3": buildJilid({q:"f", letterPages:6, pairPages:8, wordPages:12, per:4,
-    words:W3, ins:"Tanwin (ً ٍ ٌ) dan huruf sambung. Perhatikan bentuk huruf di awal, tengah, akhir."}),
+    words:W3, ins:"Tanwin (contoh: بً بٍ بٌ) dan huruf sambung. Perhatikan bentuk huruf di awal, tengah, akhir."}),
   "iqra-4": buildJilid({q:"f", letterPages:4, pairPages:8, wordPages:14, per:6,
     words:W4, ins:"Mad thabi'i: fathah+alif (2 harakat), kasrah+ya, dhammah+wau. Panjangkan 2 harakat."}),
   "iqra-5": buildJilid({q:"f", letterPages:2, pairPages:6, wordPages:18, per:8,
@@ -6848,9 +6867,12 @@ function bindActions(){
       }
       else if(act==="surah-audio"){
         const n = el.dataset.surah;
+        const key = "surah-"+n;
+        if(AM.key===key && AM.el && !AM.el.paused){ AM.el.pause(); AM._sync(); return; }
+        if(AM.key===key && AM.el){ AM.el.play().catch(()=>{}); AM._sync(); return; }
         const q = window._surahQueue && window._surahQueue[n];
         const k = window._surahKeys && window._surahKeys[n];
-        if(q && q.length){ AM.playQueue(q, "surah-"+n, k); }
+        if(q && q.length){ AM.playQueue(q, key, k); }
         else { toast("Audio surah belum termuat — buka surah terlebih dahulu"); }
       }
       else if(act==="car-prev"||act==="car-next"){ const c=$("today-carousel"); if(c&&c._go){ clearInterval(window._carTimer); c._go(carIdx+(act==="car-next"?1:-1)); window._carTimer=setInterval(()=>{ const cc=$("today-carousel"); if(cc&&cc._go)cc._go(carIdx+1); },6000); } }
